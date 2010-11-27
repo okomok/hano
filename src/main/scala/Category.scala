@@ -8,19 +8,12 @@ package com.github.okomok
 package hano
 
 
-/*
-case class Category(traversal: Category.Traversal,
-    elementAccess: Category.ElementAccess, evaluation: Category.Evaluation)
-
-    Categery(CategoryReactive(), _, _)
-*/
-
 trait Category {
     def traversal: Category.Traversal
     def elementAccess: Category.ElementAccess
     def evaluation: Category.Evaluation
 
-    final def <:<(that: Catergory.Traversal): Boolean = traversal <:< that
+    final def <:<(that: Category.Traversal): Boolean = traversal <:< that
     final def <:<(that: Category.ElementAccess): Boolean = elementAccess <:< that
     final def <:<(that: Category.Evaluation): Boolean = evaluation <:< that
 
@@ -28,13 +21,13 @@ trait Category {
     final def isIterable: Boolean = this <:< Category.Iterable
     final def isRandomAccess: Boolean = this <:< Category.RandomAccess
     final def isView: Boolean = this <:< Category.View
-    final def isWritable: Boolean this <:< Category.Writable
+    final def isWritable: Boolean = this <:< Category.Writable
 }
 
 
 object Category {
 
-    def apply(t: Traversal, a: ElementAccess = Readable, e: Evaluation = View): Category = new Category {
+    def apply(t: Traversal, a: ElementAccess = Readable, e: Evaluation = View) = new Category {
         override def traversal = t
         override def elementAccess = a
         override def evaluation = e
@@ -99,19 +92,18 @@ object Category {
     val Strict = new Strict{}
 
 
-    trait RequiresException
-    case class RequiresIterableException extends RequiresException
-    case class RequiresRandomAccessException extends RequiresException
+    class RequiresException(msg: String) extends RuntimeException(msg)
+    class RequiresReactiveException(msg: String) extends RequiresException(msg)
+    class RequiresIterableException(msg: String) extends RequiresReactiveException(msg)
+    class RequiresRandomAccessException(msg: String) extends RequiresIterableException(msg)
 
 }
 
 
+/*
+case class Category(traversal: Category.Traversal,
+    elementAccess: Category.ElementAccess, evaluation: Category.Evaluation)
 
-
-
-
-
-
-
-
+    Categery(CategoryReactive(), _, _)
+*/
 
