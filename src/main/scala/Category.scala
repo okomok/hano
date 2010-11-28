@@ -17,15 +17,16 @@ trait Category {
     final def <:<(that: Category.ElementAccess): Boolean = elementAccess <:< that
     final def <:<(that: Category.Evaluation): Boolean = evaluation <:< that
 
-    final def isReactive: Boolean = true
-    final def isIterable: Boolean = this <:< Category.Iterable
-    final def isRandomAccess: Boolean = this <:< Category.RandomAccess
-    final def isView: Boolean = this <:< Category.View
-    final def isWritable: Boolean = this <:< Category.Writable
+    final def upper(that: Category) = new Category {
+        override def traversal = if (traversal <:< that.traversal) that.traversal else traversal
+        override def elementAccess = if (elementAccess <:< that.elementAccess) that.elementAccess else elementAccess
+        override def evaluation = if (evaluation <:< that.evaluation) that.evaluation else evaluation
+    }
 }
 
 
 object Category {
+
 
     def apply(t: Traversal, a: ElementAccess = Readable, e: Evaluation = View) = new Category {
         override def traversal = t
@@ -82,15 +83,22 @@ object Category {
 // Evaluation
 
     sealed abstract class Evaluation {
-        final def <:<(that: Evaluation): Boolean = this eq that
+        protected def order: Int
+        final def <:<(that: Evaluation): Boolean = order <= that.order
     }
 
     sealed abstract class View extends Evaluation
-    val View = new View{}
+    val View = new View {
+        override protected def order = 0
+    }
 
     sealed abstract class Strict extends Evaluation
-    val Strict = new Strict{}
+    val Strict = new Strict {
+        override protected def order = -1
+    }
 
+
+// Exception
 
     class RequiresException(msg: String) extends RuntimeException(msg)
     class RequiresReactiveException(msg: String) extends RequiresException(msg)
