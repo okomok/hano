@@ -1,6 +1,6 @@
 
 
-// Copyright Shunsuke Sogame 2008-2010.
+// Copyright Shunsuke Sogame 2010.
 // Distributed under the terms of an MIT-style license.
 
 
@@ -13,8 +13,8 @@ object Seq
 
 trait Seq[+A] extends { self =>
 
-    def forloop(f: A => Unit, q: Exit => Unit)
+    def forloop(f: A => Any, q: Exit => Any)
 
-    final def foreach(f: A => Unit) = forloop(f, _ => ())
+    final def foreach(f: A => Any) = forloop(f, _ => ())
 
 }

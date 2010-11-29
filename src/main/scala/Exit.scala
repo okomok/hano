@@ -1,6 +1,6 @@
 
 
-// Copyright Shunsuke Sogame 2008-2010.
+// Copyright Shunsuke Sogame 2010.
 // Distributed under the terms of an MIT-style license.
 
 
@@ -14,10 +14,10 @@ sealed abstract class Exit
 object Exit {
 
     case object End extends Exit
-    case object Closed extends Exit
+    // case object Closed extends Exit
     case class Thrown(what: Throwable) extends Exit
 
-    def tryCatch(q: Exit => Unit)(body: => Unit) {
+    def tryCatch(q: Exit => Any)(body: => Any) {
         try {
             body
         } catch {
