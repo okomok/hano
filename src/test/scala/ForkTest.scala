@@ -24,7 +24,7 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
             fork{r => r}.
             start
 
-        assertEquals(hano.util.Iterable(2,11,4,12,6,13,8,14,10,15,12,16), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(2,11,4,12,6,13,8,14,10,15,12,16), hano.util.Vector.from(out))
     }
 
     def testDoing: Unit = {
@@ -35,6 +35,6 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
             react(e => out.add(e + 10)).
             start
 
-        assertEquals(hano.util.Iterable(2,11,4,12,6,13,8,14,10,15,12,16), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(2,11,4,12,6,13,8,14,10,15,12,16), hano.util.Vector.from(out))
     }
 }

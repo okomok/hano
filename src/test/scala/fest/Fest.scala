@@ -5,8 +5,8 @@
 // Distributed under the terms of an MIT-style license.
 
 
-package com.github.okomok.madatest
-package sequencetest.reactivetest.festtest
+package com.github.okomok.hanotest
+package festtest
 
 
 abstract class FestTestNGSuite extends

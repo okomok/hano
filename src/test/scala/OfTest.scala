@@ -18,6 +18,6 @@ class OfTest extends org.scalatest.junit.JUnit3Suite {
         val a = hano.Seq(1,2,3,4,5)
         val out = new java.util.ArrayList[Int]
         a.foreach(e => out.add(e))
-        assertEquals(hano.util.Iterable(1,2,3,4,5), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(1,2,3,4,5), hano.util.Vector.from(out))
     }
 }

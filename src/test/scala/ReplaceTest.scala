@@ -17,18 +17,18 @@ class ReplaceTest extends org.scalatest.junit.JUnit3Suite {
 
     def testLonger: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).replace(hano.util.Iterable(9,8,7,6,5,4,3))) {
+        for (x <- hano.Seq(0,1,2,3,4).replace(hano.util.Vector(9,8,7,6,5,4,3))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iterable(9,8,7,6,5), hano.util.Iterable.from(s))
+        assertEquals(hano.util.Vector(9,8,7,6,5), hano.util.Vector.from(s))
     }
 
     def testShorter: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).replace(hano.util.Iterable(9,8))) {
+        for (x <- hano.Seq(0,1,2,3,4).replace(hano.util.Vector(9,8))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iterable(9,8,2,3,4), hano.util.Iterable.from(s))
+        assertEquals(hano.util.Vector(9,8,2,3,4), hano.util.Vector.from(s))
     }
 
     def testEmpty: Unit = {
@@ -36,7 +36,7 @@ class ReplaceTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- hano.Seq(0,1,2,3,4).replace(hano.util.Iterable.emptyOf[Int])) {
             s.add(x)
         }
-        assertEquals(hano.util.Iterable(0,1,2,3,4), hano.util.Iterable.from(s))
+        assertEquals(hano.util.Vector(0,1,2,3,4), hano.util.Vector.from(s))
     }
 
     def testInfinite: Unit = {
@@ -44,15 +44,15 @@ class ReplaceTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- hano.Seq(0,1,2,3,4).generate(hano.util.Iterable.repeat(9))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iterable(9,9,9,9,9), hano.util.Iterable.from(s))
+        assertEquals(hano.util.Vector(9,9,9,9,9), hano.util.Vector.from(s))
     }
 
     def testRegion1: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).replaceRegion(2,4,hano.util.Iterable(9,8,7,6,5,4,3))) {
+        for (x <- hano.Seq(0,1,2,3,4).replaceRegion(2,4,hano.util.Vector(9,8,7,6,5,4,3))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iterable(0,1,9,8,4), hano.util.Iterable.from(s))
+        assertEquals(hano.util.Vector(0,1,9,8,4), hano.util.Vector.from(s))
     }
 
 }

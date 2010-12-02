@@ -22,7 +22,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         rx := 5
         rx := 4
         rx := 6
-        assertEquals(hano.util.Iterable(12,5,4,6), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(12,5,4,6), hano.util.Vector.from(out))
     }
 
     def testTrivial2 {
@@ -32,7 +32,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         rx := 5
         rx := 4
         rx := 6
-        assertEquals(hano.util.Iterable(5,4,6), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(5,4,6), hano.util.Vector.from(out))
     }
 /* rejected
     def testTrivial3 {
@@ -43,7 +43,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         rx := 5
         rx := 4
         rx := 6
-        assertEquals(hano.util.Iterable(12, 5,4,6), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(12, 5,4,6), hano.util.Vector.from(out))
     }
 
     def testTrivial4 {
@@ -54,13 +54,13 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         rx := 5
         rx := 4
         rx := 6
-        assertEquals(hano.util.Iterable(12, 5,4,6), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(12, 5,4,6), hano.util.Vector.from(out))
     }
 */
     def testParallel: Unit = {
     //    for (_ <- 0 to 30) {
-            val src = new IntSenders(hano.util.Iterable(1,2,3,4,5,6,7,8,9,10), hano.util.Iterable(7,7,7,7,7,7,7,7,7,7))
-            val dst = new IntReceiver(hano.util.Iterable(1,2,3,4,5,6,7,7,7,7,7,7,7,7,7,7,7,8,9,10,10))
+            val src = new IntSenders(hano.util.Vector(1,2,3,4,5,6,7,8,9,10), hano.util.Vector(7,7,7,7,7,7,7,7,7,7))
+            val dst = new IntReceiver(hano.util.Vector(1,2,3,4,5,6,7,7,7,7,7,7,7,7,7,7,7,8,9,10,10))
             val rx = new hano.Var[Int](10)
             rx.foreach(dst)
             src(0).foreach(rx.:=)
@@ -77,12 +77,12 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a; y <- b) {
             out.add(x + y)
         }
-        assertEquals(hano.util.Iterable(3), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(3), hano.util.Vector.from(out))
         a := 7
         b := 35
         b := 36
         a := 8
-        assertEquals(hano.util.Iterable(3,9,42,43,44), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(3,9,42,43,44), hano.util.Vector.from(out))
     }
 
     def testSignal2 {
@@ -95,7 +95,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
             foreach{ sum => out.add(sum) }
         a := 7
         b := 35
-        assertEquals(hano.util.Iterable(3,42), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(3,42), hano.util.Vector.from(out))
     }
 
     def testSignal3 {
@@ -106,34 +106,34 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a; y <- b; z <- c) {
             out.add(x + y + z)
         }
-        assertEquals(hano.util.Iterable.emptyOf[Int], hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Iterable.emptyOf[Int], hano.util.Vector.from(out)); out.clear
 
         b := 2
-        assertEquals(hano.util.Iterable(1+2+3), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(1+2+3), hano.util.Vector.from(out)); out.clear
 
         a := 2
-        assertEquals(hano.util.Iterable(2+2+3), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+2+3), hano.util.Vector.from(out)); out.clear
 
         b := 1
-        assertEquals(hano.util.Iterable(2+1+3), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+1+3), hano.util.Vector.from(out)); out.clear
 
         c := 4
-        assertEquals(hano.util.Iterable(2+1+4), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+1+4), hano.util.Vector.from(out)); out.clear
 
         b := 5
-        assertEquals(hano.util.Iterable(2+5+4), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+5+4), hano.util.Vector.from(out)); out.clear
 
         c := 7
-        assertEquals(hano.util.Iterable(2+5+7), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+5+7), hano.util.Vector.from(out)); out.clear
 
         a := 8
-        assertEquals(hano.util.Iterable(8+5+7), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(8+5+7), hano.util.Vector.from(out)); out.clear
 
         a := 9
-        assertEquals(hano.util.Iterable(9+5+7), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(9+5+7), hano.util.Vector.from(out)); out.clear
 
         c := 3
-        assertEquals(hano.util.Iterable(9+5+3), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(9+5+3), hano.util.Vector.from(out)); out.clear
     }
 
     def testTwice {
@@ -143,23 +143,23 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a; y <- b) {
             out.add(x + y)
         }
-        assertEquals(hano.util.Iterable(3), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(3), hano.util.Vector.from(out))
         a := 7
         b := 35
         b := 36
         a := 8
-        assertEquals(hano.util.Iterable(3,9,42,43,44), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(3,9,42,43,44), hano.util.Vector.from(out))
 
         // reset foreach.
         out.clear
         for (x <- a; y <- b) {
             out.add(x - y)
         }
-        assertEquals(hano.util.Iterable(8 - 36), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(8 - 36), hano.util.Vector.from(out)); out.clear
         a := 3
-        assertEquals(hano.util.Iterable(3 - 36), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(3 - 36), hano.util.Vector.from(out)); out.clear
         b := 5
-        assertEquals(hano.util.Iterable(3 - 5), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(3 - 5), hano.util.Vector.from(out)); out.clear
     }
 
     def testCps {
@@ -174,33 +174,33 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
             val z = each(c)
             out.add(x + y + z)
         }
-        assertEquals(hano.util.Iterable.emptyOf[Int], hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Iterable.emptyOf[Int], hano.util.Vector.from(out)); out.clear
 
         b := 2
-        assertEquals(hano.util.Iterable(1+2+3), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(1+2+3), hano.util.Vector.from(out)); out.clear
 
         a := 2
-        assertEquals(hano.util.Iterable(2+2+3), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+2+3), hano.util.Vector.from(out)); out.clear
 
         b := 1
-        assertEquals(hano.util.Iterable(2+1+3), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+1+3), hano.util.Vector.from(out)); out.clear
 
         c := 4
-        assertEquals(hano.util.Iterable(2+1+4), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+1+4), hano.util.Vector.from(out)); out.clear
 
         b := 5
-        assertEquals(hano.util.Iterable(2+5+4), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+5+4), hano.util.Vector.from(out)); out.clear
 
         c := 7
-        assertEquals(hano.util.Iterable(2+5+7), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(2+5+7), hano.util.Vector.from(out)); out.clear
 
         a := 8
-        assertEquals(hano.util.Iterable(8+5+7), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(8+5+7), hano.util.Vector.from(out)); out.clear
 
         a := 9
-        assertEquals(hano.util.Iterable(9+5+7), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(9+5+7), hano.util.Vector.from(out)); out.clear
 
         c := 3
-        assertEquals(hano.util.Iterable(9+5+3), hano.util.Iterable.from(out)); out.clear
+        assertEquals(hano.util.Vector(9+5+3), hano.util.Vector.from(out)); out.clear
     }
 }

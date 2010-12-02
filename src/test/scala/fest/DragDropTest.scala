@@ -4,8 +4,8 @@
 // Distributed under the terms of an MIT-style license.
 
 
-package com.github.okomok.madatest
-package sequencetest.reactivetest.festtest
+package com.github.okomok.hanotest
+package festtest
 package dragdroptest
 
 
@@ -16,7 +16,6 @@ import org.fest.swing.core.ComponentDragAndDrop
 import javax.swing
 
 import com.github.okomok.hano
-import mada.util.|<
 import hano.Seq
 
 import scala.util.continuations
@@ -81,7 +80,9 @@ class DragDropTest extends
     override protected def onSetUp {
         val jf = hano.eval.InEdt {
             val jf = new swing.JFrame("DragDropTest")
-            val jl = new swing.JLabel("Drag") |< (_.setName("Drag")) |< (jf.getContentPane.add(_))
+            val jl = new swing.JLabel("Drag")
+            jl.setName("Drag")
+            jf.getContentPane.add(jl)
 
             hano.block { * =>
                 val mouse = hano.Swing.Mouse(jl)

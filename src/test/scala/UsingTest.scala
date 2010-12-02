@@ -45,7 +45,7 @@ class UsingTest extends org.scalatest.junit.JUnit3Suite {
 
         assertTrue(thrown)
         assertTrue(autoEnd)
-        assertEquals(hano.util.Iterable(14,15,16,17), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(14,15,16,17), hano.util.Vector.from(out))
     }
 
     def testUsed {
@@ -80,6 +80,6 @@ class UsingTest extends org.scalatest.junit.JUnit3Suite {
 
         assertTrue(thrown)
         assertTrue(autoEnd)
-        assertEquals(hano.util.Iterable(10, 12), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(10, 12), hano.util.Vector.from(out))
     }
 }

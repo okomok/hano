@@ -36,7 +36,7 @@ class DropUntilTest extends org.scalatest.junit.JUnit3Suite {
         b ! "go"
         a ! 4
         a ! 5
-        assertEquals(hano.util.Iterable(4,5), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(4,5), hano.util.Vector.from(out))
     }
 
 }

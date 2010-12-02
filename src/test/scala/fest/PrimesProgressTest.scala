@@ -4,8 +4,8 @@
 // Distributed under the terms of an MIT-style license.
 
 
-package com.github.okomok.madatest
-package sequencetest.reactivetest.festtest
+package com.github.okomok.hanotest
+package festtest
 package sampleprogresstest
 
 
@@ -28,7 +28,7 @@ class PrimesProgressGuiTest
     private val gate = new java.util.concurrent.CountDownLatch(1)
 
     // See: http://haskell.org/haskellwiki/Prime_numbers
-    val primes: List[Int] = 2 :: 3 :: List.iterate(5)(n => n + 2).filter(isPrime(_))
+    val primes = 2 #:: 3 #:: Stream.iterate(5)(n => n + 2).filter(isPrime(_))
     def isPrime(n: Int): Boolean = primes.tail.takeWhile(p => p*p <= n).forall(notDivs(n, _))
     def notDivs(n: Int, p: Int): Boolean = n % p != 0
 

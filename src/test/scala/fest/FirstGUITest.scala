@@ -4,10 +4,11 @@
 // Distributed under the terms of an MIT-style license.
 
 
-package com.github.okomok.madatest
-package sequencetest.reactivetest.festtest.firstguitest
+package com.github.okomok.hanotest
+package festtest.firstguitest
 
 
+/*
 import org.testng.annotations._
 import org.fest.swing.edt
 import org.fest.swing.fixture.FrameFixture
@@ -15,7 +16,6 @@ import javax.swing
 import com.github.okomok.hano.sequence.reactive
 
 
-/*
 class MyFrame extends swing.JFrame {
     val panel = new swing.JPanel
     panel.setLayout(new swing.BoxLayout(panel, swing.BoxLayout.PAGE_AXIS))

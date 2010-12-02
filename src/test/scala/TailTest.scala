@@ -17,7 +17,7 @@ class TailTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
         hano.Seq(0,1,2,3,4).tail.foreach(s.add(_))
-        assertEquals(hano.util.Iterable(1,2,3,4), hano.util.Iterable.from(s))
+        assertEquals(hano.util.Vector(1,2,3,4), hano.util.Vector.from(s))
     }
 
     def testEmpty: Unit = {

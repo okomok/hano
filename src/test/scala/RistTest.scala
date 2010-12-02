@@ -22,7 +22,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         rx add 5
         rx add 4
         rx add 6
-        assertEquals(hano.util.Iterable(12,13,5,4,6), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(12,13,5,4,6), hano.util.Vector.from(out))
     }
 
     def testTrivial2 {
@@ -32,13 +32,13 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         rx add 5
         rx add 4
         rx add 6
-        assertEquals(hano.util.Iterable(5,4,6), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(5,4,6), hano.util.Vector.from(out))
     }
 /*
     def testParallel: Unit = {
     //    for (_ <- 0 to 30) {
-            val src = new IntSenders(hano.util.Iterable(1,2,3,4,5,6,7,8,9,10), hano.util.Iterable(7,7,7,7,7,7,7,7,7,7))
-            val dst = new IntReceiver(hano.util.Iterable(1,2,3,4,5,6,7,7,7,7,7,7,7,7,7,7,7,8,9,10,10))
+            val src = new IntSenders(hano.util.Vector(1,2,3,4,5,6,7,8,9,10), hano.util.Vector(7,7,7,7,7,7,7,7,7,7))
+            val dst = new IntReceiver(hano.util.Vector(1,2,3,4,5,6,7,7,7,7,7,7,7,7,7,7,7,8,9,10,10))
             val rx = hano.Rist[Int](10)
             rx.foreach(dst)
             src(0).foreach(rx.add)
@@ -57,7 +57,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         }
         a add 7
         b add 35
-        assertEquals(hano.util.Iterable(3,9,36,42), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(3,9,36,42), hano.util.Vector.from(out))
 
     }
 
@@ -71,7 +71,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
             foreach{ sum => out.add(sum) }
         a add 7
         b add 35
-        assertEquals(hano.util.Iterable(3,42), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(3,42), hano.util.Vector.from(out))
     }
 
     def testSignal3 {
@@ -81,11 +81,11 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a; y <- b) {
             out.add(x + y)
         }
-        assertEquals(hano.util.Iterable(5,6,6,7,7,8), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8), hano.util.Vector.from(out))
         a add 7
-        assertEquals(hano.util.Iterable(5,6,6,7,7,8,11,12), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12), hano.util.Vector.from(out))
         b add 35
-        assertEquals(hano.util.Iterable(5,6,6,7,7,8,11,12,36,37,38,42), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12,36,37,38,42), hano.util.Vector.from(out))
     }
 
 
@@ -96,24 +96,24 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a; y <- b) {
             out.add(x + y) //  old listner
         }
-        assertEquals(hano.util.Iterable(5,6,6,7,7,8), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8), hano.util.Vector.from(out))
         a add 7
-        assertEquals(hano.util.Iterable(5,6,6,7,7,8,11,12), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12), hano.util.Vector.from(out))
         b add 35
-        assertEquals(hano.util.Iterable(5,6,6,7,7,8,11,12,36,37,38,42), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12,36,37,38,42), hano.util.Vector.from(out))
 
         // now, a: 1,2,3,7, b:4,5,35
         out.clear
         for (x <- a; y <- b) {
             out.add(x * y)
         }
-        assertEquals(hano.util.Iterable(4,5,35, 8,10,70, 12,15,105, 28,35,35*7), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(4,5,35, 8,10,70, 12,15,105, 28,35,35*7), hano.util.Vector.from(out))
         out.clear
         a add 10 // now, a:1,2,3,7,10
-        assertEquals(hano.util.Iterable(14,15,35+10,  40,50,350), hano.util.Iterable.from(out)) // old listner still listen.
+        assertEquals(hano.util.Vector(14,15,35+10,  40,50,350), hano.util.Vector.from(out)) // old listner still listen.
         out.clear
         b add 30
-        assertEquals(hano.util.Iterable(31,32,33,37,  30,30*2,30*3,30*7,  30+10, 30*10), hano.util.Iterable.from(out))
+        assertEquals(hano.util.Vector(31,32,33,37,  30,30*2,30*3,30*7,  30+10, 30*10), hano.util.Vector.from(out))
 
     }
 }
