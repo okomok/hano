@@ -10,21 +10,29 @@ package hano
 
 sealed abstract class Exit
 
+case object End extends Exit
+
+case object Closed extends Exit // TODO?
+
+case class Thrown(what: Throwable) extends Exit
+
 
 object Exit {
 
-    case object End extends Exit
-    // case object Closed extends Exit
-    case class Thrown(what: Throwable) extends Exit
+     val End = hano.End
+     val Closed = hano.Closed
+     val Thrown = hano.Thrown
+    type Thrown = hano.Thrown
 
-    def tryCatch(q: Exit => Any)(body: => Any) {
+    def tryCatch(k: Exit => Unit)(body: => Unit) {
         try {
             body
         } catch {
             case t: Throwable => {
-                q(Thrown(t))
+                k(Thrown(t))
                 throw t
             }
         }
     }
+
 }
