@@ -192,6 +192,15 @@ trait Seq[+A] extends java.io.Closeable {
 
 // conversion
 
+    @Annotation.conversion @Annotation.pre("synchronous")
+    def toIterable: scala.collection.Iterable[A] = {
+        val that = new java.util.ArrayList[A]
+        for (x <- this) {
+            that.add(x)
+        }
+        util.Iterable.from(that)
+    }
+
     @Annotation.conversion
     def toResponder: Responder[A] = new ToResponder(this)
 
@@ -291,7 +300,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Retrieves adjacent sequences.
      */
-    def adjacent(n: Int): Seq[scala.collection.IndexedSeq[A]] = new Adjacent(this, n)
+    def adjacent(n: Int): Seq[scala.collection.immutable.IndexedSeq[A]] = new Adjacent(this, n)
 
     /**
      * Replaces elements by those of `it`. The length of this sequence never becomes longer.

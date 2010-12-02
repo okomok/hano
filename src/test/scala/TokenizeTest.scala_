@@ -1,0 +1,28 @@
+
+
+// Copyright Shunsuke Sogame 2010.
+// Distributed under the terms of an MIT-style license.
+
+
+package com.github.okomok.hanotest
+
+
+import com.github.okomok.hano
+
+import junit.framework.Assert._
+import mada.Peg
+import mada.sequence.scala.collection.immutable.Vector
+
+
+class TokenizeTest extends org.scalatest.junit.JUnit3Suite {
+
+    def testTrivial {
+        val r = hano.Seq.from(scala.collection.immutable.Vector.from("XXabcdXXabcdXX"))
+        val out = new java.util.ArrayList[String]
+        for (t <- r.tokenize(Peg.from("abcd"))) {
+            out.add(t.stringize) // needs copy(to string or something).
+        }
+        assertEquals(scala.collection.immutable.Vector.Of("abcd", "abcd"), scala.collection.immutable.Vector.from(out))
+    }
+
+}

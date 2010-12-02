@@ -62,7 +62,7 @@ trait Forwarder[A] extends Seq[A] with scala.Proxy {
     override def catching(f: PartialFunction[Throwable, Unit]): Seq[A] = around(delegate.catching(f))
     override def using(c: java.io.Closeable): Seq[A] = around(delegate.using(c))
     override def protect: Seq[A] = around(delegate.protect)
-    override def adjacent(n: Int): Seq[scala.collection.IndexedSeq[A]] = around(delegate.adjacent(n))
+    override def adjacent(n: Int): Seq[scala.collection.immutable.IndexedSeq[A]] = around(delegate.adjacent(n))
     override def generate[B](it: scala.collection.Iterable[B]): Seq[B] = around(delegate.generate(it))
     override def replace[B >: A](it: scala.collection.Iterable[B]): Seq[B] = around(delegate.replace(it))
     override def replaceRegion[B >: A](n: Int, m: Int, it: scala.collection.Iterable[B]): Seq[B] = around(delegate.replaceRegion(n, m, it))

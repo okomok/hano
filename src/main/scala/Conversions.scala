@@ -14,10 +14,52 @@ private[hano] trait Conversions { self: Seq.type =>
     def from[A](that: Seq[A]): Seq[A] = that
 
     implicit def fromArray[A](from: Array[A]): Seq[A] = new FromArray(from)
+    implicit def fromJIterable[A](from: java.lang.Iterable[A]) = new FromTraversable(util.Iterable.from(from))
     implicit def fromTraversable[A](from: scala.collection.Traversable[A]): Seq[A] = new FromTraversable(from)
     implicit def fromOption[A](from: Option[A]): Seq[A] = new FromOption(from)
     implicit def fromResponder[A](from: Responder[A]): Seq[A] = new FromResponder(from)
     implicit def fromReactor(from: Reactor): Seq[Any] = new Reactor.Secondary(from)
     /*implicit*/ def fromCps[A](from: => A @scala.util.continuations.suspendable): Seq[A] = new FromCps(from)
 
+}
+
+
+private class FromArray[A](_1: Array[A]) extends Forwarder[A] {
+    override protected val delegate = Seq.from(_1)
+}
+
+
+private class FromTraversable[A](_1: scala.collection.Traversable[A]) extends Seq[A] {
+    override def forloop(f: A => Unit, k: Exit => Unit) {
+        Exit.tryCatch(k) {
+            _1.foreach(f)
+        }
+        k(End)
+    }
+}
+
+
+private class FromOption[A](_1: Option[A]) extends Seq[A] {
+    override def forloop(f: A => Unit, k: Exit => Unit) {
+        Exit.tryCatch(k) {
+            if (!_1.isEmpty) {
+                f(_1.get)
+            }
+        }
+        k(End)
+    }
+}
+
+
+private class FromResponder[A](_1: Responder[A]) extends Seq[A] {
+    override def forloop(f: A => Unit, k: Exit => Unit) {
+        Exit.tryCatch(k) {
+            _1.respond(f)
+        }
+        k(End)
+    }
+}
+
+private class ToResponder[A](_1: Seq[A]) extends Responder[A] {
+    override def respond(f: A => Unit) = _1.foreach(f)
 }

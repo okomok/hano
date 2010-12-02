@@ -7,12 +7,18 @@
 import sbt._
 
 
-class Hano(info: ProjectInfo) extends DefaultProject(info) {
+class Hano(info: ProjectInfo) extends DefaultProject(info) with AutoCompilerPlugins {
+    val continuations = compilerPlugin("org.scala-lang.plugins" % "continuations" % buildScalaVersion)
+
     val junit = "junit" % "junit" % "4.4" % "test"
     val scalatest = "org.scalatest" % "scalatest" % "1.2" % "test"
+    val testng = "org.testng" % "testng" % "5.14" % "test"
+    val fest = "org.easytesting" % "fest-swing" % "1.2" % "test"
+    val festng = "org.easytesting" % "fest-swing-testng" % "1.2" % "test"
+    val festRelease = "fest release" at "http://repository.codehaus.org"
 
     override def compileOptions = super.compileOptions ++
-        Seq(Deprecation, Unchecked/*, ExplainTypes*/)
+        Seq(Deprecation, Unchecked/*, ExplainTypes*/) ++ compileOptions("-P:continuations:enable")
 
     override def managedStyle = ManagedStyle.Maven
     override def pomExtra =
