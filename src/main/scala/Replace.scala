@@ -21,7 +21,7 @@ private class Replace[A](_1: Seq[A], _2: scala.collection.Iterable[A]) extends S
             } else {
                 f(x)
             }
-        } _then {
+        } _andThen {
             k
         }
     }

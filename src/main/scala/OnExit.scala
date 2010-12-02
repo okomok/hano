@@ -13,7 +13,7 @@ private class OnExit[A](_1: Seq[A], _2: Exit => Unit) extends Seq[A] {
     override def forloop(f: A => Unit, k: Exit => Unit) {
         _1 _for { x =>
             f(x)
-        } _then { q =>
+        } _andThen { q =>
             _2(q)
             k(q)
         }

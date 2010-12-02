@@ -18,7 +18,7 @@ private class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
             lock.synchronized {
                 f(x)
             }
-        } _then { q =>
+        } _andThen { q =>
             lock.synchronized {
                 _k(q)
             }
@@ -28,7 +28,7 @@ private class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
             lock.synchronized {
                 f(y)
             }
-        } _then { q =>
+        } _andThen { q =>
             lock.synchronized {
                 _k(q)
             }

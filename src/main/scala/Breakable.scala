@@ -14,7 +14,7 @@ private class Breakable[A](_1: Seq[A]) extends Seq[Tuple2[A, Function0[Unit]]] {
         val _k = IfFirst[Exit] { q => k(q);close() } Else { _ => () }
         _1 _for { x =>
             f(x, () => _k(End))
-        } _then { q =>
+        } _andThen { q =>
             _k(q)
         }
     }

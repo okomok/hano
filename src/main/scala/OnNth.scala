@@ -18,7 +18,7 @@ private class OnHead[A](_1: Seq[A], _2: A => Unit) extends Seq[A] {
                 _2(x)
             }
             f(x)
-        } _then {
+        } _andThen {
             k
         }
     }

@@ -23,7 +23,7 @@ private class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) exte
                     }
                 }
             }
-        } _then {
+        } _andThen {
             k
         }
     }

@@ -24,7 +24,7 @@ private class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
             if (c == _2) {
                 c = 0
             }
-        } _then {
+        } _andThen {
             k
         }
     }
@@ -43,7 +43,7 @@ private class StepTime[A](_1: Seq[A], _2: Long) extends Seq[A] {
                 past = now
                 f(x)
             }
-        } _then {
+        } _andThen {
             k
         }
     }

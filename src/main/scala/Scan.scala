@@ -16,7 +16,7 @@ private class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends Seq[B] 
         _1 _for { x =>
             acc = _3(acc, x)
             f(acc)
-        } _then {
+        } _andThen {
             k
         }
     }
@@ -34,7 +34,7 @@ private class ScanLeft1[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends Seq[B] {
                 acc = Some(_3(acc.get, x))
             }
             f(acc.get)
-        } _then {
+        } _andThen {
             k
         }
     }

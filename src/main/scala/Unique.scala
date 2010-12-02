@@ -22,7 +22,7 @@ private class UniqueBy[A](_1: Seq[A], _2: (A, A) => Boolean) extends Seq[A] {
                 f(x)
             }
             prev = Some(x)
-        } _then {
+        } _andThen {
             k
         }
     }

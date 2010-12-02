@@ -23,7 +23,7 @@ private class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
             for (x <- s) {
                 f(x)
             }
-        } _then {
+        } _andThen {
             k
         }
     }

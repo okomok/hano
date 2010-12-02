@@ -16,7 +16,7 @@ private class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         _2 _for { y =>
             go = false
             _k(End)
-        } _then { q =>
+        } _andThen { q =>
             _k(q)
         }
         _1 _for { x =>
@@ -25,7 +25,7 @@ private class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
             } else {
                 _k(End)
             }
-        } _then { q =>
+        } _andThen { q =>
             _k(q)
         }
     }

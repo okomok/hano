@@ -18,7 +18,7 @@ private class Tail[A](_1: Seq[A]) extends Seq[A] {
             } else {
                 f(x)
             }
-        } _then {
+        } _andThen {
             k
         }
     }

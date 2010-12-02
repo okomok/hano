@@ -21,7 +21,7 @@ private class Adjacent[A](_1: Seq[A], _2: Int) extends Seq[IndexedSeq[A]] {
                 f(buf.toIndexedSeq)
                 buf.removeFirst()
             }
-        } _then {
+        } _andThen {
             k
         }
     }

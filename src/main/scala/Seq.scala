@@ -14,14 +14,14 @@ import scala.util.continuations
 object Seq extends Conversions with PseudoMethods {
 
     /**
-     * The empty sequence
-     */
-    val empty: Seq[Nothing] = new Empty()
-
-    /**
      * Creates a sequence initially containing the specified elements.
      */
     def apply[A](from: A*): Seq[A] = from
+
+    /**
+     * The empty sequence
+     */
+    val empty: Seq[Nothing] = new Empty()
 
     /**
      * A single-element sequence
@@ -36,7 +36,7 @@ object Seq extends Conversions with PseudoMethods {
     /**
      * Turns into a by-name expression.
      */
-    def byName[A](r: => Seq[A]): Seq[A] = new ByName(r)
+    def byName[A](xs: => Seq[A]): Seq[A] = new ByName(xs)
 
     @Annotation.equivalentTo("from(util.optional(body))")
     def optional[A](body: => A): Seq[A] = from {
@@ -89,7 +89,7 @@ trait Seq[+A] extends java.io.Closeable {
 
     private[hano]
     sealed class _ForThen(f: A => Unit) {
-        def _then(k: Exit => Unit): Unit = forloop(f, k)
+        def _andThen(k: Exit => Unit): Unit = forloop(f, k)
     }
 
 

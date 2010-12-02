@@ -34,7 +34,7 @@ private class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                     }
                 }
             }
-        } _then { q =>
+        } _andThen { q =>
             lock.synchronized {
                 invariant
                 ends1 = true
@@ -55,7 +55,7 @@ private class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                     }
                 }
             }
-        } _then { q =>
+        } _andThen { q =>
             lock.synchronized {
                 invariant
                 ends2 = true

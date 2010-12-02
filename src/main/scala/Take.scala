@@ -24,7 +24,7 @@ private class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
                         _k(End)
                     }
                 }
-            } _then { q =>
+            } _andThen { q =>
                 _k(q)
             }
         }

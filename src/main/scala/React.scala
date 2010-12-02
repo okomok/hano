@@ -14,7 +14,7 @@ private class React[A](_1: Seq[A], _2: A => Unit) extends Seq[A] {
         _1 _for { x =>
             _2(x)
             f(x)
-        } _then {
+        } _andThen {
             k
         }
     }
@@ -28,7 +28,7 @@ private class ReactMatch[A](_1: Seq[A], _2: PartialFunction[A, Unit]) extends Se
                 _2(x)
             }
             f(x)
-        } _then {
+        } _andThen {
             k
         }
     }

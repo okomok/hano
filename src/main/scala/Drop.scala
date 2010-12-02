@@ -20,7 +20,7 @@ private class Drop[A](_1: Seq[A], _2: Int) extends Seq[A] {
             } else {
                 c -= 1
             }
-        } _then {
+        } _andThen {
             k
         }
     }

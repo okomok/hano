@@ -23,7 +23,7 @@ private class Generate[A](_1: Seq[_], _2: scala.collection.Iterable[A]) extends 
                         _k(End)
                     }
                 }
-            } _then { q =>
+            } _andThen { q =>
                 _k(q)
             }
         }

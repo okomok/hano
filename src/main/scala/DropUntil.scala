@@ -24,7 +24,7 @@ private class DropUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
                 g()
                 f(x)
             }
-        } _then {
+        } _andThen {
             k
         }
     }

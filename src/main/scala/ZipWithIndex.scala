@@ -15,7 +15,7 @@ private class ZipWithIndex[A](_1: Seq[A]) extends Seq[(A, Int)] {
         _1 _for { x =>
             f(x, i)
             i += 1
-        } _then {
+        } _andThen {
             k
         }
     }

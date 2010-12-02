@@ -15,7 +15,7 @@ private class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
             for (y <- _2(x)) {
                 f(y)
             }
-        } _then {
+        } _andThen {
             k
         }
     }

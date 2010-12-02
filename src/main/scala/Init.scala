@@ -17,7 +17,7 @@ private class Init[A](_1: Seq[A]) extends Seq[A] {
                 f(prev.get)
             }
             prev = Some(x)
-        } _then {
+        } _andThen {
             k
         }
     }

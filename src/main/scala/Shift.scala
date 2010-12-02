@@ -13,7 +13,7 @@ private class Shift[A](_1: Seq[A], _2: (=> Unit) => Unit) extends Seq[A] {
     override def forloop(f: A => Unit, k: Exit => Unit) {
         _1 _for { x =>
             _2{f(x)}
-        } _then { q =>
+        } _andThen { q =>
             _2{k(q)}
         }
     }
@@ -24,7 +24,7 @@ private class ShiftReact[A](_1: Seq[A], _2: A => (A => Unit) => Unit) extends Se
     override def forloop(f: A => Unit, k: Exit => Unit) {
         _1 _for { x =>
             _2(x)(f)
-        } _then {
+        } _andThen {
             // FIXEME how to shift k?
             k
         }
