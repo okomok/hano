@@ -12,13 +12,17 @@ import hano.Annotation
 import scala.collection.{Iterator, Iterable => Result, JavaConversions}
 
 
+@deprecated("use Iter instead")
 object Iterable {
 
     def apply[A](xs: A*): Result[A] = xs
 
     def from[A](that: Result[A]): Result[A] = that
 
-    def from[A](from: java.lang.Iterable[A]): Result[A] = _Iterable.fromJIterable(from)
+    def from[A](from: java.lang.Iterable[A]): Result[A] = {
+        import JavaConversions._
+        from
+    }
 
     def emptyOf[A]: Result[A] = Result.empty
 
@@ -43,12 +47,5 @@ object Iterable {
             override def next = if (hasnext) { hasnext = false; y } else Iterator.empty.next
         } )
     }
-
-}
-
-private object _Iterable {
-
-    import JavaConversions._
-    def fromJIterable[A](from: java.lang.Iterable[A]): Result[A] = from
 
 }

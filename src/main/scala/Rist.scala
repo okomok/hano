@@ -9,7 +9,6 @@ package hano
 
 
 import java.util.ArrayList
-import scala.collection.JavaConversions._
 
 
 /**
@@ -20,7 +19,7 @@ final class Rist[A] extends Seq[A] {
     private[this] val outs = new ArrayList[A => Unit]
 
     override def forloop(f: A => Unit, k: Exit => Unit) {
-         for (x <- xs) {
+         for (x <- util.Iter.from(xs)) {
             f(x)
         }
         outs.add(f)
@@ -29,7 +28,7 @@ final class Rist[A] extends Seq[A] {
 
     def add(y: A) {
         xs.add(y)
-        for (out <- outs) {
+        for (out <- util.Iter.from(outs)) {
             out(y)
         }
     }

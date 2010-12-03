@@ -10,7 +10,6 @@ package hano
 
 import java.util.concurrent.CopyOnWriteArrayList
 import scala.actors.Actor
-import scala.collection.JavaConversions._
 
 
 /**
@@ -37,7 +36,9 @@ trait Reactor extends Actor {
                 }
                 case x => {
                     _f(x)
-                    _fs.foreach(_(x))
+                    for (f <- util.Iter.from(_fs)) {
+                        f(x)
+                    }
                 }
             }
         }

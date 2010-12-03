@@ -9,7 +9,6 @@ package hano
 
 
 import java.nio.channels.{Selector, SelectionKey, ClosedSelectorException}
-import scala.collection.JavaConversions._
 
 
 object Nio {
@@ -32,7 +31,7 @@ object Nio {
                     while (true) {
                         if (_2(_1) != 0) {
                             val keys = _1.selectedKeys
-                            for (key <- keys) {
+                            for (key <- util.Iter.from(keys)) {
                                 f(key.asInstanceOf[SelectionKey])
                             }
                             keys.clear()

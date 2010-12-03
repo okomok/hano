@@ -21,7 +21,7 @@ class MultiTest extends org.scalatest.junit.JUnit3Suite {
         rs.add(x => out.add(x+10))
         rs.add(x => out.add(x+20))
         val t = hano.Seq(4,5,1,3)
-        val k_ = t.foreach(hano.multi(rs))
+        val k_ = t.foreach(hano.multi(rs): Int => Unit)
         assertEquals(hano.util.Vector(14,24,15,25,11,21,13,23), hano.util.Vector.from(out))
     }
 

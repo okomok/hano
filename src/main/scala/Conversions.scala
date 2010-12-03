@@ -14,8 +14,8 @@ private[hano] trait Conversions { self: Seq.type =>
     def from[A](that: Seq[A]): Seq[A] = that
 
     implicit def fromArray[A](from: Array[A]): Seq[A] = new FromArray(from)
-    implicit def fromJIterable[A](from: java.lang.Iterable[A]) = new FromTraversable(util.Iterable.from(from))
-    implicit def fromTraversable[A](from: scala.collection.Traversable[A]): Seq[A] = new FromTraversable(from)
+    implicit def fromJIterable[A](from: java.lang.Iterable[A]): Seq[A] = new FromTraversableOnce(util.Iter.able(from.iterator))
+    implicit def fromTraversableOnce[A](from: scala.collection.TraversableOnce[A]): Seq[A] = new FromTraversableOnce(from)
     implicit def fromOption[A](from: Option[A]): Seq[A] = new FromOption(from)
     implicit def fromResponder[A](from: Responder[A]): Seq[A] = new FromResponder(from)
     implicit def fromReactor(from: Reactor): Seq[Any] = new Reactor.Secondary(from)
@@ -29,7 +29,7 @@ private class FromArray[A](_1: Array[A]) extends Forwarder[A] {
 }
 
 
-private class FromTraversable[A](_1: scala.collection.Traversable[A]) extends Seq[A] {
+private class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Seq[A] {
     override def forloop(f: A => Unit, k: Exit => Unit) {
         Exit.tryCatch(k) {
             _1.foreach(f)
