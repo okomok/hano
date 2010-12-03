@@ -305,17 +305,17 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Replaces elements by those of `it`. The length of this sequence never becomes longer.
      */
-    def generate[B](it: scala.collection.Iterable[B]): Seq[B] = new Generate(this, it)
+    def generate[B](it: util.Iter[B]): Seq[B] = new Generate(this, it)
 
     /**
      * Replaces elements by those of `it`. The length of this sequence never be changed.
      */
-    def replace[B >: A](it: scala.collection.Iterable[B]): Seq[B] = new Replace[B](this, it)
+    def replace[B >: A](it: util.Iter[B]): Seq[B] = new Replace[B](this, it)
 
     /**
      * Replaces elements by those of `it`. The length of this sequence never be changed.
      */
-    def replaceRegion[B >: A](n: Int, m: Int, it: scala.collection.Iterable[B]): Seq[B] = new ReplaceRegion[B](this, n, m, it)
+    def replaceRegion[B >: A](n: Int, m: Int, it: util.Iter[B]): Seq[B] = new ReplaceRegion[B](this, n, m, it)
 
     @Annotation.equivalentTo("replace(Stream.from(0))")
     def indices: Seq[Int] = new Indices(this)

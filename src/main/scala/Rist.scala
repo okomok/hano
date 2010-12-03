@@ -32,7 +32,7 @@ final class Rist[A] extends Seq[A] {
             out(y)
         }
     }
-    def addAll(ys: scala.collection.TraversableOnce[A]) {
+    def addAll(ys: util.Iter[A]) {
         for (y <- ys) {
             add(y)
         }

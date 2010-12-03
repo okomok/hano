@@ -11,33 +11,46 @@ package hano.util
 import scala.collection.JavaConversions
 
 
+sealed abstract class Iter[+A] {
+    def begin: scala.collection.Iterator[A]
+    def isEmpty = begin.isEmpty
+
+    def able = new scala.collection.Iterable[A] {
+        override def iterator = begin
+    }
+
+    def foreach(f: A => Unit): Unit = begin.foreach(f)
+}
+
+
 object Iter {
 
-    def apply[A](xs: A*): Iterator[A] = xs.iterator
+    def apply[A](xs: A*): Iter[A] = from(xs)
 
-    def from[A](that: Iterator[A]): Iterator[A] = that
+    @hano.Annotation.returnThat
+    def from[A](that: Iter[A]): Iter[A] = that
 
-    def from[A](from: java.util.Iterator[A]): Iterator[A] = {
+    implicit def fromSIterator[A](from: => scala.collection.Iterator[A]): Iter[A] = new Iter[A] {
+        override def begin = from
+    }
+
+    implicit def fromSIterable[A](from: scala.collection.Iterable[A]): Iter[A] = new Iter[A] {
+        override def begin = from.iterator
+    }
+
+    implicit def fromJIterator[A](from: => java.util.Iterator[A]): Iter[A] = new Iter[A] {
         import JavaConversions._
-        from
+        override def begin = from
     }
 
-    def from[A](from: java.lang.Iterable[A]): Iterator[A] = {
+    implicit def fromJIterable[A](from: java.lang.Iterable[A]): Iter[A] = new Iter[A] {
         import JavaConversions._
-        from.iterator
+        override def begin = from.iterator
     }
 
-    def emptyOf[A]: Iterator[A] = Iterator.empty
-
-    def able[A](i: => Iterator[A]) = new Iterable[A] {
-        override def iterator = i
-    }
-
-    def able[A](i: => java.util.Iterator[A])(implicit d: DummyImplicit): Iterable[A] = able(from(i))
-
-    def lazySingle[A](x: => A): Iterator[A] = {
+    def lazySingle[A](x: => A): Iter[A] = {
         lazy val y = x
-        new Iterator[A] {
+        new scala.collection.Iterator[A] {
             private[this] var hasnext = true
             override def hasNext = hasnext
             override def next = if (hasnext) { hasnext = false; y } else Iterator.empty.next
