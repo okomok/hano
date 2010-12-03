@@ -193,12 +193,12 @@ trait Seq[+A] extends java.io.Closeable {
 // conversion
 
     @Annotation.conversion @Annotation.pre("synchronous")
-    def toIterable: scala.collection.Iterable[A] = {
-        val that = new java.util.ArrayList[A]
+    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = {
+        val b = bf()
         for (x <- this) {
-            that.add(x)
+            b += x
         }
-        util.Iterable.from(that)
+        b.result
     }
 
     @Annotation.conversion

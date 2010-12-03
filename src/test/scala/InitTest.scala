@@ -24,7 +24,7 @@ class InitTest extends org.scalatest.junit.JUnit3Suite {
     def testEmpty {
         val t = hano.Seq.empty
         val k = t.init
-        assertTrue(k.toIterable.isEmpty)
+        assertTrue(hano.util.Vector.from(k).isEmpty)
     }
 
 }

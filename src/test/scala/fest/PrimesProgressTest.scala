@@ -65,7 +65,7 @@ class PrimesProgressGuiTest
                 ps.onNth(Q-1) { p =>
                     resultLabel.setText(p.toString)
                     ps.close()
-                }.indices.stepTime(100).foreach { i =>
+                }.indices.stepTime(10).foreach { i =>
                     if (monitor.isCanceled) {
                         resultLabel.setText("Canceled")
                         ps.close()

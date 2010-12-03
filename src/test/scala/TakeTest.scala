@@ -28,7 +28,7 @@ class TakeTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.util.Vector(4,5,1,3,2), hano.util.Vector.from(k))
         val k_ = t.take(50)
         assertEquals(hano.util.Vector(4,5,1,3,2,9,7,10), hano.util.Vector.from(k_))
-        assertTrue(t.take(0).toIterable.isEmpty)
+        assertTrue(hano.util.Vector.from(t.take(0)).isEmpty)
     }
 
     def testThen: Unit = {
