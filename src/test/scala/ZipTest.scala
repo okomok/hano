@@ -19,7 +19,7 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.Seq("2","3","4")
         val out = new java.util.ArrayList[(Int, String)]
         t.zip(u).foreach(out.add(_))
-        assertEquals(hano.util.Vector((1,"2"),(2,"3"),(3,"4")), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector((1,"2"),(2,"3"),(3,"4")), hano.util.Vector.make(out))
     }
 
     def testEmpty1: Unit = {
@@ -43,7 +43,7 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.Seq("2","3","4")
         val out = new java.util.ArrayList[(Int, String)]
         t.zip(u).foreach(out.add(_))
-        assertEquals(hano.util.Vector((1,"2"),(2,"3")), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector((1,"2"),(2,"3")), hano.util.Vector.make(out))
     }
 
     def testOneShorter2: Unit = {
@@ -51,7 +51,7 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.Seq("2","3")
         val out = new java.util.ArrayList[(Int, String)]
         t.zip(u).foreach(out.add(_))
-        assertEquals(hano.util.Vector((1,"2"),(2,"3")), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector((1,"2"),(2,"3")), hano.util.Vector.make(out))
     }
 
     def testMuchShorter1: Unit = {
@@ -59,7 +59,7 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.Seq("2","3","4","5","6")
         val out = new java.util.ArrayList[(Int, String)]
         t.zip(u).foreach(out.add(_))
-        assertEquals(hano.util.Vector((1,"2"),(2,"3")), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector((1,"2"),(2,"3")), hano.util.Vector.make(out))
     }
 
     def testMuchShorter2: Unit = {
@@ -67,7 +67,7 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.Seq("2","3")
         val out = new java.util.ArrayList[(Int, String)]
         t.zip(u).foreach(out.add(_))
-        assertEquals(hano.util.Vector((1,"2"),(2,"3")), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector((1,"2"),(2,"3")), hano.util.Vector.make(out))
     }
 
     def testParallel: Unit = {

@@ -22,7 +22,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- r1 merge r2) {
             out.add(x)
         }
-        assertEquals(hano.util.Vector(1,2,3,4,5), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(1,2,3,4,5), hano.util.Vector.make(out))
     }
 
     def testNonTrivial: Unit = {
@@ -33,7 +33,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- r1 merge r2 merge r3) {
             out.add(x)
         }
-        assertEquals(hano.util.Vector(1,2,3,4,5,6,7,8,9), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(1,2,3,4,5,6,7,8,9), hano.util.Vector.make(out))
     }
 
     def testDuplicate {
@@ -43,7 +43,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- r1 merge r2) {
             out.add(x)
         }
-        assertEquals(hano.util.Vector(1,1,2,2,3,3,4,4,5,5), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(1,1,2,2,3,3,4,4,5,5), hano.util.Vector.make(out))
     }
 
 }

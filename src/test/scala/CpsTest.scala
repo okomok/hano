@@ -31,7 +31,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         Thread.sleep(1200)
 
         java.util.Collections.sort(arr, implicitly[Ordering[(Int, Int)]])
-        assertEquals(hano.util.Vector((0,0), (0,1), (0,2), (1,0), (1,1), (1,2)), hano.util.Vector.from(arr))
+        assertEquals(hano.util.Vector((0,0), (0,1), (0,2), (1,0), (1,1), (1,2)), hano.util.Vector.make(arr))
     }
 
     def testNth {
@@ -44,7 +44,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
             arr.add((x, y, z))
         }
         Thread.sleep(1200)
-        assertEquals(hano.util.Vector((3,0,5)), hano.util.Vector.from(arr))
+        assertEquals(hano.util.Vector((3,0,5)), hano.util.Vector.make(arr))
     }
 
     def testNthEmpty {
@@ -66,7 +66,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- xs) {
             arr.add(x)
         }
-        assertEquals(hano.util.Vector(0,1,2), hano.util.Vector.from(arr))
+        assertEquals(hano.util.Vector(0,1,2), hano.util.Vector.make(arr))
     }
 
     def testToFrom {
@@ -76,7 +76,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
             val x = hano.Seq.fromCps(xs.toCps).toCps
             arr.add(x)
         }
-        assertEquals(hano.util.Vector(0,1,2), hano.util.Vector.from(arr))
+        assertEquals(hano.util.Vector(0,1,2), hano.util.Vector.make(arr))
     }
 
 

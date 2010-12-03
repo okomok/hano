@@ -23,7 +23,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
             a.add(x)
         }
         c.await
-        expect(0 until 10)(hano.util.Vector.from(a))
+        expect(0 until 10)(hano.util.Vector.make(a))
     }
 
     def testAsync { // in the thread pool.
@@ -33,7 +33,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
             a.add(x)
         }
         c.await
-        expect(0 until 10)(hano.util.Vector.from(a))
+        expect(0 until 10)(hano.util.Vector.make(a))
     }
 
 }
@@ -45,7 +45,7 @@ class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
         for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.util.Vector(9,8,7,6,5))) {
             s.add(x)
         }
-        assertEquals(hano.util.Vector(9,8,7,6,5), hano.util.Vector.from(s))
+        assertEquals(hano.util.Vector(9,8,7,6,5), hano.util.Vector.make(s))
     }
 
     def testEmpty: Unit = {

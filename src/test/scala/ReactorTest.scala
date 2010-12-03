@@ -44,7 +44,7 @@ class ReactorTest extends org.scalatest.junit.JUnit3Suite {
             case OK =>
         }
         a ! "abandoned"
-        assertEquals(hano.util.Vector(1,11,2,12,3,13), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(1,11,2,12,3,13), hano.util.Vector.make(out))
     }
 
     def testSingleThreaded: Unit = {
@@ -75,7 +75,7 @@ class ReactorTest extends org.scalatest.junit.JUnit3Suite {
             case OK =>
         }
         a ! "abandoned"
-        assertEquals(hano.util.Vector(1,11,2,12,3,13), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(1,11,2,12,3,13), hano.util.Vector.make(out))
     }
 
     def testRestart: Unit = {
@@ -108,7 +108,7 @@ class ReactorTest extends org.scalatest.junit.JUnit3Suite {
         }
         assertEquals(Actor.State.Terminated, a.getState)
         a ! "abandoned"
-        assertEquals(hano.util.Vector(1,11,2,12,3,13), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(1,11,2,12,3,13), hano.util.Vector.make(out))
         out.clear
 
         a.restart
@@ -121,7 +121,7 @@ class ReactorTest extends org.scalatest.junit.JUnit3Suite {
         }
         assertEquals(Actor.State.Terminated, a.getState)
         a ! "abandoned"
-        assertEquals(hano.util.Vector(1,11,2,12,3,13), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(1,11,2,12,3,13), hano.util.Vector.make(out))
     }
 
     def testEmpty {

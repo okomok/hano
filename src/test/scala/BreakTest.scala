@@ -25,6 +25,6 @@ class BreakTest extends org.scalatest.junit.JUnit3Suite {
             fork{r => r}.
             start
 
-        assertEquals(hano.util.Vector(2,4,6,8,10,12), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(2,4,6,8,10,12), hano.util.Vector.make(out))
     }
 }

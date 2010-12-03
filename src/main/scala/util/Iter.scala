@@ -13,7 +13,7 @@ import scala.collection.JavaConversions
 
 sealed abstract class Iter[+A] {
     def begin: scala.collection.Iterator[A]
-    def isEmpty = begin.isEmpty
+    def isEmpty: Boolean = begin.isEmpty
 
     def able = new scala.collection.Iterable[A] {
         override def iterator = begin

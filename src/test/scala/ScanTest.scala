@@ -19,7 +19,7 @@ class ScanLeftTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.util.Vector(5,6,8,11,15,20,26,33,41)
         val s = new java.util.ArrayList[Int]
         t.scanLeft(5)(_ + _).foreach(s.add(_))
-        assertEquals(u, hano.util.Vector.from(s))
+        assertEquals(u, hano.util.Vector.make(s))
     }
 
     def testTrivial2: Unit = {
@@ -27,13 +27,13 @@ class ScanLeftTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.util.Vector(5,6)
         val s = new java.util.ArrayList[Int]
         t.scanLeft(5)(_ + _).foreach(s.add(_))
-        assertEquals(u, hano.util.Vector.from(s))
+        assertEquals(u, hano.util.Vector.make(s))
     }
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
         hano.Seq.empty.of[Int].scanLeft(0)(_ + _).foreach(s.add(_))
-        assertEquals(hano.util.Vector(0), hano.util.Vector.from(s))
+        assertEquals(hano.util.Vector(0), hano.util.Vector.make(s))
     }
 
 /*
@@ -42,7 +42,7 @@ class ScanLeftTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.util.Vector(5,6,8,11,15,20,26,33,41, 99)
         val s = new java.util.ArrayList[Int]
         t.scanLeft1(_ + _).activate(reactor.make(_ => s.add(99), s.add(_)))
-        assertEquals(u, hano.util.Vector.from(s))
+        assertEquals(u, hano.util.Vector.make(s))
     }
 
     def testScanLeft1Empty: Unit = {
@@ -50,13 +50,13 @@ class ScanLeftTest extends org.scalatest.junit.JUnit3Suite {
         val u = hano.util.Vector(5,6, 99)
         val s = new java.util.ArrayList[Int]
         t.scanLeft1(_ + _).activate(reactor.make(_ => s.add(99), s.add(_)))
-        assertEquals(u, hano.util.Vector.from(s))
+        assertEquals(u, hano.util.Vector.make(s))
     }
 
     def testScan1Empty: Unit = {
         val s = new java.util.ArrayList[Int]
         hano.Seq.empty.of[Int].scanLeft1(_ + _).activate(reactor.make(_ => s.add(99), s.add(_)))
-        assertEquals(hano.util.Vector(99), hano.util.Vector.from(s))
+        assertEquals(hano.util.Vector(99), hano.util.Vector.make(s))
     }
 */
 }
@@ -67,7 +67,7 @@ class ScanLeft1Test extends org.scalatest.junit.JUnit3Suite {
         val u = hano.util.Vector(5,6,8,11,15,20,26,33,41)
         val s = new java.util.ArrayList[Int]
         t.scanLeft1(_ + _).foreach(s.add(_))
-        assertEquals(u, hano.util.Vector.from(s))
+        assertEquals(u, hano.util.Vector.make(s))
     }
 
     def testTrivial2: Unit = {
@@ -75,13 +75,13 @@ class ScanLeft1Test extends org.scalatest.junit.JUnit3Suite {
         val u = hano.util.Vector(5,6)
         val s = new java.util.ArrayList[Int]
         t.scanLeft1(_ + _).foreach(s.add(_))
-        assertEquals(u, hano.util.Vector.from(s))
+        assertEquals(u, hano.util.Vector.make(s))
     }
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
         hano.Seq.empty.of[Int].scanLeft1(_ + _).foreach(s.add(_))
-        assertTrue(hano.util.Vector.from(s).isEmpty)
+        assertTrue(hano.util.Vector.make(s).isEmpty)
     }
 }
 

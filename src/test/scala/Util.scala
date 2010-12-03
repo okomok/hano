@@ -66,6 +66,6 @@ class IntReceiver(expected: Iterable[Int]) extends Function1[Int, Unit] {
     def assertMe = {
         val ys = buf.clone.asInstanceOf[ArrayList[Int]]
         java.util.Collections.sort(ys, implicitly[Ordering[Int]])
-        assertTrue("expected: " + expected + " actural: " + hano.util.Vector.from(buf), expected == hano.util.Vector.from(ys))
+        assertTrue("expected: " + expected + " actural: " + hano.util.Vector.make(buf), expected == hano.util.Vector.make(ys))
     }
 }

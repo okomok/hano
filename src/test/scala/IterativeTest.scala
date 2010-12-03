@@ -16,11 +16,11 @@ import junit.framework.Assert._
 class IterativeTest extends org.scalatest.junit.JUnit3Suite {
     def testTo: Unit = {
         val r = hano.Seq(1,2,3,4,5,6)
-        assertEquals(hano.util.Vector(1,2,3,4,5,6), hano.util.Vector.from(r))
+        assertEquals(hano.util.Vector(1,2,3,4,5,6), hano.util.Vector.make(r))
     }
 
     def testLong: Unit = {
         val r = hano.Seq.from(0 until 400)
-        assertEquals(0 until 400, hano.util.Vector.from(r))
+        assertEquals(0 until 400, hano.util.Vector.make(r))
     }
 }

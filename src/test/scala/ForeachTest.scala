@@ -18,14 +18,14 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
         val a = hano.util.Vector(1,6,7,10,14,17)
         val t = new java.util.ArrayList[Int]
         hano.Seq.from(a).foreach{ e => t.add(e) }
-        assertEquals(a, hano.util.Vector.from(t))
+        assertEquals(a, hano.util.Vector.make(t))
     }
 /*
     def testOnEnd: Unit = {
         val a = hano.util.Vector(1,6,7,10,14,17)
         val t = new java.util.ArrayList[Int]
 
-        val c = new Call(assertEquals(a, hano.util.Vector.from(t)))
+        val c = new Call(assertEquals(a, hano.util.Vector.make(t)))
 
         hano.Seq.from(a).activate(new Reactor[Int] {
             override def onEnd = c()
@@ -39,7 +39,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
         val a = hano.util.Vector(1,6,7,10,14,17)
         val t = new java.util.ArrayList[Int]
         hano.Seq.from(a).forkTo{ reactor.make(_ => (), e => t.add(e)) }.start
-        assertEquals(a, hano.util.Vector.from(t))
+        assertEquals(a, hano.util.Vector.make(t))
     }
 */
 }

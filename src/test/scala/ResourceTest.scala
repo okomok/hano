@@ -33,7 +33,7 @@ class ResourceTest extends org.scalatest.junit.JUnit3Suite {
             }
             r.job()
             r.close
-            assertEquals(hano.util.Vector(10, 12, 2, 8), hano.util.Vector.from(out))
+            assertEquals(hano.util.Vector(10, 12, 2, 8), hano.util.Vector.make(out))
         }
 
         doIt()
@@ -48,7 +48,7 @@ class ResourceTest extends org.scalatest.junit.JUnit3Suite {
             }
             r.job()
             //r.close()
-            assertEquals(hano.util.Vector(10, 12, 2, 8), hano.util.Vector.from(out))
+            assertEquals(hano.util.Vector(10, 12, 2, 8), hano.util.Vector.make(out))
         }
 
         doIt()

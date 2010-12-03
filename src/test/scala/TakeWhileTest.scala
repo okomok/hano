@@ -18,14 +18,14 @@ class TakeWhileTest extends org.scalatest.junit.JUnit3Suite {
         val a = hano.util.Vector(1,2,3,4,5,6)
         val b = new java.util.ArrayList[Int]
         hano.Seq.from(a).takeWhile(_ <= 4).foreach(b.add(_))
-        assertEquals(hano.util.Vector(1,2,3,4), hano.util.Vector.from(b))
+        assertEquals(hano.util.Vector(1,2,3,4), hano.util.Vector.make(b))
     }
 
     def testAll: Unit = {
         val a = hano.util.Vector(1,2,3,4,5,6)
         val b = new java.util.ArrayList[Int]
         hano.Seq.from(a).takeWhile(_ <= 10).foreach(b.add(_))
-        assertEquals(hano.util.Vector(1,2,3,4,5,6), hano.util.Vector.from(b))
+        assertEquals(hano.util.Vector(1,2,3,4,5,6), hano.util.Vector.make(b))
     }
 
     def testEmpty: Unit = {
@@ -46,20 +46,20 @@ class TakeWhileTest extends org.scalatest.junit.JUnit3Suite {
         val a = hano.util.Vector(1,2,3,4,5,6)
         val b = new java.util.ArrayList[Int]
         hano.Seq.from(a).takeWhile(_ <= 4).onExit(_ =>b.add(99)).foreach(b.add(_))
-        assertEquals(hano.util.Vector(1,2,3,4,99), hano.util.Vector.from(b))
+        assertEquals(hano.util.Vector(1,2,3,4,99), hano.util.Vector.make(b))
     }
 
     def testThen2: Unit = {
         val a = hano.util.Vector(1,2,3,4,5,6)
         val b = new java.util.ArrayList[Int]
         hano.Seq.from(a).takeWhile(_ <= 4).onExit(_ =>b.add(98)).onExit(_ =>b.add(99)).foreach(b.add(_))
-        assertEquals(hano.util.Vector(1,2,3,4,98,99), hano.util.Vector.from(b))
+        assertEquals(hano.util.Vector(1,2,3,4,98,99), hano.util.Vector.make(b))
     }
 
     def testThenAppend: Unit = {
         val a = hano.util.Vector(1,2,3,4,5,6)
         val b = new java.util.ArrayList[Int]
         (hano.Seq.from(a).takeWhile(_ <= 4) ++ hano.Seq(5,6,7)).onExit(_ =>b.add(99)).foreach(b.add(_))
-        assertEquals(hano.util.Vector(1,2,3,4,5,6,7,99), hano.util.Vector.from(b))
+        assertEquals(hano.util.Vector(1,2,3,4,5,6,7,99), hano.util.Vector.make(b))
     }
 }

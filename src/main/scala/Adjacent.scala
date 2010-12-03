@@ -34,5 +34,5 @@ private class AdjacentBuffer[A](capacity: Int) {
     def isFull: Boolean = impl.size == capacity
     def removeFirst(): Unit = impl.remove(0)
     def addLast(x: A) { assert(!isFull); impl.add(x) }
-    def toIndexedSeq: IndexedSeq[A] = util.Vector.from(impl)
+    def toIndexedSeq: IndexedSeq[A] = util.Vector.make(impl)
 }

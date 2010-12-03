@@ -18,14 +18,14 @@ class OnNthTest extends org.scalatest.junit.JUnit3Suite {
         val a = hano.Seq(1,2,3,4,5)
         val out = new java.util.ArrayList[Int]
         a.onHead(_ => out.add(99)).foreach(e => out.add(e))
-        assertEquals(hano.util.Vector(99,1,2,3,4,5), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(99,1,2,3,4,5), hano.util.Vector.make(out))
     }
 
     def testTrivial {
         val a = hano.Seq(1,2,3,4,5)
         val out = new java.util.ArrayList[Int]
         a.onNth(2)(_ => out.add(99)).foreach(e => out.add(e))
-        assertEquals(hano.util.Vector(1,2,99,3,4,5), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(1,2,99,3,4,5), hano.util.Vector.make(out))
     }
 
 }

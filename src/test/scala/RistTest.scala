@@ -22,7 +22,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         rx add 5
         rx add 4
         rx add 6
-        assertEquals(hano.util.Vector(12,13,5,4,6), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(12,13,5,4,6), hano.util.Vector.make(out))
     }
 
     def testTrivial2 {
@@ -32,7 +32,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         rx add 5
         rx add 4
         rx add 6
-        assertEquals(hano.util.Vector(5,4,6), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(5,4,6), hano.util.Vector.make(out))
     }
 /*
     def testParallel: Unit = {
@@ -57,7 +57,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         }
         a add 7
         b add 35
-        assertEquals(hano.util.Vector(3,9,36,42), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(3,9,36,42), hano.util.Vector.make(out))
 
     }
 
@@ -71,7 +71,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
             foreach{ sum => out.add(sum) }
         a add 7
         b add 35
-        assertEquals(hano.util.Vector(3,42), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(3,42), hano.util.Vector.make(out))
     }
 
     def testSignal3 {
@@ -81,11 +81,11 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a; y <- b) {
             out.add(x + y)
         }
-        assertEquals(hano.util.Vector(5,6,6,7,7,8), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8), hano.util.Vector.make(out))
         a add 7
-        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12), hano.util.Vector.make(out))
         b add 35
-        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12,36,37,38,42), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12,36,37,38,42), hano.util.Vector.make(out))
     }
 
 
@@ -96,24 +96,24 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a; y <- b) {
             out.add(x + y) //  old listner
         }
-        assertEquals(hano.util.Vector(5,6,6,7,7,8), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8), hano.util.Vector.make(out))
         a add 7
-        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12), hano.util.Vector.make(out))
         b add 35
-        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12,36,37,38,42), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(5,6,6,7,7,8,11,12,36,37,38,42), hano.util.Vector.make(out))
 
         // now, a: 1,2,3,7, b:4,5,35
         out.clear
         for (x <- a; y <- b) {
             out.add(x * y)
         }
-        assertEquals(hano.util.Vector(4,5,35, 8,10,70, 12,15,105, 28,35,35*7), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(4,5,35, 8,10,70, 12,15,105, 28,35,35*7), hano.util.Vector.make(out))
         out.clear
         a add 10 // now, a:1,2,3,7,10
-        assertEquals(hano.util.Vector(14,15,35+10,  40,50,350), hano.util.Vector.from(out)) // old listner still listen.
+        assertEquals(hano.util.Vector(14,15,35+10,  40,50,350), hano.util.Vector.make(out)) // old listner still listen.
         out.clear
         b add 30
-        assertEquals(hano.util.Vector(31,32,33,37,  30,30*2,30*3,30*7,  30+10, 30*10), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(31,32,33,37,  30,30*2,30*3,30*7,  30+10, 30*10), hano.util.Vector.make(out))
 
     }
 }

@@ -34,7 +34,7 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
             out.add(e)
         }
 
-        assertEquals(hano.util.Vector(14,15,16,17,88,19), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(14,15,16,17,88,19), hano.util.Vector.make(out))
     }
 
     def testThrough: Unit = {
@@ -92,7 +92,7 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         assertTrue(finalOk)
-        assertEquals(hano.util.Vector(14,15,16,17,88,19), hano.util.Vector.from(out))
+        assertEquals(hano.util.Vector(14,15,16,17,88,19), hano.util.Vector.make(out))
     }
 */
 }
