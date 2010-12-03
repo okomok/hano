@@ -50,7 +50,7 @@ class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.util.Iterable.emptyOf[Int])) {
+        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.util.Vector.emptyOf[Int])) {
             s.add(x)
         }
         assertTrue(s.isEmpty)

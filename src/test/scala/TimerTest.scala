@@ -19,7 +19,7 @@ class TimerTezt {
     val t = new java.util.Timer(true)
     def naturals: hano.Seq[Int] = {
         val s: hano.Seq[Unit] = hano.Schedule(t.schedule(_, 0, 100))
-        s.generate(hano.util.Iterable.iterate(0)(_ + 1))
+        s.generate(Stream.iterate(0)(_ + 1))
     }
 
     // close method access in hano.ByName generates sequences forever, which results in stack overflow.

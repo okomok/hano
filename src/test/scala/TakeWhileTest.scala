@@ -29,7 +29,7 @@ class TakeWhileTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testEmpty: Unit = {
-        val a = hano.util.Iterable.emptyOf[Int]
+        val a = hano.util.Vector.emptyOf[Int]
         val b = new java.util.ArrayList[Int]
         hano.Seq.from(a).takeWhile(_ <= 10).foreach(b.add(_))
         assertTrue(b.isEmpty)

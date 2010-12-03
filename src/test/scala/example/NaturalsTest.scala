@@ -17,7 +17,7 @@ class NaturalsTezt {
     def naturals: hano.Seq[Int] = {
         val t = new java.util.Timer(true)
         val s: hano.Seq[Unit] = hano.Schedule(t.schedule(_, 0, 1000))
-        s.generate(hano.util.Iterable.iterate(0)(_ + 1))
+        s.generate(Stream.iterate(0)(_ + 1))
     }
 
     def testTrivial {

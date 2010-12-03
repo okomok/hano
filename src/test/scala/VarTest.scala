@@ -106,7 +106,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a; y <- b; z <- c) {
             out.add(x + y + z)
         }
-        assertEquals(hano.util.Iterable.emptyOf[Int], hano.util.Vector.from(out)); out.clear
+        assertEquals(hano.util.Vector.emptyOf[Int], hano.util.Vector.from(out)); out.clear
 
         b := 2
         assertEquals(hano.util.Vector(1+2+3), hano.util.Vector.from(out)); out.clear
@@ -174,7 +174,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
             val z = each(c)
             out.add(x + y + z)
         }
-        assertEquals(hano.util.Iterable.emptyOf[Int], hano.util.Vector.from(out)); out.clear
+        assertEquals(hano.util.Vector.emptyOf[Int], hano.util.Vector.from(out)); out.clear
 
         b := 2
         assertEquals(hano.util.Vector(1+2+3), hano.util.Vector.from(out)); out.clear

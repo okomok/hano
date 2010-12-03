@@ -33,7 +33,7 @@ class GenerateTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).generate(hano.util.Iterable.emptyOf[Int])) {
+        for (x <- hano.Seq(0,1,2,3,4).generate(hano.util.Vector.emptyOf[Int])) {
             s.add(x)
         }
         assertTrue(s.isEmpty)
@@ -41,7 +41,7 @@ class GenerateTest extends org.scalatest.junit.JUnit3Suite {
 
     def testInfinite: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).generate(hano.util.Iterable.repeat(9))) {
+        for (x <- hano.Seq(0,1,2,3,4).generate(Stream.continually(9))) {
             s.add(x)
         }
         assertEquals(hano.util.Vector(9,9,9,9,9), hano.util.Vector.from(s))
