@@ -26,7 +26,7 @@ class TrivialTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(r.began)
         assertTrue(r.ended)
     }
-
+/* rejected
     def testUsing {
         val r = TrivialResource("res")
         assertFalse(r.began)
@@ -37,6 +37,7 @@ class TrivialTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(r.began)
         assertTrue(r.ended)
     }
+*/
 
     def testThrow {
         val r = TrivialResource("res")
@@ -44,7 +45,7 @@ class TrivialTest extends org.scalatest.junit.JUnit3Suite {
         assertFalse(r.ended)
         assertFalse(thrown)
         try {
-            hano.using(r){ s =>
+            r foreach { s =>
                 assertEquals("res", s)
                 throw new Error("wow")
             }

@@ -13,9 +13,12 @@ import scala.util.continuations.{cpsParam, reset, shift}
 
 object Block {
 
+    def apply[A](ctx: Env => A @cpsParam[A, Any]): Unit = reset(ctx(Block.Env))
+
     private[hano] val Env = new Env
     sealed class Env {
         def amb[A](xs: Seq[A]): A @cpsParam[Any, Unit] = xs.toCps
+
         def each[A](xs: Seq[A]): A @cpsParam[Any, Unit] = xs.toCps
 
         def head[A](xs: Seq[A]): A @cpsParam[Any, Unit] = xs.take(1).toCps
@@ -35,6 +38,8 @@ object Block {
         }
 
         def require(cond: => Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Seq.single(()) else Seq.empty).toCps
+
+        def use[A](xs: Arm[A]): A @cpsParam[Any, Unit] = xs.toCps
     }
 
 }

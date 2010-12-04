@@ -84,7 +84,7 @@ class DragDropTest extends
             jl.setName("Drag")
             jf.getContentPane.add(jl)
 
-            hano.block { * =>
+            hano.Block { * =>
                 val mouse = hano.Swing.Mouse(jl)
                 for (p <- *(mouse.Pressed)) {
                     println("pressed at: " + (p.getX, p.getY))
@@ -112,7 +112,7 @@ class DragDropTest extends
             }
 */
 /*
-            hano.block { next =>
+            hano.Block { next =>
                 val mouse = hano.Swing.Mouse(jl)
                 val p = next.head(mouse.Pressed)
                 println("pressed at: " + (p.getX, p.getY))

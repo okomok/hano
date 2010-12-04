@@ -32,7 +32,7 @@ class MyFrame extends swing.JFrame {
     setDefaultCloseOperation(swing.JFrame.EXIT_ON_CLOSE)
 
     val rx = hano.Swing.ActionPerformed(c2)
-    hano.block {
+    hano.Block {
         val _ = rx.each
         c3.setText(c1.getText)
     }

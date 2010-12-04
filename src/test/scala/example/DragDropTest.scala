@@ -20,7 +20,7 @@ package sequencetest; package reactivetest; package example
                 val label = new swing.JLabel("testTrivial")
                 frame.getContentPane.add(label)
 
-                hano.block { * =>
+                hano.Block { * =>
                     val mouse = hano.Swing.Mouse(label)
                     val p = *.each(mouse.Pressed)
                     println("pressed at: " + (p.getX, p.getY))

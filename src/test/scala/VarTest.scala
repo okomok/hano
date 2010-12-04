@@ -167,7 +167,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         val a = new hano.Var[Int](1)
         val b = hano.Var[Int]//(2)
         val c = new hano.Var[Int](3)
-        hano.block { Y =>
+        hano.Block { Y =>
             import Y._
             val x = each(a)
             val y = each(b)
