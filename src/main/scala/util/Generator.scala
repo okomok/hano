@@ -81,7 +81,7 @@ object Generator {
         }
 
         def run() {
-            op(y)
+            op(y) // exception disappears in eval.Async.
 /*
             try {
                 op(y)
