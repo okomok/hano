@@ -16,7 +16,7 @@ private class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends Seq[B] 
             if (_2(x)) {
                 f(x)
             } else {
-                _k(End)
+                _k(Exit.End)
             }
         } _andThen { q =>
             _k(q)

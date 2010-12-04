@@ -13,7 +13,7 @@ private class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def forloop(f: A => Unit, k: Exit => Unit) {
         val _k = IfFirst[Exit] { q => k(q);close() } Else { _ => () }
         if (_2 == 0) {
-            _k(End)
+            _k(Exit.End)
         } else {
             var c = _2
             _1 _for { x =>
@@ -21,7 +21,7 @@ private class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
                     f(x)
                     c -= 1
                     if (c == 0) {
-                        _k(End)
+                        _k(Exit.End)
                     }
                 }
             } _andThen { q =>

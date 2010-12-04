@@ -21,8 +21,8 @@ trait Reactor extends Actor {
      */
     protected def startReactive(r: Seq[Any]): Unit
 
-    private var _f: Any => Unit = { _ => () } // primary
-//    private var _k: eval.ByName[Unit] = eval.ByName(())
+    private var _f: Any => Unit = null // primary
+    private var _k: Exit => Unit = null
     private val _fs = new CopyOnWriteArrayList[Any => Unit] // secondaries
 //    private val _ks = new CopyOnWriteArrayList[eval.ByName[Unit]]
 
@@ -35,12 +35,22 @@ trait Reactor extends Actor {
                     Actor.exit
                 }
                 case x => {
-                    _f(x)
+                    if (_f != null) {
+                        _f(x)
+                    }
                     for (f <- util.Iter.from(_fs)) {
                         f(x)
                     }
                 }
             }
+        }
+    }
+
+    final override def exceptionHandler = {
+        if (_k == null) {
+            super.exceptionHandler
+        } else {
+            case t => _k(Exit.Thrown(t))
         }
     }
 
@@ -102,7 +112,7 @@ object Reactor {
     private class Primary(_1: Reactor) extends Seq[Any] {
         override def forloop(f: Any => Unit, k: Exit => Unit) {
             _1._f = f
-//            _1._k = eval.ByName(k)
+            _1._k = k
         }
     }
 

@@ -14,13 +14,13 @@ private class Generate[A](_1: Seq[_], _2: util.Iter[A]) extends Seq[A] {
         val it = _2.begin
         val _k = IfFirst[Exit] { q => k(q);close() } Else { _ => () }
         if (!it.hasNext) {
-            _k(End)
+            _k(Exit.End)
         } else {
             _1 _for { _ =>
                 if (it.hasNext) {
                     f(it.next)
                     if (!it.hasNext) {
-                        _k(End)
+                        _k(Exit.End)
                     }
                 }
             } _andThen { q =>

@@ -41,7 +41,7 @@ object Iter {
         new scala.collection.Iterator[A] {
             private[this] var hasnext = true
             override def hasNext = hasnext
-            override def next = if (hasnext) { hasnext = false; y } else Iterator.empty.next
+            override def next = if (hasnext) { hasnext = false; y } else scala.collection.Iterator.empty.next
         }
     }
 

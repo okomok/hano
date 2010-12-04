@@ -34,7 +34,7 @@ private class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) ex
         Exit.tryCatch(k) {
             _1.foreach(f)
         }
-        k(End)
+        k(Exit.End)
     }
 }
 
@@ -59,7 +59,7 @@ private class FromOption[A](_1: Option[A]) extends Seq[A] {
                 f(_1.get)
             }
         }
-        k(End)
+        k(Exit.End)
     }
 }
 
@@ -69,7 +69,7 @@ private class FromResponder[A](_1: Responder[A]) extends Seq[A] {
         Exit.tryCatch(k) {
             _1.respond(f)
         }
-        k(End)
+        k(Exit.End)
     }
 }
 

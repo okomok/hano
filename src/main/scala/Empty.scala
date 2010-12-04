@@ -9,5 +9,5 @@ package hano
 
 
 private class Empty() extends Seq[Nothing] {
-    override def forloop(f: Nothing => Unit, k: Exit => Unit) = k(End)
+    override def forloop(f: Nothing => Unit, k: Exit => Unit) = k(Exit.End)
 }

@@ -13,6 +13,6 @@ private class Single[A](_1: A) extends Seq[A] {
         Exit.tryCatch(k) {
             f(_1)
         }
-        k(End)
+        k(Exit.End)
     }
 }

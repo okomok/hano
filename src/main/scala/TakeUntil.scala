@@ -15,7 +15,7 @@ private class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         val _k = IfFirst[Exit] { q => k(q);close() } Else { _ => () }
         _2 _for { y =>
             go = false
-            _k(End)
+            _k(Exit.End)
         } _andThen { q =>
             _k(q)
         }
@@ -23,7 +23,7 @@ private class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
             if (go) {
                 f(x)
             } else {
-                _k(End)
+                _k(Exit.End)
             }
         } _andThen { q =>
             _k(q)
