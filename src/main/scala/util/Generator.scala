@@ -16,15 +16,15 @@ import java.util.concurrent
 object Generator {
 
     def apply[A](op: Env[A] => Unit) = new scala.collection.Iterable[A] {
-        override def iterator = new _Cursor(op).toSIterator
+        override def iterator = new CursorImpl(op).toSIterator
     }
 
     trait Env[-A] extends (A => Unit) {
-        def flush(): Unit
         def end(): Unit
+        def flush(): Unit
     }
 
-    private class _Cursor[A](_1: Env[A] => Unit) extends Cursor[A] {
+    private class CursorImpl[A](_1: Env[A] => Unit) extends Cursor[A] {
         private[this] var in = new Data[A]
         private[this] val x = new concurrent.Exchanger[Data[A]]
 
@@ -69,20 +69,20 @@ object Generator {
                     doExchange()
                 }
             }
+            override def end() {
+                out.isLast = true
+                doExchange()
+            }
             override def flush() {
                 if (!out.buf.isEmpty) {
                     doExchange()
                 }
             }
-            override def end() {
-                out.isLast = true
-                doExchange()
-            }
         }
 
         def run() {
             op(y)
-            /*
+/*
             try {
                 op(y)
             } catch {
@@ -91,7 +91,7 @@ object Generator {
                 out.isLast = true
                 doExchange()
             }
-            */
+*/
         }
 
         private def doExchange() {
