@@ -11,18 +11,6 @@ package hano.util
 import scala.collection.JavaConversions
 
 
-sealed abstract class Iter[+A] {
-    def begin: scala.collection.Iterator[A]
-    def isEmpty: Boolean = begin.isEmpty
-
-    def able = new scala.collection.Iterable[A] {
-        override def iterator = begin
-    }
-
-    def foreach(f: A => Unit): Unit = begin.foreach(f)
-}
-
-
 object Iter {
 
     def apply[A](xs: A*): Iter[A] = from(xs)
@@ -57,4 +45,19 @@ object Iter {
         }
     }
 
+}
+
+
+/**
+ * Trivial wrapper for Iterators
+ */
+sealed abstract class Iter[+A] {
+    def begin: scala.collection.Iterator[A]
+    def isEmpty: Boolean = begin.isEmpty
+
+    def able = new scala.collection.Iterable[A] {
+        override def iterator = begin
+    }
+
+    def foreach(f: A => Unit): Unit = begin.foreach(f)
 }

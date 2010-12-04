@@ -27,6 +27,6 @@ package object hano {
     def scope[A](ctx: => A @continuations.cpsParam[A, Any]): Unit = continuations.reset(ctx)
 
     @Annotation.equivalentTo("scala.util.continuations.reset(ctx(BlockEnv))")
-    def block[A](ctx: BlockEnv.type => A @continuations.cpsParam[A, Any]): Unit = continuations.reset(ctx(BlockEnv))
+    def block[A](ctx: Block.Env => A @continuations.cpsParam[A, Any]): Unit = continuations.reset(ctx(Block.Env))
 
 }

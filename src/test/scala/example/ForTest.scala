@@ -20,7 +20,7 @@ class ForTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial {
         val out = new java.util.ArrayList[Int]
         reset {
-            val x = hano.BlockEnv.each(hano.Seq.from(1 to 10))
+            val x = hano.Seq.from(1 to 10).toCps
             if (x % 2 == 0) {
                 out.add(x)
             }
