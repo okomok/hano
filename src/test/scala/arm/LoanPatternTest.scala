@@ -17,7 +17,7 @@ object using { import scala.util.continuations._
     def apply[A](ctx: Env.type => A @cpsParam[A, Unit]) { reset(ctx(Env)) }
 }
 
-class LoanPatternTest extends org.scalatest.junit.JUnit3Suite {
+class LoanPatternTest { // extends org.scalatest.junit.JUnit3Suite {
 
     def testScope { import java.io._
         using { * =>
