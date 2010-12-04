@@ -47,6 +47,9 @@ trait Forwarder[A] extends Seq[A] with scala.Proxy {
     override def zip[B](that: Seq[B]): Seq[(A, B)] = around(delegate.zip(that))
     override def zipWithIndex: Seq[(A, Int)] = around(delegate.zipWithIndex)
     override def unzip[B, C](implicit pre: Seq[A] <:< Seq[(B, C)]): (Seq[B], Seq[C]) = around2(delegate.unzip)
+    override def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = delegate.breakOut
+    override def toTraversable: scala.collection.Traversable[A] = delegate.toTraversable
+    override def toIterable: scala.collection.Iterable[A] = delegate.toIterable
     override def toResponder: Responder[A] = delegate.toResponder
     override def actor: scala.actors.Actor = delegate.actor
     override def react(f: A => Unit): Seq[A] = around(delegate.react(f))

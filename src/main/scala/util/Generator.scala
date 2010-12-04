@@ -20,7 +20,7 @@ object Generator {
     }
 
     trait Env[-A] extends (A => Unit) {
-        def end(): Unit
+        def exit(): Unit
         def flush(): Unit
     }
 
@@ -69,7 +69,7 @@ object Generator {
                     doExchange()
                 }
             }
-            override def end() {
+            override def exit() {
                 out.isLast = true
                 doExchange()
             }

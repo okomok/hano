@@ -20,7 +20,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
     def testEmpty: Unit = {
         val tr = util.Generator[Int] { * =>
             999
-            *.end()
+            *.exit()
         }
         assertTrue(tr.isEmpty)
         assertTrue(tr.isEmpty) // run again.
@@ -30,7 +30,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
         for (i <- 1 to n) {
             y(i)
         }
-        y.end()
+        y.exit()
     }
 
     def withMakeValuesTo(n: Int): Unit = {
@@ -65,7 +65,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
                 *(i)
             }
             *("last")
-            *.end()
+            *.exit()
         }
         for (a <- example) {
             //println(a)
@@ -132,7 +132,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             y.flush() // exchange.
             throw new Error("after flush")
 //            Thread.sleep(10000)
-            y.end()
+            y.exit()
         }
         val ret = new java.util.ArrayList[Int]
         val it = sample.iterator
@@ -143,11 +143,8 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(0 until 24, util.Vector.make(ret))
     }
 
-    def testEnd {
-        def sample = util.Generator[Int] { y =>
-            hano.Seq.origin(hano.eval.Async).generate(0 until 20).onExit(_ => y.end()).foreach(y(_))
-        }
-
+    def testToIterable {
+        val sample = hano.Seq.origin(hano.eval.Async).generate(0 until 20).toIterable
         assertEquals(0 until 20, util.Vector.make(sample))
     }
 

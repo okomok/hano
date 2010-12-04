@@ -38,6 +38,19 @@ private class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) ex
     }
 }
 
+private class ToTraversable[A](_1: Seq[A]) extends scala.collection.Traversable[A] {
+    override def foreach[U](f: A => U) = _1.foreach(x => f(x))
+}
+
+
+private class ToIterable[A](_1: Seq[A]) extends scala.collection.Iterable[A] {
+    override def iterator = {
+        util.Generator[A] { y =>
+            _1.forloop(y, _ => y.exit())
+        } iterator
+    }
+}
+
 
 private class FromOption[A](_1: Option[A]) extends Seq[A] {
     override def forloop(f: A => Unit, k: Exit => Unit) {

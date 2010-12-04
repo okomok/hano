@@ -202,9 +202,13 @@ trait Seq[+A] extends java.io.Closeable {
     }
 
     @Annotation.conversion
-    def toResponder: Responder[A] = new ToResponder(this)
+    def toTraversable: scala.collection.Traversable[A] = new ToTraversable(this)
 
-    def actor: scala.actors.Actor = scala.actors.Actor.actor(start)
+    @Annotation.conversion
+    def toIterable: scala.collection.Iterable[A] = new ToIterable(this)
+
+    @Annotation.conversion
+    def toResponder: Responder[A] = new ToResponder(this)
 
     @Annotation.conversion
     final def toCps: A @continuations.cpsParam[Any, Unit] = {
@@ -212,6 +216,8 @@ trait Seq[+A] extends java.io.Closeable {
             (cont: A => Any) => foreach(new DiscardValue(cont))
         }
     }
+
+    def actor: scala.actors.Actor = scala.actors.Actor.actor(start)
 
 
 // misc
