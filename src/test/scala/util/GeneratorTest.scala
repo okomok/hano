@@ -9,6 +9,7 @@ package hanotest
 package utiltest
 
 
+import com.github.okomok.hano
 import com.github.okomok.hano.util
 import junit.framework.Assert._
 
@@ -140,6 +141,14 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             ret.add(e)
         }
         assertEquals(0 until 24, util.Vector.make(ret))
+    }
+
+    def testEnd {
+        def sample = util.Generator[Int] { y =>
+            hano.Seq.origin(hano.eval.Async).generate(0 until 20).onExit(_ => y.end()).foreach(y(_))
+        }
+
+        assertEquals(0 until 20, util.Vector.make(sample))
     }
 
 }
