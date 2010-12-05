@@ -23,11 +23,11 @@ object Generator {
         def flush(): Unit
     }
 
-    private class CursorImpl[A](_1: Env[A] => Unit) extends Cursor[A] {
+    private class CursorImpl[A](body: Env[A] => Unit) extends Cursor[A] {
         private[this] var in = new Data[A]
-        private[this] val x = new concurrent.Exchanger[Data[A]]
+        private[this] val ex = new concurrent.Exchanger[Data[A]]
 
-        hano.eval.Async { new Task(_1, x).run() }
+        hano.eval.Async { new Task(body, ex).run() }
         doExchange()
 
         override def isEnd = in.buf.isEmpty
@@ -41,19 +41,19 @@ object Generator {
 
         private def doExchange() {
             assert(in.buf.isEmpty)
-            in = x.exchange(in)
+            in = ex.exchange(in)
             assert(!in.buf.isEmpty || in.isLast)
         }
     }
 
     private val CAPACITY = 20
 
-    private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) extends Runnable {
+    private class Task[A](body: Env[A] => Unit, ex: concurrent.Exchanger[Data[A]]) extends Runnable {
         private[this] var out = new Data[A]
 
         private[this] val y = new Env[A] {
-            override def apply(e: A) {
-                out.buf.addLast(e)
+            override def apply(x: A) {
+                out.buf.addLast(x)
                 if (out.buf.size == CAPACITY) {
                     doExchange()
                 }
@@ -74,7 +74,7 @@ object Generator {
         }
 
         private def doExchange() {
-            out = x.exchange(out)
+            out = ex.exchange(out)
             assert(out.buf.isEmpty)
         }
     }

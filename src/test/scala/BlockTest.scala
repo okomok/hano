@@ -17,7 +17,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial {
         val a = new java.util.ArrayList[Int]
         hano.Block { * =>
-            for (x <- *(hano.Seq(1,2,3))) {
+            for (x <- *.in(hano.Seq(1,2,3))) {
                 a.add(x); ()
             }
             a.add(99); ()
@@ -28,7 +28,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
     def testValueDiscarding {
         val a = new java.util.ArrayList[Int]
         hano.Block { * =>
-            for (x <- *(hano.Seq(1,2,3))) {
+            for (x <- *.in(hano.Seq(1,2,3))) {
                 a.add(x)
                 "discard me"
             }
@@ -41,9 +41,9 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
     def testNested {
         val a = new java.util.ArrayList[Int]
         hano.Block { * =>
-            for (x <- *(hano.Seq(1,2,3))) {
+            for (x <- *.in(hano.Seq(1,2,3))) {
                 a.add(x)
-                for (y <- *(hano.Seq(10+x,20+x))) {
+                for (y <- *.in(hano.Seq(10+x,20+x))) {
                     a.add(y); ()
                 }
                 a.add(98); ()
@@ -56,9 +56,9 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
     def testNestedValueDiscarding {
         val a = new java.util.ArrayList[Int]
         hano.Block { * =>
-            for (x <- *(hano.Seq(1,2,3))) {
+            for (x <- *.in(hano.Seq(1,2,3))) {
                 a.add(x)
-                for (y <- *(hano.Seq(10+x,20+x))) {
+                for (y <- *.in(hano.Seq(10+x,20+x))) {
                     a.add(y)
                     "discard me"
                 }

@@ -117,6 +117,16 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(thrown)
         assertTrue(arr.isEmpty)
     }
+
+    def testNested {
+        val it = CpsGenerator[Int] { * =>
+            val x = *.amb(0 until 10)
+            *.require(x % 2 == 0)
+            *(x)
+        }
+        expect(Iter(0,2,4,6,8))(Iter.from(it))
+    }
+
 /*
     Clearly never works.
     def testAsync {
