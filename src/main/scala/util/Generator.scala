@@ -27,11 +27,8 @@ object Generator {
         private[this] var in = new Data[A]
         private[this] val x = new concurrent.Exchanger[Data[A]]
 
-        hano.eval.Async {
-            new Task(_1, x).run()
-        }
+        hano.eval.Async { new Task(_1, x).run() }
         doExchange()
-        forwardExn()
 
         override def isEnd = in.buf.isEmpty
         override def deref = in.buf.getFirst
@@ -39,13 +36,6 @@ object Generator {
             in.buf.removeFirst()
             if (in.buf.isEmpty && !in.isLast) {
                 doExchange()
-            }
-            forwardExn()
-        }
-
-        private def forwardExn() {
-            if (in.buf.isEmpty && in.isLast && !in.exn.isEmpty) {
-                throw in.exn.get
             }
         }
 
@@ -58,7 +48,7 @@ object Generator {
 
     private val CAPACITY = 20
 
-    private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) {
+    private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) extends Runnable {
         private[this] var out = new Data[A]
 
         private[this] val y = new Env[A] {
@@ -79,18 +69,8 @@ object Generator {
             }
         }
 
-        def run() {
-            body(y) // exception disappears in eval.Async.
-/*
-            try {
-                body(y)
-            } catch {
-                case t: Throwable => out.exn = Some(t)
-            } finally {
-                out.isLast = true
-                doExchange()
-            }
-*/
+        override def run() {
+            body(y) // Exceptions will disappear in eval.Async.
         }
 
         private def doExchange() {
@@ -99,8 +79,8 @@ object Generator {
         }
     }
 
-    private class Data[A](val buf: ArrayDeque[A], var isLast: Boolean, var exn: Option[Throwable]) {
-        def this() = this(new ArrayDeque[A](CAPACITY), false, None)
+    private class Data[A](val buf: ArrayDeque[A], var isLast: Boolean) {
+        def this() = this(new ArrayDeque[A](CAPACITY), false)
     }
 
 }
