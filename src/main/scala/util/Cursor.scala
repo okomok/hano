@@ -104,4 +104,5 @@ trait Cursor[+A] {
             increment()
         }
     }
+
 }

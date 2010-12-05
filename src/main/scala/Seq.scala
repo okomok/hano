@@ -78,17 +78,15 @@ trait Seq[+A] extends java.io.Closeable {
      */
     def forloop(f: A => Unit, k: Exit => Unit): Unit
 
-    @Annotation.equivalentTo("forloop(f, ())")
-    final def foreach(f: A => Unit) = forloop(f, _ => ())
+    @Annotation.equivalentTo("forloop(f, _ => ())")
+    final def foreach(f: A => Unit) = forloop(f, Exit.defaultHandler)
 
     @Annotation.equivalentTo("foreach(_ => ())")
     final def start(): Unit = foreach(_ => ())
 
-    private[hano]
-    final def _for(f: A => Unit): _ForThen = new _ForThen(f)
+    private[hano] final def _for(f: A => Unit): _ForThen = new _ForThen(f)
 
-    private[hano]
-    sealed class _ForThen(f: A => Unit) {
+    private[hano] sealed class _ForThen(f: A => Unit) {
         def _andThen(k: Exit => Unit): Unit = forloop(f, k)
     }
 
