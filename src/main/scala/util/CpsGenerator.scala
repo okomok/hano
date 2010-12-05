@@ -14,8 +14,8 @@ import scala.util.continuations.{suspendable, reset, shift}
 
 object CpsGenerator {
 
-    def apply[A](op: (A => Unit @suspendable) => Unit @suspendable) = new scala.collection.Iterable[A] {
-        override def iterator = new CursorImpl(op).toSIterator
+    def apply[A](op: (A => Unit @suspendable) => Unit @suspendable) = new Iterable[A] {
+        override def iterator = new CursorImpl(op).toIterator
     }
 
     private class CursorImpl[A](_1: (A => Unit @suspendable) => Unit @suspendable) extends Cursor[A] {

@@ -205,7 +205,7 @@ trait Seq[+A] extends java.io.Closeable {
     def toTraversable: scala.collection.Traversable[A] = new ToTraversable(this)
 
     @Annotation.conversion
-    def toIterable: scala.collection.Iterable[A] = new ToIterable(this)
+    def toIterable: Iterable[A] = new ToIterable(this)
 
     @Annotation.conversion
     def toResponder: Responder[A] = new ToResponder(this)

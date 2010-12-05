@@ -4,8 +4,7 @@
 // Distributed under the terms of an MIT-style license.
 
 
-package com.github.okomoktest
-package hanotest
+package com.github.okomok.hanotest
 package utiltest
 
 

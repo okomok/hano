@@ -15,8 +15,8 @@ import java.util.concurrent
 
 object Generator {
 
-    def apply[A](op: Env[A] => Unit) = new scala.collection.Iterable[A] {
-        override def iterator = new CursorImpl(op).toSIterator
+    def apply[A](op: Env[A] => Unit) = new Iterable[A] {
+        override def iterator = new CursorImpl(op).toIterator
     }
 
     trait Env[-A] extends (A => Unit) {
