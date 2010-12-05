@@ -118,13 +118,23 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(arr.isEmpty)
     }
 
-    def testNested {
+    def testAmb1 {
         val it = CpsGenerator[Int] { * =>
             val x = *.amb(0 until 10)
             *.require(x % 2 == 0)
             *(x)
         }
         expect(Iter(0,2,4,6,8))(Iter.from(it))
+    }
+
+    def testAmb2 {
+        val it = CpsGenerator[(Int, Int)] { * =>
+            val x = *.amb(0 until 5)
+            val y = *.amb(5 until 10)
+            *.require(x + y == 7)
+            *((x, y))
+        }
+        expect(Iter((0,7),(1,6),(2,5)))(Iter.from(it))
     }
 
 /*

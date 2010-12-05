@@ -8,7 +8,11 @@ package com.github.okomok
 package hano.util
 
 
-import scala.util.continuations.{suspendable, reset, shift}
+// See:
+//   http://jim-mcbeath.blogspot.com/2010/11/nondeterministic-evaluation-in-scala.html
+
+
+import scala.util.continuations.{cpsParam, suspendable, reset, shift}
 
 
 object CpsGenerator {
@@ -17,9 +21,8 @@ object CpsGenerator {
         override def iterator = new CursorImpl(body).toIterator
     }
 
-    sealed abstract class Env[-A] extends hano.Block.Env {
+    sealed abstract class Env[A] extends hano.Block.Env {
         def apply(x: A): Unit @suspendable
-        def amb[A](xs: Iter[A]): A @suspendable
     }
 
     private class CursorImpl[A](body: Env[A] => Unit @suspendable) extends Cursor[A] {
@@ -28,17 +31,15 @@ object CpsGenerator {
         private[this] val _y = new Env[A] {
             override def apply(x: A) = {
                 _x = Some(x)
-                _saveK()
+                _suspend()
             }
-            override def amb[A](xs: Iter[A]): A @suspendable = {
-                shift { k: (A => Unit) =>
+            override def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit] = {
+                shift { k: (B => Any) =>
                     val it = xs.begin
-                    reset[Unit, Unit] {
-                        var x: A = null.asInstanceOf[A]
+                    reset {
                         while (it.hasNext) {
-                            x = it.next
-                            k(x)
-                            _incrementAll
+                            k(it.next)
+                            _traverse()
                         }
                     }
                 }
@@ -46,7 +47,7 @@ object CpsGenerator {
         }
 
         reset {
-            _saveK()
+            _suspend()
             body(_y)
         }
         _k()
@@ -58,13 +59,13 @@ object CpsGenerator {
             _k()
         }
 
-        private def _saveK(): Unit @suspendable = shift { (k: Unit => Unit) => _k = k }
+        private def _suspend(): Unit @suspendable = shift { (k: Unit => Unit) => _k = k }
 
-        private def _incrementAll(): Unit @suspendable = {
+        private def _traverse(): Unit @suspendable = {
             var k: Unit => Unit = null
             while (!isEnd) {
                 k = _k
-                _saveK()
+                _suspend()
                 k()
             }
         }
