@@ -8,13 +8,14 @@ package com.github.okomok.hanotest
 package utiltest
 
 
+import com.github.okomok.hano
 import com.github.okomok.hano.util.{CpsGenerator, Iter}
 import scala.util.continuations.suspendable
 import junit.framework.Assert._
 
 
 class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
-    def makeEmpty(y: Int => Unit@ suspendable): Unit @suspendable = ()
+    def makeEmpty(y: CpsGenerator.Env[Int]): Unit @suspendable = ()
 
     def testEmpty: Unit = {
         val tr = CpsGenerator(makeEmpty)
@@ -22,7 +23,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(tr.isEmpty) // run again.
     }
 
-    def makeValuesTo(n: Int)(y: Int => Unit @suspendable): Unit @suspendable = {
+    def makeValuesTo(n: Int)(y: CpsGenerator.Env[Int]): Unit @suspendable = {
         var i = 1
         while (i <= n) {
             y(i)
@@ -71,7 +72,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExceptionForwarding: Unit = {
-        def throwSome(y: Int => Unit @suspendable): Unit @suspendable = {
+        def throwSome(y: CpsGenerator.Env[Int]): Unit @suspendable = {
             var i = 1
             while (i <= 27) {
                 y(i)
@@ -98,7 +99,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExceptionForwardingEmpty: Unit = {
-        def throwImmediately(y: Int => Unit @suspendable): Unit @suspendable = {
+        def throwImmediately(y: CpsGenerator.Env[Int]): Unit @suspendable = {
             throw new Error("exception forwarding")
         }
         val tr = CpsGenerator(throwImmediately)
@@ -116,4 +117,15 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(thrown)
         assertTrue(arr.isEmpty)
     }
+/*
+    Clearly never works.
+    def testAsync {
+        val it = CpsGenerator[Int] { y =>
+            val x = hano.Seq.origin(hano.eval.Async).generate(0 until 20).toCps
+            y(x)
+        }
+        Thread.sleep(2000)
+        expect(Iter.from(0 until 20))(Iter.from(it))
+    }
+*/
 }

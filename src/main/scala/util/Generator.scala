@@ -18,7 +18,7 @@ object Generator {
         override def iterator = new CursorImpl(op).toIterator
     }
 
-    trait Env[-A] extends (A => Unit) {
+    sealed abstract class Env[-A] extends (A => Unit) {
         def exit(): Unit
         def flush(): Unit
     }

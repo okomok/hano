@@ -13,14 +13,18 @@ import scala.util.continuations.{suspendable, reset, shift}
 
 object CpsGenerator {
 
-    def apply[A](op: (A => Unit @suspendable) => Unit @suspendable) = new Iterable[A] {
+    def apply[A](op: Env[A] => Unit @suspendable) = new Iterable[A] {
         override def iterator = new CursorImpl(op).toIterator
     }
 
-    private class CursorImpl[A](_1: (A => Unit @suspendable) => Unit @suspendable) extends Cursor[A] {
+    sealed abstract class Env[-A] {
+        def apply(x: A): Unit @suspendable
+    }
+
+    private class CursorImpl[A](_1: Env[A] => Unit @suspendable) extends Cursor[A] {
         private[this] var _e: Option[A] = None
         private[this] var _k: Unit => Unit = null
-        private[this] val _y = new (A => Unit @suspendable) {
+        private[this] val _y = new Env[A] {
             override def apply(e: A) = {
                 _e = Some(e)
                 _suspend()
