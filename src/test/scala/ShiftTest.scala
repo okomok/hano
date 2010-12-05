@@ -21,7 +21,7 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
             s.add(x)
         }
         // the last 99 is end-reaction shift.
-        assertEquals(hano.util.Vector(99,1,1,99,2,2,99,3,3,99,4,4,99,5,5, 99), hano.util.Vector.make(s))
+        assertEquals(hano.util.Iter(99,1,1,99,2,2,99,3,3,99,4,4,99,5,5, 99), hano.util.Iter.from(s))
     }
 
     def testSwing(off: Int) {
@@ -34,7 +34,7 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
         } foreach { x =>
             s.add(x)
         }
-        assertEquals(hano.util.Vector(1,2,3,4,5), hano.util.Vector.make(s))
+        assertEquals(hano.util.Iter(1,2,3,4,5), hano.util.Iter.from(s))
     }
 
 }

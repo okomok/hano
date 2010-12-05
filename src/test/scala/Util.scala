@@ -13,9 +13,10 @@ import com.github.okomok.hano
 import java.util.concurrent.CyclicBarrier
 import java.util.ArrayList
 import hano.Exit
+import hano.util.Iter
 
 
-class IntSenders(data: Iterable[Int]*) {
+class IntSenders(data: Iter[Int]*) {
     private val barrier = new CyclicBarrier(data.length + 1)
     private val senders: ArrayList[IntSender] = {
         val buf = new ArrayList[IntSender]
@@ -37,7 +38,7 @@ class IntSenders(data: Iterable[Int]*) {
 }
 
 
-class IntSender(datum: Iterable[Int], barrier: CyclicBarrier) extends hano.Seq[Int] {
+class IntSender(datum: Iter[Int], barrier: CyclicBarrier) extends hano.Seq[Int] {
     override def forloop(f: Int => Unit, k: Exit => Unit) = {
         new Thread {
             override def run = {
@@ -56,7 +57,7 @@ class IntSender(datum: Iterable[Int], barrier: CyclicBarrier) extends hano.Seq[I
 }
 
 
-class IntReceiver(expected: Iterable[Int]) extends Function1[Int, Unit] {
+class IntReceiver(expected: Iter[Int]) extends Function1[Int, Unit] {
     import junit.framework.Assert._
 
     private val buf = new ArrayList[Int]
@@ -66,6 +67,6 @@ class IntReceiver(expected: Iterable[Int]) extends Function1[Int, Unit] {
     def assertMe = {
         val ys = buf.clone.asInstanceOf[ArrayList[Int]]
         java.util.Collections.sort(ys, implicitly[Ordering[Int]])
-        assertTrue("expected: " + expected + " actural: " + hano.util.Vector.make(buf), expected == hano.util.Vector.make(ys))
+        assertTrue("expected: " + expected + " actural: " + hano.util.Iter.from(buf), expected == hano.util.Iter.from(ys))
     }
 }

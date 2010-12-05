@@ -115,6 +115,6 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
             arr.add(3)
         }
 
-        assertEquals(hano.util.Vector(10,20,30,1,2,3,31,21,11), hano.util.Vector.make(arr))
+        assertEquals(hano.util.Iter(10,20,30,1,2,3,31,21,11), hano.util.Iter.from(arr))
     }
 }

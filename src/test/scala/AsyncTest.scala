@@ -31,7 +31,7 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         c.await
-        expect(0 until 100)(hano.util.Vector.make(b))
+        expect(hano.util.Iter.from(0 until 100))(hano.util.Iter.from(b))
     }
 
     def testRejection {
@@ -58,7 +58,7 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         c.await
-        expect(0 until 100)(hano.util.Vector.make(b))
+        expect(hano.util.Iter.from(0 until 100))(hano.util.Iter.from(b))
     }
 
     def testReallyLazyVal {

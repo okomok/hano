@@ -14,6 +14,7 @@ private[hano] trait Conversions { self: Seq.type =>
     def from[A](that: Seq[A]): Seq[A] = that
 
     implicit def fromArray[A](from: Array[A]): Seq[A] = new FromArray(from)
+    implicit def fromIter[A](from: util.Iter[A]): Seq[A] = new FromIter(from)
     implicit def fromTraversableOnce[A](from: scala.collection.TraversableOnce[A]): Seq[A] = new FromTraversableOnce(from)
     implicit def fromJIterable[A](from: java.lang.Iterable[A]): Seq[A] = new FromTraversableOnce(util.Iter.from(from).able)
     implicit def fromOption[A](from: Option[A]): Seq[A] = new FromOption(from)
@@ -26,6 +27,16 @@ private[hano] trait Conversions { self: Seq.type =>
 
 private class FromArray[A](_1: Array[A]) extends Forwarder[A] {
     override protected val delegate = Seq.from(_1)
+}
+
+
+private class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
+    override def forloop(f: A => Unit, k: Exit => Unit) {
+        Exit.tryCatch(k) {
+            _1.foreach(f)
+        }
+        k(Exit.End)
+    }
 }
 
 

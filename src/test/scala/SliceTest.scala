@@ -18,6 +18,6 @@ class SliceTest extends org.scalatest.junit.JUnit3Suite {
         val t = hano.Seq(1,2,3,4,5,6,7,8)
         val s = new java.util.ArrayList[Int]
         t.slice(1, 5).onExit(_ =>s.add(99)).foreach(s.add(_))
-        assertEquals(hano.util.Vector(2,3,4,5,99), hano.util.Vector.make(s))
+        assertEquals(hano.util.Iter(2,3,4,5,99), hano.util.Iter.from(s))
     }
 }

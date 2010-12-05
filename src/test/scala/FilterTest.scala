@@ -19,7 +19,7 @@ class FilterTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- hano.Seq(0,1,2,3,4) if x % 2 == 0) {
             s.add(x)
         }
-        assertEquals(hano.util.Vector(0,2,4), hano.util.Vector.make(s))
+        assertEquals(hano.util.Iter(0,2,4), hano.util.Iter.from(s))
     }
 
     def testEmpty: Unit = {

@@ -28,7 +28,7 @@ class TimerTezt {
         def rx: hano.Seq[Int] = naturals.take(3) ++ rx.byName
         rx.take(10).foreach(b.add(_))
         Thread.sleep(2000)
-        assertEquals(hano.util.Vector(0,1,2,0,1,2,0,1,2,0), hano.util.Vector.make(b))
+        assertEquals(hano.util.Iter(0,1,2,0,1,2,0,1,2,0), hano.util.Iter.from(b))
     }
 
 }

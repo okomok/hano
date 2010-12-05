@@ -22,7 +22,7 @@ class MultiTest extends org.scalatest.junit.JUnit3Suite {
         rs.add(x => out.add(x+20))
         val t = hano.Seq(4,5,1,3)
         val k_ = t.foreach(hano.Multi(rs))
-        assertEquals(hano.util.Vector(14,24,15,25,11,21,13,23), hano.util.Vector.make(out))
+        assertEquals(hano.util.Iter(14,24,15,25,11,21,13,23), hano.util.Iter.from(out))
     }
 
     def testReactive {
@@ -31,8 +31,8 @@ class MultiTest extends org.scalatest.junit.JUnit3Suite {
         rs.add(x => out.add(x+10))
         rs.add(x => out.add(x+20))
         val t = hano.Seq(4,5,1,3)
-        val k_ = t.foreach(hano.Multi(hano.Seq.from(hano.util.Vector.make(rs))))
-        assertEquals(hano.util.Vector(14,24,15,25,11,21,13,23), hano.util.Vector.make(out))
+        val k_ = t.foreach(hano.Multi(hano.Seq.from(hano.util.Iter.from(rs))))
+        assertEquals(hano.util.Iter(14,24,15,25,11,21,13,23), hano.util.Iter.from(out))
     }
 
 }

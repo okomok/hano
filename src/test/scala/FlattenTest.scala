@@ -19,7 +19,7 @@ class FlattenTest extends org.scalatest.junit.JUnit3Suite {
         val tr = hano.Seq(1,2,3,4,5)
         val out = new java.util.ArrayList[Int]
         tr.flatMap{e => hano.Seq.from(0 until e)}.foreach(out.add(_))
-        assertEquals(hano.util.Vector(0,0,1,0,1,2,0,1,2,3,0,1,2,3,4), hano.util.Vector.make(out))
+        assertEquals(hano.util.Iter(0,0,1,0,1,2,0,1,2,3,0,1,2,3,4), hano.util.Iter.from(out))
     }
 
     def testUnsplit: Unit = {
@@ -31,7 +31,7 @@ class FlattenTest extends org.scalatest.junit.JUnit3Suite {
         val sep = hano.Seq(77,88)
         val out = new java.util.ArrayList[Int]
         rs.unsplit(sep).foreach(out.add(_))
-        assertEquals(hano.util.Vector(1,2,77,88,3,4,77,88,5,77,88,6,7,8,9), hano.util.Vector.make(out))
+        assertEquals(hano.util.Iter(1,2,77,88,3,4,77,88,5,77,88,6,7,8,9), hano.util.Iter.from(out))
     }
 
 }

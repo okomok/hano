@@ -31,8 +31,8 @@ class SplitAtTest extends org.scalatest.junit.JUnit3Suite {
         xs.foreach(xa.add(_))
         assertTrue(xa.isEmpty)
         ys.foreach(ya.add(_))
-        assertEquals(hano.util.Vector(1,2), hano.util.Vector.make(xa))
-        assertEquals(hano.util.Vector(3,4,5), hano.util.Vector.make(ya))
+        assertEquals(hano.util.Iter(1,2), hano.util.Iter.from(xa))
+        assertEquals(hano.util.Iter(3,4,5), hano.util.Iter.from(ya))
     }
 
     def testTrivial2 {
@@ -43,8 +43,8 @@ class SplitAtTest extends org.scalatest.junit.JUnit3Suite {
         ys.foreach(ya.add(_))
         assertTrue(ya.isEmpty)
         xs.foreach(xa.add(_))
-        assertEquals(hano.util.Vector(1,2), hano.util.Vector.make(xa))
-        assertEquals(hano.util.Vector(3,4,5), hano.util.Vector.make(ya))
+        assertEquals(hano.util.Iter(1,2), hano.util.Iter.from(xa))
+        assertEquals(hano.util.Iter(3,4,5), hano.util.Iter.from(ya))
     }
 
     def testClosed {
@@ -57,8 +57,8 @@ class SplitAtTest extends org.scalatest.junit.JUnit3Suite {
         assertFalse(r.closed)
         ys.take(2).foreach(ya.add(_))
         assertTrue(r.closed)
-        assertEquals(hano.util.Vector(1), hano.util.Vector.make(xa))
-        assertEquals(hano.util.Vector(3,4), hano.util.Vector.make(ya))
+        assertEquals(hano.util.Iter(1), hano.util.Iter.from(xa))
+        assertEquals(hano.util.Iter(3,4), hano.util.Iter.from(ya))
     }
 
     def testClosed2 {
@@ -71,8 +71,8 @@ class SplitAtTest extends org.scalatest.junit.JUnit3Suite {
         assertFalse(r.closed)
         ys.take(1).foreach(ya.add(_))
         assertTrue(r.closed)
-        assertEquals(hano.util.Vector(1,2), hano.util.Vector.make(xa))
-        assertEquals(hano.util.Vector(3), hano.util.Vector.make(ya))
+        assertEquals(hano.util.Iter(1,2), hano.util.Iter.from(xa))
+        assertEquals(hano.util.Iter(3), hano.util.Iter.from(ya))
     }
 
 }

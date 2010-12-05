@@ -34,8 +34,8 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
 
     def withMakeValuesTo(n: Int): Unit = {
         val tr = util.Generator(makeValuesTo(n))
-        assertEquals(1 to n, util.Vector.make(tr))
-        assertEquals(1 to n, util.Vector.make(tr)) // run again.
+        assertEquals(util.Iter.from(1 to n), util.Iter.from(tr))
+        assertEquals(util.Iter.from(1 to n), util.Iter.from(tr)) // run again.
     }
 
     def testTrivial: Unit = {
@@ -139,12 +139,12 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             val e = it.next
             ret.add(e)
         }
-        assertEquals(0 until 24, util.Vector.make(ret))
+        assertEquals(util.Iter.from(0 until 24), util.Iter.from(ret))
     }
 
     def testToIterable {
         val sample = hano.Seq.origin(hano.eval.Async).generate(0 until 20).toIterable
-        assertEquals(0 until 20, util.Vector.make(sample))
+        assertEquals(util.Iter.from(0 until 20), util.Iter.from(sample))
     }
 
 }

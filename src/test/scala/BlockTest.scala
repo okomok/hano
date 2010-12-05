@@ -22,7 +22,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
             }
             a.add(99); ()
         }
-        expect(hano.util.Vector(1,2,3,99))(hano.util.Vector.make(a))
+        expect(hano.util.Iter(1,2,3,99))(hano.util.Iter.from(a))
     }
 
     def testValueDiscarding {
@@ -35,7 +35,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
             a.add(99)
             "discard me"
         }
-        expect(hano.util.Vector(1,2,3,99))(hano.util.Vector.make(a))
+        expect(hano.util.Iter(1,2,3,99))(hano.util.Iter.from(a))
     }
 
     def testNested {
@@ -50,7 +50,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
             }
             a.add(99); ()
         }
-        expect(hano.util.Vector(1,11,21,98,2,12,22,98,3,13,23,98,99))(hano.util.Vector.make(a))
+        expect(hano.util.Iter(1,11,21,98,2,12,22,98,3,13,23,98,99))(hano.util.Iter.from(a))
     }
 
     def testNestedValueDiscarding {
@@ -68,7 +68,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
             a.add(99)
             "discard me"
         }
-        expect(hano.util.Vector(1,11,21,98,2,12,22,98,3,13,23,98,99))(hano.util.Vector.make(a))
+        expect(hano.util.Iter(1,11,21,98,2,12,22,98,3,13,23,98,99))(hano.util.Iter.from(a))
     }
 
     def testRequire {
@@ -79,7 +79,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
             *.require(x + y == 5)
             a.add((x, y))
         }
-        expect(hano.util.Vector((1,4),(2,3),(3,2)))(hano.util.Vector.make(a))
+        expect(hano.util.Iter((1,4),(2,3),(3,2)))(hano.util.Iter.from(a))
     }
 
     def testRequire2 {
@@ -91,7 +91,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
             *.require(x == 2)
             a.add((x, y))
         }
-        expect(hano.util.Vector((2,3)))(hano.util.Vector.make(a))
+        expect(hano.util.Iter((2,3)))(hano.util.Iter.from(a))
     }
 
 }

@@ -208,6 +208,9 @@ trait Seq[+A] extends java.io.Closeable {
     def toIterable: Iterable[A] = new ToIterable(this)
 
     @Annotation.conversion
+    final def toIter: util.Iter[A] = util.Iter.from(toIterable)
+
+    @Annotation.conversion
     def toResponder: Responder[A] = new ToResponder(this)
 
     @Annotation.conversion
