@@ -8,7 +8,7 @@ package com.github.okomok.hanotest
 package utiltest
 
 
-import com.github.okomok.hano.util.{Cursor, Iter, Vector}
+import com.github.okomok.hano.util.{Cursor, Iter}
 import junit.framework.Assert._
 
 

@@ -33,7 +33,7 @@ class ReplaceTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).replace(hano.util.Vector.emptyOf[Int])) {
+        for (x <- hano.Seq(0,1,2,3,4).replace(hano.util.Iter().of[Int])) {
             s.add(x)
         }
         assertEquals(hano.util.Iter(0,1,2,3,4), hano.util.Iter.from(s))

@@ -9,6 +9,7 @@ package hano
 
 
 import scala.collection.immutable.{IndexedSeq, Vector}
+import scala.collection.JavaConversions
 
 
 private class Adjacent[A](_1: Seq[A], _2: Int) extends Seq[IndexedSeq[A]] {
@@ -34,5 +35,8 @@ private class AdjacentBuffer[A](capacity: Int) {
     def isFull: Boolean = impl.size == capacity
     def removeFirst(): Unit = impl.remove(0)
     def addLast(x: A) { assert(!isFull); impl.add(x) }
-    def toIndexedSeq: IndexedSeq[A] = util.Vector.make(impl)
+    def toIndexedSeq: IndexedSeq[A] = {
+        import JavaConversions._
+        Vector.empty ++ impl
+    }
 }

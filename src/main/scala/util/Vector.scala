@@ -12,6 +12,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.immutable.{Vector => Result}
 
 
+@deprecated("unused")
 object Vector {
 
     def apply[A](xs: A*): Result[A] = Result.empty ++ xs
