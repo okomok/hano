@@ -14,8 +14,8 @@ import java.util.concurrent
 
 object Generator {
 
-    def apply[A](op: Env[A] => Unit) = new Iterable[A] {
-        override def iterator = new CursorImpl(op).toIterator
+    def apply[A](body: Env[A] => Unit) = new Iterable[A] {
+        override def iterator = new CursorImpl(body).toIterator
     }
 
     sealed abstract class Env[-A] extends (A => Unit) {
@@ -58,7 +58,7 @@ object Generator {
 
     private val CAPACITY = 20
 
-    private class Task[A](op: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) {
+    private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) {
         private[this] var out = new Data[A]
 
         private[this] val y = new Env[A] {
@@ -80,10 +80,10 @@ object Generator {
         }
 
         def run() {
-            op(y) // exception disappears in eval.Async.
+            body(y) // exception disappears in eval.Async.
 /*
             try {
-                op(y)
+                body(y)
             } catch {
                 case t: Throwable => out.exn = Some(t)
             } finally {
