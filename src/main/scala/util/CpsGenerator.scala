@@ -12,7 +12,7 @@ package hano.util
 //   http://jim-mcbeath.blogspot.com/2010/11/nondeterministic-evaluation-in-scala.html
 
 
-import scala.util.continuations.{suspendable, reset, shift}
+import scala.util.continuations.{cpsParam, suspendable, reset, shift}
 
 
 object CpsGenerator {
@@ -33,8 +33,8 @@ object CpsGenerator {
                 _x = Some(x)
                 _suspend()
             }
-            override def amb[B](xs: Iter[B]): B @suspendable = {
-                shift { k: (B => Unit) =>
+            override def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit] = {
+                shift { k: (B => Any) =>
                     val it = xs.begin
                     reset {
                         while (it.hasNext) {

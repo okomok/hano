@@ -39,7 +39,7 @@ object Block {
 
         def use[A](xs: Arm[A]): A @cpsParam[Any, Unit] = xs.toCps
 
-        def amb[A](xs: util.Iter[A]): A @cpsParam[Unit, Unit] = each(xs)
+        def amb[A](xs: util.Iter[A]): A @cpsParam[Any, Unit] = each(xs)
     }
 
 }
