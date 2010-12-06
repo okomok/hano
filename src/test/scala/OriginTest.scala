@@ -36,6 +36,29 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
     }
 
+    def testMultipleForloop { // in the thread pool.
+        val s = hano.Seq.origin(hano.eval.Async)
+        locally {
+            val c = new java.util.concurrent.CountDownLatch(1)
+            val a = new java.util.ArrayList[Int]
+            for (x <- s.generate(0 until 10).onExit(_ =>c.countDown)) {
+                a.add(x)
+            }
+            c.await
+            expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+        }
+
+        locally {
+            val c = new java.util.concurrent.CountDownLatch(1)
+            val a = new java.util.ArrayList[Int]
+            for (x <- s.generate(0 until 10).onExit(_ =>c.countDown)) {
+                a.add(x)
+            }
+            c.await
+            expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+        }
+    }
+
 }
 
 

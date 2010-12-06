@@ -8,13 +8,17 @@ package com.github.okomok
 package hano
 
 
-private class Origin(_1: (=> Unit) => Unit) extends Resource[Unit] {
-    @volatile private[this] var isClosed = false
-    override protected def closeResource() = isClosed = true
-    override protected def openResource(f: Unit => Unit, k: Exit => Unit) {
+private class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] {
+    @volatile private[this] var isActive = false
+    override def close() = isActive = false
+    override def forloop(f: Unit => Unit, k: Exit => Unit) {
+        if (isActive) {
+            throw new IllegalStateException("forloop shall be serialized")
+        }
+        isActive = true
         _1 {
             Exit.tryCatch(k) {
-                while (!isClosed) {
+                while (isActive) {
                     f()
                 }
             }
