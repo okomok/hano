@@ -23,4 +23,10 @@ class IterativeTest extends org.scalatest.junit.JUnit3Suite {
         val r = hano.Seq.from(0 until 400)
         assertEquals(hano.util.Iter.from(0 until 400), r.toIter)
     }
+
+    def testTakeStoppable: Unit = {
+        val r = hano.Seq.from(Stream.from(0))
+        val t = r.take(4)
+        expect(hano.util.Iter(0,1,2,3))(t.toIter)
+    }
 }

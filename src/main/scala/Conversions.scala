@@ -13,11 +13,12 @@ private[hano] trait Conversions { self: Seq.type =>
     @Annotation.returnThat
     def from[A](that: Seq[A]): Seq[A] = that
 
-    implicit def fromArray[A](from: Array[A]): Seq[A] = new FromArray(from)
+    implicit def fromArray[A](from: Array[A]): Seq[A] = new FromIter(from)
     implicit def fromIter[A](from: util.Iter[A]): Seq[A] = new FromIter(from)
+    implicit def fromIterable[A](from: scala.collection.Iterable[A]): Seq[A] = new FromIter(from)
     implicit def fromTraversableOnce[A](from: scala.collection.TraversableOnce[A]): Seq[A] = new FromTraversableOnce(from)
-    implicit def fromJIterable[A](from: java.lang.Iterable[A]): Seq[A] = new FromTraversableOnce(util.Iter.from(from).able)
-    implicit def fromOption[A](from: Option[A]): Seq[A] = new FromOption(from)
+    implicit def fromJIterable[A](from: java.lang.Iterable[A]): Seq[A] = new FromIter(from)
+    implicit def fromOption[A](from: Option[A]): Seq[A] = new FromIter(from)
     implicit def fromResponder[A](from: Responder[A]): Seq[A] = new FromResponder(from)
     implicit def fromReactor(from: Reactor): Seq[Any] = new Reactor.Secondary(from)
     /*implicit*/ def fromCps[A](from: => A @scala.util.continuations.suspendable): Seq[A] = new FromCps(from)
@@ -25,16 +26,21 @@ private[hano] trait Conversions { self: Seq.type =>
 }
 
 
-private class FromArray[A](_1: Array[A]) extends Forwarder[A] {
-    override protected val delegate = Seq.from(_1)
-}
-
-
 private class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
+    @volatile private[this] var isActive = false
+    override def close() = isActive = false
     override def forloop(f: A => Unit, k: Exit => Unit) {
-        Exit.tryCatch(k) {
-            _1.foreach(f)
+        if (isActive) {
+            throw new IllegalStateException("forloop shall be serialized")
         }
+        isActive = true
+        Exit.tryCatch(k) {
+            val it = _1.begin
+            while (isActive && it.hasNext) {
+                f(it.next)
+            }
+        }
+        isActive = false
         k(Exit.End)
     }
 }
@@ -59,18 +65,6 @@ private class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
         util.Generator[A] { y =>
             _1.forloop(y, _ => y.exit())
         } iterator
-    }
-}
-
-
-private class FromOption[A](_1: Option[A]) extends Seq[A] {
-    override def forloop(f: A => Unit, k: Exit => Unit) {
-        Exit.tryCatch(k) {
-            if (!_1.isEmpty) {
-                f(_1.get)
-            }
-        }
-        k(Exit.End)
     }
 }
 

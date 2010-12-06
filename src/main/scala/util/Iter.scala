@@ -37,6 +37,14 @@ object Iter {
         override def begin = from.iterator
     }
 
+    implicit def fromArray[A](from: Array[A]): Iter[A] = new Iter[A] {
+        override def begin = from.iterator
+    }
+
+    implicit def fromOption[A](from: Option[A]): Iter[A] = new Iter[A] {
+        override def begin = from.iterator
+    }
+
     implicit def fromCursor[A](from: => Cursor[A]): Iter[A] = new Iter[A] {
         override def begin = from.toIterator
     }

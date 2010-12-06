@@ -33,7 +33,6 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.util.Iter(1,2,3,4,5), hano.util.Iter.from(out))
     }
 
-
     def testTotal2 {
         val a = hano.Seq(1,2,3,4,5)
         val out = new java.util.ArrayList[Int]
@@ -42,7 +41,7 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
         } take {
             3
         } start;
-        assertEquals(hano.util.Iter(1,2,3,4,5), hano.util.Iter.from(out))
+        assertEquals(hano.util.Iter(1,2,3/*,4,5 (now close work well.*/), hano.util.Iter.from(out))
     }
 
 }
