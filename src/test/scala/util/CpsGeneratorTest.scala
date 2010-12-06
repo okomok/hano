@@ -137,6 +137,17 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         expect(Iter((0,7),(1,6),(2,5)))(Iter.from(it))
     }
 
+    def testAmbValueDiscarding {
+        val it = CpsGenerator[(Int, Int)] { * =>
+            val x = *.amb(0 until 5)
+            val y = *.amb(5 until 10)
+            *.require(x + y == 7)
+            *((x, y))
+            99
+        }
+        expect(Iter((0,7),(1,6),(2,5)))(Iter.from(it))
+    }
+
 /*
     Clearly never works.
     def testAsync {
