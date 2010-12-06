@@ -87,3 +87,14 @@ private class FromResponder[A](_1: Responder[A]) extends Seq[A] {
 private class ToResponder[A](_1: Seq[A]) extends Responder[A] {
     override def respond(f: A => Unit) = _1.foreach(f)
 }
+
+
+import scala.util.continuations
+
+private class FromCps[A](from: => A @continuations.suspendable) extends Seq[A] {
+    override def forloop(f: A => Unit, k: Exit => Unit) {
+        continuations.reset {
+            f(from)
+        }
+    }
+}
