@@ -21,8 +21,9 @@ object CpsGenerator {
         override def iterator = new CursorImpl(body).toIterator
     }
 
-    sealed abstract class Env[A] extends hano.Block.Env {
+    sealed abstract class Env[A] extends hano.Block.OneElementEnv {
         def apply(x: A): Unit @suspendable
+        def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
     }
 
     private class CursorImpl[A](body: Env[A] => Any @suspendable) extends Cursor[A] {
