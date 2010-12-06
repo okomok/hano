@@ -29,4 +29,17 @@ class IterativeTest extends org.scalatest.junit.JUnit3Suite {
         val t = r.take(4)
         expect(hano.util.Iter(0,1,2,3))(t.toIter)
     }
+
+    def testExit: Unit = {
+        var exited = false
+        val r = hano.Seq.from(0 until 3).onExit{_ => exited = true}
+        r.start
+        assert(exited)
+    }
+
+    def testCloseIsNotEnd: Unit = {
+        val r = hano.Seq.from(Stream.from(0)).onExit{_ => fail("shall be no end")}
+        val t = r.take(4)
+        expect(hano.util.Iter(0,1,2,3))(t.toIter)
+    }
 }
