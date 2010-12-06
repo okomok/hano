@@ -42,4 +42,13 @@ object Block {
         def amb[A](xs: util.Iter[A]): A @cpsParam[Any, Unit] = each(xs)
     }
 
+    private[hano] def discardValue[A](v: => A @cpsParam[Unit, Unit]): A @cpsParam[Any, Unit] = {
+        shift { k: (A => Any) =>
+            reset {
+                k(v)
+                ()
+            }
+        }
+    }
+
 }
