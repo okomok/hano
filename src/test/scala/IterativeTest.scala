@@ -42,4 +42,16 @@ class IterativeTest extends org.scalatest.junit.JUnit3Suite {
         val t = r.take(4)
         expect(hano.util.Iter(0,1,2,3))(t.toIter)
     }
+
+    def testReForeach: Unit = {
+        val r = hano.Seq.from(Stream.from(0))
+        locally {
+            val t = r.take(4)
+            expect(hano.util.Iter(0,1,2,3))(t.toIter)
+        }
+        locally {
+            val t = r.take(4)
+            expect(hano.util.Iter(0,1,2,3))(t.toIter)
+        }
+    }
 }
