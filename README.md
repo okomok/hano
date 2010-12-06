@@ -3,11 +3,11 @@
 
 `hano` is a reactive sequence combinator library:
 
-    hano.block { * =>
+    hano.Block { * =>
         val mouse = hano.Swing.Mouse(jl)
-        for (p <- *(mouse.Pressed)) {
+        for (p <- *.in(mouse.Pressed)) {
             println("pressed at: " + (p.getX, p.getY))
-            for (d <- *(mouse.Dragged.stepTime(100).takeUntil(mouse.Released))) {
+            for (d <- *.in(mouse.Dragged.stepTime(100).takeUntil(mouse.Released))) {
                 println("dragging at: " + (d.getX, d.getY))
             }
             println("released")
