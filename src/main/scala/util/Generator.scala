@@ -24,26 +24,38 @@ object Generator {
     private class CursorImpl[A](_1: Env[A] => Unit) extends Cursor[A] {
         private[this] var in = new Data[A]
         private[this] val x = new concurrent.Exchanger[Data[A]]
+        private[this] var exn: Throwable = null
 
-        hano.eval.Async {
-            new Task(_1, x).run()
-        }
+        hano.eval.Async { new Task(_1, x).run() }
         doExchange()
+        catchExn()
         forwardExn()
 
-        override def isEnd = in.buf.isEmpty
-        override def deref = in.buf.getFirst
+        override def isEnd = {
+            forwardExn()
+            in.buf.isEmpty
+        }
+        override def deref = {
+            forwardExn()
+            in.buf.getFirst
+        }
         override def increment() {
+            forwardExn()
             in.buf.removeFirst()
             if (in.buf.isEmpty && !in.isLast) {
                 doExchange()
             }
-            forwardExn()
+            catchExn()
         }
 
-        private def forwardExn() {
+        private def catchExn() {
             if (in.buf.isEmpty && in.isLast && !in.exn.isEmpty) {
-                throw in.exn.get
+                exn = in.exn.get
+            }
+        }
+        private def forwardExn() {
+            if (exn != null) {
+                throw exn
             }
         }
 
@@ -56,7 +68,7 @@ object Generator {
 
     private val CAPACITY = 20
 
-    private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) {
+    private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) extends Runnable {
         private[this] var out = new Data[A]
 
         private[this] val y = new Env[A] {
@@ -80,9 +92,9 @@ object Generator {
             }
         }
 
-        def run() {
+        override def run() {
             try {
-                body(y) // exception disappears in eval.Async.
+                body(y)
             } catch {
                 case t: Throwable => {
                     out.exn = Some(t)

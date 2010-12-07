@@ -94,7 +94,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             case _: Error => thrown = true
         }
         assertTrue(thrown)
-        assertEquals(util.Iter.from(1 to 26), util.Iter.from(arr)) // one-element lost; iterator.next sucks.
+        assertEquals(util.Iter.from(1 to 27), util.Iter.from(arr))
     }
 
     def testExceptionForwardingEmpty: Unit = {
