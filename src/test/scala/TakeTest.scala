@@ -15,13 +15,6 @@ import junit.framework.Assert._
 
 class TakeTest extends org.scalatest.junit.JUnit3Suite {
 
-    def testTrivial0: Unit = {
-        val a = hano.util.Iter(1,2,3,4,5,6)
-        val b = new java.util.ArrayList[Int]
-        hano.Seq.from(a).take(3).foreach(b.add(_))
-        assertEquals(hano.util.Iter(1,2,3), hano.util.Iter.from(b))
-    }
-
     def testTrivial {
         val t = hano.Seq(4,5,1,3,2,9,7,10)
         val k = t.take(5)
@@ -29,6 +22,13 @@ class TakeTest extends org.scalatest.junit.JUnit3Suite {
         val k_ = t.take(50)
         assertEquals(hano.util.Iter(4,5,1,3,2,9,7,10), k_.toIter)
         assertTrue(t.take(0).toIter.isEmpty)
+    }
+
+    def testTrivial0: Unit = {
+        val a = hano.util.Iter(1,2,3,4,5,6)
+        val b = new java.util.ArrayList[Int]
+        hano.Seq.from(a).take(3).foreach(b.add(_))
+        assertEquals(hano.util.Iter(1,2,3), hano.util.Iter.from(b))
     }
 
     def testThen: Unit = {
