@@ -14,7 +14,7 @@ import java.util.concurrent
 
 object Generator {
 
-    def apply[A](body: Env[A] => Unit) = Iter.from(new CursorImpl(body)).able
+    def apply[A](body: Env[A] => Unit): Iterable[A] = Iter.from(new CursorImpl(body)).able
 
     sealed abstract class Env[-A] extends (A => Unit) {
         def exit(): Unit

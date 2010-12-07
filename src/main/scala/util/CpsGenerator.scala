@@ -17,7 +17,7 @@ import scala.util.continuations.{cpsParam, suspendable, reset, shift}
 
 object CpsGenerator {
 
-    def apply[A](body: Env[A] => Any @suspendable) = Iter.from(new CursorImpl(body)).able
+    def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = Iter.from(new CursorImpl(body)).able
 
     sealed abstract class Env[A] extends hano.Block.OneElementEnv {
         def apply(x: A): Unit @suspendable
