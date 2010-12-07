@@ -95,7 +95,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
             case _: Error => thrown = true
         }
         assertTrue(thrown)
-        assertEquals(Iter.from(1 to 26), Iter.from(arr)) // iterator-from-cursor prefetches one-element.
+        assertEquals(Iter.from(1 to 27), Iter.from(arr))
     }
 
     def testExceptionForwardingEmpty: Unit = {

@@ -24,45 +24,35 @@ object Generator {
     private class CursorImpl[A](_1: Env[A] => Unit) extends Cursor[A] {
         private[this] var in = new Data[A]
         private[this] val x = new concurrent.Exchanger[Data[A]]
-        private[this] var exn: Throwable = null
 
         hano.eval.Async { new Task(_1, x).run() }
         doExchange()
-        catchExn()
         forwardExn()
 
         override def isEnd = {
-            forwardExn()
             in.buf.isEmpty
         }
         override def deref = {
-            forwardExn()
             in.buf.getFirst
         }
         override def increment() {
-            forwardExn()
             in.buf.removeFirst()
             if (in.buf.isEmpty && !in.isLast) {
                 doExchange()
             }
-            catchExn()
-        }
-
-        private def catchExn() {
-            if (in.buf.isEmpty && in.isLast && !in.exn.isEmpty) {
-                exn = in.exn.get
-            }
-        }
-        private def forwardExn() {
-            if (exn != null) {
-                throw exn
-            }
+            forwardExn()
         }
 
         private def doExchange() {
             assert(in.buf.isEmpty)
             in = x.exchange(in)
             assert(!in.buf.isEmpty || in.isLast)
+        }
+
+        private def forwardExn() {
+            if (in.buf.isEmpty && in.isLast && !in.exn.isEmpty) {
+                throw in.exn.get
+            }
         }
     }
 
