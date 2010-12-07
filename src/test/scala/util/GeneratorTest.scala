@@ -65,51 +65,50 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             }
             *("last")
             *.exit()
+            *.exit() // idempotent
         }
         for (a <- example) {
             //println(a)
         }
     }
-/*
+
     def testExceptionForwarding: Unit = {
-        def throwSome(y: iterative.Yield[Int]): Unit = {
+        def throwSome(y: util.Generator.Env[Int]): Unit = {
             for (i <- 1 to 27) {
                 y(i)
             }
             throw new Error("exception forwarding")
         }
 
-        val tr = iterative.generator(throwSome)
+        val tr = util.Generator(throwSome)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
 
         try {
-            val it = tr.begin
-            while (it) {
-                arr.add(~it)
-                it.++
+            val it = tr.iterator
+            while (it.hasNext) {
+                arr.add(it.next)
             }
         } catch {
             case _: Error => thrown = true
         }
         assertTrue(thrown)
-        assertEquals(iterative.from(1 to 27), iterative.from(arr))
+        assertEquals(util.Iter.from(1 to 26), util.Iter.from(arr)) // one-element lost; iterator.next sucks.
     }
 
     def testExceptionForwardingEmpty: Unit = {
-        def throwImmediately(y: iterative.Yield[Int]) {
+        def throwImmediately(y: util.Generator.Env[Int]) {
             throw new Error("exception forwarding")
         }
-        val tr = iterative.generator(throwImmediately)
+        val tr = util.Generator(throwImmediately)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
         try {
-            val it = tr.begin
-            while (it) {
-                arr.add(~it)
-                it.++
+            val it = tr.iterator
+            while (it.hasNext) {
+                arr.add(it.next)
             }
         } catch {
             case _: Error => thrown = true
@@ -117,7 +116,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(thrown)
         assertTrue(arr.isEmpty)
     }
-*/
+
     def testFlush {
         def sample = util.Generator[Int] { y =>
             for (i <- 0 until 20) {
