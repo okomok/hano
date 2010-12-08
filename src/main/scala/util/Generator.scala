@@ -68,7 +68,7 @@ object Generator {
                     doExchange()
                 }
             }
-            private lazy val _exit = hano.eval.Lazy {
+            private[this] val _exit = hano.eval.Lazy {
                 out.isLast = true
                 doExchange()
             }

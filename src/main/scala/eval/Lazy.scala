@@ -10,6 +10,7 @@ package hano.eval
 
 /**
  * Runs in the result-retrieving-site.
+ * See also: http://lampsvn.epfl.ch/trac/scala/ticket/3980
  */
 case class Lazy[R](_1: ByName[R]) extends Function0[R] {
     private[this] lazy val v = _1()

@@ -127,4 +127,5 @@ trait Iter[+A] extends Equals {
         }
         !it.hasNext && !jt.hasNext
     }
+
 }
