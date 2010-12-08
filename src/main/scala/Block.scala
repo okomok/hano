@@ -15,7 +15,8 @@ object Block {
 
     def apply[A](ctx: Env => A @cpsParam[A, Any]): Unit = reset(ctx(Env))
 
-    trait OneElementEnv {
+    // One-element sequence is usable also in CpsGenerator.
+    private[hano] class Env1 {
         def head[A](xs: Seq[A]): A @cpsParam[Any, Unit] = xs.take(1).toCps
 
         def nth[A](xs: Seq[A])(n: Int): A @cpsParam[Any, Unit] = xs.drop(n).take(1).toCps
@@ -27,8 +28,8 @@ object Block {
         def use[A](xs: Arm[A]): A @cpsParam[Any, Unit] = xs.toCps
     }
 
-    private val Env = new Env{}
-    sealed class Env extends OneElementEnv {
+    private val Env = new Env
+    sealed class Env extends Env1 {
         def each[A](xs: Seq[A]): A @cpsParam[Any, Unit] = xs.toCps
 
         def in[A](xs: Seq[A]): In[A] = new In(xs)

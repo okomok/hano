@@ -19,7 +19,7 @@ object CpsGenerator {
 
     def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = Iter.from(new CursorImpl(body)).able
 
-    sealed abstract class Env[A] extends hano.Block.OneElementEnv {
+    sealed abstract class Env[A] extends hano.Block.Env1 {
         def apply(x: A): Unit @suspendable
         def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
     }

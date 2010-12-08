@@ -8,6 +8,9 @@ package com.github.okomok
 package hano
 
 
+import scala.util.continuations
+
+
 private[hano] trait Conversions { self: Seq.type =>
 
     @Annotation.returnThat
@@ -21,7 +24,7 @@ private[hano] trait Conversions { self: Seq.type =>
     implicit def fromOption[A](from: Option[A]): Seq[A] = new FromIter(from)
     implicit def fromResponder[A](from: Responder[A]): Seq[A] = new FromResponder(from)
     implicit def fromReactor(from: Reactor): Seq[Any] = new Reactor.Secondary(from)
-    /*implicit*/ def fromCps[A](from: => A @scala.util.continuations.suspendable): Seq[A] = new FromCps(from)
+    /*implicit not work*/ def fromCps[A](from: => A @continuations.suspendable): Seq[A] = new FromCps(from)
 
 }
 
@@ -82,8 +85,6 @@ private class ToResponder[A](_1: Seq[A]) extends Responder[A] {
     override def respond(f: A => Unit) = _1.foreach(f)
 }
 
-
-import scala.util.continuations
 
 private class FromCps[A](from: => A @continuations.suspendable) extends Seq[A] {
     override def forloop(f: A => Unit, k: Exit => Unit) {
