@@ -44,6 +44,8 @@ private class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
         if (isActive) {
             isActive = false
             k(Exit.End)
+        } else {
+            k(Exit.Closed)
         }
     }
 }

@@ -11,11 +11,13 @@ package hano
 import java.util.concurrent.atomic
 
 
-private case class IfFirst[T](_then: T => Unit) {
+@Annotation.visibleForTesting
+case class IfFirst[T](_then: T => Unit) {
     def Else(_else: T => Unit): _IfFirst[T] = new _IfFirst[T](_then, _else)
 }
 
-private class _IfFirst[-T](_then: T => Unit, _else: T => Unit) extends Function1[T, Unit] {
+@Annotation.visibleForTesting
+class _IfFirst[-T](_then: T => Unit, _else: T => Unit) extends Function1[T, Unit] {
     private[this] val first = new atomic.AtomicBoolean(true)
 
     override def apply(x: T) {

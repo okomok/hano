@@ -16,7 +16,10 @@ class Hano(info: ProjectInfo) extends DefaultProject(info) with AutoCompilerPlug
     val fest = "org.easytesting" % "fest-swing" % "1.2" % "test"
     val festng = "org.easytesting" % "fest-swing-testng" % "1.2" % "test"
     val festRelease = "fest release" at "http://repository.codehaus.org"
-
+/*
+    val netty = "org.jboss.netty" % "netty" % "3.2.2.Final" % "compile"
+    val nettyRelease = "repository.jboss.org" at "http://repository.jboss.org/nexus/content/groups/public/"
+*/
     override def compileOptions = super.compileOptions ++
         Seq(Deprecation, Unchecked/*, ExplainTypes*/) ++ compileOptions("-P:continuations:enable")
 

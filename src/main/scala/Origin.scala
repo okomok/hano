@@ -20,6 +20,7 @@ private class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] {
                     f()
                 }
             }
+            k(Exit.Closed)
         }
     }
 }

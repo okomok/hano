@@ -65,7 +65,7 @@ trait Seq[+A] extends java.io.Closeable {
 // kernel
 
     /**
-     * Should be thread-safe.
+     * Should be thread-safe and idempotent.
      */
     override def close(): Unit = ()
 

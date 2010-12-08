@@ -14,7 +14,7 @@ object Exit {
 
     case object End extends Exit
 
-    // case object Closed extends Exit // feasible?
+    case object Closed extends Exit
 
     case class Thrown(what: Throwable) extends Exit
 
