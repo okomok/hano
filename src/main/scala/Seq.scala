@@ -24,6 +24,11 @@ object Seq extends Conversions with PseudoMethods {
     val empty: Seq[Nothing] = new Empty()
 
     /**
+     * The empty sequence without the end reaction
+     */
+    val never: Seq[Nothing] = new Never()
+
+    /**
      * A single-element sequence
      */
     def single[A](x: A): Seq[A] = new Single(x)

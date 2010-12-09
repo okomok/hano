@@ -21,4 +21,20 @@ class EmptyTest extends org.scalatest.junit.JUnit3Suite {
         }
         assertTrue(s.isEmpty)
     }
+
+    def testEnded {
+        var ended = false
+        hano.Seq.empty.of[Int] onExit {
+            case hano.Exit.End => ended = true
+            case _ => fail("doh")
+        } start;
+        assert(ended)
+    }
+
+    def testNever {
+        hano.Seq.never.of[Int] onExit {
+            case _ => fail("doh")
+        } start;
+        ()
+    }
 }
