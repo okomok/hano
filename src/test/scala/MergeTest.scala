@@ -46,4 +46,42 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.util.Iter(1,1,2,2,3,3,4,4,5,5), hano.util.Iter.from(out))
     }
 
+    def testEnd {
+        val xs = hano.Seq.origin(hano.eval.Async).generate(0 to 5)
+        val ys = hano.Seq.origin(hano.eval.Async).generate(6 to 9)
+        val out = new Array[Int](10)
+        var ends = false
+        val gate = new java.util.concurrent.CountDownLatch(1)
+        var i = 0
+        var exitCount = 0
+        for (x <- (xs merge ys).onExit{ case hano.Exit.End => { exitCount += 1; gate.countDown() }; case _ => fail("doh") }) {
+            out(i) = x
+            i += 1
+        }
+        gate.await()
+        expect(1)(exitCount)
+        java.util.Arrays.sort(out)
+        assertEquals(hano.util.Iter(0,1,2,3,4,5,6,7,8,9), hano.util.Iter.from(out))
+    }
+
+    def testWhenThrown {
+        val xs = hano.Seq.origin(hano.eval.Async).generate(0 until 5)
+        val ys = hano.Seq.origin(hano.eval.Async).generate(5 until 1000)
+        val out = new java.util.ArrayList[Int]
+        var ends = false
+        val gate = new java.util.concurrent.CountDownLatch(1)
+         var exitCount = 0
+        for (x <- (xs merge ys).onExit{ case hano.Exit.Thrown(_) => { exitCount += 1; gate.countDown() }; case _ => fail("doh") }) {
+            if (x == 2) {
+                throw new Error // disappears in Future.
+            }
+            out.add(x)
+        }
+        gate.await()
+        expect(1)(exitCount)
+//        println(hano.util.Iter.from(out))
+        assert(out.size < 900)
+        expect(None)(hano.util.Iter.from(out).able.find(_ == 3))
+    }
+
 }

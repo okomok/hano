@@ -8,6 +8,8 @@ package com.github.okomok
 package hano
 
 
+// BROKEN: _2 shall be Iter.
+
 private class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {

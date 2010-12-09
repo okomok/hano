@@ -9,5 +9,5 @@ package hano
 
 
 private class Flatten[A](_1: Seq[Seq[A]]) extends Forwarder[A] {
-    override protected val delegate = _1.unsplit(Seq.empty)
+    override protected val delegate = _1.flatMap(x => x)
 }

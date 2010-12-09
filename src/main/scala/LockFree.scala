@@ -33,9 +33,10 @@ class _IfFirst[-T](_then: T => Unit, _else: T => Unit) extends Function1[T, Unit
 
 /**
  * Equivalent to `lazy val` with `isDone`.
+ * Unlike `lazy val`, this can be recursive.
  */
-@deprecated("unused")
-private class OnlyFirst[-T](f: T => Unit) extends Function1[T, Unit] {
+@Annotation.visibleForTesting
+case class CallOnce[-T](f: T => Unit) extends Function1[T, Unit] {
     private[this] val delegate = new _IfFirst[T](f, _ => ())
     override def apply(x: T) = delegate(x)
 

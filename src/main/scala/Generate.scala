@@ -12,7 +12,7 @@ private class Generate[A](_1: Seq[_], _2: util.Iter[A]) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
         val it = _2.begin
-        val _k = IfFirst[Exit] { q => k(q);close() } Else { _ => () }
+        val _k = CallOnce[Exit] { q => k(q);close() }
         if (!it.hasNext) {
             _k(Exit.End)
         } else {

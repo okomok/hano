@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class LockFreeTest extends org.scalatest.junit.JUnit3Suite {
 
     def doF() { f() }
-    val f = hano.IfFirst[Unit] { _ => doF() } Else { _ => () }
+    val f = hano.CallOnce[Unit] { _ => doF() }
 
     def testRecursive {
         f()
