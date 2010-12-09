@@ -13,12 +13,14 @@ private class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override def forloop(f: A => Unit, k: Exit => Unit) {
         _1 _for { x =>
             f(x)
-        } _andThen { _ =>
-            _2 _for { y =>
-                f(y)
-            } _andThen {
-                k
-            }
+        } _andThen {
+            case Exit.End =>
+                _2 _for { y =>
+                    f(y)
+                } _andThen {
+                    k
+                }
+            case q => k(q)
         }
     }
 }
