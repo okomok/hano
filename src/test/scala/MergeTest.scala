@@ -75,11 +75,12 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
             if (x == 2) {
                 throw new Error // disappears in Future.
             }
+            Thread.sleep(3) // out.size will be smaller.
             out.add(x)
         }
         gate.await()
         expect(1)(exitCount)
-//        println(hano.util.Iter.from(out))
+        println(hano.util.Iter.from(out))
         assert(out.size < 900)
         expect(None)(hano.util.Iter.from(out).able.find(_ == 3))
     }
