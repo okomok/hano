@@ -11,16 +11,16 @@ package hano
 private class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override def close() = { _1.close(); _2.close() }
     override def forloop(f: A => Unit, k: Exit => Unit) {
-        @volatile var go = true
         val _k = CallOnce[Exit] { q => k(q);close() }
+
         _2 _for { y =>
-            go = false
             _k(Exit.End)
         } _andThen { q =>
             _k(q)
         }
+
         _1 _for { x =>
-            if (go) {
+            if (!_k.isDone) {
                 f(x)
             } else {
                 _k(Exit.End)

@@ -14,12 +14,11 @@ private class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         val _k = CallOnce[Exit] { q => k(q) }
         val _ok = IfFirst[Exit] { _ => () } Else { q => _k(q) }
         val _no = CallOnce[Exit] { q => _k(q);close() }
-        var go = true
         val lock = new AnyRef{}
 
         _1 _for { x =>
             lock.synchronized {
-                if (go) {
+                if (!_k.isDone) {
                     f(x)
                 }
             }
@@ -30,14 +29,13 @@ private class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
                 }
             case q =>
                 lock.synchronized {
-                    go = false
                     _no(q)
                 }
         }
 
         _2 _for { y =>
             lock.synchronized {
-                if (go) {
+                if (!_k.isDone) {
                     f(y)
                 }
             }
@@ -48,7 +46,6 @@ private class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
                 }
             case q =>
                 lock.synchronized {
-                    go = false
                     _no(q)
                 }
         }

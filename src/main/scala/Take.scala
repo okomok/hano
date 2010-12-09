@@ -12,6 +12,7 @@ private class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
         val _k = CallOnce[Exit] { q => k(q);close() }
+
         if (_2 == 0) {
             _k(Exit.End)
         } else {
