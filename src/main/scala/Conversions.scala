@@ -33,7 +33,6 @@ private class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
     @volatile private[this] var isActive = false
     override def close() = isActive = false
     override def forloop(f: A => Unit, k: Exit => Unit) = synchronized {
-        assert(!isActive)
         isActive = true
         Exit.tryCatch(k) {
             val it = _1.begin
