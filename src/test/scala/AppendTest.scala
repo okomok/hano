@@ -20,24 +20,23 @@ class AppendTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testNotAppendedIfThrown {
-        val xs = new hano.Seq[Int] {
-            override def forloop(f: Int => Unit, k: hano.Exit => Unit) {
-                f(1)
-                f(2)
-                throw new Error
-            }
-        }
+        val xs = hano.Seq(1,2,3)
         val ys = hano.Seq(4,5)
 
         val out = new java.util.ArrayList[Int]
+        var propagated = false
+        object MyError extends Error
         try {
-            for (x <- xs ++ ys) {
+            for (x <- (xs ++ ys).onExit{case hano.Exit.Thrown(_) => out.add(99); case _ => fail("doh")}) {
+                if (x == 3)
+                    throw MyError
                 out.add(x)
             }
         } catch {
-            case x =>
+            case MyError => propagated = true
         }
-        expect(hano.util.Iter(1,2))(hano.util.Iter.from(out))
+        assert(propagated)
+        expect(hano.util.Iter(1,2,99))(hano.util.Iter.from(out))
     }
 
 }
