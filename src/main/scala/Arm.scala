@@ -60,7 +60,7 @@ trait Arm[+A] extends Seq[A] {
         } catch {
             case t: Throwable => {
                 primary = t
-                k(Exit.Thrown(t))
+                k(Exit.Failed(t))
                 throw t
             }
         } finally {

@@ -16,14 +16,14 @@ object Exit {
 
     case object Closed extends Exit
 
-    case class Thrown(what: Throwable) extends Exit
+    case class Failed(why: AnyRef) extends Exit
 
     private[hano] def tryCatch(k: Exit => Unit)(body: => Unit) {
         try {
             body
         } catch {
             case t: Throwable => {
-                k(Thrown(t)) // informs reaction-site
+                k(Failed(t)) // informs reaction-site
                 throw t // Seq-site responsibility
             }
         }
@@ -32,9 +32,9 @@ object Exit {
     private[hano] val defaultHandler: Exit => Unit = { _ => () }
 /*
     private[hano] val defaultHandler: Exit => Unit = {
-        case Thrown(t) => {
+        case Failed(t) => {
             val d = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date())
-            java.lang.System.err.println("[hano.Exit.Thrown]["+ d + "] " + t.toString)
+            java.lang.System.err.println("[hano.Exit.Failed]["+ d + "] " + t.toString)
         }
         case _ => ()
     }

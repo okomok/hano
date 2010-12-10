@@ -71,7 +71,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         var ends = false
         val gate = new java.util.concurrent.CountDownLatch(1)
          var exitCount = 0
-        for (x <- (xs merge ys).onExit{ case hano.Exit.Thrown(_) => { exitCount += 1; gate.countDown() }; case _ => fail("doh") }) {
+        for (x <- (xs merge ys).onExit{ case hano.Exit.Failed(_) => { exitCount += 1; gate.countDown() }; case _ => fail("doh") }) {
             //println(x)
             if (x == 2) {
                 throw new Error // disappears in Future.

@@ -45,7 +45,7 @@ trait Reactor extends Actor {
 
     final override def exceptionHandler = {
         if (_k != null) {
-            case t => _k(Exit.Thrown(t))
+            case t => _k(Exit.Failed(t))
         } else {
             super.exceptionHandler
         }

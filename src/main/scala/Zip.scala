@@ -29,9 +29,9 @@ private class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                 case (null, q) => q
                 case (End, End) => End
                 case (Closed, Closed) => Closed
-                case (Thrown(s), Thrown(t)) => Thrown(s) // TODO
-                case (Thrown(s), _) => Thrown(s)
-                case (_, Thrown(t)) => Thrown(t)
+                case (Failed(s), Failed(t)) => Failed((s, t))
+                case (Failed(s), _) => Failed(s)
+                case (_, Failed(t)) => Failed(t)
                 case (Closed, _) => Closed
                 case (_, Closed) => Closed
             }
