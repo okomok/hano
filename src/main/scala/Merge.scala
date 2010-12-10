@@ -17,8 +17,8 @@ private class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         val lock = new AnyRef{}
 
         _1 _for { x =>
-            lock.synchronized {
-                if (!_k.isDone) {
+            if (!_k.isDone) {
+                lock.synchronized {
                     f(x)
                 }
             }
@@ -34,8 +34,8 @@ private class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         }
 
         _2 _for { y =>
-            lock.synchronized {
-                if (!_k.isDone) {
+            if (!_k.isDone) {
+                lock.synchronized {
                     f(y)
                 }
             }

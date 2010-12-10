@@ -72,6 +72,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         val gate = new java.util.concurrent.CountDownLatch(1)
          var exitCount = 0
         for (x <- (xs merge ys).onExit{ case hano.Exit.Thrown(_) => { exitCount += 1; gate.countDown() }; case _ => fail("doh") }) {
+            //println(x)
             if (x == 2) {
                 throw new Error // disappears in Future.
             }
@@ -80,7 +81,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         }
         gate.await()
         expect(1)(exitCount)
-        println(hano.util.Iter.from(out))
+        //println(hano.util.Iter.from(out))
         assert(out.size < 900)
         expect(None)(hano.util.Iter.from(out).able.find(_ == 3))
     }

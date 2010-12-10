@@ -38,9 +38,9 @@ private class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         }
 
         _1 _for { x =>
-            lock.synchronized {
-                invariant
-                if (!_k.isDone) {
+            if (!_k.isDone) {
+                lock.synchronized {
+                    invariant
                     if (q2.isEmpty) {
                         q1.add(x)
                     } else {
@@ -59,9 +59,9 @@ private class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         }
 
         _2 _for { y =>
-            lock.synchronized {
-                invariant
-                if (!_k.isDone) {
+            if (!_k.isDone) {
+                lock.synchronized {
+                    invariant
                     if (q1.isEmpty) {
                         q2.add(y)
                     } else {
