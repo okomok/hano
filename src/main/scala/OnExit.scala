@@ -11,9 +11,9 @@ package hano
 private class OnExit[A](_1: Seq[A], _2: Exit => Unit) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
-        _1 _for { x =>
+        For(_1) { x =>
             f(x)
-        } _andThen { q =>
+        } AndThen { q =>
             _2(q)
             k(q)
         }

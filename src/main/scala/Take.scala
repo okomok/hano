@@ -17,7 +17,7 @@ private class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
             _k(Exit.End)
         } else {
             var c = _2
-            _1 _for { x =>
+            For(_1) { x =>
                 if (c != 0) {
                     f(x)
                     c -= 1
@@ -25,7 +25,7 @@ private class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
                         _k(Exit.End)
                     }
                 }
-            } _andThen { q =>
+            } AndThen { q =>
                 _k(q)
             }
         }

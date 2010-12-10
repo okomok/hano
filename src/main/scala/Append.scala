@@ -11,13 +11,13 @@ package hano
 private class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override def close() = { _1.close(); _2.close() }
     override def forloop(f: A => Unit, k: Exit => Unit) {
-        _1 _for { x =>
+        For(_1) { x =>
             f(x)
-        } _andThen {
+        } AndThen {
             case Exit.End =>
-                _2 _for { y =>
+                For(_2) { y =>
                     f(y)
-                } _andThen {
+                } AndThen {
                     k
                 }
             case q => k(q)

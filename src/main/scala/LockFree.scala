@@ -11,23 +11,21 @@ package hano
 import java.util.concurrent.atomic
 
 
-@Annotation.visibleForTesting
-case class IfFirst[T](_then: T => Unit) {
-    def Else(_else: T => Unit): _IfFirst[T] = new _IfFirst[T](_then, _else)
-}
+private[hano] case class IfFirst[T](_then: T => Unit) {
+    def Else(_else: T => Unit) = new _Else(_else)
 
-@Annotation.visibleForTesting
-class _IfFirst[-T](_then: T => Unit, _else: T => Unit) extends Function1[T, Unit] {
-    private[this] val first = new atomic.AtomicBoolean(true)
+    class _Else(_else: T => Unit) {
+        private[this] val first = new atomic.AtomicBoolean(true)
 
-    override def apply(x: T) {
-        if (first.get && first.compareAndSet(true, false)) {
-            return _then(x)
+        def apply(x: T) {
+            if (first.get && first.compareAndSet(true, false)) {
+                return _then(x)
+            }
+            _else(x)
         }
-        _else(x)
-    }
 
-    def isSecond: Boolean = !first.get
+        def isSecond: Boolean = !first.get
+    }
 }
 
 
@@ -37,7 +35,7 @@ class _IfFirst[-T](_then: T => Unit, _else: T => Unit) extends Function1[T, Unit
  */
 @Annotation.visibleForTesting
 case class CallOnce[-T](f: T => Unit) extends Function1[T, Unit] {
-    private[this] val delegate = new _IfFirst[T](f, _ => ())
+    private[this] val delegate = IfFirst[T] { f } Else { _ => () }
     override def apply(x: T) = delegate(x)
 
     def isDone: Boolean = delegate.isSecond
@@ -46,7 +44,7 @@ case class CallOnce[-T](f: T => Unit) extends Function1[T, Unit] {
 
 @deprecated("unused")
 private class SkipFirst[-T](f: T => Unit) extends Function1[T, Unit] {
-    private[this] val delegate = new _IfFirst[T](_ => (), f)
+    private[this] val delegate = IfFirst[T] { _ => () } Else { f }
     override def apply(x: T) = delegate(x)
 
     def isSkipped: Boolean = delegate.isSecond

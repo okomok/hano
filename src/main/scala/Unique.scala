@@ -17,12 +17,12 @@ private class UniqueBy[A](_1: Seq[A], _2: (A, A) => Boolean) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
         var prev: Option[A] = None
-        _1 _for { x =>
+        For(_1) { x =>
             if (prev.isEmpty || !_2(prev.get, x)) {
                 f(x)
             }
             prev = Some(x)
-        } _andThen {
+        } AndThen {
             k
         }
     }

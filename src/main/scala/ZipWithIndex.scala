@@ -12,10 +12,10 @@ private class ZipWithIndex[A](_1: Seq[A]) extends Seq[(A, Int)] {
     override def close() = _1.close()
     override def forloop(f: Tuple2[A, Int] => Unit, k: Exit => Unit) {
         var i = 0
-        _1 _for { x =>
+        For(_1) { x =>
             f(x, i)
             i += 1
-        } _andThen {
+        } AndThen {
             k
         }
     }

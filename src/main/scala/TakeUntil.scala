@@ -13,19 +13,19 @@ private class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override def forloop(f: A => Unit, k: Exit => Unit) {
         val _k = CallOnce[Exit] { q => k(q);close() }
 
-        _2 _for { y =>
+        For(_2) { y =>
             _k(Exit.End)
-        } _andThen { q =>
+        } AndThen { q =>
             _k(q)
         }
 
-        _1 _for { x =>
+        For(_1) { x =>
             if (!_k.isDone) {
                 f(x)
             } else {
                 _k(Exit.End)
             }
-        } _andThen { q =>
+        } AndThen { q =>
             _k(q)
         }
     }

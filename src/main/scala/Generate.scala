@@ -17,14 +17,14 @@ private class Generate[A](_1: Seq[_], _2: util.Iter[A]) extends Seq[A] {
         if (!it.hasNext) {
             _k(Exit.End)
         } else {
-            _1 _for { _ =>
+            For(_1) { _ =>
                 if (it.hasNext) {
                     f(it.next)
                     if (!it.hasNext) {
                         _k(Exit.End)
                     }
                 }
-            } _andThen { q =>
+            } AndThen { q =>
                 _k(q)
             }
         }

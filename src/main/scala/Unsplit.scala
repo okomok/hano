@@ -14,7 +14,7 @@ private class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
         var first = true
-        _1 _for { s =>
+        For(_1) { s =>
             if (first) {
                 first = false
             } else {
@@ -25,7 +25,7 @@ private class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
             for (x <- s) {
                 f(x)
             }
-        } _andThen {
+        } AndThen {
             k
         }
     }

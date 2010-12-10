@@ -11,7 +11,7 @@ package hano
 private class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
-        _1 _for { x =>
+        For(_1) { x =>
             try {
                 f(x)
             } catch {
@@ -23,7 +23,7 @@ private class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) exte
                     }
                 }
             }
-        } _andThen {
+        } AndThen {
             k
         }
     }

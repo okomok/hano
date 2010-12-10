@@ -13,7 +13,7 @@ private class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends Seq[B] 
     override def forloop(f: B => Unit, k: Exit => Unit) {
         val _k = CallOnce[Exit] { q => k(q);close() }
 
-        _1 _for { x =>
+        For(_1) { x =>
             if(!_k.isDone) {
                 if (_2(x)) {
                     f(x)
@@ -21,7 +21,7 @@ private class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends Seq[B] 
                     _k(Exit.End)
                 }
             }
-        } _andThen { q =>
+        } AndThen { q =>
             _k(q)
         }
     }

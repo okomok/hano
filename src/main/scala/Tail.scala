@@ -12,13 +12,13 @@ private class Tail[A](_1: Seq[A]) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
         var first = true
-        _1 _for { x =>
+        For(_1) { x =>
             if (first) {
                 first = false
             } else {
                 f(x)
             }
-        } _andThen {
+        } AndThen {
             k
         }
     }

@@ -16,7 +16,7 @@ private class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
         var c = 0
-        _1 _for { x =>
+        For(_1) { x =>
             if (c == 0) {
                 f(x)
             }
@@ -24,7 +24,7 @@ private class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
             if (c == _2) {
                 c = 0
             }
-        } _andThen {
+        } AndThen {
             k
         }
     }
@@ -37,13 +37,13 @@ private class StepTime[A](_1: Seq[A], _2: Long) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
         var past = 0L
-        _1 _for { x =>
+        For(_1) { x =>
             val now = System.currentTimeMillis
             if (now - past >= _2) {
                 past = now
                 f(x)
             }
-        } _andThen {
+        } AndThen {
             k
         }
     }

@@ -32,11 +32,11 @@ object Arm {
         @Annotation.pre("f is synchronous")
         override def forloop(f: B => Unit, k: Exit => Unit) {
             val r = _1.open
-            _2(r) _for { y =>
+            For(_2(r)) { y =>
                 for (_ <- from(_1: java.io.Closeable)) {
                     f(y)
                 }
-            } _andThen { q =>
+            } AndThen { q =>
                 k(q)
                 close()
             }

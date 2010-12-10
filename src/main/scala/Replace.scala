@@ -12,13 +12,13 @@ private class Replace[A](_1: Seq[A], _2: util.Iter[A]) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: A => Unit, k: Exit => Unit) {
         val it = _2.begin
-        _1 _for { x =>
+        For(_1) { x =>
             if (it.hasNext) {
                 f(it.next)
             } else {
                 f(x)
             }
-        } _andThen {
+        } AndThen {
             k
         }
     }

@@ -16,13 +16,13 @@ private class Adjacent[A](_1: Seq[A], _2: Int) extends Seq[IndexedSeq[A]] {
     override def close() = _1.close()
     override def forloop(f: IndexedSeq[A] => Unit, k: Exit => Unit) {
         val buf = new AdjacentBuffer[A](_2)
-        _1 _for { x =>
+        For(_1) { x =>
             buf.addLast(x)
             if (buf.isFull) {
                 f(buf.toIndexedSeq)
                 buf.removeFirst()
             }
-        } _andThen {
+        } AndThen {
             k
         }
     }
