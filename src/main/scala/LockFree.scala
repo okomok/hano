@@ -11,7 +11,7 @@ package hano
 import java.util.concurrent.atomic
 
 
-private[hano] case class IfFirst[T](_then: T => Unit) {
+private case class IfFirst[T](_then: T => Unit) {
     def Else(_else: T => Unit) = new _Else(_else)
 
     class _Else(_else: T => Unit) {

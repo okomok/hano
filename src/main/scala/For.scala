@@ -8,7 +8,7 @@ package com.github.okomok
 package hano
 
 
-private[hano] case class For[A](xs: Seq[A]) {
+private case class For[A](xs: Seq[A]) {
     def apply(f: A => Unit) = new Apply(f)
 
     class Apply(f: A => Unit) {
@@ -18,7 +18,7 @@ private[hano] case class For[A](xs: Seq[A]) {
     }
 }
 
-private[hano] case class LockedFor[A](xs: Seq[A], by: AnyRef) {
+private case class LockedFor[A](xs: Seq[A], by: AnyRef) {
     def apply(f: A => Unit) = new Apply(f)
 
     class Apply(f: A => Unit) {
