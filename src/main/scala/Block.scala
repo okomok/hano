@@ -23,7 +23,7 @@ object Block {
 
         def find[A](xs: Seq[A])(p: A => Boolean): A @cpsParam[Any, Unit] = xs.dropWhile(!p(_)).take(1).toCps
 
-        def require(cond: => Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Seq.single(()) else Seq.empty).toCps
+        def require(cond: Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Seq.single(()) else Seq.empty).toCps
 
         def use[A](xs: Arm[A]): A @cpsParam[Any, Unit] = xs.toCps
     }
