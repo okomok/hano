@@ -14,8 +14,22 @@ import java.util.concurrent
 
 object Generator {
 
+    /**
+     * Creates an Iterable from a body using Env.
+     */
     def apply[A](body: Env[A] => Unit): Iterable[A] = Iter.from(new CursorImpl(body)).able
 
+    /**
+     * Converts a Traversable to Iterable using a thread.
+     */
+    def traverse[A](xs: scala.collection.TraversableOnce[A]): Iterable[A] = apply { * =>
+        xs.foreach(*)
+        *.exit()
+    }
+
+    /**
+     * Provides method set used in a body.
+     */
     sealed abstract class Env[-A] extends (A => Unit) {
         def exit(): Unit
         def flush(): Unit

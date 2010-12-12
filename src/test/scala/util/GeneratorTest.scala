@@ -146,6 +146,10 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(util.Iter.from(0 until 20), util.Iter.from(sample))
     }
 
+    def testTraverse {
+        val sample = util.Generator.traverse(0 until 20)
+        assertEquals(util.Iter.from(0 until 20), util.Iter.from(sample))
+    }
 }
 
 /*
