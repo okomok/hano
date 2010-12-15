@@ -15,7 +15,7 @@ import junit.framework.Assert._
 
 class ResourceTest extends org.scalatest.junit.JUnit3Suite {
 
-    class TrivialResource extends hano.NoEndResource[Int] {
+    class TrivialResource extends hano.NoExitResource[Int] {
         override protected def closeResource = { job = null }
         override protected def openResource(f: Int => Unit) {
             assertEquals(null, job)

@@ -24,7 +24,7 @@ object Swing {
         def removeActionListener(l: ActionListener)
     }
 
-    case class ActionPerformed(source: ActionEventSource) extends NoEndResource[ActionEvent] {
+    case class ActionPerformed(source: ActionEventSource) extends NoExitResource[ActionEvent] {
         private[this] var l: ActionListener = null
         override protected def closeResource() = source.removeActionListener(l)
         override protected def openResource(f: ActionEvent => Unit) {
@@ -48,7 +48,7 @@ object Swing {
 
     case class Ancestor(source: JComponent) {
 
-        private class Event extends NoEndResource[AncestorEvent] {
+        private class Event extends NoExitResource[AncestorEvent] {
             private[this] var l: AncestorAdapter = null
             override protected def closeResource() = source.removeAncestorListener(l)
             override protected def openResource(f: AncestorEvent => Unit) {
@@ -62,7 +62,7 @@ object Swing {
         }
         def Event: Seq[AncestorEvent] = new Event
 
-        private class Added extends NoEndResource[AncestorEvent] {
+        private class Added extends NoExitResource[AncestorEvent] {
             private[this] var l: AncestorAdapter = null
             override protected def closeResource() = source.removeAncestorListener(l)
             override protected def openResource(f: AncestorEvent => Unit) {
@@ -74,7 +74,7 @@ object Swing {
         }
         def Added: Seq[AncestorEvent] = new Added
 
-        private class Moved extends NoEndResource[AncestorEvent] {
+        private class Moved extends NoExitResource[AncestorEvent] {
             private[this] var l: AncestorAdapter = null
             override protected def closeResource() = source.removeAncestorListener(l)
             override protected def openResource(f: AncestorEvent => Unit) {
@@ -86,7 +86,7 @@ object Swing {
         }
         def Moved: Seq[AncestorEvent] = new Moved
 
-        private class Removed extends NoEndResource[AncestorEvent] {
+        private class Removed extends NoExitResource[AncestorEvent] {
             private[this] var l: AncestorAdapter = null
             override protected def closeResource() = source.removeAncestorListener(l)
             override protected def openResource(f: AncestorEvent => Unit) {
@@ -110,7 +110,7 @@ object Swing {
         def removeChangeListener(l: ChangeListener)
     }
 
-    case class StateChanged(source: ChangeEventSource) extends NoEndResource[ChangeEvent] {
+    case class StateChanged(source: ChangeEventSource) extends NoExitResource[ChangeEvent] {
         private[this] var l: ChangeListener = null
         override protected def closeResource() = source.removeChangeListener(l)
         override protected def openResource(f: ChangeEvent => Unit) {
@@ -128,7 +128,7 @@ object Swing {
 
     case class Component(source: AComponent) {
 
-        private class Event extends NoEndResource[ComponentEvent] {
+        private class Event extends NoExitResource[ComponentEvent] {
             private[this] var l: ComponentAdapter = null
             override protected def closeResource() = source.removeComponentListener(l)
             override protected def openResource(f: ComponentEvent => Unit) {
@@ -143,7 +143,7 @@ object Swing {
         }
         def Event: Seq[ComponentEvent] = new Event
 
-        private class Hidden extends NoEndResource[ComponentEvent] {
+        private class Hidden extends NoExitResource[ComponentEvent] {
             private[this] var l: ComponentAdapter = null
             override protected def closeResource() = source.removeComponentListener(l)
             override protected def openResource(f: ComponentEvent => Unit) {
@@ -155,7 +155,7 @@ object Swing {
         }
         def Hidden: Seq[ComponentEvent] = new Hidden
 
-        private class Moved extends NoEndResource[ComponentEvent] {
+        private class Moved extends NoExitResource[ComponentEvent] {
             private[this] var l: ComponentAdapter = null
             override protected def closeResource() = source.removeComponentListener(l)
             override protected def openResource(f: ComponentEvent => Unit) {
@@ -167,7 +167,7 @@ object Swing {
         }
         def Moved: Seq[ComponentEvent] = new Moved
 
-        private class Resized extends NoEndResource[ComponentEvent] {
+        private class Resized extends NoExitResource[ComponentEvent] {
             private[this] var l: ComponentAdapter = null
             override protected def closeResource() = source.removeComponentListener(l)
             override protected def openResource(f: ComponentEvent => Unit) {
@@ -179,7 +179,7 @@ object Swing {
         }
         def Resized: Seq[ComponentEvent] = new Resized
 
-        private class Shown extends NoEndResource[ComponentEvent] {
+        private class Shown extends NoExitResource[ComponentEvent] {
             private[this] var l: ComponentAdapter = null
             override protected def closeResource() = source.removeComponentListener(l)
             override protected def openResource(f: ComponentEvent => Unit) {
@@ -199,7 +199,7 @@ object Swing {
 
     case class Container(source: AContainer) {
 
-        private class Event extends NoEndResource[ContainerEvent] {
+        private class Event extends NoExitResource[ContainerEvent] {
             private[this] var l: ContainerAdapter = null
             override protected def closeResource() = source.removeContainerListener(l)
             override protected def openResource(f: ContainerEvent => Unit) {
@@ -212,7 +212,7 @@ object Swing {
         }
         def Event: Seq[ContainerEvent] = new Event
 
-        private class Added extends NoEndResource[ContainerEvent] {
+        private class Added extends NoExitResource[ContainerEvent] {
             private[this] var l: ContainerAdapter = null
             override protected def closeResource() = source.removeContainerListener(l)
             override protected def openResource(f: ContainerEvent => Unit) {
@@ -224,7 +224,7 @@ object Swing {
         }
         def Added: Seq[ContainerEvent] = new Added
 
-        private class Removed extends NoEndResource[ContainerEvent] {
+        private class Removed extends NoExitResource[ContainerEvent] {
             private[this] var l: ContainerAdapter = null
             override protected def closeResource() = source.removeContainerListener(l)
             override protected def openResource(f: ContainerEvent => Unit) {
@@ -245,7 +245,7 @@ object Swing {
 
     case class Focus(source: AComponent) {
 
-        private class Event extends NoEndResource[FocusEvent] {
+        private class Event extends NoExitResource[FocusEvent] {
             private[this] var l: FocusAdapter = null
             override protected def closeResource() = source.removeFocusListener(l)
             override protected def openResource(f: FocusEvent => Unit) {
@@ -258,7 +258,7 @@ object Swing {
         }
         def Event: Seq[FocusEvent] = new Event
 
-        private class Gained extends NoEndResource[FocusEvent] {
+        private class Gained extends NoExitResource[FocusEvent] {
             private[this] var l: FocusAdapter = null
             override protected def closeResource() = source.removeFocusListener(l)
             override protected def openResource(f: FocusEvent => Unit) {
@@ -270,7 +270,7 @@ object Swing {
         }
         def Gained: Seq[FocusEvent] = new Gained
 
-        private class Lost extends NoEndResource[FocusEvent] {
+        private class Lost extends NoExitResource[FocusEvent] {
             private[this] var l: FocusAdapter = null
             override protected def closeResource() = source.removeFocusListener(l)
             override protected def openResource(f: FocusEvent => Unit) {
@@ -291,7 +291,7 @@ object Swing {
 
     case class Hierarchy(source: AComponent) {
 
-        private class Changed extends NoEndResource[HierarchyEvent] {
+        private class Changed extends NoExitResource[HierarchyEvent] {
             private[this] var l: HierarchyListener = null
             override protected def closeResource() = source.removeHierarchyListener(l)
             override protected def openResource(f: HierarchyEvent => Unit) {
@@ -303,7 +303,7 @@ object Swing {
         }
         def Changed: Seq[HierarchyEvent] = new Changed
 
-        private class Bounds extends NoEndResource[HierarchyEvent] {
+        private class Bounds extends NoExitResource[HierarchyEvent] {
             private[this] var l: HierarchyBoundsAdapter = null
             override protected def closeResource() = source.removeHierarchyBoundsListener(l)
             override protected def openResource(f: HierarchyEvent => Unit) {
@@ -316,7 +316,7 @@ object Swing {
         }
         def Bounds: Seq[HierarchyEvent] = new Bounds
 
-        private class Moved extends NoEndResource[HierarchyEvent] {
+        private class Moved extends NoExitResource[HierarchyEvent] {
             private[this] var l: HierarchyBoundsAdapter = null
             override protected def closeResource() = source.removeHierarchyBoundsListener(l)
             override protected def openResource(f: HierarchyEvent => Unit) {
@@ -328,7 +328,7 @@ object Swing {
         }
         def Moved: Seq[HierarchyEvent] = new Moved
 
-        private class Resized extends NoEndResource[HierarchyEvent] {
+        private class Resized extends NoExitResource[HierarchyEvent] {
             private[this] var l: HierarchyBoundsAdapter = null
             override protected def closeResource() = source.removeHierarchyBoundsListener(l)
             override protected def openResource(f: HierarchyEvent => Unit) {
@@ -354,7 +354,7 @@ object Swing {
 
     case class InputMethod(source: AComponent) {
 
-        private class Event extends NoEndResource[InputMethodEvent] {
+        private class Event extends NoExitResource[InputMethodEvent] {
             private[this] var l: InputMethodAdapter = null
             override protected def closeResource() = source.removeInputMethodListener(l)
             override protected def openResource(f: InputMethodEvent => Unit) {
@@ -367,7 +367,7 @@ object Swing {
         }
         def Event: Seq[InputMethodEvent] = new Event
 
-        private class CaretPositionChanged extends NoEndResource[InputMethodEvent] {
+        private class CaretPositionChanged extends NoExitResource[InputMethodEvent] {
             private[this] var l: InputMethodAdapter = null
             override protected def closeResource() = source.removeInputMethodListener(l)
             override protected def openResource(f: InputMethodEvent => Unit) {
@@ -379,7 +379,7 @@ object Swing {
         }
         def CaretPositionChanged: Seq[InputMethodEvent] = new CaretPositionChanged
 
-        private class TextChanged extends NoEndResource[InputMethodEvent] {
+        private class TextChanged extends NoExitResource[InputMethodEvent] {
             private[this] var l: InputMethodAdapter = null
             override protected def closeResource() = source.removeInputMethodListener(l)
             override protected def openResource(f: InputMethodEvent => Unit) {
@@ -403,7 +403,7 @@ object Swing {
         def removeItemListener(l: ItemListener)
     }
 
-    case class ItemStateChanged(source: ItemEventSource) extends NoEndResource[ItemEvent] {
+    case class ItemStateChanged(source: ItemEventSource) extends NoExitResource[ItemEvent] {
         private[this] var l: ItemListener = null
         override protected def closeResource() = source.removeItemListener(l)
         override protected def openResource(f: ItemEvent => Unit) {
@@ -421,7 +421,7 @@ object Swing {
 
     case class Key(source: AComponent) {
 
-        private class Event extends NoEndResource[KeyEvent] {
+        private class Event extends NoExitResource[KeyEvent] {
             private[this] var l: KeyAdapter = null
             override protected def closeResource() = source.removeKeyListener(l)
             override protected def openResource(f: KeyEvent => Unit) {
@@ -435,7 +435,7 @@ object Swing {
         }
         def Event: Seq[KeyEvent] = new Event
 
-        private class Pressed extends NoEndResource[KeyEvent] {
+        private class Pressed extends NoExitResource[KeyEvent] {
             private[this] var l: KeyAdapter = null
             override protected def closeResource() = source.removeKeyListener(l)
             override protected def openResource(f: KeyEvent => Unit) {
@@ -447,7 +447,7 @@ object Swing {
         }
         def Pressed: Seq[KeyEvent] = new Pressed
 
-        private class Released extends NoEndResource[KeyEvent] {
+        private class Released extends NoExitResource[KeyEvent] {
             private[this] var l: KeyAdapter = null
             override protected def closeResource() = source.removeKeyListener(l)
             override protected def openResource(f: KeyEvent => Unit) {
@@ -459,7 +459,7 @@ object Swing {
         }
         def Released: Seq[KeyEvent] = new Released
 
-        private class Typed extends NoEndResource[KeyEvent] {
+        private class Typed extends NoExitResource[KeyEvent] {
             private[this] var l: KeyAdapter = null
             override protected def closeResource() = source.removeKeyListener(l)
             override protected def openResource(f: KeyEvent => Unit) {
@@ -491,7 +491,7 @@ object Swing {
 
     case class Menu(source: MenuEventSource) {
 
-        private class Event extends NoEndResource[MenuEvent] {
+        private class Event extends NoExitResource[MenuEvent] {
             private[this] var l: MenuAdapter = null
             override protected def closeResource() = source.removeMenuListener(l)
             override protected def openResource(f: MenuEvent => Unit) {
@@ -505,7 +505,7 @@ object Swing {
         }
         def Event: Seq[MenuEvent] = new Event
 
-        private class Canceled extends NoEndResource[MenuEvent] {
+        private class Canceled extends NoExitResource[MenuEvent] {
             private[this] var l: MenuAdapter = null
             override protected def closeResource() = source.removeMenuListener(l)
             override protected def openResource(f: MenuEvent => Unit) {
@@ -517,7 +517,7 @@ object Swing {
         }
         def Canceled: Seq[MenuEvent] = new Canceled
 
-        private class Deselected extends NoEndResource[MenuEvent] {
+        private class Deselected extends NoExitResource[MenuEvent] {
             private[this] var l: MenuAdapter = null
             override protected def closeResource() = source.removeMenuListener(l)
             override protected def openResource(f: MenuEvent => Unit) {
@@ -529,7 +529,7 @@ object Swing {
         }
         def Deselected: Seq[MenuEvent] = new Deselected
 
-        private class Selected extends NoEndResource[MenuEvent] {
+        private class Selected extends NoExitResource[MenuEvent] {
             private[this] var l: MenuAdapter = null
             override protected def closeResource() = source.removeMenuListener(l)
             override protected def openResource(f: MenuEvent => Unit) {
@@ -562,7 +562,7 @@ object Swing {
 
     case class MenuDragMouse(source: MenuDragMouseEventSource) {
 
-        private class Event extends NoEndResource[MenuDragMouseEvent] {
+        private class Event extends NoExitResource[MenuDragMouseEvent] {
             private[this] var l: MenuDragMouseAdapter = null
             override protected def closeResource() = source.removeMenuDragMouseListener(l)
             override protected def openResource(f: MenuDragMouseEvent => Unit) {
@@ -577,7 +577,7 @@ object Swing {
         }
         def Event: Seq[MenuDragMouseEvent] = new Event
 
-        private class Dragged extends NoEndResource[MenuDragMouseEvent] {
+        private class Dragged extends NoExitResource[MenuDragMouseEvent] {
             private[this] var l: MenuDragMouseAdapter = null
             override protected def closeResource() = source.removeMenuDragMouseListener(l)
             override protected def openResource(f: MenuDragMouseEvent => Unit) {
@@ -589,7 +589,7 @@ object Swing {
         }
         def Dragged: Seq[MenuDragMouseEvent] = new Dragged
 
-        private class Entered extends NoEndResource[MenuDragMouseEvent] {
+        private class Entered extends NoExitResource[MenuDragMouseEvent] {
             private[this] var l: MenuDragMouseAdapter = null
             override protected def closeResource() = source.removeMenuDragMouseListener(l)
             override protected def openResource(f: MenuDragMouseEvent => Unit) {
@@ -601,7 +601,7 @@ object Swing {
         }
         def Entered: Seq[MenuDragMouseEvent] = new Entered
 
-        private class Exited extends NoEndResource[MenuDragMouseEvent] {
+        private class Exited extends NoExitResource[MenuDragMouseEvent] {
             private[this] var l: MenuDragMouseAdapter = null
             override protected def closeResource() = source.removeMenuDragMouseListener(l)
             override protected def openResource(f: MenuDragMouseEvent => Unit) {
@@ -613,7 +613,7 @@ object Swing {
         }
         def Exited: Seq[MenuDragMouseEvent] = new Exited
 
-        private class Released extends NoEndResource[MenuDragMouseEvent] {
+        private class Released extends NoExitResource[MenuDragMouseEvent] {
             private[this] var l: MenuDragMouseAdapter = null
             override protected def closeResource() = source.removeMenuDragMouseListener(l)
             override protected def openResource(f: MenuDragMouseEvent => Unit) {
@@ -645,7 +645,7 @@ object Swing {
 
     case class MenuKey(source: MenuKeyEventSource) {
 
-        private class Event extends NoEndResource[MenuKeyEvent] {
+        private class Event extends NoExitResource[MenuKeyEvent] {
             private[this] var l: MenuKeyAdapter = null
             override protected def closeResource() = source.removeMenuKeyListener(l)
             override protected def openResource(f: MenuKeyEvent => Unit) {
@@ -659,7 +659,7 @@ object Swing {
         }
         def Event: Seq[MenuKeyEvent] = new Event
 
-        private class Pressed extends NoEndResource[MenuKeyEvent] {
+        private class Pressed extends NoExitResource[MenuKeyEvent] {
             private[this] var l: MenuKeyAdapter = null
             override protected def closeResource() = source.removeMenuKeyListener(l)
             override protected def openResource(f: MenuKeyEvent => Unit) {
@@ -671,7 +671,7 @@ object Swing {
         }
         def Pressed: Seq[MenuKeyEvent] = new Pressed
 
-        private class Released extends NoEndResource[MenuKeyEvent] {
+        private class Released extends NoExitResource[MenuKeyEvent] {
             private[this] var l: MenuKeyAdapter = null
             override protected def closeResource() = source.removeMenuKeyListener(l)
             override protected def openResource(f: MenuKeyEvent => Unit) {
@@ -683,7 +683,7 @@ object Swing {
         }
         def Released: Seq[MenuKeyEvent] = new Released
 
-        private class Typed extends NoEndResource[MenuKeyEvent] {
+        private class Typed extends NoExitResource[MenuKeyEvent] {
             private[this] var l: MenuKeyAdapter = null
             override protected def closeResource() = source.removeMenuKeyListener(l)
             override protected def openResource(f: MenuKeyEvent => Unit) {
@@ -705,7 +705,7 @@ object Swing {
 
     case class Mouse(source: AComponent) {
 
-        private class Event extends NoEndResource[MouseEvent] {
+        private class Event extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -721,7 +721,7 @@ object Swing {
         }
         def Event: Seq[MouseEvent] = new Event
 
-        private class Clicked extends NoEndResource[MouseEvent] {
+        private class Clicked extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -733,7 +733,7 @@ object Swing {
         }
         def Clicked: Seq[MouseEvent] = new Clicked
 
-        private class Entered extends NoEndResource[MouseEvent] {
+        private class Entered extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -745,7 +745,7 @@ object Swing {
         }
         def Entered: Seq[MouseEvent] = new Entered
 
-        private class Exited extends NoEndResource[MouseEvent] {
+        private class Exited extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -757,7 +757,7 @@ object Swing {
         }
         def Exited: Seq[MouseEvent] = new Exited
 
-        private class Pressed extends NoEndResource[MouseEvent] {
+        private class Pressed extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -769,7 +769,7 @@ object Swing {
         }
         def Pressed: Seq[MouseEvent] = new Pressed
 
-        private class Released extends NoEndResource[MouseEvent] {
+        private class Released extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -783,7 +783,7 @@ object Swing {
 
         // Motion MouseEvent
 
-        private class Motion extends NoEndResource[MouseEvent] {
+        private class Motion extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseMotionListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -796,7 +796,7 @@ object Swing {
         }
         def Motion: Seq[MouseEvent] = new Motion
 
-        private class Dragged extends NoEndResource[MouseEvent] {
+        private class Dragged extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseMotionListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -808,7 +808,7 @@ object Swing {
         }
         def Dragged: Seq[MouseEvent] = new Dragged
 
-        private class Moved extends NoEndResource[MouseEvent] {
+        private class Moved extends NoExitResource[MouseEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseMotionListener(l)
             override protected def openResource(f: MouseEvent => Unit) {
@@ -822,7 +822,7 @@ object Swing {
 
         // MouseWheelEvent
 
-        private class WheelMoved extends NoEndResource[MouseWheelEvent] {
+        private class WheelMoved extends NoExitResource[MouseWheelEvent] {
             private[this] var l: MouseInputAdapter = null
             override protected def closeResource() = source.removeMouseWheelListener(l)
             override protected def openResource(f: MouseWheelEvent => Unit) {
@@ -854,7 +854,7 @@ object Swing {
 
     case class PopupMenu(source: PopupMenuEventSource) {
 
-        private class Event extends NoEndResource[PopupMenuEvent] {
+        private class Event extends NoExitResource[PopupMenuEvent] {
             private[this] var l: PopupMenuAdapter = null
             override protected def closeResource() = source.removePopupMenuListener(l)
             override protected def openResource(f: PopupMenuEvent => Unit) {
@@ -868,7 +868,7 @@ object Swing {
         }
         def Event: Seq[PopupMenuEvent] = new Event
 
-        private class Canceled extends NoEndResource[PopupMenuEvent] {
+        private class Canceled extends NoExitResource[PopupMenuEvent] {
             private[this] var l: PopupMenuAdapter = null
             override protected def closeResource() = source.removePopupMenuListener(l)
             override protected def openResource(f: PopupMenuEvent => Unit) {
@@ -880,7 +880,7 @@ object Swing {
         }
         def Canceled: Seq[PopupMenuEvent] = new Canceled
 
-        private class WillBecomeInvisible extends NoEndResource[PopupMenuEvent] {
+        private class WillBecomeInvisible extends NoExitResource[PopupMenuEvent] {
             private[this] var l: PopupMenuAdapter = null
             override protected def closeResource() = source.removePopupMenuListener(l)
             override protected def openResource(f: PopupMenuEvent => Unit) {
@@ -892,7 +892,7 @@ object Swing {
         }
         def WillBecomeInvisible: Seq[PopupMenuEvent] = new WillBecomeInvisible
 
-        private class WillBecomeVisible extends NoEndResource[PopupMenuEvent] {
+        private class WillBecomeVisible extends NoExitResource[PopupMenuEvent] {
             private[this] var l: PopupMenuAdapter = null
             override protected def closeResource() = source.removePopupMenuListener(l)
             override protected def openResource(f: PopupMenuEvent => Unit) {

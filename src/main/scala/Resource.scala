@@ -15,7 +15,7 @@ trait Resource[A] extends ForloopOnce[A] {
     protected def openResource(f: A => Unit, k: Exit => Unit): Unit
     protected def closeResource(): Unit
 
-    final override def forloopOnce(f: A => Unit, k: Exit => Unit) = openResource(f, k)
+    final override protected def forloopOnce(f: A => Unit, k: Exit => Unit) = openResource(f, k)
     final override def close() = c
     private[this] lazy val c = closeResource()
 }
@@ -23,11 +23,11 @@ trait Resource[A] extends ForloopOnce[A] {
 /**
  * Mixin for a Seq resource which has no end.
  */
-trait NoEndResource[A] extends ForloopOnce[A] {
+trait NoExitResource[A] extends ForloopOnce[A] {
     protected def openResource(f: A => Unit): Unit
     protected def closeResource(): Unit
 
-    final override def forloopOnce(f: A => Unit, k: Exit => Unit) = openResource(f)
+    final override protected def forloopOnce(f: A => Unit, k: Exit => Unit) = openResource(f)
     final override def close() = c
     private[this] lazy val c = closeResource()
 }
