@@ -4,7 +4,7 @@
 // Distributed under the terms of an MIT-style license.
 
 
-package com.github.okomok.madatest.sequencetest.reactivetest.example.fortest
+package com.github.okomok.hanotest.sequencetest.reactivetest.example.fortest
 
 
 // See also: https://gist.github.com/616638

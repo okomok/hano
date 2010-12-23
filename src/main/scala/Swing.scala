@@ -343,6 +343,36 @@ object Swing {
     }
 
 
+/* ImageUpdate
+
+    ImageObserver seems completely useless.
+
+    import java.awt.Image
+    import java.awt.image.ImageObserver
+
+    case class ImageUpdateInfo(image: Image, flags: Int, x: Int, y: Int, width: Int, height: Int)
+
+    case class ImageUpdate(image: Image, subscribe: ImageObserver => Boolean) extends NoExitResource[ImageUpdateInfo] {
+        private[this] var l: ImageObserver = null
+        @volatile private[this] var go = true
+        override protected def closeResource() = go = false
+        override protected def openResource(f: ImageUpdateInfo => Unit) {
+            l = new ImageObserver {
+                override def imageUpdate(img: Image, flags: Int, x: Int, y: Int, width: Int, height: Int): Boolean = {
+                    if (go) {
+                        f(ImageUpdateInfo(img, flags, x, y, width, height))
+                    }
+                    go
+                }
+            }
+            if (subscribe(l)) {
+                f(ImageUpdateInfo(image, ImageObserver.ALLBITS, 0, 0, 0, 0))
+            }
+        }
+    }
+*/
+
+
 // InputMethodEvent
 
     import java.awt.event.{InputMethodEvent, InputMethodListener}

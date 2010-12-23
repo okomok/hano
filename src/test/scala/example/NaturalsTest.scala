@@ -4,7 +4,7 @@
 // Distributed under the terms of an MIT-style license.
 
 
-package com.github.okomok.madatest;
+package com.github.okomok.hanotest;
 package sequencetest; package reactivetest; package example
 
 

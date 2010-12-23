@@ -11,13 +11,13 @@ package hano
 import java.util.TimerTask
 
 
-case class Schedule(scheduler: TimerTask => Unit) extends NoExitResource[Unit] {
+case class Schedule(subscribe: TimerTask => Unit) extends NoExitResource[Unit] {
     private[this] var l: TimerTask = null
     override protected def closeResource() = l.cancel()
     override protected def openResource(f: Unit => Unit) {
         l = new TimerTask {
             override def run() = f()
         }
-        scheduler(l)
+        subscribe(l)
     }
 }
