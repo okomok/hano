@@ -39,7 +39,7 @@ object Generator {
         private[this] var in = new Data[A]
         private[this] val x = new concurrent.Exchanger[Data[A]]
 
-        hano.eval.Async { new Task(_1, x).run() }
+        hano.eval.Threaded { new Task(_1, x).run() }
         doExchange()
         forwardExn()
 

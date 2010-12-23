@@ -4,7 +4,8 @@
 // Distributed under the terms of an MIT-style license.
 
 
-package com.github.okomok; package hano
+package com.github.okomok
+package hano
 
 
 trait Forwarder[A] extends Seq[A] with scala.Proxy {
