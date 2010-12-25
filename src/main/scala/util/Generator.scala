@@ -81,18 +81,17 @@ object Generator {
                     doExchange()
                 }
             }
-            private[this] val _exit = hano.eval.Lazy {
+            private def _exit() = {
                 out.isLast = true
                 doExchange()
             }
             override protected def exitChecked(q: hano.Exit) {
                 q match {
-                    case hano.Exit.End => _exit()
-                    case hano.Exit.Closed => _exit()
                     case hano.Exit.Failed(why) => {
                         out.exn = Some(why)
                         _exit()
                     }
+                    case _ => _exit()
                 }
             }
             override def flush() {
