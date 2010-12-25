@@ -24,12 +24,11 @@ private class Invoke[R](_1: Function0[R], _2: Runnable => Unit) extends Function
             }
         }
     }
-    private[this] lazy val v = {
+    override def apply = {
         c.await()
         r match {
             case Right(r) => r
             case Left(t) => throw t
         }
     }
-    override def apply = v
 }
