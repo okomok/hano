@@ -16,9 +16,9 @@ package hano
 final class Var[A](private[this] var x: Option[A] = None) extends Seq[A] {
     def this(x: A) = this(Some(x))
 
-    @volatile private[this] var out: A => Unit = null
+    @volatile private[this] var out: Reaction[A] = null
 
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         if (!x.isEmpty) f(x.get)
         out = f
     }

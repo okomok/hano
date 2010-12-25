@@ -16,7 +16,7 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
     Pre.positive(_2, "step")
 
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         var c = 0
         For(_1) { x =>
             if (c == 0) {
@@ -27,7 +27,7 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
                 c = 0
             }
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 
@@ -38,7 +38,7 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
 private[hano]
 class StepTime[A](_1: Seq[A], _2: Long) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         var past = 0L
         For(_1) { x =>
             val now = System.currentTimeMillis
@@ -47,7 +47,7 @@ class StepTime[A](_1: Seq[A], _2: Long) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 

@@ -14,7 +14,7 @@ class Drop[A](_1: Seq[A], _2: Int) extends Seq[A] {
     Pre.nonnegative(_2, "drop")
 
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         var c = _2
         For(_1) { x =>
             if (c == 0) {
@@ -23,7 +23,7 @@ class Drop[A](_1: Seq[A], _2: Int) extends Seq[A] {
                 c -= 1
             }
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 

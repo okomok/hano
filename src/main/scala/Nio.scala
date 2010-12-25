@@ -25,8 +25,8 @@ object Nio {
     }
 
     private class _Selection(_1: Selector, _2: Selector => Long) extends Seq[SelectionKey] {
-        override def forloop(f: SelectionKey => Unit, k: Exit => Unit) {
-            Exit.tryCatch(k) {
+        override def forloop(f: Reaction[SelectionKey]) {
+            Exit.tryCatch(f) {
                 try {
                     while (true) {
                         if (_2(_1) != 0) {

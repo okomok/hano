@@ -12,6 +12,6 @@ package detail
 private[hano]
 class Protect[A](_1: Seq[A]) extends Seq[A] {
     // override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) = _1.forloop(f, k)
+    override def forloop(f: Reaction[A]) = _1.forloop(f)
     override def protect: Seq[A] = _1.protect // protect.protect fusion
 }

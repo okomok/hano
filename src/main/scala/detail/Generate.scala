@@ -12,8 +12,8 @@ package detail
 private[hano]
 class Generate[A](_1: Seq[_], _2: util.Iter[A]) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
-        val _k = CallOnce[Exit] { q => k(q);close() }
+    override def forloop(f: Reaction[A]) {
+        val _k = CallOnce[Exit] { q => f.onExit(q);close() }
 
         val it = _2.begin
         if (!it.hasNext) {

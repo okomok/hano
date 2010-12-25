@@ -11,15 +11,15 @@ package detail
 
 private[hano]
 class Duplicate[A](_1: Seq[A]) extends Seq[A] {
-    private[this] var _fk: (A => Unit, Exit => Unit) = null
+    private[this] var _f: Reaction[A] = null
     private[this] val _close = IfFirst[Unit] { _ => () } Else { _ => _1.close() }
     private[this] val _forloop = {
-        IfFirst[(A => Unit, Exit => Unit)] {
-            case (f, k) => _fk = (f, k)
-        } Else {
-            case (f, k) => _1.react(_fk._1).onExit(_fk._2).forloop(f, k)
+        IfFirst[Reaction[A]] { f =>
+            _f = f
+        } Else { f =>
+            _1.react(_f).forloop(f)
         }
     }
     override def close() = _close()
-    override def forloop(f: A => Unit, k: Exit => Unit) = _forloop(f, k)
+    override def forloop(f: Reaction[A]) = _forloop(f)
 }

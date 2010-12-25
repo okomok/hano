@@ -6,9 +6,11 @@
 
 package com.github.okomok
 package hano
+package detail
 
 
-private class Using[A](_1: Seq[A], _2: java.io.Closeable) extends Forwarder[A] {
+private[hano]
+class Using[A](_1: Seq[A], _2: java.io.Closeable) extends Forwarder[A] {
     override protected val delegate = {
         _1 catching {
             case t => {

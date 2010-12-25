@@ -30,14 +30,14 @@ object Arm {
         override def close() = _1.close()
 
         @Annotation.pre("f is synchronous")
-        override def forloop(f: B => Unit, k: Exit => Unit) {
+        override def forloop(f: Reaction[B]) {
             val r = _1.open
-            For(_2(r)) { y =>
+            detail.For(_2(r)) { y =>
                 for (_ <- from(_1: java.io.Closeable)) {
                     f(y)
                 }
             } AndThen { q =>
-                k(q)
+                f.onExit(q)
                 close()
             }
         }
@@ -52,7 +52,7 @@ trait Arm[+A] extends Seq[A] {
     def open: A
 
     @Annotation.pre("f is synchronous")
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         val r = open
         var primary: Throwable = null
         try {
@@ -60,7 +60,7 @@ trait Arm[+A] extends Seq[A] {
         } catch {
             case t: Throwable => {
                 primary = t
-                k(Exit.Failed(t))
+                f.onExit(Exit.Failed(t))
                 throw t
             }
         } finally {
@@ -71,7 +71,7 @@ trait Arm[+A] extends Seq[A] {
                     case s: Exception => /*primary.addSuppressedException(s)*/
                 }
             } else {
-                k(Exit.End)
+                f.onExit(Exit.End)
                 close()
             }
         }

@@ -10,14 +10,6 @@ package detail
 
 
 private[hano]
-class OnExit[A](_1: Seq[A], _2: Exit => Unit) extends Seq[A] {
-    override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
-        For(_1) { x =>
-            f(x)
-        } AndThen { q =>
-            _2(q)
-            k(q)
-        }
-    }
+class OnExit[A](_1: Seq[A], _2: Exit => Unit) extends Forwarder[A] {
+    override protected val delegate = _1.react(Reaction(_ => (), _2))
 }

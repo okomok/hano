@@ -11,10 +11,10 @@ package detail
 
 private[hano]
 class Single[A](_1: A) extends Seq[A] {
-    override def forloop(f: A => Unit, k: Exit => Unit) {
-        Exit.tryCatch(k) {
+    override def forloop(f: Reaction[A]) {
+        Exit.tryCatch(f) {
             f(_1)
         }
-        k(Exit.End)
+        f.onExit(Exit.End)
     }
 }

@@ -12,8 +12,8 @@ package detail
 private[hano]
 class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override def close() = { _1.close(); _2.close() }
-    override def forloop(f: A => Unit, k: Exit => Unit) {
-        val _k = CallOnce[Exit] { q => k(q) }
+    override def forloop(f: Reaction[A]) {
+        val _k = CallOnce[Exit] { q => f.onExit(q) }
         val _ok = IfFirst[Exit] { _ => () } Else { q => _k(q) }
         val _no = CallOnce[Exit] { q => _k(q);close() }
         val lock = new AnyRef{}

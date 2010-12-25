@@ -14,7 +14,7 @@ package detail
 private[hano]
 class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         var first = true
         For(_1) { s =>
             if (first) {
@@ -28,7 +28,7 @@ class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 }

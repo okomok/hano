@@ -19,7 +19,7 @@ trait Forwarder[A] extends Seq[A] with scala.Proxy {
     }
 
     override def close(): Unit = delegate.close()
-    override def forloop(f: A => Unit, k: Exit => Unit): Unit = delegate.forloop(f, k)
+    override def forloop(f: Reaction[A]): Unit = delegate.forloop(f)
     override def append[B >: A](that: Seq[B]): Seq[B] = around(delegate.append(that))
     override def merge[B >: A](that: Seq[B]): Seq[B] = around(delegate.merge(that))
     override def map[B](f: A => B): Seq[B] = around(delegate.map(f))
@@ -53,8 +53,10 @@ trait Forwarder[A] extends Seq[A] with scala.Proxy {
     override def toIterable: Iterable[A] = delegate.toIterable
     override def toResponder: Responder[A] = delegate.toResponder
     override def actor: scala.actors.Actor = delegate.actor
-    override def react(f: A => Unit): Seq[A] = around(delegate.react(f))
-    override def reactMatch(f: PartialFunction[A, Unit]): Seq[A] = around(delegate.reactMatch(f))
+    override def react(f: Reaction[A]): Seq[A] = around(delegate.react(f))
+    override def onExit(k: Exit => Unit): Seq[A] = around(delegate.onExit(k))
+    override def onEach(f: A => Unit): Seq[A] = around(delegate.onEach(f))
+    override def onEachMatch(f: PartialFunction[A, Unit]): Seq[A] = around(delegate.onEachMatch(f))
     override def fork(f: Seq[A] => Seq[_]): Seq[A] = around(delegate.fork(f))
     override def duplicate: (Seq[A], Seq[A]) = around2(delegate.duplicate)
     override def break: Seq[A] = around(delegate.break)

@@ -18,20 +18,24 @@ object Exit {
 
     case class Failed(why: AnyRef) extends Exit
 
-    private[hano] def tryCatch(k: Exit => Unit)(body: => Unit) {
+    private[hano]
+    def tryCatch(f: Reaction[_])(body: => Unit) {
         try {
             body
         } catch {
             case t: Throwable => {
-                k(Failed(t)) // informs reaction-site
+                f.onExit(Failed(t)) // informs reaction-site
                 throw t // Seq-site responsibility
             }
         }
     }
 
-    private[hano] val defaultHandler: Exit => Unit = { _ => () }
 /*
-    private[hano] val defaultHandler: Exit => Unit = {
+    private[hano]
+    val defaultHandler: Exit => Unit = { _ => () }
+
+    private[hano]
+    val defaultHandler: Exit => Unit = {
         case Failed(t) => {
             val d = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date())
             java.lang.System.err.println("[hano.Exit.Failed]["+ d + "] " + t.toString)

@@ -11,5 +11,5 @@ package detail
 
 private[hano]
 class Never() extends Seq[Nothing] {
-    override def forloop(f: Nothing => Unit, k: Exit => Unit) = ()
+    override def forloop(f: Reaction[Nothing]) = ()
 }

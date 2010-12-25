@@ -12,16 +12,16 @@ package hano
  * Mixin for a sequence which doesn't allow re-foreach.
  */
 trait ForloopOnce[A] extends Seq[A] {
-    protected def forloopOnce(f: A => Unit, k: Exit => Unit): Unit
+    protected def forloopOnce(f: Reaction[A]): Unit
 
     private[this] val _forloop =
-        IfFirst[(A => Unit, Exit => Unit)] { case (f, k) =>
-            forloopOnce(f, k)
+        detail.IfFirst[Reaction[A]] { f =>
+            forloopOnce(f)
         } Else { _ =>
             throw new ForloopOnceException(this)
         }
 
-    final override def forloop(f: A => Unit, k: Exit => Unit) = _forloop((f, k))
+    final override def forloop(f: Reaction[A]) = _forloop(f)
 }
 
 class ForloopOnceException[A](from: Seq[A]) extends

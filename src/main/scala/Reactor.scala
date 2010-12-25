@@ -12,6 +12,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 import scala.actors.Actor
 
 
+// TODO: Use composition.
+
 /**
  * An actor built upon Seq
  */
@@ -21,9 +23,8 @@ trait Reactor extends Actor {
      */
     protected def startHano(r: Seq[Any]): Unit
 
-    private var _f: Any => Unit = null // primary
-    private var _k: Exit => Unit = null
-    private val _fs = new CopyOnWriteArrayList[Any => Unit] // secondaries
+    private var _f: Reaction[Any] = null // primary
+    private val _fs = new CopyOnWriteArrayList[Reaction[Any]] // secondaries
 
     final override def act = {
         Actor.loop {
@@ -44,8 +45,8 @@ trait Reactor extends Actor {
     }
 
     final override def exceptionHandler = {
-        if (_k != null) {
-            case t => _k(Exit.Failed(t))
+        if (_f != null) {
+            case t => _f.onExit(Exit.Failed(t))
         } else {
             super.exceptionHandler
         }
@@ -102,23 +103,23 @@ object Reactor {
         override def apply(r: Seq[Any]) = r.start
     }
 
-    private class Wrap(f: Any => Unit) extends (Any => Unit) {
+    private class Wrap(f: Reaction[Any]) extends Reaction[Any] {
         override def apply(x: Any) = f(x)
+        override def onExit(q: Exit) = f.onExit(q)
     }
 
     private class Primary(_1: Reactor) extends Seq[Any] {
-        override def forloop(f: Any => Unit, k: Exit => Unit) {
+        override def forloop(f: Reaction[Any]) {
             _1._f = f
-            _1._k = k
         }
     }
 
     private[hano] class Secondary(_1: Reactor) extends Resource[Any] {
-        private[this] var _f: Any => Unit = null
+        private[this] var _f: Reaction[Any] = null
         override protected def closeResource() {
             _1._fs.remove(_f)
         }
-        override protected def openResource(f: Any => Unit, k: Exit => Unit) {
+        override protected def openResource(f: Reaction[Any]) {
             _f = new Wrap(f)
             _1._fs.add(_f)
         }

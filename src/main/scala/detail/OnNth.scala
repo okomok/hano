@@ -12,7 +12,7 @@ package detail
 private[hano]
 class OnHead[A](_1: Seq[A], _2: A => Unit) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         var go = true
         For(_1) { x =>
             if (go) {
@@ -21,7 +21,7 @@ class OnHead[A](_1: Seq[A], _2: A => Unit) extends Seq[A] {
             }
             f(x)
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 }

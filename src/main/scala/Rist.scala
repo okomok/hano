@@ -16,9 +16,9 @@ import java.util.ArrayList
  */
 final class Rist[A] extends Seq[A] {
     private[this] val xs = new ArrayList[A]
-    private[this] val outs = new ArrayList[A => Unit]
+    private[this] val outs = new ArrayList[Reaction[A]]
 
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
          for (x <- util.Iter.from(xs)) {
             f(x)
         }

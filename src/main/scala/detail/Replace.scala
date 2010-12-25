@@ -12,7 +12,7 @@ package detail
 private[hano]
 class Replace[A](_1: Seq[A], _2: util.Iter[A]) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         val it = _2.begin
         For(_1) { x =>
             if (it.hasNext) {
@@ -21,7 +21,7 @@ class Replace[A](_1: Seq[A], _2: util.Iter[A]) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 }
@@ -29,9 +29,9 @@ class Replace[A](_1: Seq[A], _2: util.Iter[A]) extends Seq[A] {
 private[hano]
 class ReplaceRegion[A](_1: Seq[A], _2: Int, _3: Int, _4: util.Iter[A]) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) =
-        _1.fork{ _.take(_2).react(f) }.
-           fork{ _.slice(_2, _3).replace(_4).react(f) }.
-           fork{ _.drop(_3).react(f).onExit(k) }.
+    override def forloop(f: Reaction[A]) =
+        _1.fork{ _.take(_2).onEach(f(_)) }.
+           fork{ _.slice(_2, _3).replace(_4).onEach(f(_)) }.
+           fork{ _.drop(_3).react(f) }.
            start()
 }

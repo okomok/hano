@@ -9,7 +9,8 @@ package hano
 package detail
 
 
-private[hano] trait PseudoMethods { self: Seq.type =>
+private[hano]
+trait PseudoMethods { self: Seq.type =>
 
     sealed class _OfName[A](_this: => Seq[A]) {
         def byName: Seq[A] = new ByName(_this)

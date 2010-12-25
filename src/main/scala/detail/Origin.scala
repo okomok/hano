@@ -13,15 +13,15 @@ private[hano]
 class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] {
     @volatile private[this] var isActive = false
     override def close() = isActive = false
-    override def forloop(f: Unit => Unit, k: Exit => Unit) = synchronized {
+    override def forloop(f: Reaction[Unit]) = synchronized {
         isActive = true
         _1 {
-            Exit.tryCatch(k) {
+            Exit.tryCatch(f) {
                 while (isActive) {
                     f()
                 }
             }
-            k(Exit.Closed)
+            f.onExit(Exit.Closed)
         }
     }
 }

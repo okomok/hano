@@ -8,10 +8,39 @@ package com.github.okomok
 package hano
 
 
+/**
+ * Triggered by Seq.forloop
+ */
 trait Reaction[-A] {
 
-    def react(a: A): Unit
+    /**
+     * Reacts on each element.
+     */
+    def apply(x: A): Unit
 
-    def onExit(e: Exit): Unit
+    /**
+     * Reacts on the exit.
+     */
+    def onExit(q: Exit): Unit
 
+}
+
+
+object Reaction {
+
+    def apply[A](f: A => Unit, k: Exit => Unit) = new Reaction[A] {
+        override def apply(x: A) = f(x)
+        override def onExit(q: Exit) = k(q)
+    }
+
+/*
+    @Annotation.returnThat
+    def from[A](that: Reaction[A]): Reaction[A] = that
+
+    @Annotation.conversion
+    implicit def fromFunction[A](f: A => Unit): Reaction[A] = new Reaction[A] {
+        override def apply(x: A) = f(x)
+        override def onExit(q: Exit) = ()
+    }
+*/
 }

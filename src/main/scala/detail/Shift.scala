@@ -12,11 +12,11 @@ package detail
 private[hano]
 class Shift[A](_1: Seq[A], _2: (=> Unit) => Unit) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         For(_1) { x =>
             _2{f(x)}
         } AndThen { q =>
-            _2{k(q)}
+            _2{f.onExit(q)}
         }
     }
 }
@@ -24,12 +24,12 @@ class Shift[A](_1: Seq[A], _2: (=> Unit) => Unit) extends Seq[A] {
 private[hano]
 class ShiftReact[A](_1: Seq[A], _2: A => (A => Unit) => Unit) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         For(_1) { x =>
-            _2(x)(f)
+            _2(x)(f(_))
         } AndThen {
             // FIXEME how to shift k?
-            k
+            f.onExit(_)
         }
     }
 }

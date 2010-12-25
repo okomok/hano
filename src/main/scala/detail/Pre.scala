@@ -9,7 +9,8 @@ package hano
 package detail
 
 
-private object Pre {
+private[hano]
+object Pre {
 
     def positive(n: Int, msg: String) {
         if (n <= 0) {

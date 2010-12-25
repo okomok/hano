@@ -12,7 +12,7 @@ package detail
 private[hano]
 class DropUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override def close() = { _1.close(); _2.close() }
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         @volatile var go = false
         val g = eval.Lazy{_2.close()}
 
@@ -27,7 +27,7 @@ class DropUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 }

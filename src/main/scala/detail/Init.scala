@@ -12,7 +12,7 @@ package detail
 private[hano]
 class Init[A](_1: Seq[A]) extends Seq[A] {
     override def close() = _1.close()
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         var prev: Option[A] = None
         For(_1) { x =>
             if (!prev.isEmpty) {
@@ -20,7 +20,7 @@ class Init[A](_1: Seq[A]) extends Seq[A] {
             }
             prev = Some(x)
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 }

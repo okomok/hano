@@ -12,7 +12,8 @@ package detail
 import scala.util.continuations
 
 
-private[hano] trait Conversions { self: Seq.type =>
+private[hano]
+trait Conversions { self: Seq.type =>
 
     @Annotation.returnThat
     def from[A](that: Seq[A]): Seq[A] = that
@@ -34,9 +35,9 @@ private[hano]
 class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
     @volatile private[this] var isActive = false
     override def close() = isActive = false
-    override def forloop(f: A => Unit, k: Exit => Unit) = synchronized {
+    override def forloop(f: Reaction[A]) = synchronized {
         isActive = true
-        Exit.tryCatch(k) {
+        Exit.tryCatch(f) {
             val it = _1.begin
             while (isActive && it.hasNext) {
                 f(it.next)
@@ -44,9 +45,9 @@ class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
         }
         if (isActive) {
             isActive = false
-            k(Exit.End)
+            f.onExit(Exit.End)
         } else {
-            k(Exit.Closed)
+            f.onExit(Exit.Closed)
         }
     }
 }
@@ -54,17 +55,17 @@ class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
 
 private[hano]
 class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Seq[A] {
-    override def forloop(f: A => Unit, k: Exit => Unit) {
-        Exit.tryCatch(k) {
-            _1.foreach(f)
+    override def forloop(f: Reaction[A]) {
+        Exit.tryCatch(f) {
+            _1.foreach(f(_))
         }
-        k(Exit.End)
+        f.onExit(Exit.End)
     }
 }
 
 private[hano]
 class ToTraversable[A](_1: Seq[A]) extends scala.collection.Traversable[A] {
-    override def foreach[U](f: A => U) = _1.foreach(x => f(x))
+    override def foreach[U](f: A => U) = _1.foreach(f(_))
 }
 
 
@@ -72,7 +73,7 @@ private[hano]
 class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
     override def iterator = {
         util.Generator[A] { y =>
-            _1.forloop(y, _ => y.exit())
+            _1.forloop(Reaction(y, _ => y.exit()))
         } iterator
     }
 }
@@ -80,11 +81,11 @@ class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
 
 private[hano]
 class FromResponder[A](_1: Responder[A]) extends Seq[A] {
-    override def forloop(f: A => Unit, k: Exit => Unit) {
-        Exit.tryCatch(k) {
-            _1.respond(f)
+    override def forloop(f: Reaction[A]) {
+        Exit.tryCatch(f) {
+            _1.respond(f(_))
         }
-        k(Exit.End)
+        f.onExit(Exit.End)
     }
 }
 
@@ -96,7 +97,7 @@ class ToResponder[A](_1: Seq[A]) extends Responder[A] {
 
 private[hano]
 class FromCps[A](from: => A @continuations.suspendable) extends Seq[A] {
-    override def forloop(f: A => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[A]) {
         continuations.reset {
             f(from)
         }

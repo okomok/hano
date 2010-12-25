@@ -16,7 +16,7 @@ import scala.collection.JavaConversions
 private[hano]
 class Adjacent[A](_1: Seq[A], _2: Int) extends Seq[IndexedSeq[A]] {
     override def close() = _1.close()
-    override def forloop(f: IndexedSeq[A] => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[IndexedSeq[A]]) {
         val buf = new AdjacentBuffer[A](_2)
         For(_1) { x =>
             buf.addLast(x)
@@ -25,7 +25,7 @@ class Adjacent[A](_1: Seq[A], _2: Int) extends Seq[IndexedSeq[A]] {
                 buf.removeFirst()
             }
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 }

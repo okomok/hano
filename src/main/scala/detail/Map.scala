@@ -12,11 +12,11 @@ package detail
 private[hano]
 class Map[A, B](_1: Seq[A], _2: A => B) extends Seq[B] {
     override def close() = _1.close()
-    override def forloop(f: B => Unit, k: Exit => Unit) {
+    override def forloop(f: Reaction[B]) {
         For(_1) { x =>
             f(_2(x))
         } AndThen {
-            k
+            f.onExit(_)
         }
     }
 }

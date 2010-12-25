@@ -15,5 +15,5 @@ trait Strategy {
 
 object Strategy {
     implicit def _toFunction[R](from: Strategy): (=> R) => Function0[R] = from.apply[R]
-    implicit def _toFunctionUnit[R](from: Strategy): (=> R) => Unit = new hano.DiscardValue(from.apply[R])
+    implicit def _toFunctionUnit[R](from: Strategy): (=> R) => Unit = new hano.detail.DiscardValue(from.apply[R])
 }

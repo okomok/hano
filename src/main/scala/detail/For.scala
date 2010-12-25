@@ -9,22 +9,24 @@ package hano
 package detail
 
 
-private case class For[A](xs: Seq[A]) {
+private[hano]
+case class For[A](xs: Seq[A]) {
     def apply(f: A => Unit) = new Apply(f)
 
     class Apply(f: A => Unit) {
         def AndThen(k: Exit => Unit){
-            xs.forloop(f, k)
+            xs.forloop(Reaction(f, k))
         }
     }
 }
 
-private case class LockedFor[A](xs: Seq[A], by: AnyRef) {
+private[hano]
+case class LockedFor[A](xs: Seq[A], by: AnyRef) {
     def apply(f: A => Unit) = new Apply(f)
 
     class Apply(f: A => Unit) {
         def AndThen(k: Exit => Unit) {
-            xs.forloop(x => by.synchronized{f(x)}, q => by.synchronized{k(q)})
+            xs.forloop(Reaction(x => by.synchronized{f(x)}, q => by.synchronized{k(q)}))
         }
     }
 }

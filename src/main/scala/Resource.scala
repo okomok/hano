@@ -12,10 +12,10 @@ package hano
  * Mixin for a Seq resource.
  */
 trait Resource[A] extends ForloopOnce[A] {
-    protected def openResource(f: A => Unit, k: Exit => Unit): Unit
+    protected def openResource(f: Reaction[A]): Unit
     protected def closeResource(): Unit
 
-    final override protected def forloopOnce(f: A => Unit, k: Exit => Unit) = openResource(f, k)
+    final override protected def forloopOnce(f: Reaction[A]) = openResource(f)
     final override def close() = c
     private[this] lazy val c = closeResource()
 }
@@ -27,7 +27,7 @@ trait NoExitResource[A] extends ForloopOnce[A] {
     protected def openResource(f: A => Unit): Unit
     protected def closeResource(): Unit
 
-    final override protected def forloopOnce(f: A => Unit, k: Exit => Unit) = openResource(f)
+    final override protected def forloopOnce(f: Reaction[A]) = openResource(f(_))
     final override def close() = c
     private[this] lazy val c = closeResource()
 }
