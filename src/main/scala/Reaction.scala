@@ -37,7 +37,7 @@ trait Reaction[-A] {
 
 object Reaction {
 
-    class MultipleExitsError extends Error("`exit` shall not be called multiple times")
+    class MultipleExitsError extends Error("multiple `exit` calls not allowed")
     class ApplyAfterExitError extends Error("`apply` shall not be called after exit")
 
     def apply[A](f: A => Unit, k: Exit => Unit): Reaction[A] = new Reaction[A] with Checked[A] {

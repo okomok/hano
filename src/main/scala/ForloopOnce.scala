@@ -11,10 +11,10 @@ package hano
 /**
  * Mixin for a sequence which doesn't allow re-foreach.
  */
-trait ForloopOnce[A] extends Seq[A] {
+trait ForloopOnce[A] { self: Seq[A] =>
     protected def forloopOnce(f: Reaction[A]): Unit
 
-    private[this] val _forloop =
+    private val _forloop =
         detail.IfFirst[Reaction[A]] { f =>
             forloopOnce(f)
         } Else { _ =>
