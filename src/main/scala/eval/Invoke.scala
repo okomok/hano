@@ -9,15 +9,15 @@ package hano.eval
 
 
 private class Invoke[R](_1: Function0[R], _2: Runnable => Unit) extends Function0[R] {
+    private[this] var r: Either[Throwable, R] = null
     private[this] val c = new java.util.concurrent.CountDownLatch(1)
-    private[this] var r: Either[R, Throwable] = null
     _2 {
         new Runnable {
             override def run() {
                 try {
-                    r = Left(_1())
+                    r = Right(_1())
                 } catch {
-                    case t: Throwable => r = Right(t)
+                    case t: Throwable => r = Left(t)
                 } finally {
                     c.countDown()
                 }
@@ -27,8 +27,8 @@ private class Invoke[R](_1: Function0[R], _2: Runnable => Unit) extends Function
     private[this] lazy val v = {
         c.await()
         r match {
-            case Left(r) => r
-            case Right(t) => throw t
+            case Right(r) => r
+            case Left(t) => throw t
         }
     }
     override def apply = v
