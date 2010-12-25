@@ -25,7 +25,7 @@ class DropUntilTest extends org.scalatest.junit.JUnit3Suite {
                 case e: Int => e
             } dropUntil {
                 b
-            } react { x =>
+            } onEach { x =>
                 out.add(x)
             } start
         }

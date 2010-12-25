@@ -18,9 +18,9 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
         val r = hano.Seq(1,2,3,4,5,6)
         val out = new java.util.ArrayList[Int]
         r.
-            fork{r => r.react(e => out.add(e *  2))}.
+            fork{r => r.onEach(e => out.add(e *  2))}.
             fork{r => r}.
-            fork{r => r.react(e => out.add(e + 10))}.
+            fork{r => r.onEach(e => out.add(e + 10))}.
             fork{r => r}.
             start
 
@@ -31,8 +31,8 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
         val r = hano.Seq(1,2,3,4,5,6)
         val out = new java.util.ArrayList[Int]
         r.
-            react(e => out.add(e *  2)).
-            react(e => out.add(e + 10)).
+            onEach(e => out.add(e *  2)).
+            onEach(e => out.add(e + 10)).
             start
 
         assertEquals(hano.util.Iter(2,11,4,12,6,13,8,14,10,15,12,16), hano.util.Iter.from(out))

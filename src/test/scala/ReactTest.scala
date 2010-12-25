@@ -17,7 +17,7 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial {
         val a = hano.Seq(1,2,3,2,5)
         val out = new java.util.ArrayList[Int]
-        a reactMatch {
+        a onEachMatch {
             case 2 => out.add(20)
             case 3 => out.add(30)
         } start;
@@ -27,7 +27,7 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
     def testTotal {
         val a = hano.Seq(1,2,3,4,5)
         val out = new java.util.ArrayList[Int]
-        a reactMatch {
+        a onEachMatch {
             case x => out.add(x)
         } start;
         assertEquals(hano.util.Iter(1,2,3,4,5), hano.util.Iter.from(out))
@@ -36,7 +36,7 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
     def testTotal2 {
         val a = hano.Seq(1,2,3,4,5)
         val out = new java.util.ArrayList[Int]
-        a react {
+        a onEach {
             x => out.add(x)
         } take {
             3

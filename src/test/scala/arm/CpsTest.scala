@@ -70,7 +70,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
     val arr = new java.util.ArrayList[Int]
 
     case class Res1[A](res: A) extends hano.Seq[A] {
-        override def forloop(f: A => Unit, k: Exit => Unit) = {
+        override def forloop(f: hano.Reaction[A]) = {
             arr.add(10)
             try {
                 f(res)
@@ -80,7 +80,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         }
     }
     case class Res2[A](res: A) extends hano.Seq[A] {
-        override def forloop(f: A => Unit, k: Exit => Unit) = {
+        override def forloop(f: hano.Reaction[A]) = {
             arr.add(20)
             try {
                 f(res)
@@ -90,7 +90,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         }
     }
     case class Res3[A](res: A) extends hano.Seq[A] {
-        override def forloop(f: A => Unit, k: Exit => Unit) = {
+        override def forloop(f: hano.Reaction[A]) = {
             arr.add(30)
             try {
                 f(res)

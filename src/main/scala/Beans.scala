@@ -6,7 +6,6 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
 object Beans {

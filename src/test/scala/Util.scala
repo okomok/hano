@@ -39,7 +39,7 @@ class IntSenders(data: Iter[Int]*) {
 
 
 class IntSender(datum: Iter[Int], barrier: CyclicBarrier) extends hano.Seq[Int] {
-    override def forloop(f: Int => Unit, k: Exit => Unit) = {
+    override def forloop(f: hano.Reaction[Int]) = {
         new Thread {
             override def run = {
                 barrier.await

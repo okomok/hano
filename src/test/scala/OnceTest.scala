@@ -20,7 +20,7 @@ class OnceTest extends org.scalatest.junit.JUnit3Suite {
         var thrown = false
 
         class Trivial extends hano.ForloopOnce[Int] {
-            override protected def forloopOnce(f: Int => Unit, k: Exit => Unit) {
+            override protected def forloopOnce(f: hano.Reaction[Int]) {
                 f(10)
                 f(5)
             }

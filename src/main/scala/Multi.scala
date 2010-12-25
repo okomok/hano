@@ -6,9 +6,9 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
-case class Multi[A](_1: Seq[A => Unit]) extends (A => Unit) {
+case class Multi[A](_1: Seq[Reaction[A]]) extends Reaction[A] {
     override def apply(x: A) = for (f <- _1) f(x)
+    override def onExit(q: Exit) = for (f <- _1) f.onExit(q)
 }

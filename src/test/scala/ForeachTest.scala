@@ -29,7 +29,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
 
         hano.Seq.from(a).activate(new Reactor[Int] {
             override def onEnd = c()
-            override def react(e: Int) = t.add(e)
+            override def onEach(e: Int) = t.add(e)
         })
 
         assertTrue(c.isCalled)
