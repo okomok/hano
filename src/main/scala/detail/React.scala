@@ -17,8 +17,8 @@ class React[A](_1: Seq[A], _2: Reaction[A]) extends Seq[A] {
             _2(x)
             f(x)
         } AndThen { q =>
-            _2.onExit(q)
-            f.onExit(q)
+            _2.exit(q)
+            f.exit(q)
         }
     }
 }

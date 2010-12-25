@@ -37,7 +37,7 @@ object Block {
         sealed class In[A](xs: Seq[A]) {
             def foreach(g: A => Any @cpsParam[Unit, Unit]): Exit @cpsParam[Any, Unit] = new Seq[Exit] {
                 override def forloop(cp: Reaction[Exit]) {
-                    xs.onExit(q => cp(q)).forloop(Reaction(x => reset{g(x);()}, q => cp.onExit(q)))
+                    xs.onExit(q => cp(q)).forloop(Reaction(x => reset{g(x);()}, q => cp.exit(q)))
                 }
             } toCps
         }

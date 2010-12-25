@@ -28,7 +28,7 @@ class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

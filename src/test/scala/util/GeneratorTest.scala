@@ -19,7 +19,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
     def testEmpty: Unit = {
         val tr = util.Generator[Int] { * =>
             999
-            *.exit()
+            *.end()
         }
         assertTrue(tr.isEmpty)
         assertTrue(tr.isEmpty) // run again.
@@ -29,7 +29,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
         for (i <- 1 to n) {
             y(i)
         }
-        y.exit()
+        y.end()
     }
 
     def withMakeValuesTo(n: Int): Unit = {
@@ -64,8 +64,8 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
                 *(i)
             }
             *("last")
-            *.exit()
-            *.exit() // idempotent
+            *.end()
+//            *.end() // never idempotent
         }
         for (a <- example) {
             //println(a)
@@ -130,7 +130,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             y.flush() // exchange.
             throw new Error("after flush")
 //            Thread.sleep(10000)
-            y.exit()
+            y.end()
         }
         val ret = new java.util.ArrayList[Int]
         val it = sample.iterator

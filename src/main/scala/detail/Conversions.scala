@@ -45,9 +45,9 @@ class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
         }
         if (isActive) {
             isActive = false
-            f.onExit(Exit.End)
+            f.exit(Exit.End)
         } else {
-            f.onExit(Exit.Closed)
+            f.exit(Exit.Closed)
         }
     }
 }
@@ -59,7 +59,7 @@ class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Se
         Exit.tryCatch(f) {
             _1.foreach(f(_))
         }
-        f.onExit(Exit.End)
+        f.exit(Exit.End)
     }
 }
 
@@ -73,7 +73,7 @@ private[hano]
 class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
     override def iterator = {
         util.Generator[A] { y =>
-            _1.forloop(Reaction(y, _ => y.exit()))
+            _1.forloop(y)
         } iterator
     }
 }
@@ -85,7 +85,7 @@ class FromResponder[A](_1: Responder[A]) extends Seq[A] {
         Exit.tryCatch(f) {
             _1.respond(f(_))
         }
-        f.onExit(Exit.End)
+        f.exit(Exit.End)
     }
 }
 

@@ -15,6 +15,6 @@ class Single[A](_1: A) extends Seq[A] {
         Exit.tryCatch(f) {
             f(_1)
         }
-        f.onExit(Exit.End)
+        f.exit(Exit.End)
     }
 }

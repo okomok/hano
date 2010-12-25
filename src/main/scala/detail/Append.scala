@@ -20,9 +20,9 @@ class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
                 For(_2) { y =>
                     f(y)
                 } AndThen {
-                    f.onExit(_)
+                    f.exit(_)
                 }
-            case q => f.onExit(q)
+            case q => f.exit(q)
         }
     }
 }

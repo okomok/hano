@@ -13,7 +13,7 @@ private[hano]
 class Generate[A](_1: Seq[_], _2: util.Iter[A]) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: Reaction[A]) {
-        val _k = CallOnce[Exit] { q => f.onExit(q);close() }
+        val _k = CallOnce[Exit] { q => f.exit(q);close() }
 
         val it = _2.begin
         if (!it.hasNext) {
@@ -26,8 +26,8 @@ class Generate[A](_1: Seq[_], _2: util.Iter[A]) extends Seq[A] {
                         _k(Exit.End)
                     }
                 }
-            } AndThen { q =>
-                _k(q)
+            } AndThen {
+                _k(_)
             }
         }
     }

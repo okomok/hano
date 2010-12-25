@@ -27,7 +27,7 @@ class DropUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

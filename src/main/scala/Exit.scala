@@ -16,7 +16,7 @@ object Exit {
 
     case object Closed extends Exit
 
-    case class Failed(why: AnyRef) extends Exit
+    case class Failed(why: Throwable) extends Exit
 
     private[hano]
     def tryCatch(f: Reaction[_])(body: => Unit) {
@@ -24,7 +24,7 @@ object Exit {
             body
         } catch {
             case t: Throwable => {
-                f.onExit(Failed(t)) // informs reaction-site
+                f.exit(Failed(t)) // informs reaction-site
                 throw t // Seq-site responsibility
             }
         }

@@ -23,7 +23,7 @@ class Drop[A](_1: Seq[A], _2: Int) extends Seq[A] {
                 c -= 1
             }
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 

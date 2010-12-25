@@ -19,7 +19,7 @@ class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends Seq[B] {
             acc = _3(acc, x)
             f(acc)
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 //    override def head = _2
@@ -38,7 +38,7 @@ class ScanLeft1[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends Seq[B] {
             }
             f(acc.get)
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

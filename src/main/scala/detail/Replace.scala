@@ -21,7 +21,7 @@ class Replace[A](_1: Seq[A], _2: util.Iter[A]) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

@@ -74,6 +74,5 @@ trait Forwarder[A] extends Seq[A] with scala.Proxy {
     override def replaceRegion[B >: A](n: Int, m: Int, it: util.Iter[B]): Seq[B] = around(delegate.replaceRegion(n, m, it))
     override def indices: Seq[Int] = around(delegate.indices)
     override def shift(k: (=> Unit) => Unit): Seq[A] = around(delegate.shift(k))
-    override def shiftReact[B >: A](g: B => (B => Unit) => Unit): Seq[B] = around(delegate.shiftReact(g))
     override def breakable: Seq[(A, Function0[Unit])] = around(delegate.breakable)
 }

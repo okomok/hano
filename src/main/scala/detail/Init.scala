@@ -20,7 +20,7 @@ class Init[A](_1: Seq[A]) extends Seq[A] {
             }
             prev = Some(x)
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

@@ -13,7 +13,7 @@ private[hano]
 class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: Reaction[A]) {
-        val _k = CallOnce[Exit] { q => f.onExit(q);close() }
+        val _k = CallOnce[Exit] { q => f.exit(q);close() }
 
         if (_2 == 0) {
             _k(Exit.End)
@@ -27,8 +27,8 @@ class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
                         _k(Exit.End)
                     }
                 }
-            } AndThen { q =>
-                _k(q)
+            } AndThen {
+                _k(_)
             }
         }
     }

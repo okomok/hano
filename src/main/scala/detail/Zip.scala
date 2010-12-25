@@ -21,7 +21,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         val c1 = new LinkedList[A]
         val c2 = new LinkedList[B]
         val lock = new AnyRef{}
-        val _k = CallOnce[Exit] { q => f.onExit(q);close() }
+        val _k = CallOnce[Exit] { q => f.exit(q);close() }
         def invariant = assert(c1.isEmpty || c2.isEmpty)
 
         LockedFor(_1, lock) { x =>

@@ -16,7 +16,7 @@ class Map[A, B](_1: Seq[A], _2: A => B) extends Seq[B] {
         For(_1) { x =>
             f(_2(x))
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

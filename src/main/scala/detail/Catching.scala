@@ -26,7 +26,7 @@ class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) extends Seq[
                 }
             }
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

@@ -46,7 +46,7 @@ trait Reactor extends Actor {
 
     final override def exceptionHandler = {
         if (_f != null) {
-            case t => _f.onExit(Exit.Failed(t))
+            case t => _f.exit(Exit.Failed(t))
         } else {
             super.exceptionHandler
         }
@@ -105,7 +105,7 @@ object Reactor {
 
     private class Wrap(f: Reaction[Any]) extends Reaction[Any] {
         override def apply(x: Any) = f(x)
-        override def onExit(q: Exit) = f.onExit(q)
+        override def exit(q: Exit) = f.exit(q)
     }
 
     private class Primary(_1: Reactor) extends Seq[Any] {

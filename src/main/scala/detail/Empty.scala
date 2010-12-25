@@ -11,5 +11,5 @@ package detail
 
 private[hano]
 class Empty() extends Seq[Nothing] {
-    override def forloop(f: Reaction[Nothing]) = f.onExit(Exit.End)
+    override def forloop(f: Reaction[Nothing]) = f.exit(Exit.End)
 }

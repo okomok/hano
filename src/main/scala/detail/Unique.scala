@@ -26,7 +26,7 @@ class UniqueBy[A](_1: Seq[A], _2: (A, A) => Boolean) extends Seq[A] {
             }
             prev = Some(x)
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

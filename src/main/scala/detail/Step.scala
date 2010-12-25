@@ -27,7 +27,7 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
                 c = 0
             }
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 
@@ -47,7 +47,7 @@ class StepTime[A](_1: Seq[A], _2: Long) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 

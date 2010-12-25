@@ -22,7 +22,7 @@ class DropWhile[A](_1: Seq[A], _2: A => Boolean) extends Seq[A] {
                 f(x)
             }
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

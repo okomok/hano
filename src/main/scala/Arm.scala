@@ -37,7 +37,7 @@ object Arm {
                     f(y)
                 }
             } AndThen { q =>
-                f.onExit(q)
+                f.exit(q)
                 close()
             }
         }
@@ -60,7 +60,7 @@ trait Arm[+A] extends Seq[A] {
         } catch {
             case t: Throwable => {
                 primary = t
-                f.onExit(Exit.Failed(t))
+                f.exit(Exit.Failed(t))
                 throw t
             }
         } finally {
@@ -71,7 +71,7 @@ trait Arm[+A] extends Seq[A] {
                     case s: Exception => /*primary.addSuppressedException(s)*/
                 }
             } else {
-                f.onExit(Exit.End)
+                f.exit(Exit.End)
                 close()
             }
         }

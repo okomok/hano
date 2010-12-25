@@ -333,11 +333,6 @@ trait Seq[+A] extends java.io.Closeable {
     def shift(k: (=> Unit) => Unit): Seq[A] = new detail.Shift(this, k)
 
     /**
-     * Reactions are invoked by somehow you specify.
-     */
-    def shiftReact[B >: A](g: B => (B => Unit) => Unit): Seq[B] = new detail.ShiftReact[B](this, g)
-
-    /**
      * Elements with a break function.
      */
     def breakable: Seq[(A, Function0[Unit])] = new detail.Breakable(this)

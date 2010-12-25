@@ -23,15 +23,14 @@ object Generator {
      * Converts a Traversable to Iterable using a thread.
      */
     def traverse[A](xs: scala.collection.TraversableOnce[A]): Iterable[A] = apply { * =>
-        xs.foreach(*)
-        *.exit()
+        xs.foreach(*(_))
+        *.end()
     }
 
     /**
      * Provides method set used in a body.
      */
-    sealed abstract class Env[-A] extends (A => Unit) {
-        def exit(): Unit
+    sealed abstract class Env[-A] extends hano.Reaction[A] {
         def flush(): Unit
     }
 
@@ -75,8 +74,8 @@ object Generator {
     private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) extends Runnable {
         private[this] var out = new Data[A]
 
-        private[this] val y = new Env[A] {
-            override def apply(e: A) {
+        private[this] val y = new Env[A] with hano.Reaction.Checked[A] {
+            override protected def applyChecked(e: A) {
                 out.buf.addLast(e)
                 if (out.buf.size == CAPACITY) {
                     doExchange()
@@ -86,8 +85,15 @@ object Generator {
                 out.isLast = true
                 doExchange()
             }
-            override def exit() {
-                _exit()
+            override protected def exitChecked(q: hano.Exit) {
+                q match {
+                    case hano.Exit.End => _exit()
+                    case hano.Exit.Closed => _exit()
+                    case hano.Exit.Failed(why) => {
+                        out.exn = Some(why)
+                        _exit()
+                    }
+                }
             }
             override def flush() {
                 if (!out.buf.isEmpty) {
@@ -100,10 +106,7 @@ object Generator {
             try {
                 body(y)
             } catch {
-                case t: Throwable => {
-                    out.exn = Some(t)
-                    y.exit()
-                }
+                case t: Throwable => y.failed(t)
             }
 /*
             try {

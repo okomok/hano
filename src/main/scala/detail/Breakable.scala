@@ -13,12 +13,12 @@ private[hano]
 class Breakable[A](_1: Seq[A]) extends Seq[(A, Function0[Unit])] {
     override def close() = _1.close()
     override def forloop(f: Reaction[(A, Function0[Unit])]) {
-        val _k = CallOnce[Exit] { q => f.onExit(q);close() }
+        val _k = CallOnce[Exit] { q => f.exit(q);close() }
 
         For(_1) { x =>
             f(x, () => _k(Exit.End))
-        } AndThen { q =>
-            _k(q)
+        } AndThen {
+            _k(_)
         }
     }
 }

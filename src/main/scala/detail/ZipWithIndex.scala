@@ -18,7 +18,7 @@ class ZipWithIndex[A](_1: Seq[A]) extends Seq[(A, Int)] {
             f(x, i)
             i += 1
         } AndThen {
-            f.onExit(_)
+            f.exit(_)
         }
     }
 }

@@ -21,7 +21,7 @@ class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] {
                     f()
                 }
             }
-            f.onExit(Exit.Closed)
+            f.exit(Exit.Closed)
         }
     }
 }

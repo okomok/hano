@@ -21,16 +21,51 @@ trait Reaction[-A] {
     /**
      * Reacts on the exit.
      */
-    def onExit(q: Exit): Unit
+    def exit(q: Exit): Unit
+
+    @Annotation.equivalentTo("exit(Exit.End)")
+    final def end(): Unit = exit(Exit.End)
+
+    @Annotation.equivalentTo("exit(Exit.Closed)")
+    final def closed(): Unit = exit(Exit.Closed)
+
+    @Annotation.equivalentTo("exit(Exit.Failed(why))")
+    final def failed(why: Throwable) = exit(Exit.Failed(why))
 
 }
 
 
 object Reaction {
 
-    def apply[A](f: A => Unit, k: Exit => Unit) = new Reaction[A] {
-        override def apply(x: A) = f(x)
-        override def onExit(q: Exit) = k(q)
+    class MultipleExitsError extends Error("`exit` shall not be called multiple times")
+    class ApplyAfterExitError extends Error("`apply` shall not be called after exit")
+
+    def apply[A](f: A => Unit, k: Exit => Unit): Reaction[A] = new Reaction[A] with Checked[A] {
+        override protected def applyChecked(x: A) = f(x)
+        override protected def exitChecked(q: Exit) = k(q)
+    }
+
+    /**
+     * Mixin to kick non-conforming Seq
+     */
+    trait Checked[-A] { self: Reaction[A] =>
+        protected def applyChecked(x: A): Unit
+        protected def exitChecked(q: Exit): Unit
+
+        private val _k = detail.IfFirst[Exit] { q =>
+            exitChecked(q)
+        } Else { _ =>
+            throw new MultipleExitsError
+        }
+
+        final override def apply(x: A) {
+            if (_k.isSecond) { // fail-fast only
+                throw new ApplyAfterExitError
+            } else {
+                applyChecked(x)
+            }
+        }
+        final override def exit(q: Exit) = _k(q)
     }
 
 /*
@@ -40,7 +75,7 @@ object Reaction {
     @Annotation.conversion
     implicit def fromFunction[A](f: A => Unit): Reaction[A] = new Reaction[A] {
         override def apply(x: A) = f(x)
-        override def onExit(q: Exit) = ()
+        override def exit(q: Exit) = ()
     }
 */
 }
