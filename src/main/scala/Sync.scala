@@ -99,6 +99,8 @@ object Sync {
         v.toFunction
     }
 
+    def nth[A](xs: Seq[A])(n: Int): Function0[A] = head(xs.drop(n))
+
 
     def foldLeft[A, B](xs: Seq[A])(z: B)(op: (B, A) => B): Function0[B] = {
         val v = new Val[B]
