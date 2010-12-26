@@ -16,6 +16,7 @@ import detail.For
  */
 object Sync {
 
+
     final class Val[A] extends Reaction[A] with Reaction.Checked[A] { self =>
         private[this] var v: Either[Throwable, A] = null
         private[this] val c = new java.util.concurrent.CountDownLatch(1)
@@ -57,7 +58,8 @@ object Sync {
         }
     }
 
-    def length[_](xs: Seq[_]): Function0[Int] = {
+
+    def length(xs: Seq[_]): Function0[Int] = {
         val v = new Val[Int]
         var acc = 0
         For(xs) { x =>
@@ -68,6 +70,7 @@ object Sync {
         }
         v.toFunction
     }
+
 
     def head[A](xs: Seq[A]): Function0[A] = {
         val v = new Val[A]
@@ -96,6 +99,7 @@ object Sync {
         v.toFunction
     }
 
+
     def foldLeft[A, B](xs: Seq[A])(z: B)(op: (B, A) => B): Function0[B] = {
         val v = new Val[B]
         var acc = z
@@ -123,6 +127,7 @@ object Sync {
         }
         v.toFunction
     }
+
 
     def min[A](xs: Seq[A])(implicit c: Ordering[A]): Function0[A] = {
         reduceLeft(xs)(c.min(_, _))
