@@ -32,7 +32,7 @@ class BreakableTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         c.await()
-        expect(hano.util.Iter.from(0 until 50))(hano.util.Iter.from(b))
+        expect(hano.Iter.from(0 until 50))(hano.Iter.from(b))
     }
 
 }

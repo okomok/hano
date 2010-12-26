@@ -22,7 +22,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- r1 merge r2) {
             out.add(x)
         }
-        assertEquals(hano.util.Iter(1,2,3,4,5), hano.util.Iter.from(out))
+        assertEquals(hano.Iter(1,2,3,4,5), hano.Iter.from(out))
     }
 
     def testNonTrivial: Unit = {
@@ -33,7 +33,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- r1 merge r2 merge r3) {
             out.add(x)
         }
-        assertEquals(hano.util.Iter(1,2,3,4,5,6,7,8,9), hano.util.Iter.from(out))
+        assertEquals(hano.Iter(1,2,3,4,5,6,7,8,9), hano.Iter.from(out))
     }
 
     def testDuplicate {
@@ -43,7 +43,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- r1 merge r2) {
             out.add(x)
         }
-        assertEquals(hano.util.Iter(1,1,2,2,3,3,4,4,5,5), hano.util.Iter.from(out))
+        assertEquals(hano.Iter(1,1,2,2,3,3,4,4,5,5), hano.Iter.from(out))
     }
 
     def testEnd {
@@ -61,7 +61,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         gate.await()
         expect(1)(exitCount)
         java.util.Arrays.sort(out)
-        assertEquals(hano.util.Iter(0,1,2,3,4,5,6,7,8,9), hano.util.Iter.from(out))
+        assertEquals(hano.Iter(0,1,2,3,4,5,6,7,8,9), hano.Iter.from(out))
     }
 
     def testWhenThrown {
@@ -81,9 +81,9 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         }
         gate.await()
         expect(1)(exitCount)
-        //println(hano.util.Iter.from(out))
+        //println(hano.Iter.from(out))
         assert(out.size < 900)
-        expect(None)(hano.util.Iter.from(out).able.find(_ == 3))
+        expect(None)(hano.Iter.from(out).able.find(_ == 3))
     }
 
 }

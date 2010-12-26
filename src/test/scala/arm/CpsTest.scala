@@ -116,7 +116,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
             ()
         }
 
-        assertEquals(hano.util.Iter(10,20,30,1,2,3,31,21,11), hano.util.Iter.from(arr))
+        assertEquals(hano.Iter(10,20,30,1,2,3,31,21,11), hano.Iter.from(arr))
     }
 
 

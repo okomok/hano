@@ -20,7 +20,7 @@ class DropWhileTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a.dropWhile(_ <= 4)) {
             b.add(x)
         }
-        assertEquals(hano.util.Iter(5,6), hano.util.Iter.from(b))
+        assertEquals(hano.Iter(5,6), hano.Iter.from(b))
     }
 
     def testAll: Unit = {
@@ -47,6 +47,6 @@ class DropWhileTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- a.dropWhile(_ > 10)) {
             b.add(x)
         }
-        assertEquals(hano.util.Iter(1,2,3,4,5,6), hano.util.Iter.from(b))
+        assertEquals(hano.Iter(1,2,3,4,5,6), hano.Iter.from(b))
     }
 }

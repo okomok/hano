@@ -5,11 +5,10 @@
 
 
 package com.github.okomok
-package hano.util
+package hano
 
 
 import scala.collection.JavaConversions
-import hano.Annotation
 
 
 object Iter {

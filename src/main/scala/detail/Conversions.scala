@@ -19,7 +19,7 @@ trait Conversions { self: Seq.type =>
     def from[A](that: Seq[A]): Seq[A] = that
 
     implicit def fromArray[A](from: Array[A]): Seq[A] = new FromIter(from)
-    implicit def fromIter[A](from: util.Iter[A]): Seq[A] = new FromIter(from)
+    implicit def fromIter[A](from: Iter[A]): Seq[A] = new FromIter(from)
     implicit def fromIterable[A](from: scala.collection.Iterable[A]): Seq[A] = new FromIter(from)
     implicit def fromTraversableOnce[A](from: scala.collection.TraversableOnce[A]): Seq[A] = new FromTraversableOnce(from)
     implicit def fromJIterable[A](from: java.lang.Iterable[A]): Seq[A] = new FromIter(from)
@@ -32,7 +32,7 @@ trait Conversions { self: Seq.type =>
 
 
 private[hano]
-class FromIter[A](_1: util.Iter[A]) extends Seq[A] {
+class FromIter[A](_1: Iter[A]) extends Seq[A] {
     @volatile private[this] var isActive = false
     override def close() = isActive = false
     override def forloop(f: Reaction[A]) = synchronized {
@@ -72,7 +72,7 @@ class ToTraversable[A](_1: Seq[A]) extends scala.collection.Traversable[A] {
 private[hano]
 class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
     override def iterator = {
-        util.Generator[A] { y =>
+        Generator[A] { y =>
             _1.forloop(y)
         } iterator
     }

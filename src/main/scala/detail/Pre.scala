@@ -30,7 +30,7 @@ object Pre {
         }
     }
 
-    def notEmpty[A](s: util.Iter[A], msg: String) {
+    def notEmpty[A](s: Iter[A], msg: String) {
         if (s.isEmpty) {
             throw new UnsupportedOperationException(msg + ": sequence shall not be empty.")
         }

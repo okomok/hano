@@ -17,23 +17,23 @@ class GenerateTest extends org.scalatest.junit.JUnit3Suite {
 
     def testLonger: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).generate(hano.util.Iter(9,8,7,6,5,4,3))) {
+        for (x <- hano.Seq(0,1,2,3,4).generate(hano.Iter(9,8,7,6,5,4,3))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iter(9,8,7,6,5), hano.util.Iter.from(s))
+        assertEquals(hano.Iter(9,8,7,6,5), hano.Iter.from(s))
     }
 
     def testShorter: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).generate(hano.util.Iter(9,8))) {
+        for (x <- hano.Seq(0,1,2,3,4).generate(hano.Iter(9,8))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iter(9,8), hano.util.Iter.from(s))
+        assertEquals(hano.Iter(9,8), hano.Iter.from(s))
     }
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).generate(hano.util.Iter().of[Int])) {
+        for (x <- hano.Seq(0,1,2,3,4).generate(hano.Iter().of[Int])) {
             s.add(x)
         }
         assertTrue(s.isEmpty)
@@ -44,23 +44,23 @@ class GenerateTest extends org.scalatest.junit.JUnit3Suite {
         for (x <- hano.Seq(0,1,2,3,4).generate(Stream.continually(9))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iter(9,9,9,9,9), hano.util.Iter.from(s))
+        assertEquals(hano.Iter(9,9,9,9,9), hano.Iter.from(s))
     }
 
     def testThen: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.util.Iter(9,8,7,6,5)).onExit(_ =>s.add(99))) {
+        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.Iter(9,8,7,6,5)).onExit(_ =>s.add(99))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iter(9,8,7,6,5,99), hano.util.Iter.from(s))
+        assertEquals(hano.Iter(9,8,7,6,5,99), hano.Iter.from(s))
     }
 
     def testThenAppend: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.util.Iter(9,8,7,6,5)) ++ hano.Seq(2,3,4)) {
+        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.Iter(9,8,7,6,5)) ++ hano.Seq(2,3,4)) {
             s.add(x)
         }
-        assertEquals(hano.util.Iter(9,8,7,6,5,2,3,4), hano.util.Iter.from(s))
+        assertEquals(hano.Iter(9,8,7,6,5,2,3,4), hano.Iter.from(s))
     }
 
 }

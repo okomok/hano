@@ -211,7 +211,7 @@ trait Seq[+A] extends java.io.Closeable {
     def toIterable: Iterable[A] = new detail.ToIterable(this)
 
     @Annotation.conversion
-    final def toIter: util.Iter[A] = util.Iter.from(toIterable)
+    final def toIter: Iter[A] = Iter.from(toIterable)
 
     @Annotation.conversion
     def toResponder: Responder[A] = new detail.ToResponder(this)
@@ -322,17 +322,17 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Replaces elements by those of `it`. The length of this sequence never becomes longer.
      */
-    def generate[B](it: util.Iter[B]): Seq[B] = new detail.Generate(this, it)
+    def generate[B](it: Iter[B]): Seq[B] = new detail.Generate(this, it)
 
     /**
      * Replaces elements by those of `it`. The length of this sequence never be changed.
      */
-    def replace[B >: A](it: util.Iter[B]): Seq[B] = new detail.Replace[B](this, it)
+    def replace[B >: A](it: Iter[B]): Seq[B] = new detail.Replace[B](this, it)
 
     /**
      * Replaces elements by those of `it`. The length of this sequence never be changed.
      */
-    def replaceRegion[B >: A](n: Int, m: Int, it: util.Iter[B]): Seq[B] = new detail.ReplaceRegion[B](this, n, m, it)
+    def replaceRegion[B >: A](n: Int, m: Int, it: Iter[B]): Seq[B] = new detail.ReplaceRegion[B](this, n, m, it)
 
     @Annotation.equivalentTo("replace(Stream.from(0))")
     def indices: Seq[Int] = new detail.Indices(this)

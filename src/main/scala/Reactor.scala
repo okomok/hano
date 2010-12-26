@@ -36,7 +36,7 @@ trait Reactor extends Actor {
                     if (_f != null) {
                         _f(x)
                     }
-                    for (f <- util.Iter.from(_fs)) {
+                    for (f <- Iter.from(_fs)) {
                         f(x)
                     }
                 }

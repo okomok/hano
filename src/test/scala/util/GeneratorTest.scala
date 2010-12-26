@@ -9,7 +9,6 @@ package utiltest
 
 
 import com.github.okomok.hano
-import com.github.okomok.hano.util
 import junit.framework.Assert._
 
 
@@ -17,7 +16,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
 
 
     def testEmpty: Unit = {
-        val tr = util.Generator[Int] { * =>
+        val tr = hano.Generator[Int] { * =>
             999
             *.end()
         }
@@ -25,7 +24,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(tr.isEmpty) // run again.
     }
 
-    def makeValuesTo(n: Int)(y: util.Generator.Env[Int]): Unit = {
+    def makeValuesTo(n: Int)(y: hano.Generator.Env[Int]): Unit = {
         for (i <- 1 to n) {
             y(i)
         }
@@ -33,9 +32,9 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def withMakeValuesTo(n: Int): Unit = {
-        val tr = util.Generator(makeValuesTo(n))
-        assertEquals(util.Iter.from(1 to n), util.Iter.from(tr))
-        assertEquals(util.Iter.from(1 to n), util.Iter.from(tr)) // run again.
+        val tr = hano.Generator(makeValuesTo(n))
+        assertEquals(hano.Iter.from(1 to n), hano.Iter.from(tr))
+        assertEquals(hano.Iter.from(1 to n), hano.Iter.from(tr)) // run again.
     }
 
     def testTrivial: Unit = {
@@ -58,7 +57,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        def example =  util.Generator[Any] { * =>
+        def example =  hano.Generator[Any] { * =>
             *("first")
             for (i <- 1 until 4) {
                 *(i)
@@ -73,14 +72,14 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExceptionForwarding: Unit = {
-        def throwSome(y: util.Generator.Env[Int]): Unit = {
+        def throwSome(y: hano.Generator.Env[Int]): Unit = {
             for (i <- 1 to 27) {
                 y(i)
             }
             throw new Error("exception forwarding")
         }
 
-        val tr = util.Generator(throwSome)
+        val tr = hano.Generator(throwSome)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
@@ -94,14 +93,14 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             case _: Error => thrown = true
         }
         assertTrue(thrown)
-        assertEquals(util.Iter.from(1 to 27), util.Iter.from(arr))
+        assertEquals(hano.Iter.from(1 to 27), hano.Iter.from(arr))
     }
 
     def testExceptionForwardingEmpty: Unit = {
-        def throwImmediately(y: util.Generator.Env[Int]) {
+        def throwImmediately(y: hano.Generator.Env[Int]) {
             throw new Error("exception forwarding")
         }
-        val tr = util.Generator(throwImmediately)
+        val tr = hano.Generator(throwImmediately)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
@@ -118,7 +117,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testFlush {
-        def sample = util.Generator[Int] { y =>
+        def sample = hano.Generator[Int] { y =>
             for (i <- 0 until 20) {
                 y(i)
             } // exchange.
@@ -138,17 +137,17 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             val e = it.next
             ret.add(e)
         }
-        assertEquals(util.Iter.from(0 until 24), util.Iter.from(ret))
+        assertEquals(hano.Iter.from(0 until 24), hano.Iter.from(ret))
     }
 
     def testToIterable {
         val sample = hano.Seq.origin(hano.eval.Async).generate(0 until 20).toIterable
-        assertEquals(util.Iter.from(0 until 20), util.Iter.from(sample))
+        assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
 
     def testTraverse {
-        val sample = util.Generator.traverse(0 until 20)
-        assertEquals(util.Iter.from(0 until 20), util.Iter.from(sample))
+        val sample = hano.Generator.traverse(0 until 20)
+        assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
 }
 

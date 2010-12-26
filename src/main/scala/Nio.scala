@@ -31,7 +31,7 @@ object Nio {
                     while (true) {
                         if (_2(_1) != 0) {
                             val keys = _1.selectedKeys
-                            for (key <- util.Iter.from(keys)) {
+                            for (key <- Iter.from(keys)) {
                                 f(key.asInstanceOf[SelectionKey])
                             }
                             keys.clear()

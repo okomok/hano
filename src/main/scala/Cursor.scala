@@ -5,12 +5,12 @@
 
 
 package com.github.okomok
-package hano.util
+package hano
 
 
 object Cursor {
 
-    @hano.Annotation.returnThat
+    @Annotation.returnThat
     def from[A](that: Cursor[A]): Cursor[A] = that
 
     implicit def fromIterator[A](from: Iterator[A]): Cursor[A] = new FromIterator(from)
@@ -103,10 +103,10 @@ trait Cursor[+A] {
      */
     def increment(): Unit
 
-    @hano.Annotation.conversion
+    @Annotation.conversion
     final def toIterator: Iterator[A] = new Cursor.ToIterator(this)
 
-    @hano.Annotation.conversion
+    @Annotation.conversion
     final def toJIterator[B](implicit pre: Cursor[A] <:< Cursor[B]): java.util.Iterator[B] = new Cursor.ToJIterator(pre(this))
 
     /**

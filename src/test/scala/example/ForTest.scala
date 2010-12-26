@@ -25,7 +25,7 @@ class ForTest extends org.scalatest.junit.JUnit3Suite {
                 out.add(x)
             }
         }
-        assertEquals(hano.util.Iter(2,4,6,8,10), hano.util.Iter.from(out))
+        assertEquals(hano.Iter(2,4,6,8,10), hano.Iter.from(out))
     }
 
 }

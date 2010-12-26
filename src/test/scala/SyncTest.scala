@@ -130,8 +130,8 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
         val (ys, zs) = xs.duplicate
         val ax = ys.toIterable
         val bx = zs.toIterable
-        expect(hano.util.Iter.from(0 until 108))(hano.util.Iter.from(ax))
-        expect(hano.util.Iter.from(0 until 108))(hano.util.Iter.from(bx))
+        expect(hano.Iter.from(0 until 108))(hano.Iter.from(ax))
+        expect(hano.Iter.from(0 until 108))(hano.Iter.from(bx))
     }
 */
 }

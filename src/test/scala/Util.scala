@@ -13,7 +13,7 @@ import com.github.okomok.hano
 import java.util.concurrent.CyclicBarrier
 import java.util.ArrayList
 import hano.Exit
-import hano.util.Iter
+import hano.Iter
 
 
 class IntSenders(data: Iter[Int]*) {
@@ -67,6 +67,6 @@ class IntReceiver(expected: Iter[Int]) extends Function1[Int, Unit] {
     def assertMe = {
         val ys = buf.clone.asInstanceOf[ArrayList[Int]]
         java.util.Collections.sort(ys, implicitly[Ordering[Int]])
-        assertTrue("expected: " + expected + " actural: " + hano.util.Iter.from(buf), expected == hano.util.Iter.from(ys))
+        assertTrue("expected: " + expected + " actural: " + hano.Iter.from(buf), expected == hano.Iter.from(ys))
     }
 }

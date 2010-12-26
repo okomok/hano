@@ -29,7 +29,7 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         c.await
-        expect(hano.util.Iter.from(0 until 100))(hano.util.Iter.from(b))
+        expect(hano.Iter.from(0 until 100))(hano.Iter.from(b))
     }
 
     def testRejection {
@@ -56,11 +56,11 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         c.await
-        expect(hano.util.Iter.from(0 until 100))(hano.util.Iter.from(b))
+        expect(hano.Iter.from(0 until 100))(hano.Iter.from(b))
     }
 
     def testReallyLazyVal {
-        def anError = hano.Seq.origin(hano.eval.Async).generate(hano.util.Iter.lazySingle{throw new Error; 999}.able)
+        def anError = hano.Seq.origin(hano.eval.Async).generate(hano.Iter.lazySingle{throw new Error; 999}.able)
         anError take 100
         ()
     }

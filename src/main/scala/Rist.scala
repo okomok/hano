@@ -19,7 +19,7 @@ final class Rist[A] extends Seq[A] { self =>
     private[this] val outs = new ArrayList[Reaction[A]]
 
     override def forloop(f: Reaction[A]) {
-         for (x <- util.Iter.from(xs)) {
+         for (x <- Iter.from(xs)) {
             f(x)
         }
         outs.add(f)
@@ -27,11 +27,11 @@ final class Rist[A] extends Seq[A] { self =>
 
     def add(y: A) {
         xs.add(y)
-        for (out <- util.Iter.from(outs)) {
+        for (out <- Iter.from(outs)) {
             out(y)
         }
     }
-    def addAll(ys: util.Iter[A]) {
+    def addAll(ys: Iter[A]) {
         for (y <- ys) {
             add(y)
         }

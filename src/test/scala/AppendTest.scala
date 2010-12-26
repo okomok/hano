@@ -13,10 +13,10 @@ import com.github.okomok.hano
 class AppendTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        val a = hano.util.Iter(1,2,3,4,5)
+        val a = hano.Iter(1,2,3,4,5)
         val xs = hano.Seq(1,2,3)
         val ys = hano.Seq(4,5)
-        expect(hano.util.Iter(1,2,3,4,5))((xs ++ ys).toIter)
+        expect(hano.Iter(1,2,3,4,5))((xs ++ ys).toIter)
     }
 
     def testNotAppendedIfThrown {
@@ -36,7 +36,7 @@ class AppendTest extends org.scalatest.junit.JUnit3Suite {
             case MyError => propagated = true
         }
         assert(propagated)
-        expect(hano.util.Iter(1,2,99))(hano.util.Iter.from(out))
+        expect(hano.Iter(1,2,99))(hano.Iter.from(out))
     }
 
 }

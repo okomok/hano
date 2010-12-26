@@ -8,7 +8,7 @@ package com.github.okomok.hanotest
 package utiltest
 
 
-import com.github.okomok.hano.util.Iter
+import com.github.okomok.hano.Iter
 import junit.framework.Assert._
 
 

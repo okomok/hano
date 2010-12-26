@@ -9,7 +9,7 @@ package utiltest
 
 
 import com.github.okomok.hano
-import com.github.okomok.hano.util.{CpsGenerator, Iter}
+import com.github.okomok.hano.{CpsGenerator, Iter}
 import scala.util.continuations.suspendable
 import junit.framework.Assert._
 

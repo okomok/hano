@@ -5,7 +5,7 @@
 
 
 package com.github.okomok
-package hano.util
+package hano
 
 
 // See:
@@ -25,7 +25,7 @@ object CpsGenerator {
     /**
      * Provides method set used in a body.
      */
-    sealed abstract class Env[A] extends hano.Block.Env1 {
+    sealed abstract class Env[A] extends Block.Env1 {
         def apply(x: A): Unit @suspendable
         def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
     }

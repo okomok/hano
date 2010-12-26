@@ -5,7 +5,7 @@
 
 
 package com.github.okomok
-package hano.util
+package hano
 
 
 import java.util.ArrayDeque
@@ -30,7 +30,7 @@ object Generator {
     /**
      * Provides method set used in a body.
      */
-    sealed abstract class Env[-A] extends hano.Reaction[A] {
+    sealed abstract class Env[-A] extends Reaction[A] {
         def flush(): Unit
     }
 
@@ -38,7 +38,7 @@ object Generator {
         private[this] var in = new Data[A]
         private[this] val x = new concurrent.Exchanger[Data[A]]
 
-        hano.eval.Threaded { new Task(_1, x).run() }
+        eval.Threaded { new Task(_1, x).run() }
         doExchange()
         forwardExn()
 
@@ -74,7 +74,7 @@ object Generator {
     private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) extends Runnable {
         private[this] var out = new Data[A]
 
-        private[this] val y = new Env[A] with hano.Reaction.Checked[A] {
+        private[this] val y = new Env[A] with Reaction.Checked[A] {
             override protected def applyChecked(e: A) {
                 out.buf.addLast(e)
                 if (out.buf.size == CAPACITY) {
@@ -85,9 +85,9 @@ object Generator {
                 out.isLast = true
                 doExchange()
             }
-            override protected def exitChecked(q: hano.Exit) {
+            override protected def exitChecked(q: Exit) {
                 q match {
-                    case hano.Exit.Failed(why) => {
+                    case Exit.Failed(why) => {
                         out.exn = Some(why)
                         _exit()
                     }

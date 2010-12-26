@@ -15,7 +15,7 @@ class BreakOutTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial {
         val xs = hano.Seq(1,2,3,4,5)
         val v: scala.collection.immutable.Vector[Int] = xs.breakOut
-        expect(hano.util.Iter(1,2,3,4,5))(hano.util.Iter.from(v))
+        expect(hano.Iter(1,2,3,4,5))(hano.Iter.from(v))
     }
 
 }

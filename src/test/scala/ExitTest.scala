@@ -26,7 +26,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
             a.add(x)
         }
         c.await
-        expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+        expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
     }
 
     def testOriginClosedNotSent {
@@ -39,7 +39,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
             a.add(x)
         }
         c.await
-        expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+        expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
     }
 
     def testIterClosedSent {
@@ -52,7 +52,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
             a.add(x)
         }
         assert(closed)
-        expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+        expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
     }
 
     def testIterClosedNotSent {
@@ -65,7 +65,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
             a.add(x)
         }
         expect(false)(closed)
-        expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+        expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
     }
 
 }

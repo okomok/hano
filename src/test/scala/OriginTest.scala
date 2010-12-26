@@ -23,7 +23,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
             a.add(x)
         }
         c.await
-        expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+        expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
     }
 
     def testAsync { // in the thread pool.
@@ -33,7 +33,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
             a.add(x)
         }
         c.await
-        expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+        expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
     }
 
     def testMultipleForloop { // in the thread pool.
@@ -45,7 +45,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
                 a.add(x)
             }
             c.await
-            expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+            expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
         }
 
         locally {
@@ -55,7 +55,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
                 a.add(x)
             }
             c.await
-            expect(hano.util.Iter.from(0 until 10))(hano.util.Iter.from(a))
+            expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
         }
     }
 
@@ -65,15 +65,15 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
 class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq.strict.generate(hano.util.Iter(9,8,7,6,5))) {
+        for (x <- hano.Seq.strict.generate(hano.Iter(9,8,7,6,5))) {
             s.add(x)
         }
-        assertEquals(hano.util.Iter(9,8,7,6,5), hano.util.Iter.from(s))
+        assertEquals(hano.Iter(9,8,7,6,5), hano.Iter.from(s))
     }
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.util.Iter().of[Int])) {
+        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.Iter().of[Int])) {
             s.add(x)
         }
         assertTrue(s.isEmpty)

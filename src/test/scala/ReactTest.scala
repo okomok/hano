@@ -21,7 +21,7 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
             case 2 => out.add(20)
             case 3 => out.add(30)
         } start;
-        assertEquals(hano.util.Iter(20,30,20), hano.util.Iter.from(out))
+        assertEquals(hano.Iter(20,30,20), hano.Iter.from(out))
     }
 
     def testTotal {
@@ -30,7 +30,7 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
         a onEachMatch {
             case x => out.add(x)
         } start;
-        assertEquals(hano.util.Iter(1,2,3,4,5), hano.util.Iter.from(out))
+        assertEquals(hano.Iter(1,2,3,4,5), hano.Iter.from(out))
     }
 
     def testTotal2 {
@@ -41,7 +41,7 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
         } take {
             3
         } start;
-        assertEquals(hano.util.Iter(1,2,3/*,4,5 (now close work well.*/), hano.util.Iter.from(out))
+        assertEquals(hano.Iter(1,2,3/*,4,5 (now close work well.*/), hano.Iter.from(out))
     }
 
 }
