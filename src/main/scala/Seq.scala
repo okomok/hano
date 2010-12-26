@@ -34,9 +34,21 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     def single[A](x: A): Seq[A] = new detail.Single(x)
 
     /**
-     * An infinite sequence
+     * An infinite sequence of Units
      */
     def origin(k: (=> Unit) => Unit): Seq[Unit] = new detail.Origin(k)
+
+    @Annotation.equivalentTo("origin(eval.Async)")
+    def async: Seq[Unit] = origin(eval.Async)
+
+    @Annotation.equivalentTo("origin(eval.InEdt")
+    def inEdt: Seq[Unit] = origin(eval.InEdt)
+
+    @Annotation.equivalentTo("origin(eval.Strict)")
+    def strict: Seq[Unit] = origin(eval.Strict)
+
+    @Annotation.equivalentTo("origin(eval.Threaded")
+    def threaded: Seq[Unit] = origin(eval.Threaded)
 
     /**
      * Turns into a by-name expression.

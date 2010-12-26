@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class SyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def testMinMax {
-        val xs = hano.Seq.origin(hano.eval.Threaded).generate(Seq(6,3,1,2,6,7,4,2))
+        val xs = hano.Seq.threaded.generate(Seq(6,3,1,2,6,7,4,2))
         val (ys, zs) = xs.duplicate
         val max = hano.Sync.max(ys)
         val min = hano.Sync.min(zs)

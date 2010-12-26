@@ -65,7 +65,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
 class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq.origin(hano.eval.Strict).generate(hano.util.Iter(9,8,7,6,5))) {
+        for (x <- hano.Seq.strict.generate(hano.util.Iter(9,8,7,6,5))) {
             s.add(x)
         }
         assertEquals(hano.util.Iter(9,8,7,6,5), hano.util.Iter.from(s))

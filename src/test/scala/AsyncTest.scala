@@ -10,12 +10,10 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-
-
 class AsyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def naturals: hano.Seq[Int] = {
-        hano.Seq.origin(hano.eval.Async).generate(0 until 1000)
+        hano.Seq.async.generate(0 until 1000)
     }
 
     def testTrivial {
