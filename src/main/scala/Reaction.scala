@@ -37,8 +37,8 @@ trait Reaction[-A] {
 
 object Reaction {
 
-    class MultipleExitsError extends Error("multiple `exit` calls not allowed")
-    class ApplyAfterExitError extends Error("`apply` shall not be called after exit")
+    class MultipleExitsException[A](reaction: Reaction[A]) extends RuntimeException("multiple `exit` calls not allowed")
+    class ApplyAfterExitException[A](reaction: Reaction[A]) extends RuntimeException("`apply` shall not be called after exit")
 
     def apply[A](f: A => Unit, k: Exit => Unit): Reaction[A] = new Reaction[A] with Checked[A] {
         override protected def applyChecked(x: A) = f(x)
@@ -55,12 +55,12 @@ object Reaction {
         private val _k = detail.IfFirst[Exit] { q =>
             exitChecked(q)
         } Else { _ =>
-            throw new MultipleExitsError
+            throw new MultipleExitsException(self)
         }
 
         final override def apply(x: A) {
             if (_k.isSecond) {
-                throw new ApplyAfterExitError
+                throw new ApplyAfterExitException(self)
             } else {
                 applyChecked(x)
             }

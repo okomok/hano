@@ -9,7 +9,7 @@ package hano
 
 
 /**
- * Mixin for a sequence which doesn't allow re-foreach.
+ * Mixin for a sequence which doesn't allow re-forloop.
  */
 trait ForloopOnce[A] { self: Seq[A] =>
     protected def forloopOnce(f: Reaction[A]): Unit
@@ -24,5 +24,5 @@ trait ForloopOnce[A] { self: Seq[A] =>
     final override def forloop(f: Reaction[A]) = _forloop(f)
 }
 
-class ForloopOnceException[A](from: Seq[A]) extends
+class ForloopOnceException[A](seq: Seq[A]) extends
     RuntimeException("multiple `foreach` calls not allowed")
