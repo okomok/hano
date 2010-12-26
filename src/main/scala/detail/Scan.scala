@@ -22,7 +22,6 @@ class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends Seq[B] {
             f.exit(_)
         }
     }
-//    override def head = _2
 }
 
 private[hano]

@@ -13,7 +13,7 @@ package hano
  * This can hold only one listener. You can't place this in nested
  * position of for-expression if outer sequence has multiple elements.
  */
-final class Var[A](private[this] var x: Option[A] = None) extends Seq[A] {
+final class Var[A](private[this] var x: Option[A] = None) extends Seq[A] { self =>
     def this(x: A) = this(Some(x))
 
     @volatile private[this] var out: Reaction[A] = null
@@ -22,11 +22,15 @@ final class Var[A](private[this] var x: Option[A] = None) extends Seq[A] {
         if (!x.isEmpty) f(x.get)
         out = f
     }
-//    override def head: A = x.getOrElse(super.head)
 
     def :=(y: A) {
         x = Some(y)
         out(y)
+    }
+
+    def toReaction = new Reaction[A] {
+        override def apply(x: A) { self := x }
+        override def exit(q: Exit) = ()
     }
 }
 

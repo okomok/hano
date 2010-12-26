@@ -21,6 +21,12 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
         expect(1)(min())
     }
 
+    def testLength {
+        val xs = hano.Seq.origin(hano.eval.Threaded).generate(Seq(3,1,2,6,7,4,2,9))
+        val l = hano.Sync.length(xs)
+        expect(8)(l())
+    }
+
     def testHead {
         val xs = hano.Seq.origin(hano.eval.Threaded).generate(Seq(9,3,1,2,6,7,4,2))
         val head = hano.Sync.head(xs)
@@ -96,4 +102,14 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
         }
     }
 
+/* seems unsolvable
+    def testIterable {
+        val xs = hano.Seq.origin(hano.eval.Threaded).generate(0 until 108)
+        val (ys, zs) = xs.duplicate
+        val ax = ys.toIterable
+        val bx = zs.toIterable
+        expect(hano.util.Iter.from(0 until 108))(hano.util.Iter.from(ax))
+        expect(hano.util.Iter.from(0 until 108))(hano.util.Iter.from(bx))
+    }
+*/
 }

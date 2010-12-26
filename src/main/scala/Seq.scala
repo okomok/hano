@@ -121,8 +121,6 @@ trait Seq[+A] extends java.io.Closeable {
         def by(op: (B, A) => B): Seq[B] = scanLeft(z)(op)
     }
 
-//    def head: A = throw new UnsupportedOperationException("Seq.head")
-
     def tail: Seq[A] = new detail.Tail(this)
 
     def init: Seq[A] = new detail.Init(this)

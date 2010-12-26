@@ -116,4 +116,14 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.util.Iter(31,32,33,37,  30,30*2,30*3,30*7,  30+10, 30*10), hano.util.Iter.from(out))
 
     }
+
+    def testToReaction {
+        val out = new java.util.ArrayList[Int]
+        val a = hano.Rist(1,2,3)
+        for (x <- a) {
+            out.add(x)
+        }
+        hano.Seq(9,10,11).forloop(a)
+        expect(hano.util.Iter(1,2,3,9,10,11))(hano.util.Iter.from(out))
+    }
 }

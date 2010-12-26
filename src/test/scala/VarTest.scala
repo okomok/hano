@@ -64,7 +64,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
             val rx = new hano.Var[Int](10)
             rx.foreach(dst)
             src(0).foreach(rx.:=)
-            src(1).foreach(rx.:=)
+            src(1).forloop(rx)
             src.activate
             src.shutdown(dst.assertMe)
     //    }

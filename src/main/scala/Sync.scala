@@ -57,6 +57,18 @@ object Sync {
         }
     }
 
+    def length[_](xs: Seq[_]): Function0[Int] = {
+        val v = new Val[Int]
+        var acc = 0
+        For(xs) { x =>
+            acc += 1
+        } AndThen {
+            case Exit.End => v(acc)
+            case q => v.exit(q)
+        }
+        v.toFunction
+    }
+
     def head[A](xs: Seq[A]): Function0[A] = {
         val v = new Val[A]
         var go = true

@@ -30,7 +30,7 @@ trait Reaction[-A] {
     final def closed(): Unit = exit(Exit.Closed)
 
     @Annotation.equivalentTo("exit(Exit.Failed(why))")
-    final def failed(why: Throwable) = exit(Exit.Failed(why))
+    final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
 }
 
@@ -59,7 +59,7 @@ object Reaction {
         }
 
         final override def apply(x: A) {
-            if (_k.isSecond) { // fail-fast only
+            if (_k.isSecond) {
                 throw new ApplyAfterExitError
             } else {
                 applyChecked(x)
@@ -68,14 +68,15 @@ object Reaction {
         final override def exit(q: Exit) = _k(q)
     }
 
-/*
+
     @Annotation.returnThat
     def from[A](that: Reaction[A]): Reaction[A] = that
 
-    @Annotation.conversion
     implicit def fromFunction[A](f: A => Unit): Reaction[A] = new Reaction[A] {
         override def apply(x: A) = f(x)
         override def exit(q: Exit) = ()
     }
-*/
+    implicit def fromVar[A](from: Var[A]): Reaction[A] = from.toReaction
+    implicit def fromRist[A](from: Rist[A]): Reaction[A] = from.toReaction
+
 }

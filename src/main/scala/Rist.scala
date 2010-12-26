@@ -14,7 +14,7 @@ import java.util.ArrayList
 /**
  * Infinite Seq list (immutable)
  */
-final class Rist[A] extends Seq[A] {
+final class Rist[A] extends Seq[A] { self =>
     private[this] val xs = new ArrayList[A]
     private[this] val outs = new ArrayList[Reaction[A]]
 
@@ -24,7 +24,6 @@ final class Rist[A] extends Seq[A] {
         }
         outs.add(f)
     }
-//    override def head: A = xs.get(0)
 
     def add(y: A) {
         xs.add(y)
@@ -36,6 +35,11 @@ final class Rist[A] extends Seq[A] {
         for (y <- ys) {
             add(y)
         }
+    }
+
+    def toReaction = new Reaction[A] {
+        override def apply(x: A) { self.add(x) }
+        override def exit(q: Exit) = ()
     }
 }
 
