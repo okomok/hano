@@ -11,7 +11,7 @@ package hano
 /**
  * Triggered by Seq.forloop
  */
-trait Reaction[-A] {
+trait Reaction[-A] { self =>
 
     /**
      * Reacts on each element.
@@ -32,11 +32,17 @@ trait Reaction[-A] {
     @Annotation.equivalentTo("exit(Exit.Failed(why))")
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
+    def checked: Reaction[A] = new Reaction[A] with Reaction.Checked[A] {
+        override protected def applyChecked(x: A) = self(x)
+        override protected def exitChecked(q: Exit) = self.exit(q)
+    }
+
 }
 
 
 object Reaction {
 
+    class NotSerializedException[A](reaction: Reaction[A]) extends RuntimeException("method calls shall be serialized")
     class MultipleExitsException[A](reaction: Reaction[A]) extends RuntimeException("multiple `exit` calls not allowed")
     class ApplyAfterExitException[A](reaction: Reaction[A]) extends RuntimeException("`apply` shall not be called after exit")
 
@@ -52,22 +58,39 @@ object Reaction {
         protected def applyChecked(x: A): Unit
         protected def exitChecked(q: Exit): Unit
 
-        private val _k = detail.IfFirst[Exit] { q =>
+        @volatile private var _ing = false
+        private val _exit = detail.IfFirst[Exit] { q =>
             exitChecked(q)
         } Else { _ =>
             throw new MultipleExitsException(self)
         }
-
-        final override def apply(x: A) {
-            if (_k.isSecond) {
+        private def _apply(x: A) {
+            if (_exit.isSecond) {
                 throw new ApplyAfterExitException(self)
             } else {
                 applyChecked(x)
             }
         }
-        final override def exit(q: Exit) = _k(q)
-    }
 
+        final override def apply(x: A) {
+            if (_ing) {
+                throw new NotSerializedException(self)
+            }
+            try {
+                _ing = true
+                _apply(x)
+            } finally {
+                _ing = false
+            }
+        }
+        final override def exit(q: Exit) = {
+            if (_ing) {
+                throw new NotSerializedException(self)
+            }
+            _exit(q)
+        }
+        final override def checked: Reaction[A] = self // checked.checked fusion
+    }
 
     @Annotation.returnThat
     def from[A](that: Reaction[A]): Reaction[A] = that

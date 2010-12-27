@@ -81,7 +81,7 @@ object Generator {
                     doExchange()
                 }
             }
-            private def _exit() = {
+            private def _exit() {
                 out.isLast = true
                 doExchange()
             }

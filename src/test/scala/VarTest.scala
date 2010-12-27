@@ -57,6 +57,8 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter(12, 5,4,6), hano.Iter.from(out))
     }
 */
+
+/* illegal reaction call
     def testParallel: Unit = {
     //    for (_ <- 0 to 30) {
             val src = new IntSenders(hano.Iter(1,2,3,4,5,6,7,8,9,10), hano.Iter(7,7,7,7,7,7,7,7,7,7))
@@ -69,6 +71,7 @@ class VarTest extends org.scalatest.junit.JUnit3Suite {
             src.shutdown(dst.assertMe)
     //    }
     }
+*/
 
     def testSignal {
         val out = new java.util.ArrayList[Int]
