@@ -124,6 +124,12 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
         }
     }
 
+    def testCopy {
+        val xs = hano.Seq.threaded.generate(Seq(3,1,2,6,7,4,2,9))
+        val arr = hano.Sync.copy(xs)
+        expect(hano.Iter(3,1,2,6,7,4,2,9))(hano.Iter.from(arr()))
+    }
+
 /* seems unsolvable
     def testIterable {
         val xs = hano.Seq.threaded.generate(0 until 108)

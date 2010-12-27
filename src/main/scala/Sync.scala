@@ -8,7 +8,9 @@ package com.github.okomok
 package hano
 
 
-import detail.For
+import java.util.concurrent.CountDownLatch
+import scala.collection.mutable.ArrayBuffer
+import detail.{For, RightValue}
 
 
 /**
@@ -16,10 +18,10 @@ import detail.For
  */
 object Sync {
 
-
+    @Annotation.visibleForTesting
     final class Val[A] extends Reaction[A] with Reaction.Checked[A] { self =>
         private[this] var v: Either[Throwable, A] = null
-        private[this] val c = new java.util.concurrent.CountDownLatch(1)
+        private[this] val c = new CountDownLatch(1)
 
         override protected def applyChecked(x: A) {
             if (v != null) {
@@ -47,10 +49,7 @@ object Sync {
             if (v == null) {
                 throw new NoSuchElementException("Sync.Val.apply()")
             }
-            v match {
-                case Right(x) => x
-                case Left(t) => throw t
-            }
+            RightValue.get(v)
         }
 
         def toFunction = new Function0[A] {
@@ -137,6 +136,26 @@ object Sync {
 
     def max[A](xs: Seq[A])(implicit c: Ordering[A]): Function0[A] = {
         reduceLeft(xs)(c.max(_, _))
+    }
+
+
+    def copy[A](xs: Seq[A]): Function0[ArrayBuffer[A]] = {
+        var vs = new ArrayBuffer[A]
+        var lr: Either[Throwable, ArrayBuffer[A]] = null
+        val c = new CountDownLatch(1)
+        For(xs) {
+            vs += _
+        } AndThen { q =>
+            try {
+                lr = RightValue.maybe(vs)(q)
+            } finally {
+                c.countDown()
+            }
+        }
+        eval.Lazy {
+            c.await()
+            RightValue.get(lr)
+        }
     }
 
 }
