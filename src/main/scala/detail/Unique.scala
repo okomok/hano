@@ -10,8 +10,8 @@ package detail
 
 
 private[hano]
-class Unique[A](_1: Seq[A]) extends Forwarder[A] {
-    override protected val delegate = _1.uniqueBy(_ == _)
+class Unique[A](_1: Seq[A]) extends SeqProxy[A] {
+    override val self = _1.uniqueBy(_ == _)
     override def unique: Seq[A] = this // unique.unique fusion
 }
 

@@ -10,8 +10,8 @@ package detail
 
 
 private[hano]
-class Using[A](_1: Seq[A], _2: java.io.Closeable) extends Forwarder[A] {
-    override protected val delegate = {
+class Using[A](_1: Seq[A], _2: java.io.Closeable) extends SeqProxy[A] {
+    override val self = {
         _1 catching {
             case t => {
                 try {

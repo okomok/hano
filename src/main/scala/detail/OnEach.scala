@@ -10,11 +10,11 @@ package detail
 
 
 private[hano]
-class OnEach[A](_1: Seq[A], _2: A => Unit) extends Forwarder[A] {
-    override protected val delegate = _1.react(Reaction(_2, _ => ()))
+class OnEach[A](_1: Seq[A], _2: A => Unit) extends SeqProxy[A] {
+    override val self = _1.react(Reaction(_2, _ => ()))
 }
 
 private[hano]
-class OnEachMatch[A](_1: Seq[A], _2: PartialFunction[A, Unit]) extends Forwarder[A] {
-    override protected val delegate = _1.react(Reaction(x => if (_2.isDefinedAt(x)) _2(x), _ => ()))
+class OnEachMatch[A](_1: Seq[A], _2: PartialFunction[A, Unit]) extends SeqProxy[A] {
+    override val self = _1.react(Reaction(x => if (_2.isDefinedAt(x)) _2(x), _ => ()))
 }

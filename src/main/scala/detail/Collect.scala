@@ -10,6 +10,6 @@ package detail
 
 
 private[hano]
-class Collect[A, B](_1: Seq[A], _2: PartialFunction[A, B]) extends Forwarder[B] {
-    override protected val delegate = _1.filter(_2.isDefinedAt).map(_2)
+class Collect[A, B](_1: Seq[A], _2: PartialFunction[A, B]) extends SeqProxy[B] {
+    override val self = _1.filter(_2.isDefinedAt).map(_2)
 }

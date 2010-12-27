@@ -27,6 +27,6 @@ class OnHead[A](_1: Seq[A], _2: A => Unit) extends Seq[A] {
 }
 
 private[hano]
-class OnNth[A](_1: Seq[A], _2: Int, _3: A => Unit) extends Forwarder[A] {
-    override protected val delegate = _1.fork{ r => r.drop(_2).onHead(_3) }
+class OnNth[A](_1: Seq[A], _2: Int, _3: A => Unit) extends SeqProxy[A] {
+    override val self = _1.fork{ r => r.drop(_2).onHead(_3) }
 }

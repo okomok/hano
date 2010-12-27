@@ -37,20 +37,20 @@ case class IfFirst[T](_then: T => Unit) {
  */
 @Annotation.visibleForTesting
 case class CallOnce[-T](f: T => Unit) extends Function1[T, Unit] {
-    private[this] val delegate = IfFirst[T] { f } Else { _ => () }
-    override def apply(x: T) = delegate(x)
+    private[this] val self = IfFirst[T] { f } Else { _ => () }
+    override def apply(x: T) = self(x)
 
-    def isDone: Boolean = delegate.isSecond
+    def isDone: Boolean = self.isSecond
 }
 
 
 @deprecated("unused")
 private[hano]
 class SkipFirst[-T](f: T => Unit) extends Function1[T, Unit] {
-    private[this] val delegate = IfFirst[T] { _ => () } Else { f }
-    override def apply(x: T) = delegate(x)
+    private[this] val self = IfFirst[T] { _ => () } Else { f }
+    override def apply(x: T) = self(x)
 
-    def isSkipped: Boolean = delegate.isSecond
+    def isSkipped: Boolean = self.isSecond
 }
 
 

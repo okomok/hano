@@ -10,8 +10,8 @@ package detail
 
 
 private[hano]
-class Fork[A](_1: Seq[A], _2: Seq[A] => Seq[_]) extends Forwarder[A] {
-    override protected lazy val delegate = {
+class Fork[A](_1: Seq[A], _2: Seq[A] => Seq[_]) extends SeqProxy[A] {
+    override lazy val self = {
         val (xs, ys) = _1.duplicate
         _2(xs).start()
         ys

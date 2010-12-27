@@ -24,6 +24,6 @@ class Filter[A](_1: Seq[A], _2: A => Boolean) extends Seq[A] {
 }
 
 private[hano]
-class Remove[A](_1: Seq[A], _2: A => Boolean) extends Forwarder[A] {
-    override protected val delegate = _1.filter(!_2(_))
+class Remove[A](_1: Seq[A], _2: A => Boolean) extends SeqProxy[A] {
+    override val self = _1.filter(!_2(_))
 }

@@ -10,6 +10,6 @@ package detail
 
 
 private[hano]
-class ByName[A](_1: eval.ByName[Seq[A]]) extends Forwarder[A] {
-    override protected def delegate = _1()
+class ByName[A](_1: eval.ByName[Seq[A]]) extends SeqProxy[A] {
+    override def self = _1()
 }

@@ -10,6 +10,6 @@ package detail
 
 
 private[hano]
-class OnExit[A](_1: Seq[A], _2: Exit => Unit) extends Forwarder[A] {
-    override protected val delegate = _1.react(Reaction(_ => (), _2))
+class OnExit[A](_1: Seq[A], _2: Exit => Unit) extends SeqProxy[A] {
+    override val self = _1.react(Reaction(_ => (), _2))
 }

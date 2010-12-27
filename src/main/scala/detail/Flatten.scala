@@ -10,6 +10,6 @@ package detail
 
 
 private[hano]
-class Flatten[A](_1: Seq[Seq[A]]) extends Forwarder[A] {
-    override protected val delegate = _1.flatMap(x => x)
+class Flatten[A](_1: Seq[Seq[A]]) extends SeqProxy[A] {
+    override val self = _1.flatMap(x => x)
 }
