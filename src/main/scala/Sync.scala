@@ -9,7 +9,6 @@ package hano
 
 
 import java.util.concurrent.CountDownLatch
-import scala.collection.mutable.ArrayBuffer
 import detail.{For, RightValue}
 
 
@@ -17,6 +16,7 @@ import detail.{For, RightValue}
  * Contains synchronous algorithms.
  */
 object Sync {
+
 
     @Annotation.visibleForTesting
     final class Val[A] extends Reaction[A] with Reaction.Checked[A] { self =>
@@ -139,15 +139,15 @@ object Sync {
     }
 
 
-    def copy[A](xs: Seq[A]): Function0[ArrayBuffer[A]] = {
-        var vs = new ArrayBuffer[A]
-        var lr: Either[Throwable, ArrayBuffer[A]] = null
+    def copy[A, To](xs: Seq[A])(implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Function0[To] = {
+        var b = bf()
+        var lr: Either[Throwable, To] = null
         val c = new CountDownLatch(1)
         For(xs) {
-            vs += _
+            b += _
         } AndThen { q =>
             try {
-                lr = RightValue.maybe(vs)(q)
+                lr = RightValue.maybe(b.result)(q)
             } finally {
                 c.countDown()
             }

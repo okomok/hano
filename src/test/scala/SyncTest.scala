@@ -126,8 +126,14 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def testCopy {
         val xs = hano.Seq.threaded.generate(Seq(3,1,2,6,7,4,2,9))
-        val arr = hano.Sync.copy(xs)
-        expect(hano.Iter(3,1,2,6,7,4,2,9))(hano.Iter.from(arr()))
+        val v: () => scala.collection.immutable.Vector[Int] = hano.Sync.copy(xs)
+        expect(hano.Iter(3,1,2,6,7,4,2,9))(hano.Iter.from(v()))
+    }
+
+    def testBreakOut {
+        val xs = hano.Seq.threaded.generate(Seq(3,1,2,6,7,4,2,9))
+        val v: scala.collection.immutable.Vector[Int] = xs.breakOut
+        expect(hano.Iter(3,1,2,6,7,4,2,9))(hano.Iter.from(v))
     }
 
 /* seems unsolvable

@@ -195,16 +195,10 @@ trait Seq[+A] extends java.io.Closeable {
 
 // conversion
 
-    @Annotation.conversion @Annotation.pre("synchronous")
-    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = {
-        val b = bf()
-        for (x <- this) {
-            b += x
-        }
-        b.result
-    }
-
     @Annotation.conversion
+    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = Sync.copy(this)(bf)()
+
+    @Annotation.conversion @Annotation.pre("synchronous")
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)
 
     @Annotation.conversion
