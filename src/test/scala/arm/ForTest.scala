@@ -36,7 +36,7 @@ class ForTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         assertEquals(3, fs.size)
-        for (file <- hano.Iter.from(fs)) {
+        for (file <- hano.Iter.from(fs).able) {
             assertTrue(file.disposed)
         }
     }

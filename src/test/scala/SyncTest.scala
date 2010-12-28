@@ -27,6 +27,18 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
         expect(8)(l())
     }
 
+    def testIsEmpty {
+        val xs = hano.Seq.threaded.generate(Seq[Int]())
+        val im = hano.Sync.isEmpty(xs)
+        expect(true)(im())
+    }
+
+    def testIsNotEmpty {
+        val xs = hano.Seq.threaded.generate(Seq(3,1,2,6,7,4,2,9))
+        val im = hano.Sync.isEmpty(xs)
+        expect(false)(im())
+    }
+
     def testHead {
         val xs = hano.Seq.threaded.generate(Seq(9,3,1,2,6,7,4,2))
         val head = hano.Sync.head(xs)

@@ -44,7 +44,7 @@ class IntSender(datum: Iter[Int], barrier: CyclicBarrier) extends hano.Seq[Int] 
             override def run = {
                 barrier.await
 
-                for (i <- datum) {
+                for (i <- datum.able) {
                     f(i)
                     Thread.`yield`()
                     //Thread.sleep(100)

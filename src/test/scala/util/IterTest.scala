@@ -19,11 +19,11 @@ class IterTest extends org.scalatest.junit.JUnit3Suite {
         assertNotSame(t, u)
         assertTrue(t.equalsIf(u)(_ == _))
         assertEquals(t, u)
-        assertEquals(3, t.length)
-        assertEquals(3, u.length)
+        assertEquals(3, t.able.size)
+        assertEquals(3, u.able.size)
         assertEquals(t, u)
-        assertEquals(3, t.length)
-        assertEquals(3, u.length)
+        assertEquals(3, t.able.size)
+        assertEquals(3, u.able.size)
     }
 
     def testTrivial2: Unit = {

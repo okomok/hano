@@ -30,15 +30,16 @@ object Pre {
         }
     }
 
-    def notEmpty[A](s: Iter[A], msg: String) {
-        if (s.isEmpty) {
+    def notEmpty[A](xs: Iter[A], msg: String) {
+        if (xs.able.isEmpty) {
             throw new UnsupportedOperationException(msg + ": sequence shall not be empty.")
         }
     }
 
-    def sameSize[A, B](v: scala.collection.IndexedSeq[A], w: scala.collection.IndexedSeq[B], msg: String) {
-        if (v.size != w.size) {
-            throw new UnsupportedOperationException(msg + ": sequences shall be the same size.")
+    def sameSize[A, B](xs: scala.collection.IndexedSeq[A], ys: scala.collection.IndexedSeq[B], msg: String) {
+        val (x, y) = (xs.size, ys.size)
+        if (x != y) {
+            throw new UnsupportedOperationException(msg + ": sequences shall be the same size, but " + (x, y))
         }
     }
 

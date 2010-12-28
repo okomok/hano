@@ -20,9 +20,9 @@ class DropTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter(9,7,10), k.toIter)
         val k_ = t.drop(7)
         assertEquals(hano.Iter(10), k_.toIter)
-        assertTrue(t.drop(8).toIter.isEmpty)
-        assertTrue(t.drop(9).toIter.isEmpty)
-        assertTrue(t.drop(80).toIter.isEmpty)
+        assertTrue(t.drop(8).toIterable.isEmpty)
+        assertTrue(t.drop(9).toIterable.isEmpty)
+        assertTrue(t.drop(80).toIterable.isEmpty)
     }
 
 }

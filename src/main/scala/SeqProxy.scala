@@ -50,6 +50,7 @@ trait SeqProxy[A] extends Seq[A] with scala.Proxy {
     override def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = self.breakOut
     override def toTraversable: scala.collection.Traversable[A] = self.toTraversable
     override def toIterable: Iterable[A] = self.toIterable
+    override def toIter: Iter[A] = self.toIter
     override def toResponder: Responder[A] = self.toResponder
     override def actor: scala.actors.Actor = self.actor
     override def react(f: Reaction[A]): Seq[A] = around(self.react(f))

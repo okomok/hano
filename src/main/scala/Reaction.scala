@@ -10,7 +10,7 @@ package hano
 
 object Reaction {
 
-    def apply[A](f: A => Unit, k: Exit => Unit): Reaction[A] = new Cons(f, k)
+    def apply[A](f: A => Unit, k: Exit => Unit): Reaction[A] = new Apply(f, k)
 
     @Annotation.returnThat
     def from[A](that: Reaction[A]): Reaction[A] = that
@@ -19,13 +19,13 @@ object Reaction {
     implicit def fromVar[A](from: Var[A]): Reaction[A] = from.toReaction
     implicit def fromRist[A](from: Rist[A]): Reaction[A] = from.toReaction
 
-    private class Cons[A](f: A => Unit, k: Exit => Unit) extends Reaction[A] with Checked[A] {
-        override protected def applyChecked(x: A) = f(x)
-        override protected def exitChecked(q: Exit) = k(q)
+    private class Apply[A](_1: A => Unit, _2: Exit => Unit) extends Reaction[A] with Checked[A] {
+        override protected def applyChecked(x: A) = _1(x)
+        override protected def exitChecked(q: Exit) = _2(q)
     }
 
-    private class FromFunction[A](from: A => Unit) extends Reaction[A] with Checked[A] {
-        override protected def applyChecked(x: A) = from(x)
+    private class FromFunction[A](_1: A => Unit) extends Reaction[A] with Checked[A] {
+        override protected def applyChecked(x: A) = _1(x)
         override protected def exitChecked(q: Exit) = ()
     }
 

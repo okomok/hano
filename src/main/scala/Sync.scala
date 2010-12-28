@@ -58,6 +58,19 @@ object Sync {
     }
 
 
+    def isEmpty(xs: Seq[_]): Function0[Boolean] = {
+        val v = new Val[Boolean]
+        var acc = true
+        For(xs) { x =>
+            acc = false
+        } AndThen {
+            case Exit.End => v(acc)
+            case q => v.exit(q)
+        }
+        v.toFunction
+    }
+
+
     def length(xs: Seq[_]): Function0[Int] = {
         val v = new Val[Int]
         var acc = 0
@@ -69,6 +82,8 @@ object Sync {
         }
         v.toFunction
     }
+
+    def size(xs: Seq[_]): Function0[Int] = length(xs)
 
 
     def head[A](xs: Seq[A]): Function0[A] = {

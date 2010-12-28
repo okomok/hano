@@ -81,7 +81,7 @@ class ScanLeft1Test extends org.scalatest.junit.JUnit3Suite {
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
         hano.Seq.empty.of[Int].scanLeft1(_ + _).foreach(s.add(_))
-        assertTrue(hano.Iter.from(s).isEmpty)
+        assertTrue(hano.Iter.from(s).able.isEmpty)
     }
 }
 

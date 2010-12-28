@@ -18,36 +18,45 @@ object Iter {
     @Annotation.returnThat
     def from[A](that: Iter[A]): Iter[A] = that
 
-    implicit def fromIterator[A](from: => Iterator[A]): Iter[A] = new Iter[A] {
-        override def begin = from
+    implicit def fromIterator[A](from: => Iterator[A]): Iter[A] = new FromIterator(from)
+    implicit def fromIterable[A](from: Iterable[A]): Iter[A] = new FromIterable(from)
+    implicit def fromJIterator[A](from: => java.util.Iterator[A]): Iter[A] = new FromJIterator(from)
+    implicit def fromJIterable[A](from: java.lang.Iterable[A]): Iter[A] = new FromJIterable(from)
+    implicit def fromArray[A](from: Array[A]): Iter[A] = new FromArray(from)
+    implicit def fromOption[A](from: Option[A]): Iter[A] = new FromOption(from)
+    implicit def fromCursor[A](from: => Cursor[A]): Iter[A] = new FromCursor(from)
+
+    private class FromIterator[A](_1: => Iterator[A]) extends Iter[A] {
+        override def begin = _1
     }
 
-    implicit def fromIterable[A](from: Iterable[A]): Iter[A] = new Iter[A] {
-        override def begin = from.iterator
+    private class FromIterable[A](_1: Iterable[A]) extends Iter[A] {
+        override def begin = _1.iterator
     }
 
-    implicit def fromJIterator[A](from: => java.util.Iterator[A]): Iter[A] = new Iter[A] {
+    private class FromJIterator[A](_1: => java.util.Iterator[A]) extends Iter[A] {
         import JavaConversions._
-        override def begin = from
+        override def begin = _1
     }
 
-    implicit def fromJIterable[A](from: java.lang.Iterable[A]): Iter[A] = new Iter[A] {
+    private class FromJIterable[A](_1: java.lang.Iterable[A]) extends Iter[A] {
         import JavaConversions._
-        override def begin = from.iterator
+        override def begin = _1.iterator
     }
 
-    implicit def fromArray[A](from: Array[A]): Iter[A] = new Iter[A] {
-        override def begin = from.iterator
+    private class FromArray[A](_1: Array[A]) extends Iter[A] {
+        override def begin = _1.iterator
     }
 
-    implicit def fromOption[A](from: Option[A]): Iter[A] = new Iter[A] {
-        override def begin = from.iterator
+    private class FromOption[A](_1: Option[A]) extends Iter[A] {
+        override def begin = _1.iterator
     }
 
-    implicit def fromCursor[A](from: => Cursor[A]): Iter[A] = new Iter[A] {
-        override def begin = from.toIterator
+    private class FromCursor[A](_1: => Cursor[A]) extends Iter[A] {
+        override def begin = _1.toIterator
     }
 
+    @Annotation.visibleForTesting
     def lazySingle[A](x: => A): Iter[A] = {
         lazy val y = x
         new Iterator[A] {
@@ -55,6 +64,10 @@ object Iter {
             override def hasNext = hasnext
             override def next = if (hasnext) { hasnext = false; y } else Iterator.empty.next
         }
+    }
+
+    private class Able[A](_1: Iter[A]) extends Iterable[A] {
+        override def iterator = _1.begin
     }
 
 }
@@ -66,19 +79,11 @@ object Iter {
 trait Iter[+A] extends Equals {
 
     @Annotation.returnThis
-    def of[B >: A]: Iter[B] = this
+    final def of[B >: A]: Iter[B] = this
 
     def begin: Iterator[A]
 
-    def able = new Iterable[A] {
-        override def iterator = begin
-    }
-
-    def isEmpty: Boolean = begin.isEmpty
-
-    def length: Int = begin.length
-
-    def foreach(f: A => Unit): Unit = begin.foreach(f)
+    def able: Iterable[A] = new Iter.Able(this)
 
     @Annotation.pre("finite if result is `true`")
     override def equals(that: Any) = that match {

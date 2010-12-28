@@ -10,11 +10,18 @@ package hano
 
 object Arm {
 
+    def apply[A](x: A, c: A => Unit): Arm[A] = new Apply(x, c)
+
     @Annotation.returnThat
     def from[A](that: Arm[A]): Arm[A] = that
 
     implicit def fromJCloseable[A <: java.io.Closeable](from: A): Arm[A] = new FromJCloseable(from)
     implicit def fromJLock[A <: java.util.concurrent.locks.Lock](from: A): Arm[A] = new FromJLock(from)
+
+    private class Apply[A](_1: A, _2: A => Unit) extends Arm[A] {
+        override def open = _1
+        override def close() = _2(_1)
+    }
 
     private class FromJCloseable[A <: java.io.Closeable](_1: A) extends Arm[A] {
         override def open = _1
