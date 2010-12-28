@@ -8,8 +8,7 @@ package com.github.okomok
 package hano
 
 
-import java.util.concurrent.CountDownLatch
-import detail.{For, RightValue}
+import detail.For
 
 
 /**
@@ -21,26 +20,25 @@ object Sync {
     @Annotation.visibleForTesting
     final class Val[A] extends Reaction[A] with Reaction.Checked[A] { self =>
         private[this] var v: Either[Throwable, A] = null
-        private[this] val c = new CountDownLatch(1)
+        private[this] val c = new java.util.concurrent.CountDownLatch(1)
 
         override protected def applyChecked(x: A) {
-            if (v != null) {
-                return
-            }
-            try {
-                v = Right(x)
-            } finally {
-                c.countDown
+            if (v == null) {
+                try {
+                    v = Right(x)
+                } finally {
+                    c.countDown()
+                }
             }
         }
         override protected def exitChecked(q: Exit) {
             try {
                 q match {
-                    case Exit.Failed(t) => if (v == null) { v = Left(t) }
+                    case Exit.Failed(t) if v == null => v = Left(t)
                     case _ => ()
                 }
             } finally {
-                c.countDown
+                c.countDown()
             }
         }
 
@@ -49,7 +47,10 @@ object Sync {
             if (v == null) {
                 throw new NoSuchElementException("Sync.Val.apply()")
             }
-            RightValue.get(v)
+            v match {
+                case Left(t) => throw t
+                case Right(r) => r
+            }
         }
 
         def toFunction = new Function0[A] {
@@ -155,22 +156,16 @@ object Sync {
 
 
     def copy[A, To](xs: Seq[A])(implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Function0[To] = {
+        val v = new Val[To]
         var b = bf()
-        var lr: Either[Throwable, To] = null
-        val c = new CountDownLatch(1)
         For(xs) {
             b += _
-        } AndThen { q =>
-            try {
-                lr = RightValue.maybe(b.result)(q)
-            } finally {
-                c.countDown()
-            }
+        } AndThen {
+            case Exit.End => v(b.result)
+            case q => v.exit(q)
+
         }
-        eval.Lazy {
-            c.await()
-            RightValue.get(lr)
-        }
+        v.toFunction
     }
 
 }

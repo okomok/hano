@@ -9,6 +9,7 @@ package hano
 package detail
 
 
+@deprecated("unneeded")
 private[hano]
 object RightValue {
 
