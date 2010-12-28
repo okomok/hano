@@ -12,10 +12,9 @@ object Annotation {
 
 
     /**
-     * Contains implicit conversions. (All the names must be "long".)
+     * Contains implicit conversions.
      */
     class compatibles extends StaticAnnotation
-
 
     /**
      * An explicit conversion
@@ -105,9 +104,15 @@ object Annotation {
 
 
     /**
-     * Visible only for testing: don't touch this.
+     * Visible only for testing; don't touch this.
      */
     class visibleForTesting extends StaticAnnotation
+
+
+    /**
+     * Mixin trait; should not be used as parameter types.
+     */
+    class mixin extends StaticAnnotation
 
 
     /**

@@ -18,7 +18,7 @@ object Sync {
 
 
     @Annotation.visibleForTesting
-    final class Val[A] extends Reaction[A] with Reaction.Checked[A] { self =>
+    final class Val[A] extends Reaction.Checked[A] { self =>
         private[this] var v: Either[Throwable, A] = null
         private[this] val c = new java.util.concurrent.CountDownLatch(1)
 

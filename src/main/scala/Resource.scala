@@ -14,6 +14,7 @@ import detail.IfFirst
 /**
  * Helps to implement Seq as resource.
  */
+@Annotation.mixin
 trait Resource[A] extends Seq[A] {
     protected def openResource(f: Reaction[A]): Unit
     protected def closeResource(): Unit
@@ -34,6 +35,7 @@ trait Resource[A] extends Seq[A] {
 /**
  * Helps to implement infinite Seq as resource.
  */
+@Annotation.mixin
 trait NoExitResource[A] extends Resource[A] {
     protected def openResource(f: A => Unit): Unit
     final override protected def openResource(f: Reaction[A]): Unit = openResource(f(_))

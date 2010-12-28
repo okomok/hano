@@ -34,9 +34,10 @@ object Reaction {
     class ApplyAfterExitException[A](reaction: Reaction[A]) extends RuntimeException("`apply` shall not be called after exit")
 
     /**
-     * Mixin to kick non-conforming Seq
+     * Kicks non-conforming Seq.
      */
-    trait Checked[-A] { self: Reaction[A] =>
+    @Annotation.mixin
+    trait Checked[-A] extends Reaction[A] {
         protected def applyChecked(x: A): Unit
         protected def exitChecked(q: Exit): Unit
 
@@ -45,12 +46,12 @@ object Reaction {
             detail.IfFirst[Exit] { q =>
                 exitChecked(q)
             } Else { _ =>
-                throw new MultipleExitsException(self)
+                throw new MultipleExitsException(this)
             }
         }
         private def _apply(x: A) {
             if (_exit.isSecond) {
-                throw new ApplyAfterExitException(self)
+                throw new ApplyAfterExitException(this)
             } else {
                 applyChecked(x)
             }
@@ -58,7 +59,7 @@ object Reaction {
 
         final override def apply(x: A) {
             if (_ing) {
-                throw new NotSerializedException(self)
+                throw new NotSerializedException(this)
             }
             try {
                 _ing = true
@@ -69,7 +70,7 @@ object Reaction {
         }
         final override def exit(q: Exit) = {
             if (_ing) {
-                throw new NotSerializedException(self)
+                throw new NotSerializedException(this)
             }
             _exit(q)
         }
