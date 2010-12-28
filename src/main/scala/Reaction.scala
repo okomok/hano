@@ -8,48 +8,30 @@ package com.github.okomok
 package hano
 
 
-/**
- * Triggered by Seq.forloop
- */
-trait Reaction[-A] { self =>
+object Reaction {
 
-    /**
-     * Reacts on each element.
-     */
-    def apply(x: A): Unit
+    def apply[A](f: A => Unit, k: Exit => Unit): Reaction[A] = new Cons(f, k)
 
-    /**
-     * Reacts on the exit.
-     */
-    def exit(q: Exit): Unit
+    @Annotation.returnThat
+    def from[A](that: Reaction[A]): Reaction[A] = that
 
-    @Annotation.equivalentTo("exit(Exit.End)")
-    final def end(): Unit = exit(Exit.End)
+    implicit def fromFunction[A](from: A => Unit): Reaction[A] = new FromFunction(from)
+    implicit def fromVar[A](from: Var[A]): Reaction[A] = from.toReaction
+    implicit def fromRist[A](from: Rist[A]): Reaction[A] = from.toReaction
 
-    @Annotation.equivalentTo("exit(Exit.Closed)")
-    final def closed(): Unit = exit(Exit.Closed)
-
-    @Annotation.equivalentTo("exit(Exit.Failed(why))")
-    final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
-
-    def checked: Reaction[A] = new Reaction[A] with Reaction.Checked[A] {
-        override protected def applyChecked(x: A) = self(x)
-        override protected def exitChecked(q: Exit) = self.exit(q)
+    private class Cons[A](f: A => Unit, k: Exit => Unit) extends Reaction[A] with Checked[A] {
+        override protected def applyChecked(x: A) = f(x)
+        override protected def exitChecked(q: Exit) = k(q)
     }
 
-}
-
-
-object Reaction {
+    private class FromFunction[A](from: A => Unit) extends Reaction[A] with Checked[A] {
+        override protected def applyChecked(x: A) = from(x)
+        override protected def exitChecked(q: Exit) = ()
+    }
 
     class NotSerializedException[A](reaction: Reaction[A]) extends RuntimeException("method calls shall be serialized")
     class MultipleExitsException[A](reaction: Reaction[A]) extends RuntimeException("multiple `exit` calls not allowed")
     class ApplyAfterExitException[A](reaction: Reaction[A]) extends RuntimeException("`apply` shall not be called after exit")
-
-    def apply[A](f: A => Unit, k: Exit => Unit): Reaction[A] = new Reaction[A] with Checked[A] {
-        override protected def applyChecked(x: A) = f(x)
-        override protected def exitChecked(q: Exit) = k(q)
-    }
 
     /**
      * Mixin to kick non-conforming Seq
@@ -89,17 +71,33 @@ object Reaction {
             }
             _exit(q)
         }
-        final override def checked: Reaction[A] = self // checked.checked fusion
     }
 
-    @Annotation.returnThat
-    def from[A](that: Reaction[A]): Reaction[A] = that
+}
 
-    implicit def fromFunction[A](f: A => Unit): Reaction[A] = new Reaction[A] {
-        override def apply(x: A) = f(x)
-        override def exit(q: Exit) = ()
-    }
-    implicit def fromVar[A](from: Var[A]): Reaction[A] = from.toReaction
-    implicit def fromRist[A](from: Rist[A]): Reaction[A] = from.toReaction
+
+/**
+ * Triggered by Seq.forloop
+ */
+trait Reaction[-A] { self =>
+
+    /**
+     * Reacts on each element.
+     */
+    def apply(x: A): Unit
+
+    /**
+     * Reacts on the exit.
+     */
+    def exit(q: Exit): Unit
+
+    @Annotation.equivalentTo("exit(Exit.End)")
+    final def end(): Unit = exit(Exit.End)
+
+    @Annotation.equivalentTo("exit(Exit.Closed)")
+    final def closed(): Unit = exit(Exit.Closed)
+
+    @Annotation.equivalentTo("exit(Exit.Failed(why))")
+    final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
 }

@@ -41,7 +41,7 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     @Annotation.equivalentTo("origin(eval.Async)")
     def async: Seq[Unit] = origin(eval.Async)
 
-    @Annotation.equivalentTo("origin(eval.InEdt")
+    @Annotation.equivalentTo("origin(eval.InEdt)")
     def inEdt: Seq[Unit] = origin(eval.InEdt)
 
     @Annotation.equivalentTo("origin(eval.Strict)")

@@ -10,6 +10,7 @@ package hano
 
 sealed abstract class Exit
 
+
 object Exit {
 
     case object End extends Exit
@@ -24,12 +25,11 @@ object Exit {
             body
         } catch {
             case t: Throwable => {
-                f.exit(Failed(t)) // informs reaction-site
-                throw t // Seq-site responsibility
+                f.exit(Failed(t)) // informs Reaction-site
+                throw t // handled in Seq-site
             }
         }
     }
-
 /*
     private[hano]
     val defaultHandler: Exit => Unit = { _ => () }
