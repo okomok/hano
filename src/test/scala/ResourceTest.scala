@@ -52,14 +52,9 @@ class ResourceTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         doIt()
-        var thrown = false
-        try {
+        intercept[hano.ResourceException[_]] {
             doIt()
-        } catch {
-            case e: hano.ForloopOnceException[_] => thrown = true
-            case _ => fail("doh")
         }
-        assertTrue(thrown)
     }
 
 }

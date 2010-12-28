@@ -41,10 +41,12 @@ object Reaction {
         protected def exitChecked(q: Exit): Unit
 
         @volatile private var _ing = false
-        private val _exit = detail.IfFirst[Exit] { q =>
-            exitChecked(q)
-        } Else { _ =>
-            throw new MultipleExitsException(self)
+        private val _exit = {
+            detail.IfFirst[Exit] { q =>
+                exitChecked(q)
+            } Else { _ =>
+                throw new MultipleExitsException(self)
+            }
         }
         private def _apply(x: A) {
             if (_exit.isSecond) {
