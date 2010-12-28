@@ -74,8 +74,8 @@ object Generator {
     private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) extends Runnable {
         private[this] var out = new Data[A]
 
-        private[this] val y = new Env[A] with Reaction.Checked[A] {
-            override protected def applyChecked(e: A) {
+        private[this] val y = new Env[A] with CheckedReaction[A] {
+            override protected def checkedApply(e: A) {
                 out.buf.addLast(e)
                 if (out.buf.size == CAPACITY) {
                     doExchange()
@@ -85,7 +85,7 @@ object Generator {
                 out.isLast = true
                 doExchange()
             }
-            override protected def exitChecked(q: Exit) {
+            override protected def checkedExit(q: Exit) {
                 q match {
                     case Exit.Failed(why) => {
                         out.exn = Some(why)

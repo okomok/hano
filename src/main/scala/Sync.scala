@@ -18,11 +18,11 @@ object Sync {
 
 
     @Annotation.visibleForTesting
-    final class Val[A] extends Reaction.Checked[A] { self =>
+    final class Val[A] extends CheckedReaction[A] { self =>
         private[this] var v: Either[Throwable, A] = null
         private[this] val c = new java.util.concurrent.CountDownLatch(1)
 
-        override protected def applyChecked(x: A) {
+        override protected def checkedApply(x: A) {
             if (v == null) {
                 try {
                     v = Right(x)
@@ -31,7 +31,7 @@ object Sync {
                 }
             }
         }
-        override protected def exitChecked(q: Exit) {
+        override protected def checkedExit(q: Exit) {
             try {
                 q match {
                     case Exit.Failed(t) if v == null => v = Left(t)
