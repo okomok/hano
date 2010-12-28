@@ -59,23 +59,15 @@ object Sync {
 
 
     def isEmpty(xs: Seq[_]): Function0[Boolean] = {
-        var acc = true
-        var lr: Either[Throwable, Boolean] = null
-        val c = new CountDownLatch(1)
+        val v = new Val[Boolean]
         For(xs) { x =>
-            acc = false
+            v(false)
             xs.close()
-        } AndThen { q =>
-            try {
-                lr = RightValue.maybe(acc)(q)
-            } finally {
-                c.countDown()
-            }
+        } AndThen {
+            case Exit.End => v(true)
+            case q => v.exit(q)
         }
-        eval.Lazy {
-            c.await()
-            RightValue.get(lr)
-        }
+        v.toFunction
     }
 
 
