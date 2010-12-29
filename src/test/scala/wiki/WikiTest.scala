@@ -10,7 +10,9 @@ package com.github.okomok.hanotest; package wikitest
 import com.github.okomok.hano
 
 
-class WikiTezt extends NotSuite {//extends org.scalatest.junit.JUnit3Suite {
+class WikiTest
+    extends NotSuite {
+    //extends org.scalatest.junit.JUnit3Suite {
 
 
 // Concepts
@@ -261,6 +263,41 @@ class WikiTezt extends NotSuite {//extends org.scalatest.junit.JUnit3Suite {
                 override def actionPerformed(e: ActionEvent) = f(e)
             }
             source.addActionListener(l)
+        }
+    }
+
+}
+
+
+// IO Monad
+
+class IOMonadTezt {// extends org.scalatest.junit.JUnit3Suite {
+
+    trait ReactiveSequence[A] {
+        def foreach(f: A => Unit): Unit
+    }
+
+    class Println(str: String) extends ReactiveSequence[Unit] {
+        override def foreach(f: Unit => Unit) {
+            f(println(str))
+        }
+    }
+
+    object GetLine extends ReactiveSequence[String] {
+        import java.io._
+        private val stdin = new BufferedReader(new InputStreamReader(java.lang.System.in))
+        override def foreach(f: String => Unit) {
+            f(stdin.readLine)
+        }
+    }
+
+    def testIOMonad {
+        for {
+            _ <- new Println("What's your name?")
+            str <- GetLine
+            _ <- new Println("Hello, " + str)
+        } {
+            // start the evaluation
         }
     }
 
