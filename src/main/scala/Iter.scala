@@ -56,16 +56,6 @@ object Iter {
         override def begin = _1.toIterator
     }
 
-    @Annotation.visibleForTesting
-    def lazySingle[A](x: => A): Iter[A] = {
-        lazy val y = x
-        new Iterator[A] {
-            private[this] var hasnext = true
-            override def hasNext = hasnext
-            override def next = if (hasnext) { hasnext = false; y } else Iterator.empty.next
-        }
-    }
-
     private class Able[A](_1: Iter[A]) extends Iterable[A] {
         override def iterator = _1.begin
     }

@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Generate[A](_1: Seq[_], _2: Iter[A]) extends Seq[A] {
+class Generate[A](_1: Seq[_], _2: => Iter[A]) extends Seq[A] {
     override def close() = _1.close()
     override def forloop(f: Reaction[A]) {
         val _k = CallOnce[Exit] { q => f.exit(q);close() }
