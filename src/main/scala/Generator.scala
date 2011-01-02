@@ -23,9 +23,7 @@ object Generator {
      * Converts a Traversable to Iterable using a thread.
      */
     def traverse[A](xs: scala.collection.TraversableOnce[A]): Iterable[A] = apply { * =>
-        *.tryCatch {
-            xs.foreach(*(_))
-        }
+        xs.foreach(*(_))
         *.end()
     }
 
@@ -83,18 +81,15 @@ object Generator {
                     doExchange()
                 }
             }
-            private def _exit() {
-                out.isLast = true
-                doExchange()
-            }
             override protected def checkedExit(q: Exit) {
                 q match {
-                    case Exit.Failed(why) => {
-                        out.exn = Some(why)
-                        _exit()
+                    case Exit.Failed(t) => {
+                        out.exn = Some(t)
                     }
-                    case _ => _exit()
+                    case _ => ()
                 }
+                out.isLast = true
+                doExchange()
             }
             override def flush() {
                 if (!out.buf.isEmpty) {
