@@ -149,6 +149,19 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
         val sample = hano.Generator.traverse(0 until 20)
         assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
+
+    def testThrowAfterEnd {
+        val sample = hano.Generator[Int] { * =>
+            *(1)
+            *(2)
+            *(3)
+            *.end()
+            throw new Error("after end")
+        }
+        val ret = new java.util.ArrayList[Int]
+        sample.foreach(ret.add(_))
+        expect(hano.Iter(1,2,3))(hano.Iter.from(ret))
+    }
 }
 
 /*

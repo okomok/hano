@@ -38,7 +38,7 @@ object Generator {
         private[this] var in = new Data[A]
         private[this] val xch = new concurrent.Exchanger[Data[A]]
 
-        eval.Threaded { new Task(body, xch).run() }
+        new Thread(new Task(body, xch)).start()
         doExchange()
         forwardExn()
 
@@ -73,6 +73,7 @@ object Generator {
 
     private class Task[A](body: Env[A] => Unit, xch: concurrent.Exchanger[Data[A]]) extends Runnable {
         private[this] var out = new Data[A]
+        private[this] var exited = false
 
         private[this] val y = new Env[A] with CheckedReaction[A] {
             override protected def checkedApply(x: A) {
@@ -82,6 +83,7 @@ object Generator {
                 }
             }
             override protected def checkedExit(q: Exit) {
+                exited = true
                 q match {
                     case Exit.Failed(t) => {
                         out.exn = Some(t)
@@ -102,7 +104,13 @@ object Generator {
             try {
                 body(y)
             } catch {
-                case t: Throwable => y.failed(t)
+                case t: Throwable => {
+                    if (exited) {
+                        throw t
+                    } else {
+                        y.failed(t)
+                    }
+                }
             }
 /*
             try {
