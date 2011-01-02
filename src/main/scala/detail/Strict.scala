@@ -10,7 +10,8 @@ package detail
 
 
 private[hano]
-class OnClose[A](_1: Seq[A], _2: => Unit) extends Seq[A] {
-    override def close() = { _2; _1.close() }
-    override def forloop(f: Reaction[A]) = _1.forloop(f)
+class Strict() extends SeqProxy[Unit] {
+    override val self = Seq.origin { body =>
+        body
+    }
 }

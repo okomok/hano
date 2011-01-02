@@ -24,7 +24,7 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     val empty: Seq[Nothing] = new detail.Empty()
 
     /**
-     * The empty sequence without the end reaction
+     * The empty sequence without the exit reaction
      */
     val never: Seq[Nothing] = new detail.Never()
 
@@ -38,17 +38,25 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
      */
     def origin(k: (=> Unit) => Unit): Seq[Unit] = new detail.Origin(k)
 
-    @Annotation.equivalentTo("origin(eval.Async)")
-    def async: Seq[Unit] = origin(eval.Async)
+    /**
+     * An infinite sequence of Units in a thread-pool
+     */
+    def async: Seq[Unit] = new detail.Async()
 
-    @Annotation.equivalentTo("origin(eval.InEdt)")
-    def inEdt: Seq[Unit] = origin(eval.InEdt)
+    /**
+     * An infinite sequence of Units in the event-dispatch-thread
+     */
+    def inEdt: Seq[Unit] = new detail.InEdt()
 
-    @Annotation.equivalentTo("origin(eval.Strict)")
-    def strict: Seq[Unit] = origin(eval.Strict)
+    /**
+     * An infinite sequence of Units in the call-site
+     */
+    def strict: Seq[Unit] = new detail.Strict()
 
-    @Annotation.equivalentTo("origin(eval.Threaded")
-    def threaded: Seq[Unit] = origin(eval.Threaded)
+    /**
+     * An infinite sequence of Units in a newly created thread
+     */
+    def threaded: Seq[Unit] = new detail.Threaded()
 
     /**
      * Turns into a by-name expression.
