@@ -34,10 +34,6 @@ Unlike `scala.collection.Traversable`, this `foreach` is allowed to be asynchron
 
 
 
-## Evaluation Strategy
-
-
-
 ## Continuations
 
 
