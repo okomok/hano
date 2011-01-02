@@ -10,6 +10,6 @@ package detail
 
 
 private[hano]
-class DiscardValue[T, U](_1: T => U) extends Function1[T, Unit] {
+class DiscardValue[T, U](_1: T => U) extends (T => Unit) {
     override def apply(x: T) = _1(x)
 }

@@ -53,13 +53,11 @@ object Sync {
             }
         }
 
-        def toFunction = new Function0[A] {
-            override def apply = self()
-        }
+        def toFunction: () => A = () => self.apply()
     }
 
 
-    def isEmpty(xs: Seq[_]): Function0[Boolean] = {
+    def isEmpty(xs: Seq[_]): () => Boolean = {
         val v = new Val[Boolean]
         For(xs) { x =>
             v(false)
@@ -72,7 +70,7 @@ object Sync {
     }
 
 
-    def length(xs: Seq[_]): Function0[Int] = {
+    def length(xs: Seq[_]): () => Int = {
         val v = new Val[Int]
         var acc = 0
         For(xs) { x =>
@@ -84,10 +82,10 @@ object Sync {
         v.toFunction
     }
 
-    def size(xs: Seq[_]): Function0[Int] = length(xs)
+    def size(xs: Seq[_]): () => Int = length(xs)
 
 
-    def head[A](xs: Seq[A]): Function0[A] = {
+    def head[A](xs: Seq[A]): () => A = {
         val v = new Val[A]
         var go = true
         For(xs) { x =>
@@ -102,7 +100,7 @@ object Sync {
         v.toFunction
     }
 
-    def last[A](xs: Seq[A]): Function0[A] = {
+    def last[A](xs: Seq[A]): () => A = {
         val v = new Val[A]
         var acc: Option[A] = None
         For(xs) { x =>
@@ -114,10 +112,10 @@ object Sync {
         v.toFunction
     }
 
-    def nth[A](xs: Seq[A])(n: Int): Function0[A] = head(xs.drop(n))
+    def nth[A](xs: Seq[A])(n: Int): () => A = head(xs.drop(n))
 
 
-    def foldLeft[A, B](xs: Seq[A])(z: B)(op: (B, A) => B): Function0[B] = {
+    def foldLeft[A, B](xs: Seq[A])(z: B)(op: (B, A) => B): () => B = {
         val v = new Val[B]
         var acc = z
         For(xs) { x =>
@@ -129,7 +127,7 @@ object Sync {
         v.toFunction
     }
 
-    def reduceLeft[A](xs: Seq[A])(op: (A, A) => A): Function0[A] = {
+    def reduceLeft[A](xs: Seq[A])(op: (A, A) => A): () => A = {
         val v = new Val[A]
         var acc: Option[A] = None
         For(xs) { x =>
@@ -146,16 +144,16 @@ object Sync {
     }
 
 
-    def min[A](xs: Seq[A])(implicit c: Ordering[A]): Function0[A] = {
+    def min[A](xs: Seq[A])(implicit c: Ordering[A]): () => A = {
         reduceLeft(xs)(c.min(_, _))
     }
 
-    def max[A](xs: Seq[A])(implicit c: Ordering[A]): Function0[A] = {
+    def max[A](xs: Seq[A])(implicit c: Ordering[A]): () => A = {
         reduceLeft(xs)(c.max(_, _))
     }
 
 
-    def copy[A, To](xs: Seq[A])(implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Function0[To] = {
+    def copy[A, To](xs: Seq[A])(implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): () => To = {
         val v = new Val[To]
         var b = bf()
         For(xs) {
@@ -166,6 +164,17 @@ object Sync {
 
         }
         v.toFunction
+    }
+
+
+    def inEdt[A](body: => A): () => A = head(Context.inEdt.map(_ => body))
+
+    def future[A](body: => A): () => A = {
+        try {
+            head(Context.parallel.map(_ => body))
+        } catch {
+            case _: java.util.concurrent.RejectedExecutionException => () => body
+        }
     }
 
 }

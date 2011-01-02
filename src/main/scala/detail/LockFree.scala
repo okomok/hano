@@ -36,7 +36,7 @@ case class IfFirst[T](_then: T => Unit) {
  * Unlike `lazy val`, this can be recursive.
  */
 @Annotation.visibleForTesting
-case class CallOnce[-T](f: T => Unit) extends Function1[T, Unit] {
+case class CallOnce[-T](f: T => Unit) extends (T => Unit) {
     private[this] val self = IfFirst[T] { f } Else { _ => () }
     override def apply(x: T) = self(x)
 
@@ -46,7 +46,7 @@ case class CallOnce[-T](f: T => Unit) extends Function1[T, Unit] {
 
 @deprecated("unused")
 private[hano]
-class SkipFirst[-T](f: T => Unit) extends Function1[T, Unit] {
+class SkipFirst[-T](f: T => Unit) extends (T => Unit) {
     private[this] val self = IfFirst[T] { _ => () } Else { f }
     override def apply(x: T) = self(x)
 
@@ -56,7 +56,7 @@ class SkipFirst[-T](f: T => Unit) extends Function1[T, Unit] {
 
 @deprecated("unused")
 private[hano]
-class SkipTimes[-T](f: T => Unit, n: Int) extends Function1[T, Unit] {
+class SkipTimes[-T](f: T => Unit, n: Int) extends (T => Unit) {
     private[this] val count = new atomic.AtomicInteger(n)
 
     override def apply(x: T) {
@@ -73,7 +73,7 @@ class SkipTimes[-T](f: T => Unit, n: Int) extends Function1[T, Unit] {
 
 @deprecated("unused")
 private[hano]
-class SkipWhile[-T](f: T => Unit, p: T => Boolean) extends Function1[T, Unit] {
+class SkipWhile[-T](f: T => Unit, p: T => Boolean) extends (T => Unit) {
     @volatile private[this] var begins = false
 
     override def apply(x: T) {

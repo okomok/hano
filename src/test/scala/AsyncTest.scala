@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class AsyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def naturals: hano.Seq[Int] = {
-        hano.Seq.async.generate(0 until 1000)
+        hano.Context.async.generate(0 until 1000)
     }
 
     def testTrivial {
@@ -32,6 +32,7 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter.from(0 until 100))(hano.Iter.from(b))
     }
 
+/*
     def testRejection {
         val b = new java.util.ArrayList[Int]
         val c = new java.util.concurrent.CountDownLatch(1)
@@ -58,9 +59,10 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         c.await
         expect(hano.Iter.from(0 until 100))(hano.Iter.from(b))
     }
+*/
 
     def testReallyLazy {
-        def anError = hano.Seq.async.generate({throw new Error; Iterator.single(999)})
+        def anError = hano.Context.async.generate({throw new Error; Iterator.single(999)})
         anError take 100
         ()
     }

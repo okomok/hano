@@ -36,7 +36,7 @@ class PrimesProgressGuiTest
     val A = 104729 // 10000th prime
 
     override protected def onSetUp {
-        val f = eval.InEdt {
+        val f = hano.Sync.inEdt {
             val frame = new swing.JFrame("ProgressMonitor Sample")
             frame.setLayout(new awt.GridLayout(0, 1))
             val startButton = new swing.JButton("Start") textAsName
@@ -50,16 +50,20 @@ class PrimesProgressGuiTest
                 monitor.setMillisToDecideToPopup(0)
                 monitor.setMillisToPopup(0)
 
-                val ps = hano.Seq.origin {
-                    eval.Async // primes in thread-group.
+                val ps = hano.Context.origin {
+                    hano.Context.toEval(hano.Context.threaded) // primes in thread-group.
                 } catching {
-                    case t: Throwable => t.printStackTrace()
+                    case t: Throwable => {
+                        //println("error caught")
+                        t.printStackTrace()
+                        //throw t
+                    }
                 } generate {
                     primes
                 } onClose {
                     gate.countDown()
                 } shift {
-                    eval.InEdt // reactions in EDT.
+                    hano.Context.inEdt // reactions in EDT.
                 }
 
                 ps.onNth(Q-1) { p =>

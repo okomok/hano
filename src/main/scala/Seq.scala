@@ -34,31 +34,6 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     def single[A](x: A): Seq[A] = new detail.Single(x)
 
     /**
-     * An infinite sequence of Units
-     */
-    def origin(k: (=> Unit) => Unit): Seq[Unit] = new detail.Origin(k)
-
-    /**
-     * An infinite sequence of Units in a thread-pool
-     */
-    def async: Seq[Unit] = new detail.Async()
-
-    /**
-     * An infinite sequence of Units in the event-dispatch-thread
-     */
-    def inEdt: Seq[Unit] = new detail.InEdt()
-
-    /**
-     * An infinite sequence of Units in the call-site
-     */
-    def strict: Seq[Unit] = new detail.Strict()
-
-    /**
-     * An infinite sequence of Units in a newly created thread
-     */
-    def threaded: Seq[Unit] = new detail.Threaded()
-
-    /**
      * Turns into a by-name expression.
      */
     def byName[A](xs: => Seq[A]): Seq[A] = new detail.ByName(xs)
@@ -342,11 +317,16 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Reactions are invoked in somewhere you specify.
      */
-    def shift(k: (=> Unit) => Unit): Seq[A] = new detail.Shift(this, k)
+    def shift(k: => Seq[Unit]): Seq[A] = new detail.Shift(this, k)
+
+    /**
+     * Reactions are invoked in somewhere you specify.
+     */
+    def shiftBy(k: (=> Unit) => Unit): Seq[A] = new detail.ShiftBy(this, k)
 
     /**
      * Elements with a break function.
      */
-    def breakable: Seq[(A, Function0[Unit])] = new detail.Breakable(this)
+    def breakable: Seq[(A, () => Unit)] = new detail.Breakable(this)
 
 }

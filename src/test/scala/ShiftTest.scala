@@ -17,7 +17,7 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).shift(k => {s.add(99);k/*;k*/}).map(_+1)) {
+        for (x <- hano.Seq(0,1,2,3,4).shiftBy(k => {s.add(99);k/*;k*/}).map(_+1)) {
             s.add(x)
         }
         // the last 99 is end-reaction shift.
@@ -26,9 +26,9 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
 
     def testSwing(off: Int) {
         val s = new java.util.ArrayList[Int]
-        val k: (=> Unit) => Any = hano.eval.InEdt[Unit]
+//        val k: (=> Unit) => Any = hano.eval.InEdt[Unit]
         hano.Seq(0,1,2,3,4) shift {
-            hano.eval.InEdt
+            hano.Context.inEdt
         } map { x =>
             x + 1
         } foreach { x =>

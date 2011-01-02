@@ -10,9 +10,9 @@ package detail
 
 
 private[hano]
-class Breakable[A](_1: Seq[A]) extends Seq[(A, Function0[Unit])] {
+class Breakable[A](_1: Seq[A]) extends Seq[(A, () => Unit)] {
     override def close() = _1.close()
-    override def forloop(f: Reaction[(A, Function0[Unit])]) {
+    override def forloop(f: Reaction[(A, () => Unit)]) {
         val _k = CallOnce[Exit] { q => f.exit(q);close() }
 
         For(_1) { x =>
