@@ -16,7 +16,7 @@ class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] {
     override def forloop(f: Reaction[Unit]) = synchronized {
         isActive = true
         _1 {
-            Exit.tryCatch(f) {
+            f.tryCatch {
                 while (isActive) {
                     f()
                 }

@@ -56,4 +56,16 @@ trait Reaction[-A] { self =>
     @Annotation.equivalentTo("exit(Exit.Failed(why))")
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
+    private[hano]
+    final def tryCatch(body: => Unit) {
+        try {
+            body
+        } catch {
+            case t: Throwable => {
+                exit(Exit.Failed(t)) // informs Reaction-site
+                throw t // handled in Seq-site
+            }
+        }
+    }
+
 }

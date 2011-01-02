@@ -23,7 +23,9 @@ object Generator {
      * Converts a Traversable to Iterable using a thread.
      */
     def traverse[A](xs: scala.collection.TraversableOnce[A]): Iterable[A] = apply { * =>
-        xs.foreach(*(_))
+        *.tryCatch {
+            xs.foreach(*(_))
+        }
         *.end()
     }
 
@@ -34,11 +36,11 @@ object Generator {
         def flush(): Unit
     }
 
-    private class CursorImpl[A](_1: Env[A] => Unit) extends Cursor[A] {
+    private class CursorImpl[A](body: Env[A] => Unit) extends Cursor[A] {
         private[this] var in = new Data[A]
-        private[this] val x = new concurrent.Exchanger[Data[A]]
+        private[this] val xch = new concurrent.Exchanger[Data[A]]
 
-        eval.Threaded { new Task(_1, x).run() }
+        eval.Threaded { new Task(body, xch).run() }
         doExchange()
         forwardExn()
 
@@ -58,7 +60,7 @@ object Generator {
 
         private def doExchange() {
             assert(in.buf.isEmpty)
-            in = x.exchange(in)
+            in = xch.exchange(in)
             assert(!in.buf.isEmpty || in.isLast)
         }
 
@@ -71,12 +73,12 @@ object Generator {
 
     private val CAPACITY = 20
 
-    private class Task[A](body: Env[A] => Unit, x: concurrent.Exchanger[Data[A]]) extends Runnable {
+    private class Task[A](body: Env[A] => Unit, xch: concurrent.Exchanger[Data[A]]) extends Runnable {
         private[this] var out = new Data[A]
 
         private[this] val y = new Env[A] with CheckedReaction[A] {
-            override protected def checkedApply(e: A) {
-                out.buf.addLast(e)
+            override protected def checkedApply(x: A) {
+                out.buf.addLast(x)
                 if (out.buf.size == CAPACITY) {
                     doExchange()
                 }
@@ -120,7 +122,7 @@ object Generator {
         }
 
         private def doExchange() {
-            out = x.exchange(out)
+            out = xch.exchange(out)
             assert(out.buf.isEmpty)
         }
     }

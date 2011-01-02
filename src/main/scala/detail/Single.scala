@@ -12,7 +12,7 @@ package detail
 private[hano]
 class Single[A](_1: A) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
-        Exit.tryCatch(f) {
+        f.tryCatch {
             f(_1)
         }
         f.exit(Exit.End)
