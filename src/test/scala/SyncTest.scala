@@ -124,7 +124,7 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def testValStrict {
         val v = new hano.Sync.Val[Int]
-        hano.Seq.origin(hano.eval.Strict).generate(0 until 10).forloop(v)
+        hano.Seq.strict.generate(0 until 10).forloop(v)
         expect(0)(v())
     }
 

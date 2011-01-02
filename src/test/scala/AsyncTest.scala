@@ -60,7 +60,7 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testReallyLazyVal {
-        def anError = hano.Seq.origin(hano.eval.Async).generate(hano.Iter.lazySingle{throw new Error; 999}.able)
+        def anError = hano.Seq.async.generate(hano.Iter.lazySingle{throw new Error; 999}.able)
         anError take 100
         ()
     }
