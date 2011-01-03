@@ -83,20 +83,20 @@ object Context {
 
     private class Parallel() extends SeqProxy[Unit] {
         override val self = origin { body =>
-            detail.ThreadPool.executor.submit {
-                new java.util.concurrent.Callable[Unit] {
-                    override def call() = body
-                }
-            }
+            detail.ThreadPool.submit(body)
         }
     }
 
     private class Async() extends SeqProxy[Unit] {
-        override val self = {
+        override val self = origin { body =>
             try {
-                parallel
+                detail.ThreadPool.submit(body)
             } catch {
-                case _: java.util.concurrent.RejectedExecutionException => threaded
+                case _: java.util.concurrent.RejectedExecutionException => {
+                    new Thread {
+                        override def run() = body
+                    } start
+                }
             }
         }
     }

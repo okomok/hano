@@ -15,11 +15,19 @@ import java.util.concurrent._
 private[hano]
 object ThreadPool {
 
-    val size: Int = 2 * java.lang.Runtime.getRuntime.availableProcessors
+    def submit(body: => Unit) {
+        executor.submit {
+            new Callable[Unit] {
+                override def call() = body
+            }
+        }
+    }
+
+    private val size: Int = 2 * java.lang.Runtime.getRuntime.availableProcessors
 
     // A task which has internal dependencies needs direct-handoffs(SynchronousQueue).
     // (scala.actors.Future doesn't support such tasks.)
-    val executor: ThreadPoolExecutor = {
+    private val executor: ThreadPoolExecutor = {
         val ex = new ThreadPoolExecutor(0, size, 60L, TimeUnit.SECONDS, new SynchronousQueue[Runnable])
         ex.setThreadFactory(new DaemonThreadFactory(ex.getThreadFactory))
         ex
