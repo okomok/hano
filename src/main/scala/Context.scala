@@ -51,11 +51,10 @@ object Context {
     def eval(ctx: => Seq[Unit]): (=> Unit) => Unit = new Eval(ctx)
 
 
-    private class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] {
-        @volatile private[this] var isActive = false
-        override def close() = isActive = false
-        override def forloop(f: Reaction[Unit]) = synchronized {
-            isActive = true
+    private class Origin(_1: (=> Unit) => Unit) extends Resource[Unit] {
+        @volatile private[this] var isActive = true
+        override protected def closeResource() = isActive = false
+        override protected def openResource(f: Reaction[Unit]) {
             _1 {
                 f.tryCatch {
                     while (isActive) {

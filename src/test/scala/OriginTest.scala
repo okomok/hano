@@ -35,6 +35,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
     }
 
+    /* multiple-foreach-ness rejected
     def testMultipleForloop { // in the thread pool.
         val s = hano.Context.async
         locally {
@@ -57,7 +58,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
             expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
         }
     }
-
+    */
 }
 
 
