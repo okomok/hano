@@ -45,9 +45,10 @@ object Context {
     def inEdt: Seq[Unit] = new InEdt()
 
     /**
-     * Turns a context to an evaluator.
+     * Evaluates `body` in a context.
+     *   cf. http://lampsvn.epfl.ch/trac/scala/ticket/302
      */
-    def toEval(from: => Seq[Unit]): (=> Unit) => Unit = new ToEval(from)
+    def eval(ctx: => Seq[Unit]): (=> Unit) => Unit = new Eval(ctx)
 
 
     private class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] {
@@ -110,12 +111,8 @@ object Context {
         }
     }
 
-    private class ToEval(_1: => Seq[_]) extends ((=> Unit) => Unit) {
-        override def apply(body: => Unit) {
-            for (_ <- _1.take(1)) {
-                body
-            }
-        }
+    private class Eval(_1: => Seq[Unit]) extends ((=> Unit) => Unit) {
+        override def apply(body: => Unit) = _1.take(1).foreach(_ => body)
     }
 
 }

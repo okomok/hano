@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class Shift[A](_1: Seq[A], _2: => Seq[Unit]) extends SeqProxy[A] {
-    override val self = _1.shiftBy(Context.toEval(_2))
+    override val self = _1.shiftBy(Context.eval(_2))
 }
 
 private[hano]

@@ -50,7 +50,7 @@ class PrimesProgressGuiTest
                 monitor.setMillisToPopup(0)
 
                 val ps = hano.Context.origin {
-                    hano.Context.toEval(hano.Context.threaded) // primes in thread-group.
+                    hano.Context.eval(hano.Context.threaded) // primes in thread-group.
                 } catching {
                     case t: Throwable => {
                         //println("error caught")
