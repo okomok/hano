@@ -144,15 +144,14 @@ object Sync {
     }
 
 
-    def min[A](xs: Seq[A])(implicit c: Ordering[A]): () => A = {
-        reduceLeft(xs)(c.min(_, _))
-    }
+    def min[A](xs: Seq[A])(implicit c: Ordering[A]): () => A = reduceLeft(xs)(c.min(_, _))
 
-    def max[A](xs: Seq[A])(implicit c: Ordering[A]): () => A = {
-        reduceLeft(xs)(c.max(_, _))
-    }
+    def max[A](xs: Seq[A])(implicit c: Ordering[A]): () => A = reduceLeft(xs)(c.max(_, _))
 
 
+    /**
+     * Copies elements to a standard collection.
+     */
     def copy[A, To](xs: Seq[A])(implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): () => To = {
         val v = new Val[To]
         var b = bf()
@@ -167,11 +166,22 @@ object Sync {
     }
 
 
-    def inEdt[A](body: => A): () => A = head(Context.inEdt.map(_ => body))
+    /**
+     * Evaluates `body` in a context.
+     */
+    def eval[A](ctx: Seq[Unit])(body: => A): () => A = head(ctx.map(_ => body))
 
+    /**
+     * Evaluates `body` in the event-dispatch-thread.
+     */
+    def inEdt[A](body: => A): () => A = eval(Context.inEdt)(body)
+
+    /**
+     * Evaluates `body` in the thread-pool, or result-retrieving-site.
+     */
     def future[A](body: => A): () => A = {
         try {
-            head(Context.parallel.map(_ => body))
+            eval(Context.parallel)(body)
         } catch {
             case _: java.util.concurrent.RejectedExecutionException => () => body
         }

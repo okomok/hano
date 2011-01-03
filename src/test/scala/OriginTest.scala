@@ -11,7 +11,6 @@ import com.github.okomok.hano
 
 
 import junit.framework.Assert._
-import hano.eval
 
 
 class OriginTest extends org.scalatest.junit.JUnit3Suite {

@@ -17,7 +17,6 @@ import java.awt
 import com.github.okomok.hano
 import FestUtil.textAsName
 import hano.Swing
-import hano.eval
 
 
 class PrimesProgressGuiTest
