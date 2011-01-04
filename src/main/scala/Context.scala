@@ -8,41 +8,49 @@ package com.github.okomok
 package hano
 
 
+import java.util.TimerTask
+
+
 /**
- * A context is an infinite sequence of Units.
+ * A context is a sequence of Units.
  */
 object Context {
 
 
     /**
-     * An infinite sequence of Units
+     * Creates a context from `eval`.
      */
-    def origin(k: (=> Unit) => Unit): Seq[Unit] = new Origin(k)
+    def origin(eval: (=> Unit) => Unit): Seq[Unit] = new Origin(eval)
 
     /**
-     * An infinite sequence of Units in the call-site
+     * In the call-site
      */
     def strict: Seq[Unit] = new Strict()
 
     /**
-     * An infinite sequence of Units in a new thread
+     * In a new thread
      */
     def threaded: Seq[Unit] = new Threaded()
 
     /**
-     * An infinite sequence of Units in a thread-pool
+     * In the thread-pool
      */
     def parallel: Seq[Unit] = new Parallel()
 
     /**
-     * An infinite sequence of Units in a thread-pool or new thread
+     * In the thread-pool or a new thread
      */
     def async: Seq[Unit] = new Async()
 
     /**
-     * An infinite sequence of Units in the event-dispatch-thread
+     * In the event-dispatch-thread
      */
     def inEdt: Seq[Unit] = new InEdt()
+
+    /**
+     * In a timer
+     */
+    def inTimer(schedule: TimerTask => Unit): Seq[Unit] = new InTimer(schedule)
 
     /**
      * Evaluates `body` in a context.
@@ -107,6 +115,17 @@ object Context {
                     override def run() = body
                 }
             }
+        }
+    }
+
+    private class InTimer(_1: TimerTask => Unit) extends NoExitResource[Unit] {
+        private[this] var l: TimerTask = null
+        override protected def closeResource() = l.cancel()
+        override protected def openResource(f: Unit => Unit) {
+            l = new TimerTask {
+                override def run() = f()
+            }
+            _1(l)
         }
     }
 

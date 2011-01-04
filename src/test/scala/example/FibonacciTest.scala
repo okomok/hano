@@ -17,7 +17,7 @@ import com.github.okomok.hano
 //    class FibonacciTest extends org.scalatest.junit.JUnit3Suite {
         val t = new java.util.Timer(true)
         def naturals: hano.Seq[Int] = {
-            val s: hano.Seq[Unit] = hano.Schedule(t.schedule(_, 0, 1000))
+            val s: hano.Seq[Unit] = hano.Context.inTimer(t.schedule(_, 0, 1000))
             s.generate(Stream.iterate(0)(_ + 1))
         }
         def testTrivial: Unit = {
