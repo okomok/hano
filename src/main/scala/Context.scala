@@ -76,7 +76,7 @@ object Context {
                 f.tryRethrow(context) {
                     f()
                 }
-                f.exit(Exit.Closed)
+                f.exit(Exit.End)
             }
         }
     }
@@ -88,10 +88,14 @@ object Context {
             f.tryRethrow(context) {
                 f()
             }
-            f.exit(Exit.Closed)
+            f.exit(Exit.End)
         }
     }
+
     /*
+
+    Something bad happens.
+
     private class Self() extends SeqProxy[Unit] with Context {
         override def context = this
         override lazy val self = origin { body =>
@@ -138,13 +142,23 @@ object Context {
         override def context = this
         //override def close() {
         //    a ! Exit.Closed
-       // }
+        //}
         override def forloop(f: Reaction[Unit]) {
             a ! Task { () =>
-                f.tryRethrow(context) {
-                    f()
+                var thrown = false
+                try {
+                    f.tryRethrow(context) {
+                        f()
+                    }
+                } catch {
+                    case t: Throwable => {
+                        println("Error in reaction: " + t) // TODO
+                        thrown = true
+                    }
                 }
-                f.exit(Exit.Closed)
+                if (!thrown) {
+                    f.exit(Exit.End)
+                }
             }
         }
         private val a = new Actor {
@@ -170,7 +184,7 @@ object Context {
                         f.tryRethrow(context) {
                             f()
                         }
-                        f.exit(Exit.Closed)
+                        f.exit(Exit.End)
                     }
                 }
             }

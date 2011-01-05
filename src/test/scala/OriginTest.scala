@@ -65,7 +65,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
 class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Context.async.loop.generate(hano.Iter(9,8,7,6,5))) {
+        for (x <- hano.Context.self.loop.generate(hano.Iter(9,8,7,6,5))) {
             s.add(x)
         }
         assertEquals(hano.Iter(9,8,7,6,5), hano.Iter.from(s))
@@ -73,7 +73,7 @@ class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Context.async.loop.generate(hano.Iter().of[Int])) {
+        for (x <- hano.Context.self.loop.generate(hano.Iter().of[Int])) {
             s.add(x)
         }
         assertTrue(s.isEmpty)
@@ -81,7 +81,7 @@ class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
 
     def testRandom: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Context.async.loop.generate(Stream.continually(scala.math.random.toInt)).take(3)) {
+        for (x <- hano.Context.self.loop.generate(Stream.continually(scala.math.random.toInt)).take(3)) {
             s.add(x)
             //println(x)
         }

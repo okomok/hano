@@ -15,15 +15,12 @@ class Loop(_1: Seq[_]) extends Resource[Unit] {
     override def context = _1.context
     override protected def closeResource() = isActive = false
     override protected def openResource(f: Reaction[Unit]) {
-        f.tryRethrow(context) {
+        For(context) { _ =>
             while (isActive) {
-                context.eval {
-                    f()
-                }
+                f()
             }
-        }
-        context.eval {
-            f.exit(Exit.Closed)
+        } AndThen {
+            f.exit(_)
         }
     }
 }

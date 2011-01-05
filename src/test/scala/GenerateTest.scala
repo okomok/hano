@@ -49,9 +49,12 @@ class GenerateTest extends org.scalatest.junit.JUnit3Suite {
 
     def testThen: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Context.async.loop.generate(hano.Iter(9,8,7,6,5)).onExit(_ =>s.add(99))) {
+        var i = new java.util.concurrent.CountDownLatch(6)
+        for (x <- hano.Context.async.loop.generate(hano.Iter(9,8,7,6,5)).onExit(_ => {s.add(99);i.countDown})) {
             s.add(x)
+            i.countDown()
         }
+        i.await()
         assertEquals(hano.Iter(9,8,7,6,5,99), hano.Iter.from(s))
     }
 

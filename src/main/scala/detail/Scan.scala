@@ -15,14 +15,18 @@ class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends Seq[B] {
     override def context = _1.context
     override def forloop(f: Reaction[B]) {
         var acc = _2
-        context.eval {
-            f(acc)
-        }
-        For(_1) { x =>
-            acc = _3(acc, x)
+        For(context) { _ =>
             f(acc)
         } AndThen {
-            f.exit(_)
+            case Exit.End => {
+                For(_1) { x =>
+                    acc = _3(acc, x)
+                    f(acc)
+                } AndThen {
+                    f.exit(_)
+                }
+            }
+            case q => f.exit(q)
         }
     }
 }
