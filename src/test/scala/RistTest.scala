@@ -88,7 +88,6 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter(5,6,6,7,7,8,11,12,36,37,38,42), hano.Iter.from(out))
     }
 
-
     def testTwice {
         val out = new java.util.ArrayList[Int]
         val a = hano.Rist(1,2,3)

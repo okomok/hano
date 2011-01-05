@@ -64,7 +64,7 @@ object Context {
         override protected def closeResource() = isActive = false
         override protected def openResource(f: Reaction[Unit]) {
             _1 {
-                f.tryCatch {
+                f.tryRethrow {
                     while (isActive) {
                         f()
                     }

@@ -37,7 +37,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
     override def close() = isActive = false
     override def forloop(f: Reaction[A]) = synchronized {
         isActive = true
-        f.tryCatch {
+        f.tryRethrow {
             val it = _1.begin
             while (isActive && it.hasNext) {
                 f(it.next)
@@ -56,7 +56,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
 private[hano]
 class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
-        f.tryCatch {
+        f.tryRethrow {
             _1.foreach(f(_))
         }
         f.exit(Exit.End)
@@ -82,7 +82,7 @@ class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
 private[hano]
 class FromResponder[A](_1: Responder[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
-        f.tryCatch {
+        f.tryRethrow {
             _1.respond(f(_))
         }
         f.exit(Exit.End)

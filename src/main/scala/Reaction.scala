@@ -17,7 +17,7 @@ object Reaction {
 
     implicit def fromFunction[A](from: A => Unit): Reaction[A] = new FromFunction(from)
     implicit def fromVar[A](from: Var[A]): Reaction[A] = from.toReaction
-    implicit def fromRist[A](from: Rist[A]): Reaction[A] = from.toReaction
+//    implicit def fromRist[A](from: Rist[A]): Reaction[A] = from.toReaction
 
     private class Apply[A](_1: A => Unit, _2: Exit => Unit) extends CheckedReaction[A] {
         override protected def checkedApply(x: A) = _1(x)
@@ -57,7 +57,7 @@ trait Reaction[-A] { self =>
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
     private[hano]
-    final def tryCatch(body: => Unit) {
+    final def tryRethrow(body: => Unit) {
         try {
             body
         } catch {
