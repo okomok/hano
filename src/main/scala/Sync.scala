@@ -176,9 +176,8 @@ object Sync {
      */
     def inEdt[A](body: => A): () => A = eval(Context.inEdt)(body)
 
-    /**
+    /*
      * Evaluates `body` in the thread-pool, or result-retrieving-site.
-     */
     def future[A](body: => A): () => A = {
         try {
             eval(Context.parallel)(body)
@@ -186,5 +185,5 @@ object Sync {
             case _: java.util.concurrent.RejectedExecutionException => () => body
         }
     }
-
+     */
 }

@@ -14,6 +14,7 @@ class Drop[A](_1: Seq[A], _2: Int) extends Seq[A] {
     Pre.nonnegative(_2, "drop")
 
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var c = _2
         For(_1) { x =>

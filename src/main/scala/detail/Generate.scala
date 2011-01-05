@@ -12,12 +12,15 @@ package detail
 private[hano]
 class Generate[A](_1: Seq[_], _2: => Iter[A]) extends Seq[A] {
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
         val _k = CallOnce[Exit] { q => f.exit(q);close() }
 
         val it = _2.begin
         if (!it.hasNext) {
-            _k(Exit.End)
+            context.eval {
+                _k(Exit.End)
+            }
         } else {
             For(_1) { _ =>
                 if (it.hasNext) {

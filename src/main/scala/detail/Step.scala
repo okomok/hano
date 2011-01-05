@@ -16,6 +16,7 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
     Pre.positive(_2, "step")
 
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var c = 0
         For(_1) { x =>
@@ -38,6 +39,7 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
 private[hano]
 class StepTime[A](_1: Seq[A], _2: Long) extends Seq[A] {
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var past = 0L
         For(_1) { x =>

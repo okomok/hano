@@ -109,6 +109,7 @@ object Reactor {
     }
 
     private class Primary(_1: Reactor) extends Seq[Any] {
+        override def context = throw new Error
         override def forloop(f: Reaction[Any]) {
             _1._f = f
         }
@@ -116,6 +117,7 @@ object Reactor {
 
     private[hano] class Secondary(_1: Reactor) extends Resource[Any] {
         private[this] var _f: Reaction[Any] = null
+        override def context = throw new Error
         override protected def closeResource() {
             _1._fs.remove(_f)
         }

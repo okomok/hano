@@ -15,16 +15,16 @@ import java.util.LinkedList
 private[hano]
 class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
     override def close() = { _1.close(); _2.close() }
+    override def context = _1.context
     override def forloop(f: Reaction[(A, B)]) {
         var ends1 = false
         var ends2 = false
         val c1 = new LinkedList[A]
         val c2 = new LinkedList[B]
-        val lock = new AnyRef{}
         val _k = CallOnce[Exit] { q => f.exit(q);close() }
         def invariant = assert(c1.isEmpty || c2.isEmpty)
 
-        LockedFor(_1, lock) { x =>
+        For(_1) { x =>
             if (!_k.isDone) {
                 invariant
                 if (c2.isEmpty) {
@@ -41,9 +41,9 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                 }
             }
             case q => _k(q) // fail-immediately
-         }
+        }
 
-        LockedFor(_2, lock) { y =>
+        For(_2.shift(_1)) { y =>
             if (!_k.isDone) {
                 invariant
                 if (c1.isEmpty) {

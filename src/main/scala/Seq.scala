@@ -65,20 +65,28 @@ trait Seq[+A] extends java.io.Closeable {
 // kernel
 
     /**
-     * Should be thread-safe and idempotent.
-     */
-    override def close(): Unit = ()
-
-    /**
      * (Possibly) asynchronous foreach with end reaction.
      */
     def forloop(f: Reaction[A]): Unit
+
+    /**
+     * Context where Reactions are invoked.
+     */
+    def context: Seq[Unit]
+
+    /**
+     * Should be thread-safe and idempotent.
+     */
+    override def close(): Unit = ()
 
     @Annotation.equivalentTo("forloop(Reaction(f, _ => ()))")
     final def foreach(f: A => Unit) = forloop(Reaction(f, _ => ()))
 
     @Annotation.equivalentTo("foreach(_ => ())")
     final def start(): Unit = foreach(_ => ())
+
+    @Annotation.equivalentTo("Context.eval(context)(body)")
+    final def eval(body: => Unit) = Context.eval(context)(body)
 
 
 // combinator
@@ -315,14 +323,9 @@ trait Seq[+A] extends java.io.Closeable {
     def indices: Seq[Int] = new detail.Indices(this)
 
     /**
-     * Reactions are invoked in somewhere you specify.
+     * Reactions are invoked in the context of `that`.
      */
-    def shift(k: => Seq[Unit]): Seq[A] = new detail.Shift(this, k)
-
-    /**
-     * Reactions are invoked in somewhere you specify.
-     */
-    def shiftBy(k: (=> Unit) => Unit): Seq[A] = new detail.ShiftBy(this, k)
+    def shift(that: Seq[_]): Seq[A] = new detail.Shift(this, that)
 
     /**
      * Elements with a break function.

@@ -19,7 +19,7 @@ object Beans {
         def removePropertyChangeListener(l: PropertyChangeListener)
     }
 
-    case class PropertyChange(source: PropertyChangeEventSource) extends NoExitResource[PropertyChangeEvent] {
+    case class PropertyChange(source: PropertyChangeEventSource) extends Swing.EdtResource[PropertyChangeEvent] {
         private[this] var l: PropertyChangeListener = null
         override protected def closeResource() = source.removePropertyChangeListener(l)
         override protected def openResource(f: PropertyChangeEvent => Unit) {

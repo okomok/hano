@@ -28,8 +28,11 @@ final class Rist[A] extends Seq[A] with CheckedReaction[A] {
     @Annotation.equivalentTo("addAll(it)")
     final def ++=(it: Iter[A]): Unit = addAll(it)
 
+    override def context = Context.async
+
     override def forloop(f: Reaction[A]) {
-        f.tryRethrow {
+        // TODO
+        f.tryRethrow(context) {
             for (x <- Iter.from(_xs).able) {
                 f(x)
             }
@@ -50,7 +53,7 @@ final class Rist[A] extends Seq[A] with CheckedReaction[A] {
         var s: Throwable = null // TODO: set of exceptions?
         for (f <- Iter.from(_fs).able) {
             try {
-                f.tryRethrow {
+                f.tryRethrow(context) {
                     f(x)
                 }
             } catch {

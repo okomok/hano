@@ -12,11 +12,14 @@ package detail
 private[hano]
 class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
         val _k = CallOnce[Exit] { q => f.exit(q);close() }
 
         if (_2 == 0) {
-            _k(Exit.End)
+            context.eval {
+                _k(Exit.End)
+            }
         } else {
             var c = _2
             For(_1) { x =>

@@ -12,13 +12,14 @@ package detail
 private[hano]
 class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override def close() = { _1.close(); _2.close() }
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
-        For(_1) { x =>
-            f(x)
+        For(_1) {
+            f(_)
         } AndThen {
             case Exit.End =>
-                For(_2) { y =>
-                    f(y)
+                For(_2.shift(_1)) {
+                    f(_)
                 } AndThen {
                     f.exit(_)
                 }

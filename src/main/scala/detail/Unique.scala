@@ -18,6 +18,7 @@ class Unique[A](_1: Seq[A]) extends SeqProxy[A] {
 private[hano]
 class UniqueBy[A](_1: Seq[A], _2: (A, A) => Boolean) extends Seq[A] {
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var prev: Option[A] = None
         For(_1) { x =>

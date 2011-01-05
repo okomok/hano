@@ -12,6 +12,7 @@ package detail
 private[hano]
 class React[A](_1: Seq[A], _2: Reaction[A]) extends Seq[A] {
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
         For(_1) { x =>
             _2(x)

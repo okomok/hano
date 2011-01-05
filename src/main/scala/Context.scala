@@ -9,43 +9,33 @@ package hano
 
 
 import java.util.TimerTask
+import scala.actors.Actor
 
 
 /**
- * A context is a sequence of Units.
+ * Marker trait for a context
+ * A context is one-element sequence of the Unit.
  */
+trait Context
+
+
 object Context {
 
 
     /**
-     * Creates a context from `eval`.
+     *
      */
-    def origin(eval: (=> Unit) => Unit): Seq[Unit] = new Origin(eval)
-
-    /**
-     * In the call-site
-     */
-    def strict: Seq[Unit] = new Strict()
-
-    /**
-     * In a new thread
-     */
-    def threaded: Seq[Unit] = new Threaded()
+    def origin(eval: (=> Unit) => Unit): Seq[Unit] = origin(eval)
 
     /**
      * In the thread-pool
-     */
-    def parallel: Seq[Unit] = new Parallel()
-
-    /**
-     * In the thread-pool or a new thread
      */
     def async: Seq[Unit] = new Async()
 
     /**
      * In the event-dispatch-thread
      */
-    def inEdt: Seq[Unit] = new InEdt()
+    val inEdt: Seq[Unit] = new InEdt()
 
     /**
      * In a timer
@@ -54,61 +44,50 @@ object Context {
 
     /**
      * Evaluates `body` in a context.
-     *   cf. http://lampsvn.epfl.ch/trac/scala/ticket/302
      */
-    def eval(ctx: => Seq[Unit]): (=> Unit) => Unit = new Eval(ctx)
+    def eval(ctx: Seq[Unit])(body: => Unit) {
+        assert(ctx.isInstanceOf[Context])
+        ctx.foreach(_ => body) // Exit is ignored.
+    }
 
 
-    private class Origin(_1: (=> Unit) => Unit) extends Resource[Unit] {
-        @volatile private[this] var isActive = true
-        override protected def closeResource() = isActive = false
-        override protected def openResource(f: Reaction[Unit]) {
+    private class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] with Context {
+        override def context: Seq[Unit] = this
+        override def forloop(f: Reaction[Unit]) {
             _1 {
-                f.tryRethrow {
-                    while (isActive) {
-                        f()
-                    }
+                f.tryRethrow(context) {
+                    f()
                 }
                 f.exit(Exit.Closed)
             }
         }
     }
 
-    private class Strict() extends SeqProxy[Unit] {
-        override val self = origin { body =>
-            body
-        }
-    }
 
-    private class Threaded() extends SeqProxy[Unit] {
-        override val self = origin { body =>
-            new Thread {
-                override def run() = body
-            } start
-        }
-    }
+    case class Task(_1: () => Unit)
 
-    private class Parallel() extends SeqProxy[Unit] {
-        override val self = origin { body =>
-            detail.ThreadPool.submit(body)
+    private class Async() extends SeqProxy[Unit] with Context {
+        override def close() {
+            a ! Exit.Closed
         }
-    }
-
-    private class Async() extends SeqProxy[Unit] {
         override val self = origin { body =>
-            try {
-                detail.ThreadPool.submit(body)
-            } catch {
-                case _: java.util.concurrent.RejectedExecutionException => {
-                    new Thread {
-                        override def run() = body
-                    } start
+            a ! Task(() => body)
+        }
+        private val a = new Actor {
+            override def act = {
+                Actor.loop {
+                    react {
+                        case Task(f) => f()
+                        case q: Exit => Actor.exit
+                    }
                 }
             }
         }
+        a.start()
     }
 
-    private class InEdt() extends SeqProxy[Unit] {
+
+    private class InEdt() extends SeqProxy[Unit] with Context {
         override val self = origin { body =>
             javax.swing.SwingUtilities.invokeLater {
                 new Runnable {
@@ -118,16 +97,20 @@ object Context {
         }
     }
 
-    private class InTimer(_1: TimerTask => Unit) extends NoExitResource[Unit] {
-        private[this] var l: TimerTask = null
-        override protected def closeResource() = l.cancel()
-        override protected def openResource(f: Unit => Unit) {
+
+    private class InTimer(_2: TimerTask => Unit) extends SeqProxy[Unit] with Context {
+        override val self = origin { body =>
+            var l: TimerTask = null
             l = new TimerTask {
-                override def run() = f()
+                override def run() = {
+                    body
+                    l.cancel()
+                }
             }
-            _1(l)
+            _2(l)
         }
     }
+
 
     private class Eval(_1: => Seq[Unit]) extends ((=> Unit) => Unit) {
         override def apply(body: => Unit) = _1.take(1).foreach(_ => body)

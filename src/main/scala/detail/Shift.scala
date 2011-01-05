@@ -10,18 +10,18 @@ package detail
 
 
 private[hano]
-class Shift[A](_1: Seq[A], _2: => Seq[Unit]) extends SeqProxy[A] {
-    override val self = _1.shiftBy(Context.eval(_2))
-}
-
-private[hano]
-class ShiftBy[A](_1: Seq[A], _2: (=> Unit) => Unit) extends Seq[A] {
+class Shift[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override def close() = _1.close()
+    override def context = _2.context
     override def forloop(f: Reaction[A]) {
         For(_1) { x =>
-            _2{f(x)}
+            context.eval {
+                f(x)
+            }
         } AndThen { q =>
-            _2{f.exit(q)}
+            context.eval {
+                f.exit(q)
+            }
         }
     }
 }

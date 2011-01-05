@@ -12,6 +12,7 @@ package detail
 private[hano]
 class Breakable[A](_1: Seq[A]) extends Seq[(A, () => Unit)] {
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[(A, () => Unit)]) {
         val _k = CallOnce[Exit] { q => f.exit(q);close() }
 

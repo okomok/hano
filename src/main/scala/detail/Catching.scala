@@ -12,6 +12,7 @@ package detail
 private[hano]
 class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) extends Seq[A] {
     override def close() = _1.close()
+    override def context = _1.context
     override def forloop(f: Reaction[A]) {
         For(_1) { x =>
             try {
