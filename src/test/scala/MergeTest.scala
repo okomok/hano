@@ -64,7 +64,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter(0,1,2,3,4,5,6,7,8,9), hano.Iter.from(out))
     }
 
-    def teztWhenThrown {
+    def testWhenThrown {
         val xs = hano.Context.async.loop.generate(0 until 5)
         val ys = hano.Context.async.loop.generate(5 until 1000)
         val out = new java.util.ArrayList[Int]
@@ -72,7 +72,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         val gate = new java.util.concurrent.CountDownLatch(1)
          var exitCount = 0
         for (x <- (xs merge ys).onExit{ case hano.Exit.Failed(_) => { exitCount += 1; gate.countDown() }; case q => fail("doh: " + q) }) {
-            println(x)
+            //println(x)
             //println(Thread.currentThread)
             if (x == 2) {
                 throw new Error("catch me, report me")

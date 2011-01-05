@@ -147,13 +147,13 @@ object Context {
             a ! Task { () =>
                 var thrown = false
                 try {
-                    f.tryRethrow(context) {
-                        f()
-                    }
+                    f()
                 } catch {
                     case t: Throwable => {
-                        println("Error in reaction: " + t) // TODO
                         thrown = true
+                        println("error in reaction: " + t)
+                        // t.printStackTrace()
+                        f.exit(Exit.Failed(t))
                     }
                 }
                 if (!thrown) {

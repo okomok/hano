@@ -18,7 +18,9 @@ class Shift[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
 
         For(_1) { x =>
             For(context) { _ =>
-                f(x)
+                if (!_k.isDone) {
+                    f(x)
+                }
             } AndThen {
                 case q @ Exit.Failed(_) => _k(q)
                 case _ =>

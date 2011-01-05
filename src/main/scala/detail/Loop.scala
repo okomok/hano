@@ -20,7 +20,8 @@ class Loop(_1: Seq[_]) extends Resource[Unit] {
                 f()
             }
         } AndThen {
-            f.exit(_)
+            case Exit.End => f.exit(Exit.Closed)
+            case q => f.exit(q)
         }
     }
 }
