@@ -57,13 +57,15 @@ trait Reaction[-A] { self =>
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
     private[hano]
-    final def tryRethrow(ctx: Seq[Unit])(body: => Unit) {
+    final def tryRethrow(ctx: Seq[Unit] = Context.self)(body: => Unit) {
         assert(ctx.isInstanceOf[Context])
         try {
             body
         } catch {
             case t: Throwable => {
-                exit(Exit.Failed(t)) // informs Reaction-site
+                ctx.eval {
+                    exit(Exit.Failed(t)) // informs Reaction-site
+                }
                 throw t // handled in Seq-site
             }
         }

@@ -35,7 +35,6 @@ object Arm {
 
     private class UsedBy[A, B](_1: Arm[A], _2: A => Seq[B]) extends Seq[B] {
         override def close() = _1.close()
-        override def context = _1.context // ??
 
         @Annotation.pre("f is synchronous")
         override def forloop(f: Reaction[B]) {
@@ -58,33 +57,29 @@ object Arm {
  */
 trait Arm[+A] extends Seq[A] {
     def open: A
-    def close(): Unit
-    override def context = Context.async
 
     @Annotation.pre("f is synchronous")
     override def forloop(f: Reaction[A]) {
-        context.eval {
-            val r = open
-            var primary: Throwable = null
-            try {
-                f(r)
-            } catch {
-                case t: Throwable => {
-                    primary = t
-                    f.exit(Exit.Failed(t))
-                    throw t
-                }
-            } finally {
-                if (primary != null) {
-                    try {
-                        close()
-                    } catch {
-                        case s: Exception => /*primary.addSuppressedException(s)*/
-                    }
-                } else {
-                    f.exit(Exit.End)
+        val r = open
+        var primary: Throwable = null
+        try {
+            f(r)
+        } catch {
+            case t: Throwable => {
+                primary = t
+                f.exit(Exit.Failed(t))
+                throw t
+            }
+        } finally {
+            if (primary != null) {
+                try {
                     close()
+                } catch {
+                    case s: Exception => /*primary.addSuppressedException(s)*/
                 }
+            } else {
+                f.exit(Exit.End)
+                close()
             }
         }
     }

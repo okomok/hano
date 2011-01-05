@@ -76,4 +76,5 @@ trait SeqProxy[A] extends Seq[A] with scala.Proxy {
     override def indices: Seq[Int] = around(self.indices)
     override def shift(k: Seq[_]): Seq[A] = around(self.shift(k))
     override def breakable: Seq[(A, () => Unit)] = around(self.breakable)
+    override def loop: Seq[Unit] = self.loop
 }

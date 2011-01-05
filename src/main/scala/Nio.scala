@@ -25,17 +25,14 @@ object Nio {
     }
 
     private class _Selection(_1: Selector, _2: Selector => Long) extends Seq[SelectionKey] {
-        override def context = Context.async
         override def forloop(f: Reaction[SelectionKey]) {
-            f.tryRethrow(context) {
+            f.tryRethrow() {
                 try {
                     while (true) {
                         if (_2(_1) != 0) {
                             val keys = _1.selectedKeys
                             for (key <- Iter.from(keys).able) {
-                                context.eval {
-                                    f(key.asInstanceOf[SelectionKey])
-                                }
+                                f(key.asInstanceOf[SelectionKey])
                             }
                             keys.clear()
                         }

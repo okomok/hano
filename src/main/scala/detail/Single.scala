@@ -11,12 +11,9 @@ package detail
 
 private[hano]
 class Single[A](_1: A) extends Seq[A] {
-    override def context = Context.async
     override def forloop(f: Reaction[A]) {
-        f.tryRethrow(context) {
-            context.eval {
-                f(_1)
-            }
+        f.tryRethrow() {
+            f(_1)
         }
         f.exit(Exit.End)
     }

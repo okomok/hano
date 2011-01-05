@@ -28,6 +28,11 @@ object Context {
     def origin(eval: (=> Unit) => Unit): Seq[Unit] = origin(eval)
 
     /**
+     * In the call-site
+     */
+    val self: Seq[Unit] = new Self
+
+    /**
      * In the thread-pool
      */
     def async: Seq[Unit] = new Async()
@@ -51,6 +56,22 @@ object Context {
     }
 
 
+    private[hano]
+    def upper(xs1: Seq[_], xs2: Seq[_]): Seq[Unit] = {
+        val ctx1 = xs1.context
+        val ctx2 = xs2.context
+        if (ctx1 eq self) {
+            if (ctx2 eq self) {
+                ctx1
+            } else {
+                ctx2
+            }
+        } else {
+            ctx1
+        }
+    }
+
+
     private class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] with Context {
         override def context: Seq[Unit] = this
         override def forloop(f: Reaction[Unit]) {
@@ -64,9 +85,18 @@ object Context {
     }
 
 
+    private class Self() extends SeqProxy[Unit] with Context {
+        override def context = this
+        override val self = origin { body =>
+            body
+        }
+    }
+
+
     case class Task(_1: () => Unit)
 
     private class Async() extends SeqProxy[Unit] with Context {
+        override def context = this
         override def close() {
             a ! Exit.Closed
         }
@@ -88,6 +118,7 @@ object Context {
 
 
     private class InEdt() extends SeqProxy[Unit] with Context {
+        override def context = this
         override val self = origin { body =>
             javax.swing.SwingUtilities.invokeLater {
                 new Runnable {
@@ -99,6 +130,7 @@ object Context {
 
 
     private class InTimer(_2: TimerTask => Unit) extends SeqProxy[Unit] with Context {
+        override def context = this
         override val self = origin { body =>
             var l: TimerTask = null
             l = new TimerTask {

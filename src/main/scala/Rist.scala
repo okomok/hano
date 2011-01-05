@@ -28,8 +28,6 @@ final class Rist[A] extends Seq[A] with CheckedReaction[A] {
     @Annotation.equivalentTo("addAll(it)")
     final def ++=(it: Iter[A]): Unit = addAll(it)
 
-    override def context = Context.async
-
     override def forloop(f: Reaction[A]) {
         // TODO
         f.tryRethrow(context) {

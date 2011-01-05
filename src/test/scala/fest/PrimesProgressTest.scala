@@ -49,9 +49,8 @@ class PrimesProgressGuiTest
                 monitor.setMillisToDecideToPopup(0)
                 monitor.setMillisToPopup(0)
 
-                val ps = hano.Context.origin {
-                    hano.Context.eval(hano.Context.threaded) // primes in thread-group.
-                } catching {
+                val ps =
+                hano.Context.async.loop catching {// primes in thread-group.
                     case t: Throwable => {
                         //println("error caught")
                         t.printStackTrace()

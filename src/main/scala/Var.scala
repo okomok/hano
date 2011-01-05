@@ -18,8 +18,6 @@ final class Var[A](private[this] var x: Option[A] = None) extends Seq[A] { self 
 
     @volatile private[this] var out: Reaction[A] = null
 
-    override def context = Context.async
-
     override def forloop(f: Reaction[A]) {
         if (!x.isEmpty) f(x.get)
         out = f
