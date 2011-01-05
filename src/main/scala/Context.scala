@@ -23,14 +23,9 @@ object Context {
 
 
     /**
-     *
-     */
-    def origin(eval: (=> Unit) => Unit): Seq[Unit] = origin(eval)
-
-    /**
      * In the call-site
      */
-    val self: Seq[Unit] = new Self
+    val self: Seq[Unit] = new Self()
 
     /**
      * In the thread-pool
@@ -72,6 +67,8 @@ object Context {
     }
 
 
+    private def origin(eval: (=> Unit) => Unit): Seq[Unit] = origin(eval)
+
     private class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] with Context {
         override def context: Seq[Unit] = this
         override def forloop(f: Reaction[Unit]) {
@@ -85,15 +82,22 @@ object Context {
     }
 
 
+    private class Self() extends Seq[Unit] with Context {
+        override def context: Seq[Unit] = this
+        override def forloop(f: Reaction[Unit]) {
+            f.tryRethrow(context) {
+                f()
+            }
+            f.exit(Exit.Closed)
+        }
+    }
+    /*
     private class Self() extends SeqProxy[Unit] with Context {
         override def context = this
-        override val self = origin { body =>
+        override lazy val self = origin { body =>
             body
         }
     }
-
-
-    case class Task(_1: () => Unit)
 
     private class Async() extends SeqProxy[Unit] with Context {
         override def context = this
@@ -116,13 +120,58 @@ object Context {
         a.start()
     }
 
-
     private class InEdt() extends SeqProxy[Unit] with Context {
         override def context = this
-        override val self = origin { body =>
+        override lazy val self = origin { body =>
             javax.swing.SwingUtilities.invokeLater {
                 new Runnable {
                     override def run() = body
+                }
+            }
+        }
+    }
+    */
+
+    case class Task(_1: () => Unit)
+
+    private class Async() extends Seq[Unit] with Context {
+        override def context = this
+        //override def close() {
+        //    a ! Exit.Closed
+       // }
+        override def forloop(f: Reaction[Unit]) {
+            a ! Task { () =>
+                f.tryRethrow(context) {
+                    f()
+                }
+                f.exit(Exit.Closed)
+            }
+        }
+        private val a = new Actor {
+            override def act = {
+                Actor.loop {
+                    react {
+                        case Task(f) => f()
+                        case q: Exit => Actor.exit
+                    }
+                }
+            }
+        }
+        a.start()
+    }
+
+
+    private class InEdt() extends Seq[Unit] with Context {
+        override def context = this
+        override def forloop(f: Reaction[Unit]) {
+            javax.swing.SwingUtilities.invokeLater {
+                new Runnable {
+                    override def run() {
+                        f.tryRethrow(context) {
+                            f()
+                        }
+                        f.exit(Exit.Closed)
+                    }
                 }
             }
         }
@@ -141,11 +190,6 @@ object Context {
             }
             _2(l)
         }
-    }
-
-
-    private class Eval(_1: => Seq[Unit]) extends ((=> Unit) => Unit) {
-        override def apply(body: => Unit) = _1.take(1).foreach(_ => body)
     }
 
 }

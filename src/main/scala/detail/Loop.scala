@@ -22,6 +22,8 @@ class Loop(_1: Seq[_]) extends Resource[Unit] {
                 }
             }
         }
-        f.exit(Exit.Closed)
+        context.eval {
+            f.exit(Exit.Closed)
+        }
     }
 }
