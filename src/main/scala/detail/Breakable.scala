@@ -14,12 +14,11 @@ class Breakable[A](_1: Seq[A]) extends Seq[(A, () => Unit)] {
     override def close() = _1.close()
     override def context = _1.context
     override def forloop(f: Reaction[(A, () => Unit)]) {
-        val _k = CallOnce[Exit] { q => f.exit(q);close() }
-
         For(_1) { x =>
-            f(x, () => _k(Exit.End))
+            // Note f.exit in f.apply is illegal.
+            f(x, () => close())
         } AndThen {
-            _k(_)
+            f.exit(_)
         }
     }
 }
