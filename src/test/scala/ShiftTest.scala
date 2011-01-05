@@ -14,6 +14,8 @@ import junit.framework.Assert._
 
 
 class ShiftTest extends org.scalatest.junit.JUnit3Suite {
+    def testNone {
+    }
 /*
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
