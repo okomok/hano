@@ -14,8 +14,7 @@ import junit.framework.Assert._
 
 
 class ShiftTest extends org.scalatest.junit.JUnit3Suite {
-    def testNone {
-    }
+
 /*
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
@@ -39,4 +38,16 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter(1,2,3,4,5), hano.Iter.from(s))
     }
 
+    def testAsyncToSelf {
+        val s = new java.util.ArrayList[Int]
+        val cur = Thread.currentThread()
+        hano.Context.async.loop.generate(0 to 10) shift {
+            hano.Context.self
+        } foreach { x =>
+            s.add(x)
+            Thread.sleep(100)
+            expect(cur)(Thread.currentThread())
+        }
+        expect(hano.Iter.from(0 to 10))(hano.Iter.from(s))
+    }
 }

@@ -68,7 +68,6 @@ object Context {
     }
 
 
-
     private class Self() extends Seq[Unit] with Context {
         override def context: Seq[Unit] = this
         override def forloop(f: Reaction[Unit]) {

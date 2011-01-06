@@ -325,7 +325,17 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Reactions are invoked in the context of `that`.
      */
-    def shift(that: Seq[_]): Seq[A] = new detail.Shift(this, that)
+    def shift(that: Seq[_]): Seq[A] = {
+        val from = context
+        val to = that.context
+        if (from eq to) {
+            this
+        } else if (to eq Context.self) {
+            new detail.ShiftToSelf(this)
+        } else {
+            new detail.ShiftToAsync(this, that)
+        }
+    }
 
     /**
      * Elements with a break function.
