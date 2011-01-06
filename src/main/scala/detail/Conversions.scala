@@ -56,10 +56,11 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
 private[hano]
 class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
-        f.tryRethrow() {
+        For(context) { _ =>
             _1.foreach(f(_))
+        } AndThen {
+            f.exit(_)
         }
-        f.exit(Exit.End)
     }
 }
 
@@ -82,10 +83,11 @@ class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
 private[hano]
 class FromResponder[A](_1: Responder[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
-        f.tryRethrow() {
+        For(context) { _ =>
             _1.respond(f(_))
+        } AndThen {
+            f.exit(_)
         }
-        f.exit(Exit.End)
     }
 }
 
@@ -98,8 +100,12 @@ class ToResponder[A](_1: Seq[A]) extends Responder[A] {
 private[hano]
 class FromCps[A](from: => A @continuations.suspendable) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
-        continuations.reset {
-            f(from)
+        For(context) { _ =>
+            continuations.reset {
+                f(from)
+            }
+        } AndThen {
+            f.exit(_)
         }
     }
 }

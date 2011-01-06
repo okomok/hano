@@ -10,6 +10,7 @@ package hano
 
 import java.util.TimerTask
 import scala.actors.Actor
+import detail.LogErr
 
 
 /**
@@ -40,7 +41,7 @@ object Context {
     /**
      * In a timer
      */
-    def inTimer(schedule: TimerTask => Unit): Seq[Unit] = new InTimer(schedule)
+    //def inTimer(schedule: TimerTask => Unit): Seq[Unit] = new InTimer(schedule)
 
     /**
      * Evaluates `body` in a context.
@@ -67,6 +68,123 @@ object Context {
     }
 
 
+
+    private class Self() extends Seq[Unit] with Context {
+        override def context: Seq[Unit] = this
+        override def forloop(f: Reaction[Unit]) {
+            try {
+                f()
+            } catch {
+                case t: Throwable => {
+                    f.exit(Exit.Failed(t)) // informs Reaction-site
+                    throw t // handled in Seq-site
+                }
+            }
+            f.exit(Exit.End)
+        }
+    }
+
+
+    case class Task(_1: () => Unit)
+    def newTask(body: => Unit): Task = new Task(() => body)
+
+    private class Async() extends Seq[Unit] with Context {
+        override def context = this
+        //override def close() { a ! Exit.Closed }
+        override def forloop(f: Reaction[Unit]) {
+            a ! newTask {
+                var thrown = false
+                try {
+                    f()
+                } catch {
+                    case t: Throwable => {
+                        thrown = true
+                        LogErr(t, "Reaction.apply error in async context")
+                        try {
+                            f.exit(Exit.Failed(t))
+                        } catch {
+                            case t: Throwable => LogErr(t, "Reaction.exit error in async context")
+                        }
+                    }
+                }
+                if (!thrown) {
+                    try {
+                        f.exit(Exit.End)
+                    } catch {
+                        case t: Throwable => LogErr(t, "Reaction.exit error in async context")
+                    }
+                }
+            }
+        }
+        private val a = new Actor {
+            override def act = {
+                Actor.loop {
+                    react {
+                        case Task(f) => f()
+                        case q: Exit => Actor.exit
+                    }
+                }
+            }
+        }
+        a.start()
+    }
+
+
+    private class InEdt() extends Seq[Unit] with Context {
+        override def context = this
+        override def forloop(f: Reaction[Unit]) {
+            javax.swing.SwingUtilities.invokeLater {
+                new Runnable {
+                    override def run() {
+                        var thrown = false
+                        try {
+                            f()
+                        } catch {
+                            case t: Throwable => {
+                                thrown = true
+                                try {
+                                    f.exit(Exit.Failed(t))
+                                } catch {
+                                    case t: Throwable => LogErr(t, "Reaction.exit error in Edt context")
+                                }
+                            }
+                        }
+                        if (!thrown) {
+                            try {
+                                f.exit(Exit.End)
+                            } catch {
+                                case t: Throwable => LogErr(t, "Reaction.exit error in Edt context")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+
+    private class InTimer(_2: TimerTask => Unit) extends SeqProxy[Unit] with Context {
+        override def context = this
+        override val self = origin { body =>
+            var l: TimerTask = null
+            l = new TimerTask {
+                override def run() = {
+                    body
+                    l.cancel()
+                }
+            }
+            _2(l)
+        }
+    }
+*/
+
+
+    /*
+
+    Something bad happens.
+
+
     private def origin(eval: (=> Unit) => Unit): Seq[Unit] = origin(eval)
 
     private class Origin(_1: (=> Unit) => Unit) extends Seq[Unit] with Context {
@@ -80,21 +198,6 @@ object Context {
             }
         }
     }
-
-
-    private class Self() extends Seq[Unit] with Context {
-        override def context: Seq[Unit] = this
-        override def forloop(f: Reaction[Unit]) {
-            f.tryRethrow(context) {
-                f()
-            }
-            f.exit(Exit.End)
-        }
-    }
-
-    /*
-
-    Something bad happens.
 
     private class Self() extends SeqProxy[Unit] with Context {
         override def context = this
@@ -135,75 +238,5 @@ object Context {
         }
     }
     */
-
-    case class Task(_1: () => Unit)
-
-    private class Async() extends Seq[Unit] with Context {
-        override def context = this
-        //override def close() {
-        //    a ! Exit.Closed
-        //}
-        override def forloop(f: Reaction[Unit]) {
-            a ! Task { () =>
-                var thrown = false
-                try {
-                    f()
-                } catch {
-                    case t: Throwable => {
-                        thrown = true
-                        println("error in reaction: " + t)
-                        // t.printStackTrace()
-                        f.exit(Exit.Failed(t))
-                    }
-                }
-                if (!thrown) {
-                    f.exit(Exit.End)
-                }
-            }
-        }
-        private val a = new Actor {
-            override def act = {
-                Actor.loop {
-                    react {
-                        case Task(f) => f()
-                        case q: Exit => Actor.exit
-                    }
-                }
-            }
-        }
-        a.start()
-    }
-
-
-    private class InEdt() extends Seq[Unit] with Context {
-        override def context = this
-        override def forloop(f: Reaction[Unit]) {
-            javax.swing.SwingUtilities.invokeLater {
-                new Runnable {
-                    override def run() {
-                        f.tryRethrow(context) {
-                            f()
-                        }
-                        f.exit(Exit.End)
-                    }
-                }
-            }
-        }
-    }
-
-
-    private class InTimer(_2: TimerTask => Unit) extends SeqProxy[Unit] with Context {
-        override def context = this
-        override val self = origin { body =>
-            var l: TimerTask = null
-            l = new TimerTask {
-                override def run() = {
-                    body
-                    l.cancel()
-                }
-            }
-            _2(l)
-        }
-    }
 
 }
