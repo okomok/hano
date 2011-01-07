@@ -26,8 +26,9 @@ class AppendTest extends org.scalatest.junit.JUnit3Suite {
         val out = new java.util.ArrayList[Int]
         var propagated = false
         object MyError extends Error
+        var failed = false
         try {
-            for (x <- (xs ++ ys).onExit{case hano.Exit.Failed(_) => out.add(99); case _ => fail("doh")}) {
+            for (x <- (xs ++ ys).onExit{case hano.Exit.Failed(_) => out.add(99); case _ => failed = true}) {
                 if (x == 3)
                     throw MyError
                 out.add(x)
@@ -35,6 +36,7 @@ class AppendTest extends org.scalatest.junit.JUnit3Suite {
         } catch {
             case MyError => propagated = true
         }
+        assert(!failed)
         assert(propagated)
         expect(hano.Iter(1,2,99))(hano.Iter.from(out))
     }

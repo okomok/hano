@@ -28,7 +28,6 @@ object Reaction {
         override protected def checkedApply(x: A) = _1(x)
         override protected def checkedExit(q: Exit) = ()
     }
-
 }
 
 
@@ -43,7 +42,7 @@ trait Reaction[-A] { self =>
     def apply(x: A): Unit
 
     /**
-     * Reacts on the exit.
+     * Reacts on the exit. (should not throw.)
      */
     def exit(q: Exit): Unit
 
@@ -57,26 +56,23 @@ trait Reaction[-A] { self =>
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
     private[hano]
-    final def tryRethrow(ctx: Context = Context.self)(body: => Unit) {
+    final def tryRethrow(body: => Unit) {
         try {
             body
         } catch {
             case t: Throwable => {
-                ctx.eval {
-                    exit(Exit.Failed(t)) // informs Reaction-site
-                }
+                exitNothrow(Exit.Failed(t)) // informs Reaction-site
                 throw t // handled in Seq-site
             }
         }
     }
 
     private[hano]
-    final def exitCatch(q: Exit) {
+    final def exitNothrow(q: Exit) {
         try {
             exit(q)
         } catch {
             case t: Throwable => detail.LogErr(t, "Reaction.exit error")
         }
     }
-
 }

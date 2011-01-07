@@ -9,6 +9,7 @@ package hano
 
 
 object Context {
+
     /**
      * In the call-site
      */
@@ -32,7 +33,7 @@ object Context {
 trait Context extends Seq[Unit] with Reaction[() => Unit] {
 
     /**
-     * No effects; context shall be reusable.
+     * No effects; context shall be anytime reusable.
      */
     final override def close() = ()
 
@@ -45,7 +46,7 @@ trait Context extends Seq[Unit] with Reaction[() => Unit] {
     override def forloop(f: Reaction[Unit]): Unit
 
     /**
-     * Turns into closeable infinite sequence of the Units.
+     * Turns into an infinite sequence of the Units.
      */
     final def loop: Seq[Unit] = new detail.Loop(this)
 
@@ -56,7 +57,7 @@ trait Context extends Seq[Unit] with Reaction[() => Unit] {
     final def eval(body: => Unit): Unit = apply(() => body)
 
     /**
-     * Prefers Context.async to Context.self.
+     * Prefers async to self; avoid ShiftToSelf if possible.
      */
     private[hano]
     final def upper(that: Context): Context = {

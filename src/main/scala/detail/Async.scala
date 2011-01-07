@@ -27,22 +27,16 @@ class Async() extends Context {
     }
     a.start()
 
-    override def exit(q: Exit) { a ! q }
+    override def exit(q: Exit) {
+        a ! q
+    }
 
     override def forloop(f: Reaction[Unit]) {
         a ! Body {
-            var thrown = false
             try {
-                f()
+                Context.self.forloop(f)
             } catch {
-                case t: Throwable => {
-                    thrown = true
-                    LogErr(t, "Reaction.apply error in async context")
-                    f.exitCatch(Exit.Failed(t))
-                }
-            }
-            if (!thrown) {
-                f.exitCatch(Exit.End)
+                case t: Throwable => LogErr(t, "Reaction.apply error in async context")
             }
         }
     }

@@ -30,7 +30,7 @@ final class Rist[A] extends Seq[A] with CheckedReaction[A] {
 
     override def forloop(f: Reaction[A]) {
         // TODO
-        f.tryRethrow(context) {
+        f.tryRethrow {
             for (x <- Iter.from(_xs).able) {
                 f(x)
             }
@@ -51,7 +51,7 @@ final class Rist[A] extends Seq[A] with CheckedReaction[A] {
         var s: Throwable = null // TODO: set of exceptions?
         for (f <- Iter.from(_fs).able) {
             try {
-                f.tryRethrow(context) {
+                f.tryRethrow {
                     f(x)
                 }
             } catch {

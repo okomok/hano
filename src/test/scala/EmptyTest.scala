@@ -24,17 +24,20 @@ class EmptyTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEnded {
         var ended = false
+        var failed = false
         hano.Seq.empty.of[Int] onExit {
             case hano.Exit.End => ended = true
-            case _ => fail("doh")
+            case _ => failed = true
         } start;
+        assert(!failed)
         assert(ended)
     }
 
     def testNever {
+        var failed = false
         hano.Seq.never.of[Int] onExit {
-            case _ => fail("doh")
+            case _ => failed = true
         } start;
-        ()
+        assert(!failed)
     }
 }

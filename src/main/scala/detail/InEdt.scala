@@ -16,17 +16,10 @@ class InEdt() extends Context {
         javax.swing.SwingUtilities.invokeLater {
             new Runnable {
                 override def run() {
-                    var thrown = false
                     try {
-                        f()
+                        Context.self.forloop(f)
                     } catch {
-                        case t: Throwable => {
-                            thrown = true
-                            f.exitCatch(Exit.Failed(t))
-                        }
-                    }
-                    if (!thrown) {
-                        f.exitCatch(Exit.End)
+                        case t: Throwable => LogErr(t, "Reaction.apply error in edt context")
                     }
                 }
             }
