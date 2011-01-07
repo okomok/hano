@@ -15,14 +15,16 @@ trait Context extends Seq[Unit] with Reaction[() => Unit] {
     final override def close() = ()
     final override def context = this
 
+    /**
+     * Shall be thread-safe.
+     * Moreover all the Reaction method calls shall be serialized.
+     */
+    def forloop(f: Reaction[Unit]): Unit
+
     final def loop: Seq[Unit] = new detail.Loop(this)
 
-    final override def apply(body: () => Unit) {
-        foreach(_ => body())
-    }
-    final def eval(body: => Unit) {
-        apply(() => body)
-    }
+    final override def apply(body: () => Unit): Unit = foreach(_ => body())
+    final def eval(body: => Unit): Unit = apply(() => body)
 
     private[hano]
     final def upper(that: Context): Context = {

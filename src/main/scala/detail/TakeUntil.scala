@@ -14,7 +14,7 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override def close() = { _1.close(); _2.close() }
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
-        val _k = CallOnce[Exit] { q => f.exit(q);close() }
+        val _k = ExitOnce { q => f.exit(q);close() }
 
         For(_2.shift(_1)) { y =>
             _k(Exit.End)
@@ -23,7 +23,7 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         }
 
         For(_1) { x =>
-            if (!_k.isDone) {
+            if (!_k.isExited) {
                 f(x)
             } else {
                 _k(Exit.End)

@@ -15,10 +15,10 @@ class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
     override def close() = _1.close()
     override def context = _1.context
     override def forloop(f: Reaction[B]) {
-        val _k = CallOnce[Exit] { q => f.exit(q);close() }
+        val _k = ExitOnce { q => f.exit(q);close() }
 
         For(_1) { x =>
-            if (!_k.isDone) {
+            _k.beforeExit {
                 For(_2(x).shift(_1)) { y =>
                     f(y)
                 } AndThen {
@@ -27,7 +27,7 @@ class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
                 }
             }
         } AndThen {
-            _k
+            _k(_)
         }
     }
 }
