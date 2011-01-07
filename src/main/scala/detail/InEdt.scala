@@ -11,7 +11,6 @@ package detail
 
 private[hano]
 class InEdt() extends Context {
-    override def exit(q: Exit) = ()
     override def forloop(f: Reaction[Unit]) {
         javax.swing.SwingUtilities.invokeLater {
             new Runnable {

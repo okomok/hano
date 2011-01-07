@@ -30,7 +30,7 @@ object Context {
 /**
  * Context is one-element sequence of the Unit.
  */
-trait Context extends Seq[Unit] with Reaction[() => Unit] {
+trait Context extends Seq[Unit] {
 
     /**
      * No effects; context shall be anytime reusable.
@@ -39,6 +39,11 @@ trait Context extends Seq[Unit] with Reaction[() => Unit] {
 
     @Annotation.returnThis
     final override def context = this
+
+    /**
+     * Terminates this context.
+     */
+    def exit: Unit = ()
 
     /**
      * Shall be thread-safe, and preserve order of subscription.
@@ -50,11 +55,8 @@ trait Context extends Seq[Unit] with Reaction[() => Unit] {
      */
     final def loop: Seq[Unit] = new detail.Loop(this)
 
-    @Annotation.equivalentTo("foreach(_ => body())")
-    final override def apply(body: () => Unit): Unit = foreach(_ => body())
-
-    @Annotation.equivalentTo("apply(() => body)")
-    final def eval(body: => Unit): Unit = apply(() => body)
+    @Annotation.equivalentTo("foreach(_ => body)")
+    final def eval(body: => Unit): Unit = foreach(_ => body)
 
     /**
      * Prefers async to self; avoid ShiftToSelf if possible.

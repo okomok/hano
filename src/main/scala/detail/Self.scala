@@ -11,7 +11,6 @@ package detail
 
 private[hano]
 class Self() extends Context {
-    override def exit(q: Exit) = ()
     override def forloop(f: Reaction[Unit]) {
         f.tryRethrow {
             f()

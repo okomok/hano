@@ -20,15 +20,15 @@ class Async() extends Context {
             Actor.loop {
                 react {
                     case Action(f) => f()
-                    case q: Exit => Actor.exit
+                    case _: Exit => Actor.exit
                 }
             }
         }
     }
     a.start()
 
-    override def exit(q: Exit) {
-        a ! q
+    override def exit() {
+        a ! Exit.Closed
     }
 
     override def forloop(f: Reaction[Unit]) {
