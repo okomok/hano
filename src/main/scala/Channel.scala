@@ -25,31 +25,31 @@ final class Channel[A](override val context: Context = Context.self) extends Seq
         var next: Node[A] = null
     }
 
-    private[this] var headNode = new Node[A]
-    private[this] var lastNode = headNode
+    private[this] var readNode = new Node[A]
+    private[this] var writeNode = readNode
 
-    private[this] val headLock = new ReentrantLock
-    private[this] val lastLock = new ReentrantLock
+    private[this] val readLock = new ReentrantLock
+    private[this] val writeLock = new ReentrantLock
 
     override def forloop(f: Reaction[A]) {
-        headLock.lock()
+        readLock.lock()
         val v = try {
-            if (headNode.next == null) {
-                lastLock.lock()
+            if (readNode.next == null) {
+                writeLock.lock()
                 try {
-                    if (headNode.next == null) {
-                        headNode.next = new Node[A]
+                    if (readNode.next == null) {
+                        readNode.next = new Node[A]
                     }
                 } finally {
-                    lastLock.unlock()
+                    writeLock.unlock()
                 }
             }
 
-            val w = headNode.value
-            headNode = headNode.next
+            val w = readNode.value
+            readNode = readNode.next
             w
         } finally {
-            headLock.unlock()
+            readLock.unlock()
         }
         v.forloop(f)
     }
@@ -57,16 +57,16 @@ final class Channel[A](override val context: Context = Context.self) extends Seq
     def read = toCps
 
     def write(x: A) {
-        lastLock.lock()
+        writeLock.lock()
         val v = try {
-            val w = lastNode.value
-            if (lastNode.next == null) {
-                lastNode.next = new Node[A]
+            val w = writeNode.value
+            if (writeNode.next == null) {
+                writeNode.next = new Node[A]
             }
-            lastNode = lastNode.next
+            writeNode = writeNode.next
             w
         } finally {
-            lastLock.unlock()
+            writeLock.unlock()
         }
         v := x
     }
