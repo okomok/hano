@@ -12,6 +12,7 @@ package detail
 import scala.actors.Actor
 
 
+private[hano]
 case class AsyncTask(_1: () => Unit)
 
 

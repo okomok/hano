@@ -10,9 +10,9 @@ package detail
 
 
 private[hano]
-class Loop(_1: Seq[_]) extends Resource[Unit] {
+class Loop(_1: Context) extends Resource[Unit] {
     @volatile private[this] var isActive = true
-    override def context = _1.context
+    override def context = _1
     override protected def closeResource() = isActive = false
     override protected def openResource(f: Reaction[Unit]) {
         For(context) { _ =>
