@@ -72,7 +72,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Context where Reactions are invoked.
      */
-    def context: Seq[Unit] = Context.self
+    def context: Context = Context.self
 
     /**
      * Should be thread-safe and idempotent.
@@ -84,9 +84,6 @@ trait Seq[+A] extends java.io.Closeable {
 
     @Annotation.equivalentTo("foreach(_ => ())")
     final def start(): Unit = foreach(_ => ())
-
-    @Annotation.equivalentTo("Context.eval(context)(body)")
-    final def eval(body: => Unit) = Context.eval(context)(body)
 
 
 // combinator
@@ -341,10 +338,5 @@ trait Seq[+A] extends java.io.Closeable {
      * Elements with a break function.
      */
     def breakable: Seq[(A, () => Unit)] = new detail.Breakable(this)
-
-    /**
-     * Infinite loop of Units.
-     */
-    def loop: Seq[Unit] = new detail.Loop(this)
 
 }

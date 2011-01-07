@@ -169,7 +169,7 @@ object Sync {
     /**
      * Evaluates `body` in a context.
      */
-    def eval[A](ctx: Seq[Unit])(body: => A): () => A = head(ctx.map(_ => body))
+    def eval[A](ctx: Context)(body: => A): () => A = head(ctx.map(_ => body))
 
     /**
      * Evaluates `body` in the event-dispatch-thread.

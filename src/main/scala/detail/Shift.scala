@@ -50,7 +50,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         val _k = CallOnce[Exit] { q => cur ! q;f.exit(q);close() }
 
         For(_1) { x =>
-            cur ! Context.newTask {
+            cur ! AsyncTask { () =>
                 For(context) { _ =>
                     if (!_k.isDone) {
                         f(x)
@@ -61,7 +61,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                 }
             }
         } AndThen { q =>
-            cur ! Context.newTask {
+            cur ! AsyncTask { () =>
                 For(context) { _ =>
                     _k(q)
                 } AndThen {
@@ -74,7 +74,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         var go = true
         while (go) {
             Actor.receive {
-                case Context.Task(f) => f()
+                case AsyncTask(f) => f()
                 case _: Exit => go = false
             }
         }

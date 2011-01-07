@@ -18,7 +18,7 @@ trait SeqProxy[A] extends Seq[A] with scala.Proxy {
     }
 
     override def forloop(f: Reaction[A]): Unit = self.forloop(f)
-    override def context: Seq[Unit] = self.context
+    override def context: Context = self.context
     override def close(): Unit = self.close()
     override def append[B >: A](that: Seq[B]): Seq[B] = around(self.append(that))
     override def merge[B >: A](that: Seq[B]): Seq[B] = around(self.merge(that))
@@ -76,5 +76,4 @@ trait SeqProxy[A] extends Seq[A] with scala.Proxy {
     override def indices: Seq[Int] = around(self.indices)
     override def shift(k: Seq[_]): Seq[A] = around(self.shift(k))
     override def breakable: Seq[(A, () => Unit)] = around(self.breakable)
-    override def loop: Seq[Unit] = self.loop
 }

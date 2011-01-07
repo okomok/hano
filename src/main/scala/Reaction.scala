@@ -57,8 +57,7 @@ trait Reaction[-A] { self =>
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
     private[hano]
-    final def tryRethrow(ctx: Seq[Unit] = Context.self)(body: => Unit) {
-        assert(ctx.isInstanceOf[Context])
+    final def tryRethrow(ctx: Context = Context.self)(body: => Unit) {
         try {
             body
         } catch {
