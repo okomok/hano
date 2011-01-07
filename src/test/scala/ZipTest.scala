@@ -70,6 +70,7 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter((1,"2"),(2,"3")), hano.Iter.from(out))
     }
 
+/* rejected: context must be implemented
     def testParallel: Unit = {
         //for (_ <- 0 to 30) {
             val src = new IntSenders(hano.Iter(1,2,3,4,5,6), hano.Iter(7,7,7,7))
@@ -79,5 +80,5 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
             src.shutdown(dst.assertMe)
         //}
     }
-
+*/
 }

@@ -9,7 +9,13 @@ package hano
 package detail
 
 
+private[hano]
+object ExitOnce {
+    def apply(k: Exit => Unit) = new ExitOnce(k)
+}
+
 @Annotation.notThreadSafe
+private[hano]
 class ExitOnce(k: Exit => Unit)
 {
     private[this] var exited = false
@@ -28,8 +34,4 @@ class ExitOnce(k: Exit => Unit)
     }
 
     def isExited: Boolean = exited
-}
-
-object ExitOnce {
-    def apply(k: Exit => Unit) = new ExitOnce(k)
 }

@@ -14,12 +14,12 @@ class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override def close() = { _1.close(); _2.close() }
     override def context = _1.context upper _2.context
     override def forloop(f: Reaction[A]) {
-        val _k = CallOnce[Exit] { q => f.exit(q) }
+        val _k = ExitOnce { q => f.exit(q) }
         val _ok = IfFirst[Exit] { _ => () } Else { q => _k(q) }
-        val _no = CallOnce[Exit] { q => _k(q);close() }
+        val _no = ExitOnce { q => _k(q);close() }
 
         For(_1.shift(context)) { x =>
-            if (!_no.isDone) {
+            _no.beforeExit {
                 f(x)
             }
         } AndThen {
@@ -28,7 +28,7 @@ class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         }
 
         For(_2.shift(context)) { x =>
-            if (!_no.isDone) {
+            _no.beforeExit {
                 f(x)
             }
         } AndThen {

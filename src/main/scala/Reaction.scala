@@ -70,4 +70,13 @@ trait Reaction[-A] { self =>
         }
     }
 
+    private[hano]
+    final def exitCatch(q: Exit) {
+        try {
+            exit(q)
+        } catch {
+            case t: Throwable => detail.LogErr(t, "Reaction.exit error")
+        }
+    }
+
 }

@@ -57,6 +57,7 @@ object Arm {
  */
 trait Arm[+A] extends Seq[A] {
     def open: A
+    override def close(): Unit
 
     @Annotation.pre("f is synchronous")
     override def forloop(f: Reaction[A]) {

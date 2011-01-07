@@ -22,19 +22,11 @@ class InEdt() extends Context {
                     } catch {
                         case t: Throwable => {
                             thrown = true
-                            try {
-                                f.exit(Exit.Failed(t))
-                            } catch {
-                                case t: Throwable => LogErr(t, "Reaction.exit error in Edt context")
-                            }
+                            f.exitCatch(Exit.Failed(t))
                         }
                     }
                     if (!thrown) {
-                        try {
-                            f.exit(Exit.End)
-                        } catch {
-                            case t: Throwable => LogErr(t, "Reaction.exit error in Edt context")
-                        }
+                        f.exitCatch(Exit.End)
                     }
                 }
             }

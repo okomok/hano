@@ -13,17 +13,13 @@ import scala.actors.Actor
 
 
 private[hano]
-case class AsyncTask(_1: () => Unit)
-
-
-private[hano]
 class Async() extends Context {
 
     private val a = new Actor {
         override def act = {
             Actor.loop {
                 react {
-                    case AsyncTask(f) => f()
+                    case Body(f) => f()
                     case q: Exit => Actor.exit
                 }
             }
@@ -34,7 +30,7 @@ class Async() extends Context {
     override def exit(q: Exit) { a ! q }
 
     override def forloop(f: Reaction[Unit]) {
-        a ! AsyncTask { () =>
+        a ! Body {
             var thrown = false
             try {
                 f()
@@ -42,19 +38,11 @@ class Async() extends Context {
                 case t: Throwable => {
                     thrown = true
                     LogErr(t, "Reaction.apply error in async context")
-                    try {
-                        f.exit(Exit.Failed(t))
-                    } catch {
-                        case t: Throwable => LogErr(t, "Reaction.exit error in async context")
-                    }
+                    f.exitCatch(Exit.Failed(t))
                 }
             }
             if (!thrown) {
-                try {
-                    f.exit(Exit.End)
-                } catch {
-                    case t: Throwable => LogErr(t, "Reaction.exit error in async context")
-                }
+                f.exitCatch(Exit.End)
             }
         }
     }

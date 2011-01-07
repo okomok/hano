@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class OnClose[A](_1: Seq[A], _2: => Unit) extends Seq[A] {
-    override def close() = {
+    override def close() {
         context.eval {
             _2
         }

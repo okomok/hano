@@ -10,6 +10,7 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
+    /*
 class LockFreeTest extends org.scalatest.junit.JUnit3Suite {
 
     def doF() { f() }
@@ -22,3 +23,4 @@ class LockFreeTest extends org.scalatest.junit.JUnit3Suite {
     }
 
 }
+    */
