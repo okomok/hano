@@ -50,7 +50,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         val _k = ExitOnce { q => cur ! q;f.exit(q);close() }
 
         For(_1) { x =>
-            cur ! Body {
+            cur ! Action {
                 For(context) { _ =>
                     _k.beforeExit {
                         f(x)
@@ -61,7 +61,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                 }
             }
         } AndThen { q =>
-            cur ! Body {
+            cur ! Action {
                 For(context) { _ =>
                     _k(q)
                 } AndThen {
@@ -74,7 +74,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         var go = true
         while (go) {
             Actor.receive {
-                case Body(f) => f()
+                case Action(f) => f()
                 case _: Exit => go = false
             }
         }

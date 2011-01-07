@@ -19,7 +19,7 @@ class Async() extends Context {
         override def act = {
             Actor.loop {
                 react {
-                    case Body(f) => f()
+                    case Action(f) => f()
                     case q: Exit => Actor.exit
                 }
             }
@@ -32,7 +32,7 @@ class Async() extends Context {
     }
 
     override def forloop(f: Reaction[Unit]) {
-        a ! Body {
+        a ! Action {
             try {
                 Context.self.forloop(f)
             } catch {

@@ -10,9 +10,9 @@ package detail
 
 
 private[hano]
-object Body {
-    def apply(body: => Unit)(implicit d: DummyImplicit) = new Body(() => body)
+object Action {
+    def apply(body: => Unit)(implicit d: DummyImplicit) = new Action(() => body)
 }
 
 private[hano]
-case class Body(_1: () => Unit)
+case class Action(_1: () => Unit)
