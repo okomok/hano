@@ -26,9 +26,8 @@ object Val {
         v
     }
 
+    @Annotation.equivalentTo("new Val[A]")
     def apply[A]: Val[A] = new Val[A]
-
-    case class MultipleAssignmentException[A](expected: A, actual: A) extends RuntimeException
 }
 
 
@@ -59,8 +58,8 @@ final class Val[A](override val context: Context = Context.self) extends Seq[A] 
                     eval(f, x)
                 }
             }
-        } else if (v.get != x) {
-            throw new Val.MultipleAssignmentException(v.get, x)
+        } else if (v.get.get != x) {
+            throw new MultipleAssignmentException(v.get.get, x)
         }
     }
 
@@ -72,3 +71,7 @@ final class Val[A](override val context: Context = Context.self) extends Seq[A] 
         }
     }
 }
+
+
+class MultipleAssignmentException[A](expected: A, actual: A) extends
+    RuntimeException("expected: " + expected + ", but actual: " + actual)
