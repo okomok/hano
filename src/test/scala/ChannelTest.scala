@@ -128,7 +128,8 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial {
-        val ch = new hano.Channel[Int]
+        val ctx = hano.Context.async
+        val ch = new hano.Channel[Int](ctx)
 
         val suite = new ParallelSuite(10)
         val i = new java.util.concurrent.atomic.AtomicInteger(0)
@@ -138,27 +139,26 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
 
         val q = new java.util.concurrent.ConcurrentLinkedQueue[Int]
         suite.add(10) {
-            loopTail2(ch) { x =>
-                println(x)
+            for (x <- ch.loop) {
                 q.offer(x)
             }
-            /*
-            loopRecSeq(ch).foreach { x =>
-                println(x)
-                q.offer(x)
-            }
-            */
-            /*
-            hano.Block { * =>
-                while (true) {
-                    val x = ch.read
-                    q.offer(x)
-                }
-            }
-            */
         }
 
         suite.start()
+
+        Thread.sleep(2000)
+
+        /*
+        too early.
+        import scala.actors.Actor
+        val cur = Actor.self
+        object OK
+        ctx.foreach { _ =>
+            cur ! OK
+        }
+        Actor.receive {
+            case OK =>
+        }*/
 
         val arr = new java.util.ArrayList[Int]
         for (x <- hano.Iter.from(q).able) {

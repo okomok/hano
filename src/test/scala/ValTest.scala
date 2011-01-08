@@ -14,7 +14,8 @@ import org.testng.annotations._
 class ValTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        val v1 = new hano.Val[Int]
+        val cxt = hano.Context.async
+        val v1 = new hano.Val[Int](cxt)
 
         val suite = new ParallelSuite(10)
         suite.add(50) {
@@ -31,26 +32,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
             }
         }
         suite.start()
-    }
-
-    def testTrivialAsync {
-        val v1 = new hano.Val[Int](hano.Context.async)
-
-        val suite = new ParallelSuite(10)
-        suite.add(50) {
-            v1 := 12
-        }
-        suite.add(50) {
-            @volatile var called = false
-            for (v <- v1) {
-                if (called) {
-                    fail("multiple call impossible")
-                }
-                expect(12)(v)
-                called = true
-            }
-        }
-        suite.start()
+        Thread.sleep(1000)
     }
 
     def testThrows {
@@ -58,6 +40,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
         v := 11
         v := 11
         intercept[hano.MultipleAssignmentException[_]] {
+            // throws immediately.
             v := 12
         }
     }

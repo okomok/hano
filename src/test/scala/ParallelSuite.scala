@@ -52,7 +52,7 @@ class ParallelSuite(poolSize: Int) {
 
             var f: () => Unit = () => ()
             for (i <- 0 until c) {
-                f = compose(f, tasks.poll())
+                f = compose(f, compose(yld, tasks.poll()))
             }
 
             ret.offer {
@@ -76,6 +76,7 @@ class ParallelSuite(poolSize: Int) {
     }
 
     private def compose(f: () => Unit, g: () => Unit) = () => { f(); g() }
+    private def yld() { Thread.`yield`() }
 }
 
 
