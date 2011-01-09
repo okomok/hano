@@ -16,6 +16,13 @@
 
 
 
+## Ratinonale
+
+* No locks
+* Everything is sequence.
+* Continuations plugin is elective.
+
+
 
 ## Reactive Sequence
 

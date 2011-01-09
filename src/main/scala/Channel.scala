@@ -89,24 +89,30 @@ final class Channel[A](override val context: Context = Context.act) extends Seq[
 private[hano]
 object Channel {
 
-    private class LoopOther[A](_1: Channel[A]) extends Seq[A] {
+    private class LoopOther[A](_1: Channel[A]) extends Resource[A] {
         assert(_1.context ne Context.self)
+        @volatile private[this] var isActive = true
         override def context = _1.context
-        override def forloop(f: Reaction[A]) {
+        override protected def closeResource() = isActive = false
+        override protected def openResource(f: Reaction[A]) {
             val _k = detail.ExitOnce { q => f.exit(q) }
 
-            def g() {
+            def rec() {
                 _1 `for` { x =>
                     _k.beforeExit {
                         f(x)
-                        g()
+                        if (isActive) {
+                            rec()
+                        } else {
+                            _k(Exit.Closed)
+                        }
                     }
                 } exit {
-                    case q @ Exit.Failed(t) => f.exit(q)
+                    case q @ Exit.Failed(t) => _k(q)
                     case _ => ()
                 }
             }
-            g()
+            rec()
         }
     }
 

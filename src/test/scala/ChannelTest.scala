@@ -168,4 +168,29 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter.from(1 to 50))(hano.Iter.from(arr))
     }
 
+
+    def testTake {
+        val ctx = hano.Context.act
+        val ch = new hano.Channel[Int](ctx)
+
+        val suite = new ParallelSuite(10)
+        val i = new java.util.concurrent.atomic.AtomicInteger(0)
+        suite.add(50) {
+            ch write i.incrementAndGet
+        }
+
+        val q = new java.util.concurrent.ConcurrentLinkedQueue[Int]
+        suite.add(10) {
+            for (x <- ch.loop.take(4)) {
+                q.offer(x)
+            }
+        }
+
+        suite.start()
+
+        Thread.sleep(2000)
+
+        expect(40)(q.size)
+    }
+
 }
