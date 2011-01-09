@@ -15,7 +15,7 @@ import com.github.okomok.hano
 class BreakableTest extends org.scalatest.junit.JUnit3Suite {
 
     def naturals: hano.Seq[Int] = {
-        hano.Context.async.loop.generate(0 until 1000)
+        hano.Context.act.loop.generate(0 until 1000)
     }
 
     def testTrivial {

@@ -141,7 +141,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testToIterable {
-        val sample = hano.Context.async.loop.generate(0 until 20).toIterable
+        val sample = hano.Context.act.loop.generate(0 until 20).toIterable
         assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
 

@@ -14,7 +14,7 @@ import org.testng.annotations._
 class ValTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        val cxt = hano.Context.async
+        val cxt = hano.Context.act
         val v1 = new hano.Val[Int](cxt)
 
         val suite = new ParallelSuite(10)

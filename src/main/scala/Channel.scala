@@ -17,8 +17,9 @@ import java.util.concurrent.locks.ReentrantLock
 
 /**
  * Asynchronous channel
+ * This is mutable one-element sequence; As you foreach, element varies.
  */
-final class Channel[A](override val context: Context = Context.async) extends Seq[A] {
+final class Channel[A](override val context: Context = Context.act) extends Seq[A] {
     require(context ne Context.self)
 
     private class Node[A] {
@@ -73,21 +74,22 @@ final class Channel[A](override val context: Context = Context.async) extends Se
     }
 
     def loop: Seq[A] = {
-        new Channel.LoopAsync(this)
+        new Channel.LoopOther(this)
         /*
         if (context eq Context.self) {
             new Channel.LoopSelf(this)
         } else {
-            new Channel.LoopAsync(this)
+            new Channel.LoopOther(this)
         }
         */
     }
 }
 
 
+private[hano]
 object Channel {
 
-    private class LoopAsync[A](_1: Channel[A]) extends Seq[A] {
+    private class LoopOther[A](_1: Channel[A]) extends Seq[A] {
         assert(_1.context ne Context.self)
         override def context = _1.context
         override def forloop(f: Reaction[A]) {

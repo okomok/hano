@@ -41,7 +41,7 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
     def testAsyncToSelf {
         val s = new java.util.ArrayList[Int]
         val cur = Thread.currentThread()
-        hano.Context.async.loop.generate(0 to 10) shift {
+        hano.Context.act.loop.generate(0 to 10) shift {
             hano.Context.self
         } foreach { x =>
             s.add(x)

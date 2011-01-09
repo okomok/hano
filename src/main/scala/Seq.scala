@@ -330,7 +330,7 @@ trait Seq[+A] extends java.io.Closeable {
         } else if (to eq Context.self) {
             new detail.ShiftToSelf(this)
         } else {
-            new detail.ShiftToAsync(this, that)
+            new detail.ShiftToOther(this, that)
         }
     }
 

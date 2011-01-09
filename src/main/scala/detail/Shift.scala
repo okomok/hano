@@ -13,35 +13,6 @@ import scala.actors.Actor
 
 
 private[hano]
-class ShiftToAsync[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
-    assert(_2.context ne Context.self)
-    override def close() = _1.close()
-    override def context = _2.context
-    override def forloop(f: Reaction[A]) {
-        val _k = ExitOnce { q => f.exit(q);close() }
-
-        For(_1) { x =>
-            For(context) { _ =>
-                _k.beforeExit {
-                    f(x)
-                }
-            } AndThen {
-                case q @ Exit.Failed(_) => _k(q)
-                case _ =>
-            }
-        } AndThen { q =>
-            For(context) { _ =>
-                _k(q)
-            } AndThen {
-                case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
-                case _ =>
-            }
-        }
-    }
-}
-
-
-private[hano]
 class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
     override def close() = _1.close()
     override def context = Context.self
@@ -76,6 +47,35 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
             Actor.receive {
                 case Action(f) => f()
                 case _: Exit => go = false
+            }
+        }
+    }
+}
+
+
+private[hano]
+class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
+    assert(_2.context ne Context.self)
+    override def close() = _1.close()
+    override def context = _2.context
+    override def forloop(f: Reaction[A]) {
+        val _k = ExitOnce { q => f.exit(q);close() }
+
+        For(_1) { x =>
+            For(context) { _ =>
+                _k.beforeExit {
+                    f(x)
+                }
+            } AndThen {
+                case q @ Exit.Failed(_) => _k(q)
+                case _ =>
+            }
+        } AndThen { q =>
+            For(context) { _ =>
+                _k(q)
+            } AndThen {
+                case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
+                case _ =>
             }
         }
     }

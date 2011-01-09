@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import scala.actors.Actor
 
 
-// TODO: Use composition.
+// BROKEN.
 
 /**
  * An actor built upon Seq

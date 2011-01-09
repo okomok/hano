@@ -13,7 +13,7 @@ import scala.actors.Actor
 
 
 private[hano]
-class Async() extends Context {
+class Act() extends Context {
 
     private val a = new Actor {
         override def act = {
@@ -36,7 +36,7 @@ class Async() extends Context {
             try {
                 Context.self.forloop(f)
             } catch {
-                case t: Throwable => LogErr(t, "Reaction.apply error in async context")
+                case t: Throwable => LogErr(t, "Reaction.apply error in act context")
             }
         }
     }

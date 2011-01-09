@@ -18,12 +18,29 @@ object Context {
     /**
      * In the thread-pool
      */
-    def async: Context = new detail.Async()
+    def act: Context = new detail.Act()
 
     /**
      * In the event-dispatch-thread
      */
     val inEdt: Context = new detail.InEdt()
+
+
+    private class Loop(_1: Context) extends Resource[Unit] {
+        @volatile private[this] var isActive = true
+        override def context = _1
+        override protected def closeResource() = isActive = false
+        override protected def openResource(f: Reaction[Unit]) {
+            detail.For(context) { _ =>
+                while (isActive) {
+                    f()
+                }
+            } AndThen {
+                case Exit.End => f.exit(Exit.Closed)
+                case q => f.exit(q)
+            }
+        }
+    }
 }
 
 
@@ -53,13 +70,13 @@ trait Context extends Seq[Unit] {
     /**
      * Turns into an infinite sequence of the Units.
      */
-    final def loop: Seq[Unit] = new detail.Loop(this)
+    final def loop: Seq[Unit] = new Context.Loop(this)
 
     @Annotation.equivalentTo("foreach(_ => body)")
     final def eval(body: => Unit): Unit = foreach(_ => body)
 
     /**
-     * Prefers async to self; avoid ShiftToSelf if possible.
+     * Prefers act to self; avoid ShiftToSelf if possible.
      */
     private[hano]
     final def upper(that: Context): Context = {
