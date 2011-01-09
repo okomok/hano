@@ -9,7 +9,7 @@ package hano
 package detail
 
 
-// BUGBUG: end is indeterminate.
+// Exit.End is indeterminate.
 private[hano]
 class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
     override def close() = _1.close()
@@ -19,15 +19,16 @@ class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
 
         _1 `for` { x =>
             _k.beforeExit {
-                _2(x).shift(_1) `for` { y =>
-                    f(y)
+                _2(x).shift(_1) `for` {
+                    f(_)
                 } exit {
-                    case Exit.End => ()
-                    case q => _k(q)
+                    case q @ Exit.Failed(_) => _k(q)
+                    case _ => ()
                 }
             }
         } exit {
-            _k(_)
+            case q @ Exit.Failed(_) => _k(q)
+            case _ => ()
         }
     }
 }

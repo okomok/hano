@@ -28,7 +28,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                     }
                 } exit {
                     case q @ Exit.Failed(_) => _k(q)
-                    case _ =>
+                    case _ => ()
                 }
             }
         } exit { q =>
@@ -37,7 +37,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                     _k(q)
                 } exit {
                     case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
-                    case _ =>
+                    case _ => ()
                 }
             }
         }
@@ -68,14 +68,14 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
                 }
             } exit {
                 case q @ Exit.Failed(_) => _k(q)
-                case _ =>
+                case _ => ()
             }
         } exit { q =>
             context `for` { _ =>
                 _k(q)
             } exit {
                 case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
-                case _ =>
+                case _ => ()
             }
         }
     }

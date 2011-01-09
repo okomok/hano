@@ -108,7 +108,7 @@ object Channel {
                         }
                     }
                 } exit {
-                    case q @ Exit.Failed(t) => _k(q)
+                    case q @ Exit.Failed(_) => _k(q)
                     case _ => ()
                 }
             }
@@ -132,7 +132,7 @@ object Channel {
                         y = Some(x)
                     }
                 } exit {
-                    case q @ Exit.Failed(t) => f.exit(q)
+                    case q @ Exit.Failed(_) => f.exit(q)
                     case _ => ()
                 }
                 if (!y.isEmpty) {
