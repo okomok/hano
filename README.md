@@ -16,7 +16,7 @@
 
 
 
-## Ratinonale
+## Rationale
 
 * No locks
 * Everything is sequence.
