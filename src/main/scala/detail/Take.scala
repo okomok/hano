@@ -22,7 +22,7 @@ class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
             }
         } else {
             var c = _2
-            For(_1) { x =>
+            _1 `for` { x =>
                 if (c != 0) {
                     f(x)
                     c -= 1
@@ -30,7 +30,7 @@ class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
                         _k(Exit.End)
                     }
                 }
-            } AndThen {
+            } exit {
                 _k(_)
             }
         }

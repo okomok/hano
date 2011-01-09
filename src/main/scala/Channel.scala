@@ -96,12 +96,12 @@ object Channel {
             val _k = detail.ExitOnce { q => f.exit(q) }
 
             def g() {
-                detail.For(_1) { x =>
+                _1 `for` { x =>
                     _k.beforeExit {
                         f(x)
                         g()
                     }
-                } AndThen {
+                } exit {
                     case q @ Exit.Failed(t) => f.exit(q)
                     case _ => ()
                 }
@@ -121,11 +121,11 @@ object Channel {
             @annotation.tailrec
             def g() {
                 var y: Option[A] = None
-                detail.For(_1) { x =>
+                _1 `for` { x =>
                     _k.beforeExit {
                         y = Some(x)
                     }
-                } AndThen {
+                } exit {
                     case q @ Exit.Failed(t) => f.exit(q)
                     case _ => ()
                 }

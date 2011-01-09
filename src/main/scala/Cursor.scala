@@ -8,6 +8,56 @@ package com.github.okomok
 package hano
 
 
+/**
+ * Yet another Iterator. (used internally)
+ * Unlike <code>Iterator</code>, this separates element-access and traversing method.
+ */
+trait Cursor[+A] {
+
+    /**
+     * Is cursor pass-the-end?
+     */
+    def isEnd: Boolean
+
+    /**
+     * Returns the current element.
+     */
+    def deref: A
+
+    /**
+     * Traverses to the next position.
+     */
+    def increment(): Unit
+
+    @Annotation.conversion
+    final def toIterator: Iterator[A] = new Cursor.ToIterator(this)
+
+    @Annotation.conversion
+    final def toJIterator[B](implicit pre: Cursor[A] <:< Cursor[B]): java.util.Iterator[B] = new Cursor.ToJIterator(pre(this))
+
+    /**
+     * Advances <code>n</code>.
+     */
+    final def advance(n: Int) {
+        var it = n
+        while (it != 0 && !isEnd) {
+            increment()
+            it -= 1
+        }
+    }
+
+    /**
+     * Advances while satisfying the predicate.
+     */
+    final def advanceWhile(p: A => Boolean) {
+        while (!isEnd && p(deref)) {
+            increment()
+        }
+    }
+
+}
+
+
 object Cursor {
 
     @Annotation.returnThat
@@ -77,56 +127,6 @@ object Cursor {
             }
         }
         override def remove = throw new UnsupportedOperationException("ToJIterator.remove")
-    }
-
-}
-
-
-/**
- * Yet another Iterator.
- * Unlike <code>Iterator</code>, this separates element-access and traversing method.
- */
-trait Cursor[+A] {
-
-    /**
-     * Is cursor pass-the-end?
-     */
-    def isEnd: Boolean
-
-    /**
-     * Returns the current element.
-     */
-    def deref: A
-
-    /**
-     * Traverses to the next position.
-     */
-    def increment(): Unit
-
-    @Annotation.conversion
-    final def toIterator: Iterator[A] = new Cursor.ToIterator(this)
-
-    @Annotation.conversion
-    final def toJIterator[B](implicit pre: Cursor[A] <:< Cursor[B]): java.util.Iterator[B] = new Cursor.ToJIterator(pre(this))
-
-    /**
-     * Advances <code>n</code>.
-     */
-    final def advance(n: Int) {
-        var it = n
-        while (it != 0 && !isEnd) {
-            increment()
-            it -= 1
-        }
-    }
-
-    /**
-     * Advances while satisfying the predicate.
-     */
-    final def advanceWhile(p: A => Boolean) {
-        while (!isEnd && p(deref)) {
-            increment()
-        }
     }
 
 }

@@ -15,10 +15,10 @@ class ZipWithIndex[A](_1: Seq[A]) extends Seq[(A, Int)] {
     override def context = _1.context
     override def forloop(f: Reaction[(A, Int)]) {
         var i = 0
-        For(_1) { x =>
+        _1 `for` { x =>
             f(x, i)
             i += 1
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

@@ -15,14 +15,14 @@ class DropWhile[A](_1: Seq[A], _2: A => Boolean) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var go = false
-        For(_1) { x =>
+        _1 `for` { x =>
             if (!go && !_2(x)) {
                 go = true
             }
             if (go) {
                 f(x)
             }
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

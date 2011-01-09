@@ -14,11 +14,11 @@ class Breakable[A](_1: Seq[A]) extends Seq[(A, () => Unit)] {
     override def close() = _1.close()
     override def context = _1.context
     override def forloop(f: Reaction[(A, () => Unit)]) {
-        For(_1) { x =>
+        _1 `for` { x =>
             // Note f.exit in f.apply is illegal.
             // Effect of context.eval{close()} would be too late.
             f(x, () => close())
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

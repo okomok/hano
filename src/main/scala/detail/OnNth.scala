@@ -15,13 +15,13 @@ class OnHead[A](_1: Seq[A], _2: A => Unit) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var go = true
-        For(_1) { x =>
+        _1 `for` { x =>
             if (go) {
                 go = false
                 _2(x)
             }
             f(x)
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

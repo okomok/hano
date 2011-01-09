@@ -14,11 +14,11 @@ class Filter[A](_1: Seq[A], _2: A => Boolean) extends Seq[A] {
     override def close() = _1.close()
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
-        For(_1) { x =>
+        _1 `for` { x =>
             if (_2(x)) {
                 f(x)
             }
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

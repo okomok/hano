@@ -18,20 +18,20 @@ class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         val _ok = IfFirst[Exit] { _ => () } Else { q => _k(q) }
         val _no = ExitOnce { q => _k(q);close() }
 
-        For(_1.shift(context)) { x =>
+        _1.shift(context) `for` { x =>
             _no.beforeExit {
                 f(x)
             }
-        } AndThen {
+        } exit {
             case Exit.End => _ok(Exit.End)
             case q => _no(q)
         }
 
-        For(_2.shift(context)) { x =>
+        _2.shift(context) `for` { x =>
             _no.beforeExit {
                 f(x)
             }
-        } AndThen {
+        } exit {
             case Exit.End => _ok(Exit.End)
             case q => _no(q)
         }

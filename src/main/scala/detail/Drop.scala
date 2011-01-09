@@ -17,13 +17,13 @@ class Drop[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var c = _2
-        For(_1) { x =>
+        _1 `for` { x =>
             if (c == 0) {
                 f(x)
             } else {
                 c -= 1
             }
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

@@ -17,7 +17,7 @@ class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var first = true
-        For(_1) { s =>
+        _1 `for` { s =>
             if (first) {
                 first = false
             } else {
@@ -28,7 +28,7 @@ class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
             for (x <- s) {
                 f(x)
             }
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

@@ -14,9 +14,9 @@ class Map[A, B](_1: Seq[A], _2: A => B) extends Seq[B] {
     override def close() = _1.close()
     override def context = _1.context
     override def forloop(f: Reaction[B]) {
-        For(_1) { x =>
+        _1 `for` { x =>
             f(_2(x))
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

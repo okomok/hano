@@ -14,7 +14,7 @@ class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) extends Seq[
     override def close() = _1.close()
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
-        For(_1) { x =>
+        _1 `for` { x =>
             try {
                 f(x)
             } catch {
@@ -26,7 +26,7 @@ class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) extends Seq[
                     }
                 }
             }
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

@@ -85,6 +85,8 @@ trait Seq[+A] extends java.io.Closeable {
     @Annotation.equivalentTo("foreach(_ => ())")
     final def start(): Unit = foreach(_ => ())
 
+    final def `for`(f: A => Unit) = new detail.For(this, f)
+
 
 // combinator
 

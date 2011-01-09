@@ -20,22 +20,22 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         val cur = Actor.self
         val _k = ExitOnce { q => cur ! q;f.exit(q);close() }
 
-        For(_1) { x =>
+        _1 `for` { x =>
             cur ! Action {
-                For(context) { _ =>
+                context `for` { _ =>
                     _k.beforeExit {
                         f(x)
                     }
-                } AndThen {
+                } exit {
                     case q @ Exit.Failed(_) => _k(q)
                     case _ =>
                 }
             }
-        } AndThen { q =>
+        } exit { q =>
             cur ! Action {
-                For(context) { _ =>
+                context `for` { _ =>
                     _k(q)
-                } AndThen {
+                } exit {
                     case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
                     case _ =>
                 }
@@ -61,19 +61,19 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
         val _k = ExitOnce { q => f.exit(q);close() }
 
-        For(_1) { x =>
-            For(context) { _ =>
+        _1 `for` { x =>
+            context `for` { _ =>
                 _k.beforeExit {
                     f(x)
                 }
-            } AndThen {
+            } exit {
                 case q @ Exit.Failed(_) => _k(q)
                 case _ =>
             }
-        } AndThen { q =>
-            For(context) { _ =>
+        } exit { q =>
+            context `for` { _ =>
                 _k(q)
-            } AndThen {
+            } exit {
                 case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
                 case _ =>
             }

@@ -24,7 +24,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         val _k = ExitOnce { q => f.exit(q);close() }
         def invariant = assert(c1.isEmpty || c2.isEmpty)
 
-        For(_1.shift(context)) { x =>
+        _1.shift(context) `for` { x =>
             _k.beforeExit {
                 invariant
                 if (c2.isEmpty) {
@@ -33,7 +33,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                     f(x, c2.poll)
                 }
             }
-        } AndThen {
+        } exit {
             case Exit.End => {
                 ends1 = true
                 if (ends2 || c1.isEmpty) {
@@ -43,7 +43,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
             case q => _k(q) // fail-immediately
         }
 
-        For(_2.shift(context)) { y =>
+        _2.shift(context) `for` { y =>
             _k.beforeExit {
                 invariant
                 if (c1.isEmpty) {
@@ -52,7 +52,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                     f(c1.poll, y)
                 }
             }
-        } AndThen {
+        } exit {
             case Exit.End => {
                 invariant
                 ends2 = true

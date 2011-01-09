@@ -31,11 +31,11 @@ object Context {
         override def context = _1
         override protected def closeResource() = isActive = false
         override protected def openResource(f: Reaction[Unit]) {
-            detail.For(context) { _ =>
+            context `for` { _ =>
                 while (isActive) {
                     f()
                 }
-            } AndThen {
+            } exit {
                 case Exit.End => f.exit(Exit.Closed)
                 case q => f.exit(q)
             }

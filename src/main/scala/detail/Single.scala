@@ -12,9 +12,9 @@ package detail
 private[hano]
 class Single[A](_1: A) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
-        For(context) { _ =>
+        context `for` { _ =>
             f(_1)
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }

@@ -8,9 +8,6 @@ package com.github.okomok
 package hano
 
 
-import detail.For
-
-
 /**
  * Contains synchronous algorithms.
  */
@@ -59,10 +56,10 @@ object Sync {
 
     def isEmpty(xs: Seq[_]): () => Boolean = {
         val v = new Val[Boolean]
-        For(xs) { x =>
+        xs `for` { x =>
             v(false)
             xs.close()
-        } AndThen {
+        } exit {
             case Exit.End => v(true)
             case q => v.exit(q)
         }
@@ -73,9 +70,9 @@ object Sync {
     def length(xs: Seq[_]): () => Int = {
         val v = new Val[Int]
         var acc = 0
-        For(xs) { x =>
+        xs `for` { x =>
             acc += 1
-        } AndThen {
+        } exit {
             case Exit.End => v(acc)
             case q => v.exit(q)
         }
@@ -88,13 +85,13 @@ object Sync {
     def head[A](xs: Seq[A]): () => A = {
         val v = new Val[A]
         var go = true
-        For(xs) { x =>
+        xs `for` { x =>
             if (go) {
                 go = false
                 v(x)
                 xs.close()
             }
-        } AndThen {
+        } exit {
             v.exit(_)
         }
         v.toFunction
@@ -103,9 +100,9 @@ object Sync {
     def last[A](xs: Seq[A]): () => A = {
         val v = new Val[A]
         var acc: Option[A] = None
-        For(xs) { x =>
+        xs `for` { x =>
             acc = Some(x)
-        } AndThen {
+        } exit {
             case Exit.End => if (acc.isEmpty) v.exit(Exit.End) else v(acc.get)
             case q => v.exit(q)
         }
@@ -118,9 +115,9 @@ object Sync {
     def foldLeft[A, B](xs: Seq[A])(z: B)(op: (B, A) => B): () => B = {
         val v = new Val[B]
         var acc = z
-        For(xs) { x =>
+        xs `for` { x =>
             acc = op(acc, x)
-        } AndThen {
+        } exit {
             case Exit.End => v(acc)
             case q => v.exit(q)
         }
@@ -130,13 +127,13 @@ object Sync {
     def reduceLeft[A](xs: Seq[A])(op: (A, A) => A): () => A = {
         val v = new Val[A]
         var acc: Option[A] = None
-        For(xs) { x =>
+        xs `for` { x =>
             if (acc.isEmpty) {
                 acc = Some(x)
             } else {
                 acc = Some(op(acc.get, x))
             }
-        } AndThen {
+        } exit {
             case Exit.End => if (acc.isEmpty) v.exit(Exit.End) else v(acc.get)
             case q => v.exit(q)
         }
@@ -155,9 +152,9 @@ object Sync {
     def copy[A, To](xs: Seq[A])(implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): () => To = {
         val v = new Val[To]
         var b = bf()
-        For(xs) {
+        xs `for` {
             b += _
-        } AndThen {
+        } exit {
             case Exit.End => v(b.result)
             case q => v.exit(q)
 

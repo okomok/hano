@@ -19,7 +19,7 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var c = 0
-        For(_1) { x =>
+        _1 `for` { x =>
             if (c == 0) {
                 f(x)
             }
@@ -27,7 +27,7 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
             if (c == _2) {
                 c = 0
             }
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }
@@ -42,13 +42,13 @@ class StepTime[A](_1: Seq[A], _2: Long) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var past = 0L
-        For(_1) { x =>
+        _1 `for` { x =>
             val now = System.currentTimeMillis
             if (now - past >= _2) {
                 past = now
                 f(x)
             }
-        } AndThen {
+        } exit {
             f.exit(_)
         }
     }
