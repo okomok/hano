@@ -27,7 +27,7 @@ class BoundedSetTest extends org.scalatest.junit.JUnit3Suite {
     def testOffer {
         val xs = new hano.BoundedSet[Int](2)
         expect(true)(xs offer 2)
-        expect(true)(xs offer 3)
+        expect(true)(xs += 3)
         expect(false)(xs offer 4)
     }
 

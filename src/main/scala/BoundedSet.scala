@@ -66,4 +66,7 @@ final class BoundedSet[A](val capacity: Int, override val context: Context = Con
             false
         }
     }
+
+    @Annotation.equivalentTo("offer(x)")
+    final def +=(x: A): Boolean = offer(x)
 }
