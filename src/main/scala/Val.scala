@@ -40,6 +40,7 @@ final class Val[A](override val context: Context = Context.act) extends Seq[A] {
     private[this] val v = new concurrent.atomic.AtomicReference[Option[A]](None)
     private[this] val fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]
 
+    // subscription order is NOT preserved.
     override def forloop(f: Reaction[A]) {
         if (!v.get.isEmpty) {
             eval(f, v.get.get)
