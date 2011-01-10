@@ -12,16 +12,15 @@ import java.util.concurrent.CopyOnWriteArrayList
 import scala.actors.Actor
 
 
-// BROKEN.
-
 /**
  * An actor built upon Seq
  */
 trait Reactor extends Actor {
+
     /**
      * Override to build up a Seq.
      */
-    protected def startHano(r: Seq[Any]): Unit
+    protected def hanoStart(xs: Seq[Any]): Unit
 
     private var _f: Reaction[Any] = null // primary
     private val _fs = new CopyOnWriteArrayList[Reaction[Any]] // secondaries
@@ -29,9 +28,8 @@ trait Reactor extends Actor {
     final override def act = {
         Actor.loop {
             react {
-                case Reactor.Exit => {
-                    Actor.exit
-                }
+                case Action(f) => f()
+                case _: Exit => Actor.exit()
                 case x => {
                     if (_f != null) {
                         _f(x)
@@ -53,63 +51,50 @@ trait Reactor extends Actor {
     }
 
     final override def start = {
-        startHano(new Reactor.Primary(this))
+        hanoStart(new Reactor.Primary(this))
         super.start
     }
 
     final override def restart = {
-        startHano(new Reactor.Primary(this))
+        hanoStart(new Reactor.Primary(this))
         super.restart
     }
+
+    final val hanoContext: Context = new detail.Act(this)
 }
 
 
 object Reactor {
 
     /**
-     * Message to exit a Reactor.
-     */
-    object Exit
-
-    /**
-     * Message to generate something.
-     */
-    object Generate
-
-    /**
      * Constructs a trivial Reactor.
      */
-    def apply(f: Seq[Any] => Unit = Starter): Reactor = {
-        val a = new Reactor {
-            override protected def startHano(r: Seq[Any]) = f(r)
+    def apply(body: Seq[Any] => Unit = Starter): Reactor = {
+        val that = new Reactor {
+            override protected def hanoStart(xs: Seq[Any]) = body(xs)
         }
-        a.start
-        a
+        that.start
+        that
     }
 
     /**
      * Constructs a single-threaded Reactor.
      */
-    def singleThreaded(f: Seq[Any] => Unit = Starter): Reactor = {
-        val a = new Reactor {
-            override protected def startHano(r: Seq[Any]) = f(r)
+    def singleThreaded(body: Seq[Any] => Unit = Starter): Reactor = {
+        val that = new Reactor {
+            override protected def hanoStart(xs: Seq[Any]) = body(xs)
             override def scheduler = new scala.actors.scheduler.SingleThreadedScheduler
         }
-        a.start
-        a
+        that.start
+        that
     }
 
     private object Starter extends (Seq[Any] => Unit) {
-        override def apply(r: Seq[Any]) = r.start
-    }
-
-    private class Wrap(f: Reaction[Any]) extends Reaction[Any] {
-        override def apply(x: Any) = f(x)
-        override def exit(q: Exit) = f.exit(q)
+        override def apply(xs: Seq[Any]) = xs.start
     }
 
     private class Primary(_1: Reactor) extends Seq[Any] {
-        override def context = throw new Error
+        override val context = _1.hanoContext
         override def forloop(f: Reaction[Any]) {
             _1._f = f
         }
@@ -117,14 +102,13 @@ object Reactor {
 
     private[hano] class Secondary(_1: Reactor) extends Resource[Any] {
         private[this] var _f: Reaction[Any] = null
-        override def context = throw new Error
+        override val context = _1.hanoContext
         override protected def closeResource() {
             _1._fs.remove(_f)
         }
         override protected def openResource(f: Reaction[Any]) {
-            _f = new Wrap(f)
+            _f = new detail.WrappedReaction(f)
             _1._fs.add(_f)
         }
     }
-
 }

@@ -6,13 +6,14 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
-private[hano]
+/**
+ * Trivial wrapper for a function passed around Actors.
+ */
+case class Action(_1: () => Unit)
+
+
 object Action {
     def apply(body: => Unit)(implicit d: DummyImplicit) = new Action(() => body)
 }
-
-private[hano]
-case class Action(_1: () => Unit)

@@ -13,19 +13,7 @@ import scala.actors.Actor
 
 
 private[hano]
-class Act() extends Context {
-
-    private val a = new Actor {
-        override def act = {
-            Actor.loop {
-                react {
-                    case Action(f) => f()
-                    case _: Exit => Actor.exit
-                }
-            }
-        }
-    }
-    a.start()
+class Act(a: Actor = Act.defaultActor) extends Context {
 
     override def exit() {
         a ! Exit.Closed
@@ -42,3 +30,22 @@ class Act() extends Context {
     }
 }
 
+
+private[hano]
+object Act {
+
+    def defaultActor: Actor = {
+        val that = new Actor {
+            override def act = {
+                Actor.loop {
+                    react {
+                        case Action(f) => f()
+                        case _: Exit => Actor.exit()
+                    }
+                }
+            }
+        }
+        that.start
+        that
+    }
+}
