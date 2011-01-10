@@ -73,22 +73,14 @@ final class Channel[A](override val context: Context = Context.act) extends Seq[
         v := x
     }
 
-    def loop: Seq[A] = {
-        new Channel.LoopOther(this)
-        /*
-        if (context eq Context.self) {
-            new Channel.LoopSelf(this)
-        } else {
-            new Channel.LoopOther(this)
-        }
-        */
-    }
+    def loop: Seq[A] = new Channel.LoopOther(this)
 }
 
 
 private[hano]
 object Channel {
 
+    // Context can't be self, so stack-overflow doesn't happens.
     private class LoopOther[A](_1: Channel[A]) extends Resource[A] {
         assert(_1.context ne Context.self)
         @volatile private[this] var isActive = true

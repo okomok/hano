@@ -13,6 +13,22 @@ import scala.actors.Actor
 
 
 private[hano]
+class Shift[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
+    override val self = {
+        val from = _1.context
+        val to = _2.context
+        if (from eq to) {
+            _1
+        } else if (to eq Context.self) {
+            new ShiftToSelf(_1)
+        } else {
+            new ShiftToOther(_1, _2)
+        }
+    }
+}
+
+
+private[hano]
 class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
     override def close() = _1.close()
     override def context = Context.self
