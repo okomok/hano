@@ -17,9 +17,12 @@ final class BoundedQueue[A](val capacity: Int, override val context: Context = C
     private[this] var cur = 0
     private[this] val curLock = new java.util.concurrent.locks.ReentrantLock
 
-    private[this] val vs = new Array[Val[A]](capacity)
-    for (i <- 0 until capacity) {
-        vs(i) = new Val[A](context)
+    private[this] lazy val vs: Array[Val[A]] = {
+        val that = new Array[Val[A]](capacity)
+        for (i <- 0 until capacity) {
+            that(i) = new Val[A](context)
+        }
+        that
     }
 
     override def forloop(f: Reaction[A]) {
