@@ -19,4 +19,11 @@ object Exit {
 
     case class Failed(why: Throwable) extends Exit
 
+    private[hano]
+    object defaultHandler extends (Exit => Unit) {
+        override def apply(q: Exit) = q match {
+            case Exit.Failed(t) => detail.LogErr(t, "unhandled failure")
+            case _ => ()
+        }
+    }
 }

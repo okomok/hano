@@ -80,7 +80,7 @@ trait Seq[+A] extends java.io.Closeable {
     override def close(): Unit = ()
 
     @Annotation.equivalentTo("forloop(Reaction(f, _ => ()))")
-    final def foreach(f: A => Unit) = forloop(Reaction(f, _ => ()))
+    final def foreach(f: A => Unit) = forloop(Reaction(f, Exit.defaultHandler))
 
     @Annotation.equivalentTo("foreach(_ => ())")
     final def start(): Unit = foreach(_ => ())

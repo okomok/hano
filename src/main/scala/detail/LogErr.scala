@@ -13,7 +13,7 @@ private[hano]
 object LogErr {
     def apply(t: Throwable, msg: Any) {
         val d = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date())
-        java.lang.System.err.println("[" + msg + "]["+ d + "] " + t)
+        java.lang.System.err.println("[hano][" + msg + "]["+ d + "] " + t)
         // t.printStrackTrace()
     }
 }
