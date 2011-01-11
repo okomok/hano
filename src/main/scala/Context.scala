@@ -24,23 +24,6 @@ object Context {
      * In the event-dispatch-thread
      */
     val inEdt: Context = new detail.InEdt()
-
-
-    private class Loop(_1: Context) extends Resource[Unit] {
-        @volatile private[this] var isActive = true
-        override def context = _1
-        override protected def closeResource() = isActive = false
-        override protected def openResource(f: Reaction[Unit]) {
-            context `for` { _ =>
-                while (isActive) {
-                    f()
-                }
-            } exit {
-                case Exit.End => f.exit(Exit.Closed)
-                case q => f.exit(q)
-            }
-        }
-    }
 }
 
 
@@ -66,11 +49,6 @@ trait Context extends Seq[Unit] {
      * Shall be thread-safe, and preserve order of subscription.
      */
     override def forloop(f: Reaction[Unit]): Unit
-
-    /**
-     * Turns into an infinite sequence of the Units.
-     */
-    final def loop: Seq[Unit] = new Context.Loop(this)
 
     @Annotation.equivalentTo("foreach(_ => body)")
     final def eval(body: => Unit): Unit = foreach(_ => body)

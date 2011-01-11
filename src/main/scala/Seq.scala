@@ -334,4 +334,14 @@ trait Seq[+A] extends java.io.Closeable {
      */
     def breakable: Seq[(A, () => Unit)] = new detail.Breakable(this)
 
+    /**
+     * Turns into a closeable infinite sequence of the first elements.
+     */
+    def loop: Seq[A] = new detail.Loop(this)
+
+    /**
+     * Turns into a closeable infinite sequence of the first elements.
+     */
+    def loopBy(grainSize: Int): Seq[A] = new detail.Loop(this, grainSize)
+
 }
