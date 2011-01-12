@@ -9,17 +9,17 @@ package hano
 
 
 /**
- * Immutable unordered bounded set
+ * Immutable unordered set (Exit.End isn't sent.)
  */
-final class BoundedSet[A](val capacity: Int, override val context: Context = Context.act) extends Seq[A] {
+final class Set[A](val size: Int, override val context: Context = Context.act) extends Seq[A] {
     require(context ne Context.self)
 
     private[this] var cur = 0
     private[this] val curLock = new java.util.concurrent.locks.ReentrantLock
 
     private[this] lazy val vs: Array[Val[A]] = {
-        val that = new Array[Val[A]](capacity)
-        for (i <- 0 until capacity) {
+        val that = new Array[Val[A]](size)
+        for (i <- 0 until size) {
             that(i) = new Val[A](context)
         }
         that
@@ -27,27 +27,28 @@ final class BoundedSet[A](val capacity: Int, override val context: Context = Con
 
     override def forloop(f: Reaction[A]) {
         val _k = detail.ExitOnce { q => f.exit(q) }
-        val byFail: Exit => Unit = {
-            case q @ Exit.Failed(_) => _k(q)
-            case q => ()
-        }
 
-        var i = 0
         for (v <- vs) {
-            i += 1
-            val k = if (i == capacity) { q => _k(q) } else byFail
             v `for` { x =>
                 _k.beforeExit {
                     f(x)
                 }
             } exit {
-                k
+                case q @ Exit.Failed(_) => _k(q)
+                case q => ()
             }
         }
     }
 
-    def offer(x: A): Boolean = {
-        if (cur < capacity) {
+    def empty: Set[A] = new Set[A](0, context)
+
+    def isEmpty: Boolean = size == 0
+
+    @Annotation.aliasOf("member")
+    def +=(x: A): Boolean = member(x)
+
+    def member(x: A): Boolean = {
+        if (cur < size) {
             curLock.lock()
             val j = try {
                 val tmp = cur
@@ -56,7 +57,7 @@ final class BoundedSet[A](val capacity: Int, override val context: Context = Con
             } finally {
                 curLock.unlock()
             }
-            if (j < capacity) {
+            if (j < size) {
                 vs(j) := x
                 true
             } else {
@@ -66,7 +67,4 @@ final class BoundedSet[A](val capacity: Int, override val context: Context = Con
             false
         }
     }
-
-    @Annotation.equivalentTo("offer(x)")
-    final def +=(x: A): Boolean = offer(x)
 }
