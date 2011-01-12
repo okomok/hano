@@ -71,13 +71,7 @@ class ToTraversable[A](_1: Seq[A]) extends scala.collection.Traversable[A] {
 
 
 private[hano]
-class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
-    override def iterator = {
-        Generator[A] { y =>
-            _1.forloop(y)
-        } iterator
-    }
-}
+class ToIterable[A](_1: Seq[A]) extends Generator.SeqToIterable[A](_1)
 
 
 private[hano]
