@@ -64,19 +64,22 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             }
             *("last")
             *.end()
-//            *.end() // never idempotent
+            *.end() // idempotent (illegal, but accepted.).
         }
         for (a <- example) {
             //println(a)
         }
     }
 
+    class IgnoredError extends RuntimeException("ignore me")
+    class ForwardedError extends RuntimeException("forward me")
+
     def testExceptionForwarding: Unit = {
         def throwSome(y: hano.Generator.Env[Int]): Unit = {
             for (i <- 1 to 27) {
                 y(i)
             }
-            throw new Error("exception forwarding")
+            throw new ForwardedError
         }
 
         val tr = hano.Generator(throwSome)
@@ -90,15 +93,16 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
                 arr.add(it.next)
             }
         } catch {
-            case _: Error => thrown = true
+            case _: ForwardedError => thrown = true
         }
         assertTrue(thrown)
         assertEquals(hano.Iter.from(1 to 27), hano.Iter.from(arr))
     }
 
+
     def testExceptionForwardingEmpty: Unit = {
         def throwImmediately(y: hano.Generator.Env[Int]) {
-            throw new Error("exception forwarding")
+            throw new ForwardedError
         }
         val tr = hano.Generator(throwImmediately)
 
@@ -110,34 +114,30 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
                 arr.add(it.next)
             }
         } catch {
-            case _: Error => thrown = true
+            case _: ForwardedError => thrown = true
         }
         assertTrue(thrown)
         assertTrue(arr.isEmpty)
     }
 
-    def testFlush {
+    def testThrowButEnough {
         def sample = hano.Generator[Int] { y =>
-            for (i <- 0 until 20) {
+            for (i <- 0 until 25) {
                 y(i)
-            } // exchange.
-            y(20)
-            y(21)
-            y(22)
-            y(23)
-            y(24)
-            y.flush() // exchange.
-            throw new Error("after flush")
-//            Thread.sleep(10000)
-            y.end()
+            }
+            throw new ForwardedError
         }
         val ret = new java.util.ArrayList[Int]
         val it = sample.iterator
-        for (_ <- 0 until 24) { // cf. Cursor will prefetch one element.
+        for (_ <- 0 until 25) { // cf. Cursor will prefetch one element.
             val e = it.next
             ret.add(e)
         }
-        assertEquals(hano.Iter.from(0 until 24), hano.Iter.from(ret))
+        assertEquals(hano.Iter.from(0 until 25), hano.Iter.from(ret))
+
+        intercept[ForwardedError] {
+            it.next
+        }
     }
 
     def testToIterable {
@@ -156,10 +156,10 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
             *(2)
             *(3)
             *.end()
-            throw new Error("after end")
+            throw new IgnoredError // abandoned.
         }
         val ret = new java.util.ArrayList[Int]
-        sample.foreach(ret.add(_))
+         sample.foreach(ret.add(_))
         expect(hano.Iter(1,2,3))(hano.Iter.from(ret))
     }
 }
