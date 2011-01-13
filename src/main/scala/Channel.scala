@@ -34,42 +34,30 @@ final class Channel[A](override val context: Context = Context.act) extends Seq[
     private[this] val writeLock = new ReentrantLock
 
     override def forloop(f: Reaction[A]) {
-        readLock.lock()
-        val v = try {
+        detail.Synchronized(readLock) {
             if (readNode.next == null) {
-                writeLock.lock()
-                try {
+                detail.Synchronized(writeLock) {
                     if (readNode.next == null) {
                         readNode.next = new Node[A]
                     }
-                } finally {
-                    writeLock.unlock()
                 }
             }
-
             val w = readNode.value
             readNode = readNode.next
             w
-        } finally {
-            readLock.unlock()
-        }
-        v.forloop(f)
+        } forloop(f)
     }
 
     def read = toCps
 
     def write(x: A) {
-        writeLock.lock()
-        val v = try {
+        detail.Synchronized(writeLock) {
             val w = writeNode.value
             if (writeNode.next == null) {
                 writeNode.next = new Node[A]
             }
             writeNode = writeNode.next
             w
-        } finally {
-            writeLock.unlock()
-        }
-        v := x
+        } := x
     }
 }

@@ -49,13 +49,10 @@ final class Set[A](val size: Int, override val context: Context = Context.act) e
 
     def member(x: A): Boolean = {
         if (cur < size) {
-            curLock.lock()
-            val j = try {
+            val j = detail.Synchronized(curLock) {
                 val tmp = cur
                 cur += 1
                 tmp
-            } finally {
-                curLock.unlock()
             }
             if (j < size) {
                 vs(j) := x
