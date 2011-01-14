@@ -9,6 +9,7 @@ package hano
 package detail
 
 
+private[hano]
 object Synchronized {
     def apply[A](l: java.util.concurrent.locks.ReentrantLock)(body: => A): A = {
         l.lock()

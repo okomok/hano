@@ -86,7 +86,6 @@ object Iter {
     implicit def fromJIterable[A](from: java.lang.Iterable[A]): Iter[A] = new FromJIterable(from)
     implicit def fromArray[A](from: Array[A]): Iter[A] = new FromArray(from)
     implicit def fromOption[A](from: Option[A]): Iter[A] = new FromOption(from)
-    implicit def fromCursor[A](from: => Cursor[A]): Iter[A] = new FromCursor(from)
 
     private class FromIterator[A](_1: => Iterator[A]) extends Iter[A] {
         override def begin = _1
@@ -112,10 +111,6 @@ object Iter {
 
     private class FromOption[A](_1: Option[A]) extends Iter[A] {
         override def begin = _1.iterator
-    }
-
-    private class FromCursor[A](_1: => Cursor[A]) extends Iter[A] {
-        override def begin = _1.toIterator
     }
 
     private class Able[A](_1: Iter[A]) extends Iterable[A] {

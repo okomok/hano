@@ -34,7 +34,7 @@ object Generator {
 
     private[hano]
     class SeqToIterable[A](_1: Seq[A]) extends Iterable[A] {
-        override def iterator = Iter.from(new CursorImpl(_1)).begin
+        override def iterator: Iterator[A] = new IteratorImpl(_1)
     }
 
     private case class Element[A](x: A)
@@ -48,7 +48,7 @@ object Generator {
         }
     }
 
-    private class CursorImpl[A](xs: Seq[A]) extends Cursor[A] {
+    private class IteratorImpl[A](xs: Seq[A]) extends AbstractIterator[A] {
         private[this] var v: Option[A] = None
         private[this] val a = Actor.self
         Actor.actor {
@@ -56,9 +56,9 @@ object Generator {
         }
         ready()
 
-        override def isEnd = v.isEmpty
-        override def deref = v.get
-        override def increment() = ready()
+        override protected def isEnd = v.isEmpty
+        override protected def deref = v.get
+        override protected def increment() = ready()
 
         private def ready() {
             var s: Throwable = null

@@ -20,7 +20,7 @@ object CpsGenerator {
     /**
      * Creates an Iterable from a cps statement using Env.
      */
-    def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = Iter.from(new CursorImpl(body)).able
+    def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = new Apply(body)
 
     /**
      * Provides method set used in a body.
@@ -30,7 +30,11 @@ object CpsGenerator {
         def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
     }
 
-    private class CursorImpl[A](body: Env[A] => Any @suspendable) extends Cursor[A] {
+    private class Apply[A](_1: Env[A] => Any @suspendable) extends Iterable[A] {
+        override def iterator: Iterator[A] = new IteratorImpl(_1)
+    }
+
+    private class IteratorImpl[A](body: Env[A] => Any @suspendable) extends AbstractIterator[A] {
         private[this] var _x: Option[A] = None
         private[this] var _k: Unit => Unit = null
         private[this] val _y = new Env[A] {
@@ -58,9 +62,9 @@ object CpsGenerator {
         }
         _k()
 
-        override def isEnd = _x.isEmpty
-        override def deref = _x.get
-        override def increment() {
+        override protected def isEnd = _x.isEmpty
+        override protected def deref = _x.get
+        override protected def increment() {
             _x = None
             _k()
         }
