@@ -14,9 +14,9 @@ import java.util.concurrent.Exchanger
 
 
 private[hano]
-object BlockingGenerator {
+object BlockingGenerator extends GeneratorCommon {
 
-    def apply[A](xs: Seq[A]): Iterator[A] = {
+    override def iterator[A](xs: Seq[A]): Iterator[A] = {
         assert(xs.context eq Context.self)
         val xch = new Exchanger[Data[A]]
         Threaded {

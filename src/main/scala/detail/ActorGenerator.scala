@@ -16,9 +16,9 @@ import scala.actors.Actor
 
 
 @Annotation.visibleForTesting
-object ActorGenerator {
+object ActorGenerator extends GeneratorCommon {
 
-    def apply[A](xs: Seq[A]): Iterator[A] = new IteratorImpl(xs)
+    override def iterator[A](xs: Seq[A]): Iterator[A] = new IteratorImpl(xs)
 
     private case class Element[A](x: A)
 
@@ -56,4 +56,5 @@ object ActorGenerator {
             a ! q
         }
     }
+
 }
