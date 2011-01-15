@@ -15,6 +15,6 @@ class Self() extends Context {
         f.tryRethrow {
             f()
         }
-        f.exitNothrow(Exit.End)
+        f.exit(Exit.End)
     }
 }

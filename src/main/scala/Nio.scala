@@ -38,9 +38,10 @@ object Nio {
                         }
                     }
                 } catch  {
-                    case _: ClosedSelectorException => // k(End)? k(Closed)?
+                    case _: ClosedSelectorException => ()
                 }
             }
+            f.exit(Exit.Closed)
         }
     }
 

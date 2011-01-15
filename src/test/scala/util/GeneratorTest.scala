@@ -136,7 +136,7 @@ class GeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter.from(0 until 25), hano.Iter.from(ret))
 
         intercept[ForwardedError] {
-            it.next
+            it.hasNext
         }
     }
 

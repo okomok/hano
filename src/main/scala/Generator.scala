@@ -76,25 +76,10 @@ object Generator {
     private class BodyToSeq[A](body: Env[A] => Unit) extends Seq[A] {
         override def context = Context.self
         override def forloop(f: Reaction[A]) {
-            // accepts slightly illegal statement.
-            val g = new Reaction[A] {
-                private[this] var exited = false
-                override def apply(x: A) = f(x)
-                override def exit(q: Exit) {
-                    if (!exited) {
-                        exited = true
-                        f.exit(q)
-                    } else {
-                        q match {
-                            case Exit.Failed(t) => detail.LogErr(t, "abandoned exception in Generator")
-                            case _ => ()
-                        }
-                    }
-                }
-            }
+            val g = new detail.MultiExitReaction(f)
             try {
                 body(g)
-                g.exitNothrow(Exit.End)
+                g.exit(Exit.End)
             } catch {
                 case t: Throwable => g.exitNothrow(Exit.Failed(t))
             }
