@@ -25,10 +25,6 @@ object BlockingGenerator {
         new IteratorImpl(xch)
     }
 
-    trait Flushable {
-        def flush(): Unit
-    }
-
     private val CAPACITY = 20
 
     private class Data[A](val buf: ArrayDeque[A], var isLast: Boolean, var exn: Option[Throwable]) {
@@ -68,7 +64,7 @@ object BlockingGenerator {
         }
     }
 
-    private class ReactionImpl[A](xch: Exchanger[Data[A]]) extends CheckedReaction[A] with Flushable {
+    private class ReactionImpl[A](xch: Exchanger[Data[A]]) extends CheckedReaction[A] with java.io.Flushable {
         private[this] var out = new Data[A]
         private[hano] var exited = false
 
