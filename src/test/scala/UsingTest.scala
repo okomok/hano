@@ -55,6 +55,7 @@ class UsingTest extends org.scalatest.junit.JUnit3Suite {
         var thrown = false
 
         class TrivialResource extends hano.NoExitResource[Int] {
+            override def context = hano.Context.self
             override def closeResource = autoEnd = true
             override protected def openResource(f: Int => Unit) {
                 job = _ => {f(10); f(12); f(2); f(8)}

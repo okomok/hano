@@ -35,6 +35,7 @@ private[hano]
 class FromIter[A](_1: Iter[A]) extends Seq[A] {
     @volatile private[this] var isActive = false
     override def close() = isActive = false
+    override def context = Context.self
     override def forloop(f: Reaction[A]) = synchronized {
         isActive = true
         f.tryRethrow {
@@ -55,6 +56,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
 
 private[hano]
 class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Seq[A] {
+    override def context = Context.self
     override def forloop(f: Reaction[A]) {
         context `for` { _ =>
             _1.foreach(f(_))
@@ -76,6 +78,7 @@ class ToIterable[A](_1: Seq[A]) extends Generator.SeqToIterable[A](_1)
 
 private[hano]
 class FromResponder[A](_1: Responder[A]) extends Seq[A] {
+    override def context = Context.self
     override def forloop(f: Reaction[A]) {
         context `for` { _ =>
             _1.respond(f(_))
@@ -93,6 +96,7 @@ class ToResponder[A](_1: Seq[A]) extends Responder[A] {
 
 private[hano]
 class FromCps[A](from: => A @continuations.suspendable) extends Seq[A] {
+    override def context = Context.self
     override def forloop(f: Reaction[A]) {
         context `for` { _ =>
             continuations.reset {

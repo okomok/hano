@@ -72,7 +72,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Context where Reactions are invoked.
      */
-    def context: Context = Context.self
+    def context: Context
 
     /**
      * Should be thread-safe and idempotent.
