@@ -15,7 +15,7 @@ package detail
 import scala.actors.Actor
 
 
-private[hano]
+@Annotation.visibleForTesting
 object ActorGenerator {
 
     def apply[A](xs: Seq[A]): Iterator[A] = new IteratorImpl(xs)

@@ -5,7 +5,6 @@
 
 
 package com.github.okomok.hanotest
-package utiltest
 
 
 import com.github.okomok.hano.Iter
