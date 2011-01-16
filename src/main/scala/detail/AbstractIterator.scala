@@ -6,11 +6,13 @@
 
 package com.github.okomok
 package hano
+package detail
 
 
 /**
  * Iterator implementation helper
  */
+private[hano]
 trait AbstractIterator[+A] extends Iterator[A] {
 
     /**

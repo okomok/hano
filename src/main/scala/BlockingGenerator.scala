@@ -6,20 +6,18 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
 import java.util.ArrayDeque
 import java.util.concurrent.Exchanger
 
 
-private[hano]
-object BlockingGenerator extends GeneratorCommon {
+object BlockingGenerator extends detail.GeneratorFactory {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = {
         assert(xs.context eq Context.self)
         val xch = new Exchanger[Data[A]]
-        Threaded {
+        detail.Threaded {
             xs.forloop(new ReactionImpl(xch))
         }
         new IteratorImpl(xch)
@@ -31,7 +29,7 @@ object BlockingGenerator extends GeneratorCommon {
         def this() = this(new ArrayDeque[A](CAPACITY), false, None)
     }
 
-    private class IteratorImpl[A](xch: Exchanger[Data[A]]) extends AbstractIterator[A] {
+    private class IteratorImpl[A](xch: Exchanger[Data[A]]) extends detail.AbstractIterator[A] {
         private[this] var in = new Data[A]
 
         doExchange()

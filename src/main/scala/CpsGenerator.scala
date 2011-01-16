@@ -34,7 +34,7 @@ object CpsGenerator {
         override def iterator: Iterator[A] = new IteratorImpl(_1)
     }
 
-    private class IteratorImpl[A](body: Env[A] => Any @suspendable) extends AbstractIterator[A] {
+    private class IteratorImpl[A](body: Env[A] => Any @suspendable) extends detail.AbstractIterator[A] {
         private[this] var _x: Option[A] = None
         private[this] var _k: Unit => Unit = null
         private[this] val _y = new Env[A] {

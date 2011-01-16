@@ -6,7 +6,6 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
 // See: http://d.hatena.ne.jp/shomah4a/20110105
@@ -15,14 +14,13 @@ package detail
 import scala.actors.Actor
 
 
-@Annotation.visibleForTesting
-object ActorGenerator extends GeneratorCommon {
+object ActorGenerator extends detail.GeneratorFactory {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = new IteratorImpl(xs)
 
     private case class Element[A](x: A)
 
-    private class IteratorImpl[A](xs: Seq[A]) extends AbstractIterator[A] {
+    private class IteratorImpl[A](xs: Seq[A]) extends detail.AbstractIterator[A] {
         private[this] var v: Option[A] = None
         private[this] val a = Actor.self
 

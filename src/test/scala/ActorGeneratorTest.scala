@@ -10,7 +10,7 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 import junit.framework.Assert._
 
-import hano.detail.ActorGenerator
+import hano.ActorGenerator
 
 
 class ActorGeneratorTest extends org.scalatest.junit.JUnit3Suite {
