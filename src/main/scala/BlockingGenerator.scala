@@ -12,7 +12,7 @@ import java.util.ArrayDeque
 import java.util.concurrent.Exchanger
 
 
-object BlockingGenerator extends detail.GeneratorFactory {
+object BlockingGenerator extends detail.GeneratorCommon {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = {
         assert(xs.context eq Context.self)

@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-trait GeneratorFactory { self =>
+trait GeneratorCommon { self =>
 
     type Env[-A] = Reaction[A] with java.io.Flushable
 

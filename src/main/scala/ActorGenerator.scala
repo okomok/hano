@@ -14,7 +14,7 @@ package hano
 import scala.actors.Actor
 
 
-object ActorGenerator extends detail.GeneratorFactory {
+object ActorGenerator extends detail.GeneratorCommon {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = new IteratorImpl(xs)
 
