@@ -38,7 +38,7 @@ object ActorGenerator extends detail.GeneratorCommon {
             v = a.receive {
                 case Element(x) => Some(x.asInstanceOf[A])
                 case Exit.Failed(t) => s = t; None
-                case _ => None
+                case q: Exit => None
             }
             if (s != null) {
                 throw s
