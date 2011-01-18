@@ -18,14 +18,15 @@ object ActorGenerator extends detail.GeneratorCommon {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = new IteratorImpl(xs)
 
-    private case class Element[A](x: A)
-
     private class IteratorImpl[A](xs: Seq[A]) extends detail.AbstractIterator[A] {
+
+        private case class Mail[B](msg: B)
+
         private[this] var v: Option[A] = None
         private[this] val a = Actor.self
 
         Actor.actor {
-            xs.forloop(new ReactionImpl[A](a))
+            xs.forloop(new ReactionImpl)
         }
         ready()
 
@@ -36,23 +37,22 @@ object ActorGenerator extends detail.GeneratorCommon {
         private def ready() {
             var s: Throwable = null
             v = a.receive {
-                case Element(x) => Some(x.asInstanceOf[A])
-                case Exit.Failed(t) => s = t; None
-                case q: Exit => None
+                case Mail(Exit.Failed(t)) => s = t; None
+                case Mail(q: Exit) => None
+                case Mail(x) => Some(x.asInstanceOf[A])
             }
             if (s != null) {
                 throw s
             }
         }
-    }
 
-    private class ReactionImpl[A](a: Actor) extends Reaction[A] {
-        override def apply(x: A) {
-            a ! Element(x)
-        }
-        override def exit(q: Exit) {
-            a ! q
+        private class ReactionImpl extends Reaction[A] {
+            override def apply(x: A) {
+                a ! Mail(x)
+            }
+            override def exit(q: Exit) {
+                a ! Mail(q)
+            }
         }
     }
-
 }
