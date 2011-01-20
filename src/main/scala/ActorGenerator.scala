@@ -11,7 +11,7 @@ package hano
 // See: http://d.hatena.ne.jp/shomah4a/20110105
 
 
-import scala.actors.Actor
+import scala.actors
 
 
 object ActorGenerator extends detail.GeneratorCommon {
@@ -20,12 +20,12 @@ object ActorGenerator extends detail.GeneratorCommon {
 
     private class IteratorImpl[A](xs: Seq[A]) extends detail.AbstractIterator[A] {
 
-        private case class Mail[B](msg: B)
+        private[this] case class Msg(msg: Any)
 
         private[this] var v: Option[A] = None
-        private[this] val a = Actor.self
+        private[this] val ch = new actors.Channel[Msg]
 
-        Actor.actor {
+        actors.Actor.actor {
             xs.forloop(new ReactionImpl)
         }
         ready()
@@ -36,10 +36,10 @@ object ActorGenerator extends detail.GeneratorCommon {
 
         private def ready() {
             var s: Throwable = null
-            v = a.receive {
-                case Mail(Exit.Failed(t)) => s = t; None
-                case Mail(q: Exit) => None
-                case Mail(x) => Some(x.asInstanceOf[A])
+            v = ch.receive {
+                case Msg(Exit.Failed(t)) => s = t; None
+                case Msg(q: Exit) => None
+                case Msg(x) => Some(x.asInstanceOf[A])
             }
             if (s != null) {
                 throw s
@@ -48,10 +48,10 @@ object ActorGenerator extends detail.GeneratorCommon {
 
         private class ReactionImpl extends Reaction[A] {
             override def apply(x: A) {
-                a ! Mail(x)
+                ch ! Msg(x)
             }
             override def exit(q: Exit) {
-                a ! Mail(q)
+                ch ! Msg(q)
             }
         }
     }
