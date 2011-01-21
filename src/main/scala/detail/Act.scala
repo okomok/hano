@@ -9,18 +9,18 @@ package hano
 package detail
 
 
-import scala.actors.Actor
+import scala.actors
 
 
 private[hano]
-class Act(a: Actor = Act.defaultActor) extends Context {
+class Act(out: actors.OutputChannel[Any] = Act.defaultOut) extends Context {
 
     override def exit() {
-        a ! Exit.Closed
+        out ! Exit.Closed
     }
 
     override def forloop(f: Reaction[Unit]) {
-        a ! Action {
+        out ! Action {
             try {
                 Context.self.forloop(f)
             } catch {
@@ -34,18 +34,20 @@ class Act(a: Actor = Act.defaultActor) extends Context {
 private[hano]
 object Act {
 
-    def defaultActor: Actor = {
-        val that = new Actor {
-            override def act = {
-                Actor.loop {
-                    react {
-                        case Action(f) => f()
-                        case _: Exit => Actor.exit()
-                    }
+    def defaultOut: actors.OutputChannel[Any] = {
+        val that = new DefaultOut
+        that.start()
+        that
+    }
+
+    private class DefaultOut extends actors.Reactor[Any] {
+        override def act = {
+            loop {
+                react {
+                    case Action(f) => f()
+                    case _: Exit => exit()
                 }
             }
         }
-        that.start
-        that
     }
 }

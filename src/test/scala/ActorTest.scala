@@ -9,9 +9,9 @@ package com.github.okomok.hanotest
 
 import com.github.okomok.hano
 
-import scala.actors.Actor
+import scala.actors.{Actor, Reactor, ReplyReactor}
 
-
+/*
 class ActorTest extends org.scalatest.junit.JUnit3Suite {
 
     case class Mail(msg: String)
@@ -40,4 +40,26 @@ class ActorTest extends org.scalatest.junit.JUnit3Suite {
             case scala.actors.TIMEOUT => ()
         }
     }
+
+    def testSendSelf {
+        val a = new Reactor[Any] {
+            override def act() = {
+                loop {
+                    react {
+                        case "Go" => {
+                            println("Go")
+                        }
+                    }
+                }
+            }
+        }
+
+        a.start()
+        a ! "Go"
+        a ! "Go"
+        a ! "Go"
+
+        Thread.sleep(1000)
+    }
 }
+*/
