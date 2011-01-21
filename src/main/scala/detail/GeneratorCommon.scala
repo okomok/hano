@@ -23,6 +23,7 @@ trait GeneratorCommon { self =>
      * Creates an Iterable from a body.
      */
     final def apply[A](body: Env[A] => Unit): Iterable[A] = new Apply(body)
+
     /**
      * Creates an Iterable from a sequence.
      */

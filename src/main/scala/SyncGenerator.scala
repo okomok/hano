@@ -12,14 +12,11 @@ import java.util.ArrayDeque
 import java.util.concurrent.Exchanger
 
 
-object BlockingGenerator extends detail.GeneratorCommon {
+object SyncGenerator extends detail.GeneratorCommon {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = {
-        assert(xs.context eq Context.self)
         val xch = new Exchanger[Data[A]]
-        detail.Threaded {
-            xs.forloop(new ReactionImpl(xch))
-        }
+        detail.AsyncForloop(xs)(new ReactionImpl(xch))
         new IteratorImpl(xch)
     }
 

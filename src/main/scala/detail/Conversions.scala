@@ -76,9 +76,9 @@ private[hano]
 class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
     override def iterator = {
         if (_1.context eq Context.self) {
-            BlockingGenerator.iterator(_1)
+            SyncGenerator.iterator(_1)
         } else {
-            ActorGenerator.iterator(_1)
+            AsyncGenerator.iterator(_1)
         }
     }
 }
