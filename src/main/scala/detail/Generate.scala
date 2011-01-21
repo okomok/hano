@@ -16,7 +16,7 @@ class Generate[A](_1: Seq[_], _2: => Iter[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
         val _k = ExitOnce { q => f.exit(q);close() }
 
-        val it = _2.begin
+        val it = _2.ator
         if (!it.hasNext) {
             context.eval {
                 _k(Exit.End)

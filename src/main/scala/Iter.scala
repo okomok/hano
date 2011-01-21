@@ -19,7 +19,7 @@ trait Iter[+A] extends Equals {
     @Annotation.returnThis
     final def of[B >: A]: Iter[B] = this
 
-    def begin: Iterator[A]
+    def ator: Iterator[A]
 
     def able: Iterable[A] = new Iter.Able(this)
 
@@ -34,7 +34,7 @@ trait Iter[+A] extends Equals {
     @Annotation.pre("finite")
     override def hashCode = {
         var r = 1
-        val it = begin
+        val it = ator
         while (it.hasNext) {
             r = 31 * r + it.next.hashCode
         }
@@ -46,7 +46,7 @@ trait Iter[+A] extends Equals {
         val sb = new StringBuilder
         sb.append('[')
 
-        val it = begin
+        val it = ator
         if (it.hasNext) {
             sb.append(it.next)
         }
@@ -60,8 +60,8 @@ trait Iter[+A] extends Equals {
     }
 
     def equalsIf[B](that: Iter[B])(p: (A, B) => Boolean): Boolean = {
-        val it = begin
-        val jt = that.begin
+        val it = ator
+        val jt = that.ator
         while (it.hasNext && jt.hasNext) {
             if (!p(it.next, jt.next)) {
                 return false
@@ -88,33 +88,33 @@ object Iter {
     implicit def fromOption[A](from: Option[A]): Iter[A] = new FromOption(from)
 
     private class FromIterator[A](_1: => Iterator[A]) extends Iter[A] {
-        override def begin = _1
+        override def ator = _1
     }
 
     private class FromIterable[A](_1: Iterable[A]) extends Iter[A] {
-        override def begin = _1.iterator
+        override def ator = _1.iterator
     }
 
     private class FromJIterator[A](_1: => java.util.Iterator[A]) extends Iter[A] {
         import JavaConversions._
-        override def begin = _1
+        override def ator = _1
     }
 
     private class FromJIterable[A](_1: java.lang.Iterable[A]) extends Iter[A] {
         import JavaConversions._
-        override def begin = _1.iterator
+        override def ator = _1.iterator
     }
 
     private class FromArray[A](_1: Array[A]) extends Iter[A] {
-        override def begin = _1.iterator
+        override def ator = _1.iterator
     }
 
     private class FromOption[A](_1: Option[A]) extends Iter[A] {
-        override def begin = _1.iterator
+        override def ator = _1.iterator
     }
 
     private class Able[A](_1: Iter[A]) extends Iterable[A] {
-        override def iterator = _1.begin
+        override def iterator = _1.ator
     }
 
 }

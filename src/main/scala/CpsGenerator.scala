@@ -44,7 +44,7 @@ object CpsGenerator {
             }
             override def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit] = {
                 shift { k: (B => Any) =>
-                    val it = xs.begin
+                    val it = xs.ator
                     reset {
                         while (it.hasNext) {
                             k(it.next)

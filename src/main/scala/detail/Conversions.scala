@@ -39,7 +39,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) = synchronized {
         isActive = true
         f.tryRethrow {
-            val it = _1.begin
+            val it = _1.ator
             while (isActive && it.hasNext) {
                 f(it.next)
             }
