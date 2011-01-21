@@ -11,9 +11,6 @@ package hano
 // See: http://d.hatena.ne.jp/shomah4a/20110105
 
 
-import scala.actors
-
-
 object ActorGenerator extends detail.GeneratorCommon {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = new IteratorImpl(xs)
@@ -23,7 +20,7 @@ object ActorGenerator extends detail.GeneratorCommon {
         private[this] case class Msg(msg: Any)
 
         private[this] var v: Option[A] = None
-        private[this] val ch = new actors.Channel[Msg]
+        private[this] val ch = new Channel[Msg]
 
         actors.Actor.actor {
             xs.forloop(new ReactionImpl)
@@ -35,14 +32,10 @@ object ActorGenerator extends detail.GeneratorCommon {
         override protected def increment() = ready()
 
         private def ready() {
-            var s: Throwable = null
             v = ch.receive {
-                case Msg(Exit.Failed(t)) => s = t; None
+                case Msg(Exit.Failed(t)) => throw t
                 case Msg(q: Exit) => None
                 case Msg(x) => Some(x.asInstanceOf[A])
-            }
-            if (s != null) {
-                throw s
             }
         }
 

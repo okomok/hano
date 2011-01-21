@@ -48,8 +48,6 @@ final class Channel[A](override val context: Context = Context.act) extends Seq[
         } forloop(f)
     }
 
-    def read = toCps
-
     def write(x: A) {
         detail.Synchronized(writeLock) {
             val w = writeNode.value
@@ -60,4 +58,13 @@ final class Channel[A](override val context: Context = Context.act) extends Seq[
             w
         } := x
     }
+
+    @Annotation.aliasOf("toCps")
+    def read = toCps
+
+    @Annotation.aliasOf("write")
+    def !(x: A) = write(x)
+
+    @Annotation.equivalentTo("f(Sync.head(this)())")
+    def receive[R](f: A => R): R = f(Sync.head(this)())
 }
