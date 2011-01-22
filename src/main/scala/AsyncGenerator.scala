@@ -20,10 +20,10 @@ object AsyncGenerator extends detail.GeneratorCommon {
 
     private class ReactionImpl[A](ch: Channel[Msg]) extends Reaction[A] {
         override def apply(x: A) {
-            ch ! Msg(x)
+            ch write Msg(x)
         }
         override def exit(q: Exit) {
-            ch ! Msg(q)
+            ch write Msg(q)
         }
     }
 
@@ -36,7 +36,7 @@ object AsyncGenerator extends detail.GeneratorCommon {
         override protected def increment() = ready()
 
         private def ready() {
-            v = ch.receive {
+            v = ch.read match {
                 case Msg(Exit.Failed(t)) => throw t
                 case Msg(q: Exit) => None
                 case Msg(x) => Some(x.asInstanceOf[A])
