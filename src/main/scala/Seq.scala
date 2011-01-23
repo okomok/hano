@@ -269,12 +269,17 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Calls `f` on the head of sequence.
      */
-    def onHead(f: A => Unit): Seq[A] = new detail.OnHead(this, f)
+    def onHead(f: Option[A] => Unit): Seq[A] = new detail.OnHead(this, f)
+
+    /**
+     * Calls `f` on the last of sequence.
+     */
+    def onLast(f: Option[A] => Unit): Seq[A] = new detail.OnLast(this, f)
 
     /**
      * Calls `f` on the nth of sequence.
      */
-    def onNth(n: Int)(f: A => Unit): Seq[A] = new detail.OnNth(this, n, f)
+    def onNth(n: Int)(f: Option[A] => Unit): Seq[A] = new detail.OnNth(this, n, f)
 
     /**
      * Calls `f` on the closing of sequence.

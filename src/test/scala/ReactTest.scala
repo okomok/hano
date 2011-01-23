@@ -14,6 +14,17 @@ import junit.framework.Assert._
 
 class ReactTest extends org.scalatest.junit.JUnit3Suite {
 
+    def testOrder {
+        val a = hano.Seq(1,2,3)
+        val out = new java.util.ArrayList[Int]
+        a react {
+            hano.Reaction(x => out.add(x*10), _ => out.add(99))
+        } react {
+            hano.Reaction(x => out.add(x*100), _ => out.add(100))
+        } start;
+        assertEquals(hano.Iter(10,100,20,200,30,300,99,100), hano.Iter.from(out))
+    }
+
     def testTrivial {
         val a = hano.Seq(1,2,3,2,5)
         val out = new java.util.ArrayList[Int]

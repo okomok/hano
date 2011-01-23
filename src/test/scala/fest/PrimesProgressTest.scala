@@ -64,9 +64,11 @@ class PrimesProgressGuiTest
                     hano.Context.inEdt // reactions in EDT.
                 }
 
-                ps.onNth(Q-1) { p =>
-                    resultLabel.setText(p.toString)
-                    ps.close()
+                ps.onNth(Q-1) {
+                    case Some(p) =>
+                        resultLabel.setText(p.toString)
+                        ps.close()
+                    case None => ()
                 }.indices.stepTime(10) `for` { i =>
                     if (monitor.isCanceled) {
                         resultLabel.setText("Canceled")
