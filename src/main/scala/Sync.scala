@@ -56,13 +56,13 @@ object Sync {
 
     def isEmpty(xs: Seq[_]): () => Boolean = {
         val v = new Val[Boolean]
-        xs `for` { x =>
+        xs onEach { x =>
             v(false)
             xs.close()
-        } exit {
+        } onExit {
             case Exit.End => v(true)
             case q => v.exit(q)
-        }
+        } start()
         v.toFunction
     }
 
@@ -70,12 +70,12 @@ object Sync {
     def length(xs: Seq[_]): () => Int = {
         val v = new Val[Int]
         var acc = 0
-        xs `for` { x =>
+        xs onEach { x =>
             acc += 1
-        } exit {
+        } onExit {
             case Exit.End => v(acc)
             case q => v.exit(q)
-        }
+        } start()
         v.toFunction
     }
 
@@ -85,27 +85,27 @@ object Sync {
     def head[A](xs: Seq[A]): () => A = {
         val v = new Val[A]
         var go = true
-        xs `for` { x =>
+        xs onEach { x =>
             if (go) {
                 go = false
                 v(x)
                 xs.close()
             }
-        } exit {
+        } onExit {
             v.exit(_)
-        }
+        } start()
         v.toFunction
     }
 
     def last[A](xs: Seq[A]): () => A = {
         val v = new Val[A]
         var acc: Option[A] = None
-        xs `for` { x =>
+        xs onEach { x =>
             acc = Some(x)
-        } exit {
+        } onExit {
             case Exit.End => if (acc.isEmpty) v.exit(Exit.End) else v(acc.get)
             case q => v.exit(q)
-        }
+        } start()
         v.toFunction
     }
 
@@ -115,28 +115,28 @@ object Sync {
     def foldLeft[A, B](xs: Seq[A])(z: B)(op: (B, A) => B): () => B = {
         val v = new Val[B]
         var acc = z
-        xs `for` { x =>
+        xs onEach { x =>
             acc = op(acc, x)
-        } exit {
+        } onExit {
             case Exit.End => v(acc)
             case q => v.exit(q)
-        }
+        } start()
         v.toFunction
     }
 
     def reduceLeft[A](xs: Seq[A])(op: (A, A) => A): () => A = {
         val v = new Val[A]
         var acc: Option[A] = None
-        xs `for` { x =>
+        xs onEach { x =>
             if (acc.isEmpty) {
                 acc = Some(x)
             } else {
                 acc = Some(op(acc.get, x))
             }
-        } exit {
+        } onExit {
             case Exit.End => if (acc.isEmpty) v.exit(Exit.End) else v(acc.get)
             case q => v.exit(q)
-        }
+        } start()
         v.toFunction
     }
 
@@ -152,13 +152,12 @@ object Sync {
     def copy[A, To](xs: Seq[A])(implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): () => To = {
         val v = new Val[To]
         var b = bf()
-        xs `for` {
+        xs onEach {
             b += _
-        } exit {
+        } onExit {
             case Exit.End => v(b.result)
             case q => v.exit(q)
-
-        }
+        } start()
         v.toFunction
     }
 

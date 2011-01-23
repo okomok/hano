@@ -41,14 +41,14 @@ object Arm {
         @Annotation.pre("f is synchronous")
         override def forloop(f: Reaction[B]) {
             val r = _1.open
-            _2(r) `for` { y =>
+            _2(r) onEach { y =>
                 for (_ <- from(_1: java.io.Closeable)) {
                     f(y)
                 }
-            } exit { q =>
+            } onExit { q =>
                 f.exit(q)
                 close()
-            }
+            } start()
         }
     }
 }

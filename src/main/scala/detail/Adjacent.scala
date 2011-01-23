@@ -19,15 +19,15 @@ class Adjacent[A](_1: Seq[A], _2: Int) extends Seq[IndexedSeq[A]] {
     override def context = _1.context
     override def forloop(f: Reaction[IndexedSeq[A]]) {
         val buf = new AdjacentBuffer[A](_2)
-        _1 `for` { x =>
+        _1 onEach { x =>
             buf.addLast(x)
             if (buf.isFull) {
                 f(buf.toIndexedSeq)
                 buf.removeFirst()
             }
-        } exit {
+        } onExit {
             f.exit(_)
-        }
+        } start()
     }
 }
 

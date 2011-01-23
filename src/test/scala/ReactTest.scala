@@ -25,6 +25,17 @@ class ReactTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter(10,100,20,200,30,300,99,100), hano.Iter.from(out))
     }
 
+    def testFusion {
+        val a = hano.Seq(1,2,3)
+        val out = new java.util.ArrayList[Int]
+        a react {
+            hano.Reaction(x => out.add(x*10), _ => out.add(99))
+        } foreach { x =>
+            out.add(x*100)
+        }
+        assertEquals(hano.Iter(10,100,20,200,30,300,99), hano.Iter.from(out))
+    }
+
     def testTrivial {
         val a = hano.Seq(1,2,3,2,5)
         val out = new java.util.ArrayList[Int]

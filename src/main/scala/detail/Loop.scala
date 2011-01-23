@@ -30,17 +30,17 @@ class LoopSelf[A](_1: Seq[A]) extends Resource[A] {
     override protected def openResource(f: Reaction[A]) {
         val _k = ExitOnce { q => f.exit(q) }
 
-        _1 `for` { x =>
+        _1 onEach { x =>
             _k.beforeExit {
                 while (isActive) {
                     f(x)
                 }
                 _k(Exit.Closed)
             }
-        } exit {
+        } onExit {
             case q @ Exit.Failed(_) => _k(q)
             case _ => ()
-        }
+        } start()
     }
 }
 
@@ -55,7 +55,7 @@ class LoopOther[A](_1: Seq[A], _2: Int) extends Resource[A] {
         val _k = ExitOnce { q => f.exit(q) }
 
         def rec() {
-            _1 `for` { x =>
+            _1 onEach { x =>
                 _k.beforeExit {
                     for (i <- 0 until _2 if isActive) {
                         f(x)
@@ -66,10 +66,10 @@ class LoopOther[A](_1: Seq[A], _2: Int) extends Resource[A] {
                         _k(Exit.Closed)
                     }
                 }
-            } exit {
+            } onExit {
                 case q @ Exit.Failed(_) => _k(q)
                 case _ => ()
-            }
+            } start()
         }
         rec()
     }

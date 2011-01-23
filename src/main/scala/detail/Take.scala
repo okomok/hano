@@ -22,7 +22,7 @@ class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
             }
         } else {
             var c = _2
-            _1 `for` { x =>
+            _1 onEach { x =>
                 if (c != 0) {
                     f(x)
                     c -= 1
@@ -30,9 +30,9 @@ class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
                         _k(Exit.End)
                     }
                 }
-            } exit {
+            } onExit {
                 _k(_)
-            }
+            } start()
         }
     }
     override def take(n: Int): Seq[A] = _1.take(java.lang.Math.min(_2, n)) // take.take fusion

@@ -22,13 +22,13 @@ class DropUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
             g
         }
 
-        _1 `for` { x =>
+        _1 onEach { x =>
             if (go) {
                 g
                 f(x)
             }
-        } exit {
+        } onExit {
             f.exit(_)
-        }
+        } start()
     }
 }

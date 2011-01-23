@@ -22,16 +22,16 @@ class Generate[A](_1: Seq[_], _2: => Iter[A]) extends Seq[A] {
                 _k(Exit.End)
             }
         } else {
-            _1 `for` { _ =>
+            _1 onEach { _ =>
                 if (it.hasNext) {
                     f(it.next)
                     if (!it.hasNext) {
                         _k(Exit.End)
                     }
                 }
-            } exit {
+            } onExit {
                 _k(_)
-            }
+            } start()
         }
     }
 }

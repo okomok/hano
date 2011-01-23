@@ -16,20 +16,20 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
         val _k = ExitOnce { q => f.exit(q); close() }
 
-        _2.shift(_1) `for` { y =>
+        _2.shift(_1) onEach { y =>
             _k(Exit.End)
-        } exit {
+        } onExit {
             _k(_)
-        }
+        } start()
 
-        _1 `for` { x =>
+        _1 onEach { x =>
             if (!_k.isExited) {
                 f(x)
             } else {
                 _k(Exit.End)
             }
-        } exit {
+        } onExit {
             _k(_)
-        }
+        } start()
     }
 }

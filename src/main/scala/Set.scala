@@ -29,14 +29,14 @@ final class Set[A](val size: Int, override val context: Context = Context.act) e
         val _k = detail.ExitOnce { q => f.exit(q) }
 
         for (v <- vs) {
-            v `for` { x =>
+            v onEach { x =>
                 _k.beforeExit {
                     f(x)
                 }
-            } exit {
+            } onExit {
                 case q @ Exit.Failed(_) => _k(q)
                 case q => ()
-            }
+            } start()
         }
     }
 

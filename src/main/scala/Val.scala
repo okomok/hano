@@ -66,11 +66,11 @@ final class Val[A](override val context: Context = Context.act) extends Seq[A] {
     }
 
     private def eval(f: Reaction[A], x: A) {
-        context `for` { _ =>
+        context onEach { _ =>
             f(x)
-        } exit {
+        } onExit {
             f.exit(_)
-        }
+        } start()
     }
 }
 

@@ -58,11 +58,11 @@ private[hano]
 class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Seq[A] {
     override def context = Context.self
     override def forloop(f: Reaction[A]) {
-        context `for` { _ =>
+        context onEach { _ =>
             _1.foreach(f(_))
-        } exit {
+        } onExit {
             f.exit(_)
-        }
+        } start()
     }
 }
 
@@ -88,11 +88,11 @@ private[hano]
 class FromResponder[A](_1: Responder[A]) extends Seq[A] {
     override def context = Context.self
     override def forloop(f: Reaction[A]) {
-        context `for` { _ =>
+        context onEach { _ =>
             _1.respond(f(_))
-        } exit {
+        } onExit {
             f.exit(_)
-        }
+        } start()
     }
 }
 
@@ -106,12 +106,12 @@ private[hano]
 class FromCps[A](from: => A @continuations.suspendable) extends Seq[A] {
     override def context = Context.self
     override def forloop(f: Reaction[A]) {
-        context `for` { _ =>
+        context onEach { _ =>
             continuations.reset {
                 f(from)
             }
-        } exit {
+        } onExit {
             f.exit(_)
-        }
+        } start()
     }
 }

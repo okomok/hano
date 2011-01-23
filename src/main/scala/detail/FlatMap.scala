@@ -17,18 +17,18 @@ class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
     override def forloop(f: Reaction[B]) {
         val _k = ExitOnce { q => f.exit(q); close() }
 
-        _1 `for` { x =>
+        _1 onEach { x =>
             _k.beforeExit {
-                _2(x).shift(_1) `for` {
+                _2(x).shift(_1) onEach {
                     f(_)
-                } exit {
+                } onExit {
                     case q @ Exit.Failed(_) => _k(q)
                     case _ => ()
-                }
+                } start()
             }
-        } exit {
+        } onExit {
             case q @ Exit.Failed(_) => _k(q)
             case _ => ()
-        }
+        } start()
     }
 }

@@ -69,7 +69,7 @@ class PrimesProgressGuiTest
                         resultLabel.setText(p.toString)
                         ps.close()
                     case None => ()
-                }.indices.stepTime(10) `for` { i =>
+                }.indices.stepTime(10) onEach { i =>
                     if (monitor.isCanceled) {
                         resultLabel.setText("Canceled")
                         ps.close()
@@ -77,7 +77,7 @@ class PrimesProgressGuiTest
                         monitor.setProgress(i)
                         monitor.setNote("Calculated " + i + " primes")
                     }
-                } exit()
+                } start()
             }
 
             frame.setSize(300, 200)

@@ -13,10 +13,10 @@ private[hano]
 class Single[A](_1: A) extends Seq[A] {
     override def context = Context.self
     override def forloop(f: Reaction[A]) {
-        context `for` { _ =>
+        context onEach { _ =>
             f(_1)
-        } exit {
+        } onExit {
             f.exit(_)
-        }
+        } start()
     }
 }
