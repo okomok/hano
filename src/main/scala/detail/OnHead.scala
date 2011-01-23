@@ -15,17 +15,11 @@ class OnHead[A](_1: Seq[A], _2: Option[A] => Unit) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var go = true
-        _1 `for` { x =>
-            if (go) {
-                go = false
-                _2(Some(x))
-            }
-            f(x)
-        } exit { q =>
-            if (go) {
-                _2(None)
-            }
-            f.exit(q)
-        }
+        _1 react {
+            Reaction(
+                x => if (go) { go = false; _2(Some(x)) },
+                _ => if (go) { _2(None) }
+            )
+        } forloop(f)
     }
 }

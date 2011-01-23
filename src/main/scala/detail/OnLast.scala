@@ -15,15 +15,11 @@ class OnLast[A](_1: Seq[A], _2: Option[A] => Unit) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         var acc: Option[A] = None
-        _1 `for` { x =>
-            acc = Some(x)
-            f(x)
-        } exit { q =>
-            q match {
-                case Exit.End => _2(acc)
-                case _ => _2(None)
-            }
-            f.exit(q)
-        }
+        _1 react {
+            Reaction(
+                x => acc = Some(x),
+                { case Exit.End => _2(acc); case _ => _2(None) }
+            )
+        } forloop(f)
     }
 }

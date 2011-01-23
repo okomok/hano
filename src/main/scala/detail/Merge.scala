@@ -16,7 +16,7 @@ class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
         val _k = ExitOnce { q => f.exit(q) }
         val _ok = IfFirst[Exit] { _ => () } Else { q => _k(q) }
-        val _no = ExitOnce { q => _k(q);close() }
+        val _no = ExitOnce { q => _k(q); close() }
 
         _1.shift(context) `for` { x =>
             _no.beforeExit {
