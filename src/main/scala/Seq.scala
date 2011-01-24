@@ -58,8 +58,11 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
 trait Seq[+A] extends java.io.Closeable {
 
 
-    @Annotation.returnThis
+    @Annotation.returnThis @inline
     final def of[B >: A]: Seq[B] = this
+
+    @Annotation.returnThis @inline
+    final def asSeq: Seq[A] = this
 
 
 // kernel

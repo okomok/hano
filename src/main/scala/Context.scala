@@ -32,6 +32,9 @@ object Context {
  */
 trait Context extends Seq[Unit] {
 
+    @Annotation.returnThis @inline
+    final def asContext: Context = this
+
     /**
      * No effects; context shall be anytime reusable.
      */

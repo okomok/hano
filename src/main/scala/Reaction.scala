@@ -34,6 +34,12 @@ object Reaction {
  */
 trait Reaction[-A] { self =>
 
+    @Annotation.returnThis @inline
+    final def of[B <: A]: Reaction[B] = this
+
+    @Annotation.returnThis @inline
+    final def asReaction: Reaction[A] = this
+
     /**
      * Reacts on each element.
      */

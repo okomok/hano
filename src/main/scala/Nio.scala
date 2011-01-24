@@ -17,11 +17,11 @@ object Nio {
     def selection(s: Selector, t: Long): Seq[SelectionKey] = Selection2(s, t)
 
     case class Selection1(_1: Selector) extends SeqProxy[SelectionKey] {
-        override val self: Seq[SelectionKey] = new _Selection(_1, _.select)
+        override val self = new _Selection(_1, _.select).asSeq
     }
 
     case class Selection2(_1: Selector, _2: Long) extends SeqProxy[SelectionKey] {
-        override val self: Seq[SelectionKey] = new _Selection(_1, _.select(_2))
+        override val self = new _Selection(_1, _.select(_2)).asSeq
     }
 
     private class _Selection(_1: Selector, _2: Selector => Long) extends Seq[SelectionKey] {
