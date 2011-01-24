@@ -20,7 +20,7 @@ object SyncGenerator extends detail.GeneratorCommon {
     override def iterator[A](xs: Seq[A]): Iterator[A] = {
         val xch = new Exchanger[Data[A]]
         detail.AsyncForloop(xs)(new ReactionImpl(xch))
-        new IteratorImpl(xch)
+        new IteratorImpl(xch).concrete
     }
 
     private val CAPACITY = 20
@@ -35,13 +35,13 @@ object SyncGenerator extends detail.GeneratorCommon {
         doExchange()
         forwardExn()
 
-        override protected def isEnd = {
+        override def isEnd = {
             in.buf.isEmpty
         }
-        override protected def deref = {
+        override def deref = {
             in.buf.getFirst
         }
-        override protected def increment() {
+        override def increment() {
             in.buf.removeFirst()
             if (in.buf.isEmpty && !in.isLast) {
                 doExchange()

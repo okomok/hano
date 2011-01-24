@@ -13,31 +13,31 @@ package detail
  * Iterator implementation helper
  */
 private[hano]
-trait AbstractIterator[+A] extends Iterator[A] {
+trait AbstractIterator[+A] {
 
     /**
      * Is iterator pass-the-end?
      */
-    protected def isEnd: Boolean
+    def isEnd: Boolean
 
     /**
      * Returns the current element.
      */
-    protected def deref: A
+    def deref: A
 
     /**
      * Traverses to the next position.
      */
-    protected def increment(): Unit
+    def increment(): Unit
 
     private[this] var err: Throwable = null
 
-    final override def hasNext: Boolean = {
+    private def hasNext: Boolean = {
         delayThrow()
         !isEnd
     }
 
-    final override def next: A = {
+    private def next: A = {
         delayThrow()
         val tmp = deref
         try {
@@ -52,5 +52,17 @@ trait AbstractIterator[+A] extends Iterator[A] {
         if (err != null) {
             throw err
         }
+    }
+
+    final def concrete: Iterator[A] = new AbstractIterator.Concrete(this)
+}
+
+
+private[hano]
+object AbstractIterator {
+
+    private class Concrete[A](_1: AbstractIterator[A]) extends Iterator[A] {
+        override def hasNext = _1.hasNext
+        override def next = _1.next
     }
 }

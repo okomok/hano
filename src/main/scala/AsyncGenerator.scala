@@ -16,7 +16,7 @@ object AsyncGenerator extends detail.GeneratorCommon {
     override def iterator[A](xs: Seq[A]): Iterator[A] = {
         val ch = new Channel[Msg]
         detail.AsyncForloop(xs)(new ReactionImpl[A](ch))
-        new IteratorImpl[A](ch)
+        new IteratorImpl[A](ch).concrete
     }
 
     private case class Msg(msg: Any)
@@ -34,9 +34,9 @@ object AsyncGenerator extends detail.GeneratorCommon {
         private[this] var v: Option[A] = None
         ready()
 
-        override protected def isEnd = v.isEmpty
-        override protected def deref = v.get
-        override protected def increment() = ready()
+        override def isEnd = v.isEmpty
+        override def deref = v.get
+        override def increment() = ready()
 
         private def ready() {
             v = ch.read match {
