@@ -12,6 +12,9 @@ import java.util.ArrayDeque
 import java.util.concurrent.Exchanger
 
 
+/**
+ * Yielding thread is blocked.
+ */
 object SyncGenerator extends detail.GeneratorCommon {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = {

@@ -32,7 +32,7 @@ object Reaction {
 /**
  * Triggered by Seq.forloop
  */
-trait Reaction[-A] { self =>
+trait Reaction[-A] {
 
     @Annotation.returnThis @inline
     final def of[B <: A]: Reaction[B] = this

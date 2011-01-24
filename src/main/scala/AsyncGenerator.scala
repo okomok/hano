@@ -8,6 +8,9 @@ package com.github.okomok
 package hano
 
 
+/**
+ * Yielding thread is not blocked; elements are buffered.
+ */
 object AsyncGenerator extends detail.GeneratorCommon {
 
     override def iterator[A](xs: Seq[A]): Iterator[A] = {

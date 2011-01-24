@@ -8,7 +8,7 @@ package com.github.okomok
 package hano
 
 
-sealed abstract class Exit
+sealed abstract class Exit extends Message
 
 
 object Exit {

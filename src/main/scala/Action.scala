@@ -11,7 +11,7 @@ package hano
 /**
  * Trivial wrapper for a function passed around Actors.
  */
-case class Action(_1: () => Unit)
+case class Action(_1: () => Unit) extends Message
 
 
 object Action {
