@@ -12,6 +12,6 @@ package detail
 private[hano]
 class Unknown() extends Context {
     override def forloop(f: Reaction[Unit]) {
-        throw new Error
+        throw new UnsupportedOperationException("Context.unknown.forloop")
     }
 }

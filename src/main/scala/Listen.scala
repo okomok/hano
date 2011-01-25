@@ -8,18 +8,6 @@ package com.github.okomok
 package hano
 
 
-/**
- *
-    val xs = Listen[Event]() { * =>
-        val l = new MyListener {
-            override def handleMyEvent(ev: MyEvent) {
-                *(ev)
-            }
-        }
-        *.addBy{component.addListener(l)}
-        *.removeBy{component.removeMyListener(l))}
-    }
- */
 object Listen {
 
     sealed abstract class Env[A] extends Reaction[A] {
@@ -58,7 +46,7 @@ object Listen {
             override def context = cxt
             override protected def closeResource() {
                 _remove()
-                _f.exit(Exit.Closed)
+                // cxt.eval { _f.exit(Exit.Closed) }
             }
             override protected def openResource(f: Reaction[A]) {
                 _f = f
