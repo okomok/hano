@@ -24,6 +24,11 @@ object Context {
      * In the event-dispatch-thread
      */
     val inEdt: Context = new detail.InEdt()
+
+    /**
+     * Unknown
+     */
+    val unknown: Context = new detail.Unknown()
 }
 
 

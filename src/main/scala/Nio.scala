@@ -45,5 +45,4 @@ object Nio {
             f.exit(Exit.Closed)
         }
     }
-
 }

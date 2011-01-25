@@ -17,7 +17,7 @@ object Swing {
 
     private[hano]
     trait EdtResource[A] extends NoExitResource[A] {
-        override def context = Context.inEdt
+        final override def context = Context.inEdt
     }
 
 

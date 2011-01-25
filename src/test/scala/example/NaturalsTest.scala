@@ -15,8 +15,8 @@ class NaturalsTezt {
 //class NaturalsTest extends org.scalatest.junit.JUnit3Suite {
 
     def naturals: hano.Seq[Int] = {
-        val t = new java.util.Timer(true)
-        val s: hano.Seq[Unit] = hano.Schedule(t.schedule(_, 0, 1000))
+        val t = new hano.Timer(true)
+        val s: hano.Seq[Unit] = t.schedule(0, 1000)
         s.generate(Stream.iterate(0)(_ + 1))
     }
 

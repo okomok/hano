@@ -16,9 +16,9 @@ import junit.framework.Assert._
 class TimerTezt {
 //extends org.scalatest.junit.JUnit3Suite {
 
-    val t = new java.util.Timer(true)
+    val t = new hano.Timer(true)
     def naturals: hano.Seq[Int] = {
-        val s: hano.Seq[Unit] = hano.Schedule(t.schedule(_, 0, 100))
+        val s: hano.Seq[Unit] = t.schedule(0, 100)
         s.generate(Stream.iterate(0)(_ + 1))
     }
 
