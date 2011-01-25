@@ -15,20 +15,22 @@ object Listen {
         def removeBy(remove: => Unit): Unit
     }
 
-    def apply[A](ctx: Context = Context.unknown)(body: Env[A] => Unit): Seq[A] = {
+    def apply[A](ctx: Context = Context.act)(body: Env[A] => Unit): Seq[A] = {
         val env = new EnvImpl[A](ctx)
         body(env)
         env.toSeq
     }
 
-    private class EnvImpl[A](cxt: Context) extends Env[A] with CheckedReaction[A] {
+    private class EnvImpl[A](ctx: Context) extends Env[A] with CheckedReaction[A] {
 
         @volatile private[this] var _f: Reaction[A] = null
         @volatile private[this] var _add: () => Unit = null
         @volatile private[this] var _remove: () => Unit = null
 
         override def checkedApply(x: A) {
-            _f(x)
+            ctx.eval {
+                _f(x)
+            }
         }
         override def checkedExit(q: Exit) {
         }
@@ -43,11 +45,8 @@ object Listen {
         def toSeq: Seq[A] = new Resource[A] {
             assert(_add != null)
             assert(_remove != null)
-            override def context = cxt
-            override protected def closeResource() {
-                _remove()
-                // cxt.eval { _f.exit(Exit.Closed) }
-            }
+            override def context = ctx
+            override protected def closeResource() = _remove()
             override protected def openResource(f: Reaction[A]) {
                 _f = f
                 _add()
