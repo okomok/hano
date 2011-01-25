@@ -14,7 +14,7 @@ import java.util.{Date, Timer => JTimer, TimerTask}
 /**
  * Timer creates a sequence of Units.
  */
-class Timer(isDaemon: Boolean = false) extends Context { outer =>
+final class Timer(isDaemon: Boolean = false) extends Context { outer =>
 
     private[this] val timer = new JTimer(isDaemon)
 
