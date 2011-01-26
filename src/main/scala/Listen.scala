@@ -28,7 +28,7 @@ object Listen {
     /**
      * Creates a Seq from listeners.
      */
-    def apply[A](ctx: Context = Context.act)(body: Env[A] => Unit): Seq[A] = {
+    def apply[A](ctx: Context = Context.unknown)(body: Env[A] => Unit): Seq[A] = {
         val env = new EnvImpl[A](ctx)
         body(env)
         env.asSeq
@@ -41,18 +41,11 @@ object Listen {
         private[this] val _k = detail.ExitOnce { q => _f.exit(q); asSeq.close() }
 
         override def checkedApply(x: A) {
-            ctx onEach { _ =>
-                _k.beforeExit {
-                    _f(x)
-                }
-            } onExit {
-                case q @ Exit.Failed(t) => _k(q)
-                case _ => ()
-            } start()
+            _f.tryRethrow {
+                _f(x)
+            }
         }
-        override def checkedExit(q: Exit) {
-            asSeq.close()
-        }
+        override def checkedExit(q: Exit) = ()
 
         override def addBy(add: => Unit) {
             _adds.add(() => add)

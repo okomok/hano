@@ -66,10 +66,12 @@ trait Context extends Seq[Unit] {
      */
     private[hano]
     final def upper(that: Context): Context = {
-        require((this ne Context.unknown) || (that ne Context.unknown))
-
         if (this eq Context.unknown) {
-            that
+            if (that eq Context.unknown) {
+                Context.act
+            } else {
+                that
+            }
         } else if (this eq Context.self) {
             if (that eq Context.self) {
                 this
