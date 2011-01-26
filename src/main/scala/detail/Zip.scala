@@ -15,7 +15,7 @@ import java.util.LinkedList
 private[hano]
 class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
     override def close() = { _1.close(); _2.close() }
-    override def context = _1.context upper _2.context
+    override val context = _1.context upper _2.context
     override def forloop(f: Reaction[(A, B)]) {
         var ends1 = false
         var ends2 = false
