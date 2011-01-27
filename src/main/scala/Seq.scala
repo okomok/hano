@@ -101,7 +101,7 @@ trait Seq[+A] extends java.io.Closeable {
     def map[B](f: A => B): Seq[B] = new detail.Map(this, f)
 
     /**
-     * Exit.End isn't sent.
+     * Returns an infinite sequence.
      */
     def flatMap[B](f: A => Seq[B]): Seq[B] = new detail.FlatMap(this, f)
 
