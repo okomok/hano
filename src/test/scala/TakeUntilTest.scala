@@ -39,6 +39,29 @@ class TakeUntilTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter(1,2,3), hano.Iter.from(out))
     }
 
+    def testTrivial2 = {
+        val out = new java.util.ArrayList[Int]
+
+        val ctx = hano.Context.act
+        val b = new hano.Rist[Int](ctx)
+        val a = new hano.Rist[Int](ctx)
+
+        val z = a takeUntil {
+            b
+        } onEach {
+            out.add(_)
+        } start()
+
+        a add 1
+        a add 2
+        a add 3
+        b add 999
+        a add 4
+        a add 5
+        Thread.sleep(2000)
+        assertEquals(hano.Iter(1,2,3), hano.Iter.from(out))
+    }
+
     def testParallel {
         val xs = new hano.Set[Unit](100)
         val ys = new hano.Channel[Unit]
