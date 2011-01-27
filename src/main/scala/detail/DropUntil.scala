@@ -11,20 +11,20 @@ package detail
 
 private[hano]
 class DropUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
-    override def close() = { _1.close(); _2.close() }
+    private[this] lazy val close2 = _2.close() // for thread-safety
+    override def close() = { _1.close(); close2 }
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         @volatile var go = false
-        lazy val g = _2.close()
 
-        for (y <- _2.shift(_1)) {
+        _2 onEach { _ =>
             go = true
-            g
-        }
+            close2
+        } start()
 
         _1 onEach { x =>
             if (go) {
-                g
+                close2
                 f(x)
             }
         } onExit {
