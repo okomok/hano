@@ -9,17 +9,17 @@ package hano
 
 
 /**
- * Immutable unordered set (Exit.End isn't sent.)
+ * Immutable infinite unordered set
  */
-final class Set[A](val size: Int, override val context: Context = Context.act) extends Seq[A] {
+final class Set[A](val capacity: Int, override val context: Context = Context.act) extends Seq[A] {
     require(context ne Context.self)
 
     private[this] var cur = 0
     private[this] val curLock = new java.util.concurrent.locks.ReentrantLock
 
     private[this] lazy val vs: Array[Val[A]] = {
-        val that = new Array[Val[A]](size)
-        for (i <- 0 until size) {
+        val that = new Array[Val[A]](capacity)
+        for (i <- 0 until capacity) {
             that(i) = new Val[A](context)
         }
         that
@@ -40,21 +40,17 @@ final class Set[A](val size: Int, override val context: Context = Context.act) e
         }
     }
 
-    def empty: Set[A] = new Set[A](0, context)
-
-    def isEmpty: Boolean = size == 0
-
     @Annotation.aliasOf("member")
     def +=(x: A): Boolean = member(x)
 
     def member(x: A): Boolean = {
-        if (cur < size) {
+        if (cur < capacity) {
             val j = detail.Synchronized(curLock) {
                 val tmp = cur
                 cur += 1
                 tmp
             }
-            if (j < size) {
+            if (j < capacity) {
                 vs(j) := x
                 true
             } else {
