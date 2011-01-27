@@ -61,11 +61,9 @@ trait Context extends Seq[Unit] {
     @Annotation.equivalentTo("foreach(_ => body)")
     final def eval(body: => Unit): Unit = foreach(_ => body)
 
-    /**
-     * Prefers act to self; avoid ShiftToSelf if possible.
-     */
     private[hano]
     final def upper(that: Context): Context = {
+        // unknown <: self <: other
         if (this eq Context.unknown) {
             if (that eq Context.unknown) {
                 Context.act
@@ -73,7 +71,7 @@ trait Context extends Seq[Unit] {
                 that
             }
         } else if (this eq Context.self) {
-            if (that eq Context.self) {
+            if ((that eq Context.self) || (that eq Context.unknown)) {
                 this
             } else {
                 that
