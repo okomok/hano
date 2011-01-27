@@ -14,8 +14,7 @@ class SetTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
         val rx = new hano.Set[Int](5)
-        expect(5)(rx.size)
-        expect(false)(rx.isEmpty)
+        expect(5)(rx.capacity)
         hano.Context.act.eval {
             rx member 12
             rx member 13
@@ -36,8 +35,7 @@ class SetTest extends org.scalatest.junit.JUnit3Suite {
     def testEmpty {
         val xs = new hano.Set[Int](0)
         expect(false)(xs member 2)
-        expect(true)(xs.isEmpty)
-        expect(0)(xs.size)
+        expect(0)(xs.capacity)
     }
 
     def testSignal {
