@@ -8,9 +8,6 @@ package com.github.okomok
 package hano
 
 
-import java.util.ArrayList
-
-
 object Listen {
 
     sealed abstract class Env[A] extends Reaction[A] {
@@ -36,8 +33,8 @@ object Listen {
 
     private class EnvImpl[A](ctx: Context) extends Env[A] with CheckedReaction[A] {
         @volatile private[this] var _f: Reaction[A] = null
-        private[this] var _adds = new ArrayList[() => Unit]
-        private[this] var _removes = new ArrayList[() => Unit]
+        private[this] var _add: () => Unit = null
+        private[this] var _remove: () => Unit = null
         private[this] val _k = detail.ExitOnce { q => _f.exit(q); asSeq.close() }
 
         override def checkedApply(x: A) {
@@ -48,26 +45,26 @@ object Listen {
         override def checkedExit(q: Exit) = ()
 
         override def addBy(add: => Unit) {
-            _adds.add(() => add)
+            _add = () => add
         }
         override def removeBy(remove: => Unit) {
-            _removes.add(() => remove)
+            _remove = () => remove
         }
 
         lazy val asSeq: Seq[A] = new Resource[A] {
             override def context = ctx
             override protected def closeResource() {
-                for (remove <- Iter.from(_removes).able) {
-                    remove()
+                if (_remove != null) {
+                    _remove()
                 }
-                _removes = null
+                _remove = null
             }
             override protected def openResource(f: Reaction[A]) {
                 _f = f // synchronization point
-                for (add <- Iter.from(_adds).able) {
-                    add()
+                if (_add != null) {
+                    _add()
                 }
-                _adds = null
+                _add = null
             }
         }
     }
