@@ -12,7 +12,7 @@ import com.github.okomok.hano
 class RistTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        val ctx = hano.Context.act
+        val ctx = hano.Act()
         val xs = new hano.Rist[Int](ctx)
 
         val suite = new ParallelSuite(10)
@@ -41,7 +41,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        val ctx = hano.Context.act
+        val ctx = hano.Act()
         val xs = new hano.Rist[Int](ctx)
 
         val suite = new ParallelSuite(10)

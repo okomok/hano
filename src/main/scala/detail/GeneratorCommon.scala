@@ -47,7 +47,7 @@ trait GeneratorCommon { self =>
     }
 
     private class BodyToSeq[A](body: Env[A] => Unit) extends Seq[A] {
-        override def context = Context.self
+        override def context = Self
         override def forloop(f: Reaction[A]) {
             val g = new MultiExitable(f)
             try {

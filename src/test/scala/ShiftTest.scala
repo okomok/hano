@@ -29,7 +29,7 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
         val s = new java.util.ArrayList[Int]
 //        val k: (=> Unit) => Any = hano.eval.InEdt[Unit]
         hano.Seq(0,1,2,3,4) shift {
-            hano.Context.inEdt
+            hano.InEdt
         } map { x =>
             x + 1
         } foreach { x =>
@@ -41,8 +41,8 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
     def testAsyncToSelf {
         val s = new java.util.ArrayList[Int]
         val cur = Thread.currentThread()
-        hano.Context.act.loop.generate(0 to 10) shift {
-            hano.Context.self
+        hano.Act().loop.generate(0 to 10) shift {
+            hano.Self
         } foreach { x =>
             s.add(x)
             Thread.sleep(100)

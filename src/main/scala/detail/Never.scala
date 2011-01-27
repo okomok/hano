@@ -11,6 +11,6 @@ package detail
 
 private[hano]
 class Never() extends Seq[Nothing] {
-    override def context = Context.self
+    override def context = Self
     override def forloop(f: Reaction[Nothing]) = ()
 }

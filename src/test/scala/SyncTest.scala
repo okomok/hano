@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class SyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def testMinMax {
-        val xs = hano.Context.act.loop.generate(Seq(6,3,1,2,6,7,4,2))
+        val xs = hano.Act().loop.generate(Seq(6,3,1,2,6,7,4,2))
         val (ys, zs) = xs.duplicate
         val max = hano.Sync.max(ys)
         val min = hano.Sync.min(zs)
@@ -22,31 +22,31 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testLength {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,2,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,2,6,7,4,2,9))
         val l = hano.Sync.length(xs)
         expect(8)(l())
     }
 
     def testIsEmpty {
-        val xs = hano.Context.act.loop.generate(Seq[Int]())
+        val xs = hano.Act().loop.generate(Seq[Int]())
         val im = hano.Sync.isEmpty(xs)
         expect(true)(im())
     }
 
     def testIsNotEmpty {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,2,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,2,6,7,4,2,9))
         val im = hano.Sync.isEmpty(xs)
         expect(false)(im())
     }
 
     def testHead {
-        val xs = hano.Context.act.loop.generate(Seq(9,3,1,2,6,7,4,2))
+        val xs = hano.Act().loop.generate(Seq(9,3,1,2,6,7,4,2))
         val head = hano.Sync.head(xs)
         expect(9)(head())
     }
 
     def testNoHead {
-        val xs = hano.Context.act.loop.generate(Seq[Int]())
+        val xs = hano.Act().loop.generate(Seq[Int]())
         val head = hano.Sync.head(xs)
         intercept[NoSuchElementException] {
             head()
@@ -54,13 +54,13 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testLast {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,2,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,2,6,7,4,2,9))
         val last = hano.Sync.last(xs)
         expect(9)(last())
     }
 
     def testNoLast {
-        val xs = hano.Context.act.loop.generate(Seq[Int]())
+        val xs = hano.Act().loop.generate(Seq[Int]())
         val last = hano.Sync.last(xs)
         intercept[NoSuchElementException] {
             last()
@@ -68,13 +68,13 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testNth {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,8,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,8,6,7,4,2,9))
         val nth = hano.Sync.nth(xs)(6)
         expect(2)(nth())
     }
 
     def testNoNth {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,8,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,8,6,7,4,2,9))
         val nth = hano.Sync.nth(xs)(10)
         intercept[NoSuchElementException] {
             nth()
@@ -82,7 +82,7 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testNoNthEmpty {
-        val xs = hano.Context.act.loop.generate(Seq[Int]())
+        val xs = hano.Act().loop.generate(Seq[Int]())
         val nth = hano.Sync.nth(xs)(0)
         intercept[NoSuchElementException] {
             nth()
@@ -90,26 +90,26 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testFoldLeft {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,2,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,2,6,7,4,2,9))
         val fold = hano.Sync.foldLeft(xs)("0")(_ + _.toString)
         expect("031267429")(fold())
     }
 
     def testFoldLeftEmpty {
-        val xs = hano.Context.act.loop.generate(Seq[Int]())
+        val xs = hano.Act().loop.generate(Seq[Int]())
         val fold = hano.Sync.foldLeft(xs)("0")(_ + _.toString)
         expect("0")(fold())
 
     }
 
     def testReduceLeft {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,2,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,2,6,7,4,2,9))
         val reduce = hano.Sync.reduceLeft(xs)(_ + _)
         expect(3+1+2+6+7+4+2+9)(reduce())
     }
 
     def testReduceLeftEmpty {
-        val xs = hano.Context.act.loop.generate(Seq[Int]())
+        val xs = hano.Act().loop.generate(Seq[Int]())
         val reduce = hano.Sync.reduceLeft(xs)(_ + _)
         intercept[NoSuchElementException] {
             reduce()
@@ -118,39 +118,39 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def testValThreaded {
         val v = new hano.Sync.Val[Int]
-        hano.Context.act.loop.generate(0 until 10).forloop(v)
+        hano.Act().loop.generate(0 until 10).forloop(v)
         expect(0)(v())
     }
 
     def testValStrict {
         val v = new hano.Sync.Val[Int]
-        hano.Context.act.loop.generate(0 until 10).forloop(v)
+        hano.Act().loop.generate(0 until 10).forloop(v)
         expect(0)(v())
     }
 
     def testValEmpty {
         val v = new hano.Sync.Val[Int]
-        hano.Context.act.loop.generate(Seq()).forloop(v)
+        hano.Act().loop.generate(Seq()).forloop(v)
         intercept[NoSuchElementException] {
             v()
         }
     }
 
     def testCopy {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,2,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,2,6,7,4,2,9))
         val v: () => scala.collection.immutable.Vector[Int] = hano.Sync.copy(xs)
         expect(hano.Iter(3,1,2,6,7,4,2,9))(hano.Iter.from(v()))
     }
 
     def testBreakOut {
-        val xs = hano.Context.act.loop.generate(Seq(3,1,2,6,7,4,2,9))
+        val xs = hano.Act().loop.generate(Seq(3,1,2,6,7,4,2,9))
         val v: scala.collection.immutable.Vector[Int] = xs.breakOut
         expect(hano.Iter(3,1,2,6,7,4,2,9))(hano.Iter.from(v))
     }
 
 /* seems unsolvable
     def testIterable {
-        val xs = hano.Context.act.loop.generate(0 until 108)
+        val xs = hano.Act().loop.generate(0 until 108)
         val (ys, zs) = xs.duplicate
         val ax = ys.toIterable
         val bx = zs.toIterable

@@ -6,34 +6,19 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
 import scala.actors
 
 
-private[hano]
-class Act(out: actors.OutputChannel[Any] = Act.defaultOut) extends Context {
-
-    override def exit() {
-        out ! Exit.Closed
-    }
-
-    override def forloop(f: Reaction[Unit]) {
-        out ! Action {
-            try {
-                Context.self.forloop(f)
-            } catch {
-                case t: Throwable => LogErr(t, "Reaction.apply error in act context")
-            }
-        }
-    }
-}
-
-
-private[hano]
+/**
+ * Thread-pool context
+ */
 object Act {
 
+    def apply(out: actors.OutputChannel[Any] = defaultOut): Context = new Act(out)
+
+    private[hano]
     def defaultOut: actors.OutputChannel[Any] = {
         val that = new DefaultOut
         that.start()
@@ -47,6 +32,25 @@ object Act {
                     case Action(f) => f()
                     case _: Exit => exit()
                 }
+            }
+        }
+    }
+}
+
+
+private[hano]
+class Act(out: actors.OutputChannel[Any]) extends Context {
+
+    override def exit() {
+        out ! Exit.Closed
+    }
+
+    override def forloop(f: Reaction[Unit]) {
+        out ! Action {
+            try {
+                Self.forloop(f)
+            } catch {
+                case t: Throwable => detail.LogErr(t, "Reaction.apply error in Act context")
             }
         }
     }

@@ -6,11 +6,12 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
-private[hano]
-class Self() extends Context {
+/**
+ * Call-site context
+ */
+object Self extends Context {
     override def forloop(f: Reaction[Unit]) {
         f.tryRethrow {
             f()

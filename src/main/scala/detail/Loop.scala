@@ -12,7 +12,7 @@ package detail
 private[hano]
 class Loop[A](_1: Seq[A], _2: Int = 1) extends SeqProxy[A] {
     override val self = {
-        if (_1.context eq Context.self) {
+        if (_1.context eq Self) {
             new LoopSelf(_1)
         } else {
             new LoopOther(_1, _2)
@@ -23,7 +23,7 @@ class Loop[A](_1: Seq[A], _2: Int = 1) extends SeqProxy[A] {
 
 private[hano]
 class LoopSelf[A](_1: Seq[A]) extends Resource[A] {
-    assert(_1.context eq Context.self)
+    assert(_1.context eq Self)
     @volatile private[this] var isActive = true
     override def context = _1.context
     override protected def closeResource() = isActive = false
@@ -47,7 +47,7 @@ class LoopSelf[A](_1: Seq[A]) extends Resource[A] {
 
 private[hano]
 class LoopOther[A](_1: Seq[A], _2: Int) extends Resource[A] {
-    assert(_1.context ne Context.self)
+    assert(_1.context ne Self)
     @volatile private[this] var isActive = true
     override def context = _1.context
     override protected def closeResource() = isActive = false

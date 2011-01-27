@@ -50,7 +50,7 @@ class PrimesProgressGuiTest
                 monitor.setMillisToPopup(0)
 
                 val ps =
-                hano.Context.act.loopBy(100).catching {// primes in thread-group.
+                hano.Act().loopBy(100).catching {// primes in thread-group.
                     case t: Throwable => {
                         //println("error caught")
                         t.printStackTrace()
@@ -61,7 +61,7 @@ class PrimesProgressGuiTest
                 } onClose {
                     gate.countDown()
                 } shift {
-                    hano.Context.inEdt // reactions in EDT.
+                    hano.InEdt // reactions in EDT.
                 }
 
                 ps.onNth(Q-1) {

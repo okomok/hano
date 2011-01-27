@@ -170,7 +170,7 @@ object Sync {
     /**
      * Evaluates `body` in the event-dispatch-thread.
      */
-    def inEdt[A](body: => A): () => A = eval(Context.inEdt)(body)
+    def inEdt[A](body: => A): () => A = eval(InEdt)(body)
 
     /*
      * Evaluates `body` in the thread-pool, or result-retrieving-site.

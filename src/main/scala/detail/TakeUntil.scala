@@ -36,7 +36,7 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
             _k(_)
         } start()
 
-/*      broken under Context.unknown.
+/*      broken under Unknown.
         val _k = ExitOnce { q => f.exit(q); close() }
 
         _2.shift(_1) onEach { y =>

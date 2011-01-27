@@ -36,7 +36,7 @@ object Arm {
     // BROKEN
     private class UsedBy[A, B](_1: Arm[A], _2: A => Seq[B]) extends Seq[B] {
         override def close() = _1.close()
-        override def context = Context.self
+        override def context = Self
 
         @Annotation.pre("f is synchronous")
         override def forloop(f: Reaction[B]) {
@@ -59,7 +59,7 @@ object Arm {
  */
 trait Arm[+A] extends Seq[A] {
     def open: A
-    final override def context = Context.self
+    final override def context = Self
 
     @Annotation.pre("f is synchronous")
     override def forloop(f: Reaction[A]) {

@@ -25,7 +25,7 @@ object Nio {
     }
 
     private class _Selection(_1: Selector, _2: Selector => Long) extends Seq[SelectionKey] {
-        override def context = Context.self
+        override def context = Self
         override def forloop(f: Reaction[SelectionKey]) {
             f.tryRethrow {
                 try {

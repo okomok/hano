@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class Single[A](_1: A) extends Seq[A] {
-    override def context = Context.self
+    override def context = Self
     override def forloop(f: Reaction[A]) {
         context onEach { _ =>
             f(_1)

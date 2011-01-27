@@ -11,9 +11,9 @@ package hano
 /**
  * Immutable(single-forloop) infinite list
  */
-final class Rist[A](override val context: Context = Context.act) extends Resource[A] {
-    require(context ne Context.self)
-    require(context ne Context.unknown)
+final class Rist[A](override val context: Context = Act()) extends Resource[A] {
+    require(context ne Self)
+    require(context ne Unknown)
 
     @volatile private[this] var isActive = true
     @volatile private[this] var g: Reaction[A] = null

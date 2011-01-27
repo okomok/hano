@@ -34,9 +34,9 @@ object Val {
 /**
  * Single-assignment value
  */
-final class Val[A](override val context: Context = Context.act) extends Seq[A] {
-    require(context ne Context.self)
-    require(context ne Context.unknown)
+final class Val[A](override val context: Context = Act()) extends Seq[A] {
+    require(context ne Self)
+    require(context ne Unknown)
 
     private[this] val v = new concurrent.atomic.AtomicReference[Option[A]](None)
     private[this] val fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]

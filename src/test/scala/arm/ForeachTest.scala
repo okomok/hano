@@ -71,7 +71,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
     val arr = new java.util.ArrayList[Int]
 
     case class Res1[A](res: A) extends hano.Seq[A] {
-        override def context = hano.Context.self
+        override def context = hano.Self
         override def forloop(f: hano.Reaction[A]) = {
             arr.add(10)
             try {
@@ -82,7 +82,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
         }
     }
     case class Res2[A](res: A) extends hano.Seq[A] {
-        override def context = hano.Context.self
+        override def context = hano.Self
         override def forloop(f: hano.Reaction[A]) = {
             arr.add(20)
             try {
@@ -93,7 +93,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
         }
     }
     case class Res3[A](res: A) extends hano.Seq[A] {
-        override def context = hano.Context.self
+        override def context = hano.Self
         override def forloop(f: hano.Reaction[A]) = {
             arr.add(30)
             try {

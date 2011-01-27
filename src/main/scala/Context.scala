@@ -8,30 +8,6 @@ package com.github.okomok
 package hano
 
 
-object Context {
-
-    /**
-     * In the call-site
-     */
-    val self: Context = new detail.Self()
-
-    /**
-     * In the thread-pool
-     */
-    def act: Context = new detail.Act()
-
-    /**
-     * In the event-dispatch-thread
-     */
-    val inEdt: Context = new detail.InEdt()
-
-    /**
-     * Unknown
-     */
-    val unknown: Context = new detail.Unknown()
-}
-
-
 /**
  * Context is one-element sequence of the Unit.
  */
@@ -64,14 +40,14 @@ trait Context extends Seq[Unit] {
     private[hano]
     final def upper(that: Context): Context = {
         // unknown <: self <: other
-        if (this eq Context.unknown) {
-            if (that eq Context.unknown) {
-                Context.act
+        if (this eq Unknown) {
+            if (that eq Unknown) {
+                Act()
             } else {
                 that
             }
-        } else if (this eq Context.self) {
-            if ((that eq Context.self) || (that eq Context.unknown)) {
+        } else if (this eq Self) {
+            if ((that eq Self) || (that eq Unknown)) {
                 this
             } else {
                 that

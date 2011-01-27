@@ -11,9 +11,9 @@ package hano
 /**
  * Immutable infinite unordered set
  */
-final class Set[A](val capacity: Int, override val context: Context = Context.act) extends Seq[A] {
-    require(context ne Context.self)
-    require(context ne Context.unknown)
+final class Set[A](val capacity: Int, override val context: Context = Act()) extends Seq[A] {
+    require(context ne Self)
+    require(context ne Unknown)
 
     private[this] var cur = 0
     private[this] val curLock = new java.util.concurrent.locks.ReentrantLock

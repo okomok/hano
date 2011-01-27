@@ -18,7 +18,7 @@ class CloseTest extends org.scalatest.junit.JUnit3Suite {
     class MyResource extends hano.NoExitResource[Int] {
         private var out: Int => Unit = null
         var closed = false
-        override def context = hano.Context.self
+        override def context = hano.Self
         override protected def openResource(f: Int => Unit) = {
             out = f
         }

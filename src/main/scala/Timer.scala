@@ -23,7 +23,7 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
         val l = new TimerTask {
             override def run() {
                 try {
-                    Context.self.forloop(f)
+                    Self.forloop(f)
                 } catch {
                     case t: Throwable => detail.LogErr(t, "Reaction.apply error in Timer context")
                 }

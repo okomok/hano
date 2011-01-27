@@ -25,7 +25,7 @@ object Listen {
     /**
      * Creates a Seq from listeners.
      */
-    def apply[A](ctx: Context = Context.unknown)(body: Env[A] => Unit): Seq[A] = {
+    def apply[A](ctx: Context = Unknown)(body: Env[A] => Unit): Seq[A] = {
         val env = new EnvImpl[A](ctx)
         body(env)
         env.asSeq

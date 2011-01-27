@@ -6,19 +6,20 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
-private[hano]
-class InEdt() extends Context {
+/**
+ * Event-dispatch-thread context
+ */
+object InEdt extends Context {
     override def forloop(f: Reaction[Unit]) {
         javax.swing.SwingUtilities.invokeLater {
             new Runnable {
                 override def run() {
                     try {
-                        Context.self.forloop(f)
+                        Self.forloop(f)
                     } catch {
-                        case t: Throwable => LogErr(t, "Reaction.apply error in edt context")
+                        case t: Throwable => detail.LogErr(t, "Reaction.apply error in Edt context")
                     }
                 }
             }

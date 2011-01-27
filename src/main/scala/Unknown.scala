@@ -6,12 +6,13 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
-private[hano]
-class Unknown() extends Context {
+/**
+ * Unknown context
+ */
+object Unknown extends Context {
     override def forloop(f: Reaction[Unit]) {
-        throw new UnsupportedOperationException("Context.unknown.forloop")
+        throw new UnsupportedOperationException("Unknown.forloop")
     }
 }
