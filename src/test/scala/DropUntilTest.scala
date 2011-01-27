@@ -16,33 +16,7 @@ import scala.actors.Actor
 
 class DropUntilTest extends org.scalatest.junit.JUnit3Suite {
 
-    def testTrivial {
-        val ctx = hano.Context.act
-        val xs = new hano.Channel[Int]//(ctx)
-        val ys = new hano.Set[Int](10)//, ctx)
-
-        val zs = ys dropUntil xs
-        ys member 1
-        ys member 2
-        ys member 3
-        xs write 999
-        //xs write 999
-        ys member 4
-        ys member 5
-        ys member 6
-
- //       zs.toIter.toString
-for (y <- zs) {
-            println(y)
-        }
-
-        Thread.sleep(2000)
-//        println(ys.toIter)
-
-        expect(hano.Iter(1,2,3,4,5,6))(hano.Iter.from(hano.AsyncGenerator.iterable(zs)))
-    }
-
-    def testTrivial2: Unit = {
+    def testTrivial: Unit = {
         val out = new java.util.ArrayList[Int]
 
         val b = Reactor.singleThreaded()
@@ -63,6 +37,24 @@ for (y <- zs) {
         a ! 4
         a ! 5
         assertEquals(hano.Iter(4,5), hano.Iter.from(out))
+    }
+
+    def testParallel {
+        val xs = new hano.Set[Unit](100)
+        val ys = new hano.Channel[Unit]
+
+        val suite = new ParallelSuite(10)
+        suite.add(100) {
+            xs member ()
+        }
+        suite.add(10) {
+            Thread.sleep(100)
+            ys write ()
+        }
+        val zs = xs dropUntil ys
+        for (z <- zs) {
+        }
+        suite.start()
     }
 
 }
