@@ -8,9 +8,12 @@ package com.github.okomok
 package hano
 
 
-class NotSerializedException[A](reaction: Reaction[A]) extends RuntimeException("method calls shall be serialized")
-class MultipleExitsException[A](reaction: Reaction[A]) extends RuntimeException("multiple `exit` calls not allowed")
-class ApplyAfterExitException[A](reaction: Reaction[A]) extends RuntimeException("`apply` shall not be called after exit")
+import java.util.ConcurrentModificationException
+
+
+class NotSerializedException[A](reaction: Reaction[A]) extends ConcurrentModificationException("method calls shall be serialized")
+class MultipleExitsException[A](reaction: Reaction[A]) extends ConcurrentModificationException("multiple `exit` calls not allowed")
+class ApplyAfterExitException[A](reaction: Reaction[A]) extends ConcurrentModificationException("`apply` shall not be called after exit")
 
 
 /**

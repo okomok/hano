@@ -58,6 +58,9 @@ trait SeqProxy[A] extends Seq[A] with scala.Proxy {
     override def actor: scala.actors.Actor = self.actor
     override def react(f: Reaction[A]): Seq[A] = around(self.react(f))
     override def onExit(k: Exit => Unit): Seq[A] = around(self.onExit(k))
+    override def onEnd(k: => Unit): Seq[A] = around(self.onEnd(k))
+    override def onFailed(k: Throwable => Unit): Seq[A] = around(self.onFailed(k))
+    override def onClosed(k: => Unit): Seq[A] = around(self.onClosed(k))
     override def onEach(f: A => Unit): Seq[A] = around(self.onEach(f))
     override def onEachMatch(f: PartialFunction[A, Unit]): Seq[A] = around(self.onEachMatch(f))
     override def fork(f: Seq[A] => Seq[_]): Seq[A] = around(self.fork(f))
@@ -81,4 +84,5 @@ trait SeqProxy[A] extends Seq[A] with scala.Proxy {
     override def breakable: Seq[(A, () => Unit)] = around(self.breakable)
     override def loop: Seq[A] = around(self.loop)
     override def loopBy(grainSize: Int): Seq[A] = around(self.loopBy(grainSize))
+    override def await(): Unit = self.await()
 }

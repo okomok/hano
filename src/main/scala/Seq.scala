@@ -222,9 +222,24 @@ trait Seq[+A] extends java.io.Closeable {
     def react(f: Reaction[A]): Seq[A] = new detail.React(this, f)
 
     /**
-     * Calls `f` on the exit of sequence.
+     * Calls `k` on the exit of sequence.
      */
     def onExit(k: Exit => Unit): Seq[A] = new detail.OnExit(this, k)
+
+    /**
+     * Calls `k` on the end of sequence.
+     */
+    def onEnd(k: => Unit): Seq[A] = new detail.OnEnd(this, k)
+
+    /**
+     * Calls `k` on the failure of sequence.
+     */
+    def onFailed(k: Throwable => Unit): Seq[A] = new detail.OnFailed(this, k)
+
+    /**
+     * Calls `k` on the closing of sequence.
+     */
+    def onClosed(k: => Unit): Seq[A] = new detail.OnClosed(this, k)
 
     /**
      * Loops with evaluating `f`.
@@ -349,5 +364,18 @@ trait Seq[+A] extends java.io.Closeable {
      * Turns into a closeable infinite sequence of the first elements.
      */
     def loopBy(grainSize: Int): Seq[A] = new detail.Loop(this, grainSize)
+
+    /**
+     * Starts and waits until Exit is sent.
+     */
+    def await() {
+        val l = new java.util.concurrent.CountDownLatch(1)
+
+        onExit { _ =>
+            l.countDown()
+        } start()
+
+        l.await()
+    }
 
 }
