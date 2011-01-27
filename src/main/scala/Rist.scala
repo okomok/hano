@@ -13,6 +13,7 @@ package hano
  */
 final class Rist[A](override val context: Context = Context.act) extends Resource[A] {
     require(context ne Context.self)
+    require(context ne Context.unknown)
 
     @volatile private[this] var isActive = true
     @volatile private[this] var g: Reaction[A] = null

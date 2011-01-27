@@ -21,6 +21,7 @@ import java.util.concurrent.locks.ReentrantLock
  */
 final class Channel[A](override val context: Context = Context.act) extends Seq[A] {
     require(context ne Context.self)
+    require(context ne Context.unknown)
 
     private class Node[A] {
         val value = new Val[A](context) // shares context.
