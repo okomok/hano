@@ -36,8 +36,8 @@ object Listen {
         private[this] var _add: () => Unit = null
         private[this] var _remove: () => Unit = null
 
-        override def checkedApply(x: A) = _f(x)
-        override def checkedExit(q: Exit) = _f.exit(q)
+        override protected def checkedApply(x: A) = _f(x)
+        override protected def checkedExit(q: Exit) = _f.exit(q)
 
         override def addBy(add: => Unit) {
             _add = () => add
