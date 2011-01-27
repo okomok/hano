@@ -35,14 +35,9 @@ object Listen {
         @volatile private[this] var _f: Reaction[A] = null
         private[this] var _add: () => Unit = null
         private[this] var _remove: () => Unit = null
-        private[this] val _k = detail.ExitOnce { q => _f.exit(q); asSeq.close() }
 
-        override def checkedApply(x: A) {
-            _f.tryRethrow {
-                _f(x)
-            }
-        }
-        override def checkedExit(q: Exit) = ()
+        override def checkedApply(x: A) = _f(x)
+        override def checkedExit(q: Exit) = _f.exit(q)
 
         override def addBy(add: => Unit) {
             _add = () => add
