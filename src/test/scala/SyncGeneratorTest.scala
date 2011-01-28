@@ -10,14 +10,14 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 import junit.framework.Assert._
 
-import hano.SyncGenerator
+import hano.Generator
 
 
 class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
 
 
     def testEmpty: Unit = {
-        val tr = SyncGenerator[Int] { * =>
+        val tr = Generator.Sync[Int] { * =>
             999
             *.end()
         }
@@ -25,7 +25,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(tr.isEmpty) // run again.
     }
 
-    def makeValuesTo(n: Int)(y: SyncGenerator.Env[Int]): Unit = {
+    def makeValuesTo(n: Int)(y: Generator.Sync.Env[Int]): Unit = {
         for (i <- 1 to n) {
             y(i)
         }
@@ -33,7 +33,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def withMakeValuesTo(n: Int): Unit = {
-        val tr = SyncGenerator(makeValuesTo(n))
+        val tr = Generator.Sync(makeValuesTo(n))
         assertEquals(hano.Iter.from(1 to n), hano.Iter.from(tr))
         assertEquals(hano.Iter.from(1 to n), hano.Iter.from(tr)) // run again.
     }
@@ -58,7 +58,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        def example =  SyncGenerator[Any] { * =>
+        def example =  Generator.Sync[Any] { * =>
             *("first")
             for (i <- 1 until 4) {
                 *(i)
@@ -73,14 +73,14 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExceptionForwarding: Unit = {
-        def throwSome(y: SyncGenerator.Env[Int]): Unit = {
+        def throwSome(y: Generator.Sync.Env[Int]): Unit = {
             for (i <- 1 to 27) {
                 y(i)
             }
             throw new Error("exception forwarding")
         }
 
-        val tr = SyncGenerator(throwSome)
+        val tr = Generator.Sync(throwSome)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
@@ -98,10 +98,10 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExceptionForwardingEmpty: Unit = {
-        def throwImmediately(y: SyncGenerator.Env[Int]) {
+        def throwImmediately(y: Generator.Sync.Env[Int]) {
             throw new Error("exception forwarding")
         }
-        val tr = SyncGenerator(throwImmediately)
+        val tr = Generator.Sync(throwImmediately)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
@@ -118,7 +118,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testFlush {
-        def sample = SyncGenerator[Int] { y =>
+        def sample = Generator.Sync[Int] { y =>
             for (i <- 0 until 20) {
                 y(i)
             } // exchange.
@@ -145,14 +145,14 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         val sample = hano.Act().loop.generate(0 until 20).toIterable
         assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
-
+/*
     def testTraverse {
-        val sample = SyncGenerator.traverse(0 until 20)
+        val sample = Generator.Sync.traverse(0 until 20)
         assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
-
+*/
     def testThrowAfterEnd {
-        val sample = SyncGenerator[Int] { * =>
+        val sample = Generator.Sync[Int] { * =>
             *(1)
             *(2)
             *(3)

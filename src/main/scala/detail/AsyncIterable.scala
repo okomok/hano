@@ -6,18 +6,22 @@
 
 package com.github.okomok
 package hano
+package detail
 
 
-/**
- * Yielding thread is not blocked; elements are buffered.
- */
-object AsyncGenerator extends detail.GeneratorCommon {
-
-    override def iterator[A](xs: Seq[A]): Iterator[A] = {
+private[hano]
+class AsyncIterable[A](_1: Seq[A]) extends Iterable[A] {
+    override def iterator = {
+        import AsyncIterable._
         val ch = new Channel[Msg]
-        detail.AsyncForloop(xs)(new ReactionImpl[A](ch))
+        AsyncForloop(_1)(new ReactionImpl[A](ch))
         new IteratorImpl[A](ch).concrete
     }
+}
+
+
+private[hano]
+object AsyncIterable {
 
     private case class Msg(msg: Any)
 
@@ -30,7 +34,7 @@ object AsyncGenerator extends detail.GeneratorCommon {
         }
     }
 
-    private class IteratorImpl[A](ch: Channel[Msg]) extends detail.AbstractIterator[A] {
+    private class IteratorImpl[A](ch: Channel[Msg]) extends AbstractIterator[A] {
         private[this] var v: Option[A] = None
         ready()
 

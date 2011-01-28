@@ -6,22 +6,26 @@
 
 package com.github.okomok
 package hano
+package detail
 
 
 import java.util.ArrayDeque
 import java.util.concurrent.Exchanger
 
 
-/**
- * Yielding thread is blocked.
- */
-object SyncGenerator extends detail.GeneratorCommon {
-
-    override def iterator[A](xs: Seq[A]): Iterator[A] = {
+private[hano]
+class SyncIterable[A](_1: Seq[A]) extends Iterable[A] {
+    override def iterator = {
+        import SyncIterable._
         val xch = new Exchanger[Data[A]]
-        detail.AsyncForloop(xs)(new ReactionImpl(xch))
+        AsyncForloop(_1)(new ReactionImpl(xch))
         new IteratorImpl(xch).concrete
     }
+}
+
+
+private[hano]
+object SyncIterable {
 
     private val CAPACITY = 20
 
@@ -29,7 +33,7 @@ object SyncGenerator extends detail.GeneratorCommon {
         def this() = this(new ArrayDeque[A](CAPACITY), false, None)
     }
 
-    private class IteratorImpl[A](xch: Exchanger[Data[A]]) extends detail.AbstractIterator[A] {
+    private class IteratorImpl[A](xch: Exchanger[Data[A]]) extends AbstractIterator[A] {
         private[this] var in = new Data[A]
 
         doExchange()

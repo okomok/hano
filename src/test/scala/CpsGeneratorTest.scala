@@ -8,21 +8,21 @@ package com.github.okomok.hanotest
 
 
 import com.github.okomok.hano
-import com.github.okomok.hano.{CpsGenerator, Iter}
+import com.github.okomok.hano.{Generator, Iter}
 import scala.util.continuations.suspendable
 import junit.framework.Assert._
 
 
 class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
-    def makeEmpty(y: CpsGenerator.Env[Int]): Unit @suspendable = ()
+    def makeEmpty(y: Generator.Cps.Env[Int]): Unit @suspendable = ()
 
     def testEmpty: Unit = {
-        val tr = CpsGenerator(makeEmpty)
+        val tr = Generator.Cps(makeEmpty)
         assertTrue(tr.isEmpty)
         assertTrue(tr.isEmpty) // run again.
     }
 
-    def makeValuesTo(n: Int)(y: CpsGenerator.Env[Int]): Unit @suspendable = {
+    def makeValuesTo(n: Int)(y: Generator.Cps.Env[Int]): Unit @suspendable = {
         var i = 1
         while (i <= n) {
             y(i)
@@ -31,7 +31,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def withMakeValuesTo(n: Int): Unit = {
-        val tr = CpsGenerator(makeValuesTo(n))
+        val tr = Generator.Cps(makeValuesTo(n))
         assertEquals(Iter.from(1 to n), Iter.from(tr))
         assertEquals(Iter.from(1 to n), Iter.from(tr)) // run again.
     }
@@ -56,7 +56,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        def example = CpsGenerator[Any] { `yield` =>
+        def example = Generator.Cps[Any] { `yield` =>
             `yield`("first")
             var i = 1
             while (i < 4) {
@@ -71,7 +71,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExceptionForwarding: Unit = {
-        def throwSome(y: CpsGenerator.Env[Int]): Unit @suspendable = {
+        def throwSome(y: Generator.Cps.Env[Int]): Unit @suspendable = {
             var i = 1
             while (i <= 27) {
                 y(i)
@@ -80,7 +80,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
             throw new Error("exception forwarding")
         }
 
-        val tr = CpsGenerator(throwSome)
+        val tr = Generator.Cps(throwSome)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
@@ -98,10 +98,10 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExceptionForwardingEmpty: Unit = {
-        def throwImmediately(y: CpsGenerator.Env[Int]): Unit @suspendable = {
+        def throwImmediately(y: Generator.Cps.Env[Int]): Unit @suspendable = {
             throw new Error("exception forwarding")
         }
-        val tr = CpsGenerator(throwImmediately)
+        val tr = Generator.Cps(throwImmediately)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
@@ -118,7 +118,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testAmb1 {
-        val it = CpsGenerator[Int] { * =>
+        val it = Generator.Cps[Int] { * =>
             val x = *.amb(0 until 10)
             *.require(x % 2 == 0)
             *(x)
@@ -127,7 +127,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testAmb2 {
-        val it = CpsGenerator[(Int, Int)] { * =>
+        val it = Generator.Cps[(Int, Int)] { * =>
             val x = *.amb(0 until 5)
             val y = *.amb(5 until 10)
             *.require(x + y == 7)
@@ -137,7 +137,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testAmbValueDiscarding {
-        val it = CpsGenerator[(Int, Int)] { * =>
+        val it = Generator.Cps[(Int, Int)] { * =>
             val x = *.amb(0 until 5)
             val y = *.amb(5 until 10)
             *.require(x + y == 7)
@@ -156,14 +156,14 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testValueDiscarding3 {
-        val it = CpsGenerator[Int] { * =>
+        val it = Generator.Cps[Int] { * =>
             *(4)
             999
         }
     }
 
     def testAmbWithOneElementSeq {
-        val it = CpsGenerator[(Int, Int, Int)] { * =>
+        val it = Generator.Cps[(Int, Int, Int)] { * =>
             val x = *.amb(0 until 2)
             val y = *.find(0 until 9)(_ == 7)
             val z = *.amb(0 until 3)
@@ -175,7 +175,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
 /*
     Clearly never works.
     def testAsync {
-        val it = CpsGenerator[Int] { y =>
+        val it = Generator.Cps[Int] { y =>
             val x = hano.Act().loop.generate(0 until 20).toCps
             y(x)
         }

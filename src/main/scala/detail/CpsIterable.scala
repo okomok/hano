@@ -6,6 +6,7 @@
 
 package com.github.okomok
 package hano
+package detail
 
 
 // See:
@@ -15,26 +16,21 @@ package hano
 import scala.util.continuations.{cpsParam, suspendable, reset, shift}
 
 
-object CpsGenerator {
-
-    /**
-     * Creates an Iterable from a cps statement using Env.
-     */
-    def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = new Apply(body)
-
-    /**
-     * Provides method set used in a body.
-     */
-    sealed abstract class Env[A] extends Block.Env1 {
-        def apply(x: A): Unit @suspendable
-        def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
+private[hano]
+class CpsIterable[A](_1: Generator.Cps.Env[A] => Any @suspendable) extends Iterable[A] {
+    override def iterator = {
+        import CpsIterable._
+        new IteratorImpl(_1).concrete
     }
+}
 
-    private class Apply[A](_1: Env[A] => Any @suspendable) extends Iterable[A] {
-        override def iterator: Iterator[A] = new IteratorImpl(_1).concrete
-    }
 
-    private class IteratorImpl[A](body: Env[A] => Any @suspendable) extends detail.AbstractIterator[A] {
+private[hano]
+object CpsIterable {
+
+    import Generator.Cps.Env
+
+    private class IteratorImpl[A](body: Env[A] => Any @suspendable) extends AbstractIterator[A] {
         private[this] var _x: Option[A] = None
         private[this] var _k: Unit => Unit = null
         private[this] val _y = new Env[A] {

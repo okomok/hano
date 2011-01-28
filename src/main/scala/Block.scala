@@ -15,7 +15,7 @@ object Block {
 
     def apply[A](ctx: Env => A @cpsParam[A, Any]): Unit = reset(ctx(Env))
 
-    // One-element sequence is usable also in CpsGenerator.
+    // One-element sequence is usable also in Generator.Cps.
     private[hano] class Env1 {
         def head[A](xs: Seq[A]): A @cpsParam[Any, Unit] = xs.take(1).toCps
 

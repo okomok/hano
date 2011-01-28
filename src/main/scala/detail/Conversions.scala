@@ -76,9 +76,9 @@ private[hano]
 class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
     override def iterator = {
         if (_1.context eq Self) {
-            SyncGenerator.iterator(_1)
+            new SyncIterable(_1).iterator
         } else {
-            AsyncGenerator.iterator(_1)
+            new AsyncIterable(_1).iterator
         }
     }
 }
