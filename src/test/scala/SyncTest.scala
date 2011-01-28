@@ -119,20 +119,20 @@ class SyncTest extends org.scalatest.junit.JUnit3Suite {
     def testValThreaded {
         val v = new hano.Sync.Val[Int]
         hano.Act().loop.generate(0 until 10).forloop(v)
-        expect(0)(v())
+        expect(0)(v.get)
     }
 
     def testValStrict {
         val v = new hano.Sync.Val[Int]
         hano.Act().loop.generate(0 until 10).forloop(v)
-        expect(0)(v())
+        expect(0)(v.get)
     }
 
     def testValEmpty {
         val v = new hano.Sync.Val[Int]
         hano.Act().loop.generate(Seq()).forloop(v)
         intercept[NoSuchElementException] {
-            v()
+            v.get
         }
     }
 

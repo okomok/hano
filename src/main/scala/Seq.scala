@@ -365,17 +365,7 @@ trait Seq[+A] extends java.io.Closeable {
      */
     def loopBy(grainSize: Int): Seq[A] = new detail.Loop(this, grainSize)
 
-    /**
-     * Starts and waits until Exit is sent.
-     */
-    def await() {
-        val l = new java.util.concurrent.CountDownLatch(1)
-
-        onExit { _ =>
-            l.countDown()
-        } start()
-
-        l.await()
-    }
+    @Annotation.equivalentTo("Sync.untilExit(this)()")
+    def await(): Unit = Sync.untilExit(this)()
 
 }

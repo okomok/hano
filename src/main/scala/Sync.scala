@@ -39,7 +39,7 @@ object Sync {
             }
         }
 
-        def apply(): A = {
+        def get: A = {
             c.await()
             if (v == null) {
                 throw new NoSuchElementException("Sync.Val.apply()")
@@ -50,7 +50,7 @@ object Sync {
             }
         }
 
-        def toFunction: () => A = () => self.apply()
+        def toFunction: () => A = () => get
     }
 
 
@@ -163,6 +163,18 @@ object Sync {
 
 
     /**
+     * Waits until is Exit sent.
+     */
+    def untilExit(xs: Seq[_]): () => Unit = {
+        val v = new Val[Unit]
+        xs onExit { _ =>
+            v()
+        } start()
+        v.toFunction
+    }
+
+
+    /**
      * Evaluates `body` in a context.
      */
     def eval[A](ctx: Context)(body: => A): () => A = head(ctx.map(_ => body))
@@ -171,6 +183,7 @@ object Sync {
      * Evaluates `body` in the event-dispatch-thread.
      */
     def inEdt[A](body: => A): () => A = eval(InEdt)(body)
+
 
     /*
      * Evaluates `body` in the thread-pool, or result-retrieving-site.
