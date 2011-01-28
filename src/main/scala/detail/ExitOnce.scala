@@ -9,7 +9,7 @@ package hano
 package detail
 
 
-private[hano]
+//private[hano]
 object ExitOnce {
     def apply(k: Exit => Unit) = new ExitOnce(k)
 }
