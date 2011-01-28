@@ -6,84 +6,67 @@
 
 package com.github.okomok.hanotest
 
-
 import com.github.okomok.hano
 
-import hano.Exit
-
-class LoopOther[A](_1: hano.Seq[A], _2: String) extends hano.Seq[A] {
-    assert(_1.context ne hano.Self)
-    @volatile private[this] var isActive = true
-    override def close() {
-        isActive = false
-        _1.close()
-        println(_2 + " closed")
-    }
-    override def context = _1.context
-    override def forloop(f: hano.Reaction[A]) = synchronized {
-        isActive = true
-        val _k = hano.detail.ExitOnce { q => f.exit(q); close() }
-
-        def rec() {
-            println(_2 + " rec()")
-            _1 onEach { x =>
-                println(_2 + " onEach " + _k.isExited)
-                _k.beforeExit {
-                    if (isActive) {
-                        println(x)
-                        f(x)
-                    }
-                    if (!isActive) {
-                        println(_2 + " closing in onEach")
-                        _k(Exit.Closed)
-                    }
-                }
-            } onExit { q =>
-                println(_2 + " onExit " + q)
-                q match {
-                case Exit.End => {
-                    if (isActive) {
-                        println(_2 + " recuring in End")
-                        rec()
-                    } else {
-                        println(_2 + " closing in End")
-                        _k(Exit.Closed)
-                    }
-                }
-                case q => ()
-                /*
-                case q @ Exit.Closed => {
-                    if (isActive) {
-                        println("closing in Closed")
-                        _k(q)
-                    }
-                }
-                case q => {
-                    println("bad happened")
-                    _k(q)
-                }
-                */
-            } } start()
-        }
-        rec()
-    }
-}
 
 class LoopTest extends org.scalatest.junit.JUnit3Suite {
 
-    /*def testTrivial {
+    def testTrivial {
         val xs = hano.Self.loop.generate(1 until 4)
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
-    }*/
+    }
 
     def testTrivial2 {
-        val xs = new LoopOther(hano.Act(), "Units").generate(1 until 4)
-        //println(xs.toIter)
-        //println(xs.toIter)
-        for (x <- new LoopOther(xs, "Ints").take(100)) {
-            ()
+        val xs = hano.Act().loop.generate(1 until 4)
+        expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
+    }
+
+    def testClose {
+        val xs = hano.Act().loop.generate(1 until 100)
+
+        val out = new java.util.ArrayList[Int]
+        var i = 0
+        val ys = xs.loop
+        ys onEach { x =>
+            out add i
+            i += 1
+            if (i == 50) {
+                ys.close()
+            }
+        } await()
+
+        expect(hano.Iter.from(0 until 50))(hano.Iter.from(out))
+    }
+
+    def testCloseIndirect {
+        val xs = hano.Act().loop.generate(1 until 100)
+
+        val out = new java.util.ArrayList[Int]
+        var i = 0
+        xs.loop onEach { x =>
+            out add i
+            i += 1
+            if (i == 50) {
+                xs.close()
+            }
+        } await()
+
+        expect(hano.Iter.from(0 until 50))(hano.Iter.from(out))
+    }
+
+    def testCloseParallel {
+        val suite = new ParallelSuite(10)
+        val xs = hano.Act().loop.generate(1 until 100)
+        suite.add(1) {
+            for (x <- xs.loop.take(500)) {
+                ()
+            }
         }
-        Thread.sleep(1000)
-//        expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
+        suite.add(100) {
+            Thread.sleep(100)
+            xs.close
+        }
+        suite.start()
+        Thread.sleep(1500)
     }
 }
