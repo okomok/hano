@@ -31,7 +31,7 @@ class LoopSelf[A](_1: Seq[A]) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         isActive = true
-        val _k = ExitOnce { q => f.exit(q); close() }
+        val _k = ExitOnce { q => close(); f.exit(q) }
 
         while (isActive) {
             _1 onEach { x =>
@@ -60,7 +60,7 @@ class LoopOther[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         isActive = true
-        val _k = ExitOnce { q => f.exit(q); close() }
+        val _k = ExitOnce { q => close(); f.exit(q) }
 
         def rec() {
             _1 onEach { x =>
@@ -77,9 +77,7 @@ class LoopOther[A](_1: Seq[A], _2: Int) extends Seq[A] {
             } onExit {
                 case Exit.End => {
                     if (isActive) {
-                        context.eval { // avoids to interleave the current context.
-                            rec()
-                        }
+                        rec()
                     } else {
                         _k(Exit.Closed)
                     }

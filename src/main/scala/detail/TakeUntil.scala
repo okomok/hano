@@ -16,7 +16,7 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
         @volatile var go = true
-        val _k = ExitOnce { q => f.exit(q); close() }
+        val _k = ExitOnce { q => close(); f.exit(q) }
 
         _2 onEach { _ =>
             go = false
@@ -37,7 +37,7 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         } start()
 
 /*      broken under Unknown.
-        val _k = ExitOnce { q => f.exit(q); close() }
+        val _k = ExitOnce { q => close(); f.exit(q) }
 
         _2.shift(_1) onEach { y =>
             _k(Exit.End)

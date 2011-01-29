@@ -14,7 +14,7 @@ class Take[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def close() = _1.close()
     override def context = _1.context
     override def forloop(f: Reaction[A]) {
-        val _k = ExitOnce { q => f.exit(q); close() }
+        val _k = ExitOnce { q => close(); f.exit(q) }
 
         if (_2 == 0) {
             context.eval {
