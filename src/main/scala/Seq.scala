@@ -24,11 +24,6 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     val empty: Seq[Nothing] = new detail.Empty()
 
     /**
-     * The empty sequence without the exit reaction
-     */
-    val never: Seq[Nothing] = new detail.Never()
-
-    /**
      * A single-element sequence
      */
     def single[A](x: A): Seq[A] = new detail.Single(x)
@@ -364,6 +359,11 @@ trait Seq[+A] extends java.io.Closeable {
      * Turns into a closeable infinite sequence of the first elements.
      */
     def loopBy(grainSize: Int): Seq[A] = new detail.Loop(this, grainSize)
+
+    /**
+     * Ignores `Exit.End`.
+     */
+    def noEnd: Seq[A] = new detail.NoEnd(this)
 
     @Annotation.equivalentTo("Sync.untilExit(this)()")
     def await(): Unit = Sync.untilExit(this)()

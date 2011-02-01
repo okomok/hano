@@ -34,13 +34,12 @@ class LoopSelf[A](_1: Seq[A]) extends Seq[A] {
         val _k = ExitOnce { q => close(); f.exit(q) }
 
         while (isActive) {
-            _1 onEach { x =>
+            _1.noEnd onEach { x =>
                 _k.beforeExit {
                     f(x)
                 }
             } onExit {
-                case Exit.End => ()
-                case q => _k(q)
+                _k(_)
             } start()
         }
 

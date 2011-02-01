@@ -84,5 +84,6 @@ trait SeqProxy[A] extends Seq[A] with scala.Proxy {
     override def breakable: Seq[(A, () => Unit)] = around(self.breakable)
     override def loop: Seq[A] = around(self.loop)
     override def loopBy(grainSize: Int): Seq[A] = around(self.loopBy(grainSize))
+    override def noEnd: Seq[A] = around(self.noEnd)
     override def await(): Unit = self.await()
 }
