@@ -8,7 +8,7 @@ package com.github.okomok
 package hano
 
 
-trait SeqProxy[A] extends Seq[A] with scala.Proxy {
+trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     def self: Seq[A]
 
     protected def around[B](that: => Seq[B]): Seq[B] = that
@@ -66,6 +66,7 @@ trait SeqProxy[A] extends Seq[A] with scala.Proxy {
     override def fork(f: Seq[A] => Seq[_]): Seq[A] = around(self.fork(f))
     override def duplicate: (Seq[A], Seq[A]) = around2(self.duplicate)
     override def break: Seq[A] = around(self.break)
+    override def breakExit(k: PartialFunction[Exit, Unit]): Seq[A] = around(self.breakExit(k))
     override def takeUntil(that: Seq[_]): Seq[A] = around(self.takeUntil(that))
     override def dropUntil(that: Seq[_]): Seq[A] = around(self.dropUntil(that))
     override def onHead(f: Option[A] => Unit): Seq[A] = around(self.onHead(f))

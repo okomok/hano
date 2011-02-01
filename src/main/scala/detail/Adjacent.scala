@@ -14,9 +14,8 @@ import scala.collection.JavaConversions
 
 
 private[hano]
-class Adjacent[A](_1: Seq[A], _2: Int) extends Seq[IndexedSeq[A]] {
-    override def close() = _1.close()
-    override def context = _1.context
+class Adjacent[A](_1: Seq[A], _2: Int) extends SeqAdapter[IndexedSeq[A]] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[IndexedSeq[A]]) {
         val buf = new AdjacentBuffer[A](_2)
         _1 onEach { x =>

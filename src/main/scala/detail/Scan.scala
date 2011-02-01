@@ -10,9 +10,8 @@ package detail
 
 
 private[hano]
-class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends Seq[B] {
-    override def close() = _1.close()
-    override def context = _1.context
+class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter[B] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[B]) {
         var acc = _2
         context onEach { _ =>
@@ -32,9 +31,8 @@ class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends Seq[B] {
 }
 
 private[hano]
-class ScanLeft1[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends Seq[B] {
-    override def close() = _1.close()
-    override def context = _1.context
+class ScanLeft1[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends SeqAdapter[B] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[B]) {
         var acc: Option[B] = None
         _1 onEach { x =>

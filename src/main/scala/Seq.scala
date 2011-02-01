@@ -260,9 +260,14 @@ trait Seq[+A] extends java.io.Closeable {
     def duplicate: (Seq[A], Seq[A]) = { val b = new detail.Duplicate(this); (b, b) }
 
     /**
-     * Skips trailing forks.
+     * Skips trailing reactions.
      */
     def break: Seq[A] = new detail.Break(this)
+
+    /**
+     * Skips trailing exit-reactions.
+     */
+    def breakExit(k: PartialFunction[Exit, Unit]): Seq[A] = new detail.BreakExit(this, k)
 
     /**
      * Takes elements until `that` starts. `that` may be closed.
@@ -359,6 +364,11 @@ trait Seq[+A] extends java.io.Closeable {
      * Turns into a closeable infinite sequence of the first elements.
      */
     def loopBy(grainSize: Int): Seq[A] = new detail.Loop(this, grainSize)
+
+    /**
+     *
+     */
+ //   def adapt(body: (Seq[A], Reaction[A]) => Unit): Seq[A] = new detail.Adapt(this, body)
 
     /**
      * Ignores `Exit.End`.

@@ -10,9 +10,8 @@ package detail
 
 
 private[hano]
-class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends Seq[B] {
-    override def close() = _1.close()
-    override def context = _1.context
+class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter[B] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[B]) {
         val _k = ExitOnce { q => close(); f.exit(q) }
 

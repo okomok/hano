@@ -10,9 +10,8 @@ package detail
 
 
 private[hano]
-class NoEnd[A](_1: Seq[A]) extends Seq[A] {
-    override def close() = _1.close()
-    override def context = _1.context
+class NoEnd[A](_1: Seq[A]) extends SeqAdapter[A] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         _1 onEach {
             f(_)

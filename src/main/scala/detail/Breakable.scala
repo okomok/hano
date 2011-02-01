@@ -10,9 +10,8 @@ package detail
 
 
 private[hano]
-class Breakable[A](_1: Seq[A]) extends Seq[(A, () => Unit)] {
-    override def close() = _1.close()
-    override def context = _1.context
+class Breakable[A](_1: Seq[A]) extends SeqAdapter[(A, () => Unit)] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[(A, () => Unit)]) {
         _1 onEach { x =>
             // Note f.exit in f.apply is illegal.

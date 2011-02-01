@@ -10,9 +10,8 @@ package detail
 
 
 private[hano]
-class OnHead[A](_1: Seq[A], _2: Option[A] => Unit) extends Seq[A] {
-    override def close() = _1.close()
-    override def context = _1.context
+class OnHead[A](_1: Seq[A], _2: Option[A] => Unit) extends SeqAdapter[A] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var go = true
         _1 onEach { x =>

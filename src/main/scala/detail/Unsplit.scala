@@ -12,9 +12,8 @@ package detail
 // BROKEN: _2 shall be Iter.
 
 private[hano]
-class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends Seq[A] {
-    override def close() = _1.close()
-    override def context = _1.context
+class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends SeqAdapter[A] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var first = true
         _1 onEach { s =>

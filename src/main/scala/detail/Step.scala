@@ -12,11 +12,10 @@ package detail
 // step 0 is meaningful?
 
 private[hano]
-class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
+class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter[A] {
     Pre.positive(_2, "step")
 
-    override def close() = _1.close()
-    override def context = _1.context
+    override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var c = 0
         _1 onEach { x =>
@@ -37,9 +36,8 @@ class Step[A](_1: Seq[A], _2: Int) extends Seq[A] {
 
 
 private[hano]
-class StepTime[A](_1: Seq[A], _2: Long) extends Seq[A] {
-    override def close() = _1.close()
-    override def context = _1.context
+class StepTime[A](_1: Seq[A], _2: Long) extends SeqAdapter[A] {
+    override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var past = 0L
         _1 onEach { x =>
