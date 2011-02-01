@@ -10,8 +10,6 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-
-
 class BreakableTest extends org.scalatest.junit.JUnit3Suite {
 
     def naturals: hano.Seq[Int] = {

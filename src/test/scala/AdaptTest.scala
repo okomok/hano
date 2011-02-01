@@ -13,14 +13,14 @@ import com.github.okomok.hano
 import junit.framework.Assert._
 
 
-class BreakTest extends org.scalatest.junit.JUnit3Suite {
+class AdaptTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val r = hano.Seq(1,2,3,4,5,6)
         val out = new java.util.ArrayList[Int]
         r.
             fork{r => r.onEach(e => out.add(e *  2))}.
             fork{r => r}.
-            break.
+            adapt { (xs, _) =>  xs.start() }.
             fork{r => r.onEach(e => out.add(e + 10))}.
             fork{r => r}.
             start

@@ -83,6 +83,9 @@ trait Seq[+A] extends java.io.Closeable {
     @Annotation.equivalentTo("foreach(_ => ())")
     def start(): Unit = foreach(_ => ())
 
+    @Annotation.equivalentTo("Sync.untilExit(this)()")
+    def await(): Unit = Sync.untilExit(this)()
+
 
 // combinator
 
@@ -260,16 +263,6 @@ trait Seq[+A] extends java.io.Closeable {
     def duplicate: (Seq[A], Seq[A]) = { val b = new detail.Duplicate(this); (b, b) }
 
     /**
-     * Skips trailing reactions.
-     */
-    def break: Seq[A] = new detail.Break(this)
-
-    /**
-     * Skips trailing exit-reactions.
-     */
-    def breakExit(k: PartialFunction[Exit, Unit]): Seq[A] = new detail.BreakExit(this, k)
-
-    /**
      * Takes elements until `that` starts. `that` may be closed.
      */
     def takeUntil(that: Seq[_]): Seq[A] = new detail.TakeUntil(this, that)
@@ -366,16 +359,8 @@ trait Seq[+A] extends java.io.Closeable {
     def loopBy(grainSize: Int): Seq[A] = new detail.Loop(this, grainSize)
 
     /**
-     *
-     */
- //   def adapt(body: (Seq[A], Reaction[A]) => Unit): Seq[A] = new detail.Adapt(this, body)
-
-    /**
      * Ignores `Exit.End`.
      */
     def noEnd: Seq[A] = new detail.NoEnd(this)
-
-    @Annotation.equivalentTo("Sync.untilExit(this)()")
-    def await(): Unit = Sync.untilExit(this)()
 
 }

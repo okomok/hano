@@ -12,6 +12,11 @@ package detail
 private[hano]
 trait PseudoMethods { self: Seq.type =>
 
+    sealed class _OfVariant[A](_this: Seq[A]) {
+        def adapt(body: (Seq[A], Reaction[A]) => Unit): Seq[A] = new Adapt(_this, body)
+    }
+    implicit def _ofVariant[A](_this: Seq[A]): _OfVariant[A] = new _OfVariant(_this)
+
     sealed class _OfName[A](_this: => Seq[A]) {
         def byName: Seq[A] = new ByName(_this)
     }
@@ -36,5 +41,4 @@ trait PseudoMethods { self: Seq.type =>
         def map5[R](f: (T1, T2, T3, T4, T5) => R = (v1: T1, v2: T2, v3: T3, v4: T4, v5: T5) => (v1, v2, v3, v4, v5)): Seq[R] = _this.map{case ((((v1, v2), v3), v4), v5) => f(v1, v2, v3, v4, v5)}
     }
     implicit def _ofZip5[T1, T2, T3, T4, T5](_this: Seq[((((T1, T2), T3), T4), T5)]): _OfZip5[T1, T2, T3, T4, T5] = new _OfZip5(_this)
-
 }
