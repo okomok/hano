@@ -66,6 +66,29 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(thrown)
     }
 
+    def testRethrow {
+        val xs = hano.Act().loop.generate(0 until 10)
+
+        object MyError1 extends RuntimeException
+        object MyError2 extends RuntimeException
+
+        var ok: Option[Boolean] = None
+        xs catching {
+            case MyError2 => ok = Some(true)
+            case _ => ok = Some(false)
+        } catching {
+            case MyError1 => throw MyError2 // rethrow
+            case _ => ok = Some(false)
+        } onEach { x =>
+            if (x == 5) {
+                throw MyError1
+            }
+        } await()
+
+        expect(false)(ok.isEmpty)
+        expect(true)(ok.get)
+    }
+
 /*
     def testTrivial: Unit = {
         val t = hano.Seq(1,2,3,4,5,6,7,8,9)
