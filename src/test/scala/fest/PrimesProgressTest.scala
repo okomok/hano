@@ -58,8 +58,9 @@ class PrimesProgressGuiTest
                     }
                 } generate {
                     primes
-                } onClose {
+                } closing {
                     gate.countDown()
+                    false
                 } shift {
                     hano.InEdt // reactions in EDT.
                 }

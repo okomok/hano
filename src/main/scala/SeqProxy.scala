@@ -70,7 +70,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def onHead(f: Option[A] => Unit): Seq[A] = around(self.onHead(f))
     override def onLast(f: Option[A] => Unit): Seq[A] = around(self.onLast(f))
     override def onNth(n: Int)(f: Option[A] => Unit): Seq[A] = around(self.onNth(n)(f))
-    override def onClose(f: => Unit): Seq[A] = around(self.onClose(f))
+    override def closing(f: => Boolean): Seq[A] = around(self.closing(f))
     override def catching(f: PartialFunction[Throwable, Unit]): Seq[A] = around(self.catching(f))
     override def using(c: java.io.Closeable): Seq[A] = around(self.using(c))
     override def protect: Seq[A] = around(self.protect)

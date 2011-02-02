@@ -290,7 +290,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Calls `f` on the closing of sequence.
      */
-    def onClose(f: => Unit): Seq[A] = new detail.OnClose(this, f)
+    def closing(f: => Boolean): Seq[A] = new detail.Closing(this, f)
 
     /**
      * Pseudo catch-statement
