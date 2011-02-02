@@ -298,6 +298,16 @@ trait Seq[+A] extends java.io.Closeable {
     def catching(f: PartialFunction[Throwable, Unit]): Seq[A] = new detail.Catching(this, f)
 
     /**
+     * Event-style handler for elements
+     */
+    def handleEach(f: A => Boolean): Seq[A] = new detail.HandleEach(this, f)
+
+    /**
+     * Event-style handler for Exit message
+     */
+    def handleExit(k: PartialFunction[Exit, Unit]): Seq[A] = new detail.HandleExit(this, k)
+
+    /**
      * Attach a resource.
      */
     def using(c: java.io.Closeable): Seq[A] = new detail.Using(this, c)
