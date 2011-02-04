@@ -26,6 +26,19 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
         expect(1)(i)
     }
 
+    def testContext2 {
+        val xs = hano.Act()
+
+        var i = 0
+        for (x <- xs) {
+            expect(())(x)
+            i += 1
+        }
+
+        Thread.sleep(1000)
+        expect(1)(i)
+    }
+
     def testAwait {
         val xs = hano.Act()
 
@@ -129,4 +142,19 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
         expect(10)(i)
     }
 
+
+    def testListen {
+        import java.awt.event.MouseEvent
+        import javax.swing.event.MouseInputAdapter
+
+        def clicks(source: java.awt.Component): hano.Seq[MouseEvent] = {
+            hano.Listen[MouseEvent]() { * =>
+                val l = new MouseInputAdapter {
+                    override def mouseClicked(e: MouseEvent) = *(e)
+                }
+                *.addBy{source.addMouseListener(l)}
+                *.removeBy{source.removeMouseListener(l)}
+            }
+        }
+    }
 }
