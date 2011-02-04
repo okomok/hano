@@ -8,6 +8,9 @@ package com.github.okomok
 package hano
 
 
+/**
+ * Trivial helper to implement combinators.
+ */
 trait SeqAdapter[+A] extends Seq[A] {
     protected def underlying: Seq[_]
     override def close() = underlying.close()

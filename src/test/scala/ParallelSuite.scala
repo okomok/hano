@@ -44,18 +44,18 @@ class ParallelSuite(poolSize: Int) {
     private def distribute(done: CountDownLatch): ArrayDeque[Thread] = {
         var n = tasks.size
         var m = poolSize
-        val ret = new ArrayDeque[Thread](m)
+        val that = new ArrayDeque[Thread](m)
 
         while (m > 0) {
             val c = java.lang.Math.ceil(n/m).asInstanceOf[Int]
-            assert(c != 0)
+            //println(n, m, c)
 
             var f: () => Unit = () => ()
             for (i <- 0 until c) {
                 f = compose(f, compose(yld, tasks.poll()))
             }
 
-            ret.offer {
+            that.offer {
                 new Thread {
                     override def run() {
                         barrier.await()
@@ -71,8 +71,8 @@ class ParallelSuite(poolSize: Int) {
             m = m - 1
         }
 
-        assert(poolSize == ret.size)
-        ret
+        assert(poolSize == that.size)
+        that
     }
 
     private def compose(f: () => Unit, g: () => Unit) = () => { f(); g() }
@@ -96,4 +96,17 @@ class ParallelSuiteTest extends org.scalatest.junit.JUnit3Suite {
         expect(37)(c.get)
     }
 
+    def testNotEnough {
+        val suite = new ParallelSuite(5)
+        var c = new java.util.concurrent.atomic.AtomicInteger(0)
+        for (i <- 1 to 3) {
+            suite.add {
+                //println((Thread.currentThread, i))
+                c.incrementAndGet
+                ()
+            }
+        }
+        suite.start
+        expect(3)(c.get)
+    }
 }
