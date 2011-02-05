@@ -134,14 +134,15 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         var i = 0
-        naturals.take(10) onEach { x =>
+        naturals take {
+            10
+        } onEach { x =>
             expect(i)(x)
             i += 1
         } await()
 
         expect(10)(i)
     }
-
 
     def testListen {
         import java.awt.event.MouseEvent
@@ -156,5 +157,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
                 *.removeBy{source.removeMouseListener(l)}
             }
         }
+
+        // ...
     }
 }
