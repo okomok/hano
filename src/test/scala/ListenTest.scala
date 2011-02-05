@@ -15,7 +15,7 @@ class ListenTest extends org.scalatest.junit.JUnit3Suite {
     val t = new java.util.Timer(true)
 
     def naturals: hano.Seq[Int] = {
-        val xs = hano.Listen[Unit]() { * =>
+        val xs = hano.Listen[Unit] { * =>
             val l = new java.util.TimerTask {
                 override def run() {
                     *()
@@ -30,5 +30,4 @@ class ListenTest extends org.scalatest.junit.JUnit3Suite {
     def testNaturals: Unit = {
         expect(hano.Iter(0,1,2,3,4,5))(naturals.take(6).toIter)
     }
-
 }

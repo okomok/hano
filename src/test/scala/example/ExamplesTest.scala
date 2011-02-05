@@ -148,7 +148,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
         import javax.swing.event.MouseInputAdapter
 
         def clicks(source: java.awt.Component): hano.Seq[MouseEvent] = {
-            hano.Listen[MouseEvent]() { * =>
+            hano.Listen[MouseEvent] { * =>
                 val l = new MouseInputAdapter {
                     override def mouseClicked(e: MouseEvent) = *(e)
                 }

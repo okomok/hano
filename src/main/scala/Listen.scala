@@ -20,21 +20,27 @@ object Listen {
          * How to remove a listener
          */
         def removeBy(remove: => Unit): Unit
+
+        /**
+         * Where to evaluate a reaction (`Unknown` if omitted.)
+         */
+        def contextIs(cxt: Context): Unit
     }
 
     /**
      * Creates a Seq from listeners.
      */
-    def apply[A](ctx: Context = Unknown)(body: Env[A] => Unit): Seq[A] = {
-        val env = new EnvImpl[A](ctx)
+    def apply[A](body: Env[A] => Unit): Seq[A] = {
+        val env = new EnvImpl[A]
         body(env)
         env.asSeq
     }
 
-    private class EnvImpl[A](ctx: Context) extends Env[A] with CheckedReaction[A] {
+    private class EnvImpl[A] extends Env[A] with CheckedReaction[A] {
         @volatile private[this] var _f: Reaction[A] = null
         private[this] var _add: () => Unit = null
         private[this] var _remove: () => Unit = null
+        private[this] var _context: Context = Unknown
 
         override protected def checkedApply(x: A) = _f(x)
         override protected def checkedExit(q: Exit) = _f.exit(q)
@@ -45,9 +51,12 @@ object Listen {
         override def removeBy(remove: => Unit) {
             _remove = () => remove
         }
+        override def contextIs(ctx: Context) {
+            _context = ctx
+        }
 
         lazy val asSeq: Seq[A] = new Resource[A] {
-            override def context = ctx
+            override def context = _context
             override protected def closeResource() {
                 if (_remove != null) {
                     _remove()
