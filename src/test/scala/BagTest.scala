@@ -10,10 +10,10 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-class SetTest extends org.scalatest.junit.JUnit3Suite {
+class BagTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        val rx = new hano.Set[Int](5)
+        val rx = new hano.Bag[Int](5)
         expect(5)(rx.capacity)
         hano.Async().eval {
             rx member 12
@@ -26,22 +26,22 @@ class SetTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testOffer {
-        val xs = new hano.Set[Int](2)
+        val xs = new hano.Bag[Int](2)
         expect(true)(xs += 2)
         expect(true)(xs += 3)
         expect(false)(xs member 4)
     }
 
     def testEmpty {
-        val xs = new hano.Set[Int](0)
+        val xs = new hano.Bag[Int](0)
         expect(false)(xs member 2)
         expect(0)(xs.capacity)
     }
 
     def testSignal {
         val ctx = hano.Async()
-        val a = new hano.Set[Int](2, ctx)
-        val b = new hano.Set[Int](2, ctx)
+        val a = new hano.Bag[Int](2, ctx)
+        val b = new hano.Bag[Int](2, ctx)
         val ys = for (x <- a; y <- b) yield (x + y)
         hano.Async().eval {
             a member 1
@@ -56,7 +56,7 @@ class SetTest extends org.scalatest.junit.JUnit3Suite {
 
     def testParallel {
         val suite = new ParallelSuite(10)
-        val xs = new hano.Set[Int](100)
+        val xs = new hano.Bag[Int](100)
         suite.add(100) {
             xs member 10
         }

@@ -40,7 +40,7 @@ class DropUntilTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testParallel {
-        val xs = new hano.Set[Unit](100)
+        val xs = new hano.Bag[Unit](100)
         val ys = new hano.Channel[Unit]
 
         val suite = new ParallelSuite(10)
