@@ -128,7 +128,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial {
-        val ctx = hano.Act()
+        val ctx = hano.Async()
         val ch = new hano.Channel[Int](ctx)
 
         val suite = new ParallelSuite(10)
@@ -170,7 +170,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
 
 
     def testTake {
-        val ctx = hano.Act()
+        val ctx = hano.Async()
         val ch = new hano.Channel[Int](ctx)
 
         val suite = new ParallelSuite(10)

@@ -14,9 +14,9 @@ import scala.actors
 /**
  * Thread-pool context
  */
-object Act {
+object Async {
 
-    def apply(out: actors.OutputChannel[Any] = defaultOut): Context = new Act(out)
+    def apply(out: actors.OutputChannel[Any] = defaultOut): Context = new Async(out)
 
     private[hano]
     def defaultOut: actors.OutputChannel[Any] = {
@@ -39,7 +39,7 @@ object Act {
 
 
 private[hano]
-class Act(out: actors.OutputChannel[Any]) extends Context {
+class Async(out: actors.OutputChannel[Any]) extends Context {
 
     override def exit() {
         out ! Exit.Closed
@@ -50,7 +50,7 @@ class Act(out: actors.OutputChannel[Any]) extends Context {
             try {
                 Self.forloop(f)
             } catch {
-                case t: Throwable => detail.LogErr(t, "Reaction.apply error in Act context")
+                case t: Throwable => detail.LogErr(t, "Reaction.apply error in Async context")
             }
         }
     }

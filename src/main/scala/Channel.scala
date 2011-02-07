@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock
  * Asynchronous channel
  * This is mutable one-element sequence; As you foreach, element varies.
  */
-final class Channel[A](override val context: Context = Act()) extends Seq[A] {
+final class Channel[A](override val context: Context = Async()) extends Seq[A] {
     require(context ne Self)
     require(context ne Unknown)
 

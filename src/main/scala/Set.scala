@@ -11,7 +11,7 @@ package hano
 /**
  * Immutable infinite unordered set
  */
-final class Set[A](val capacity: Int, override val context: Context = Act()) extends Seq[A] {
+final class Set[A](val capacity: Int, override val context: Context = Async()) extends Seq[A] {
     require(context ne Self)
     require(context ne Unknown)
 

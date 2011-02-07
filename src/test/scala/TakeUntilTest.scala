@@ -42,7 +42,7 @@ class TakeUntilTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial2 = {
         val out = new java.util.ArrayList[Int]
 
-        val ctx = hano.Act()
+        val ctx = hano.Async()
         val b = new hano.Rist[Int](ctx)
         val a = new hano.Rist[Int](ctx)
 

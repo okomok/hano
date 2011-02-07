@@ -50,7 +50,7 @@ class PrimesProgressGuiTest
                 monitor.setMillisToPopup(0)
 
                 val ps =
-                hano.Act().loopBy(100).catching {// primes in thread-group.
+                hano.Async().loopBy(100).catching {// primes in thread-group.
                     case t: Throwable => {
                         //println("error caught")
                         t.printStackTrace()

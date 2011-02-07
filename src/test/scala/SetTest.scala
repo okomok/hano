@@ -15,7 +15,7 @@ class SetTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial {
         val rx = new hano.Set[Int](5)
         expect(5)(rx.capacity)
-        hano.Act().eval {
+        hano.Async().eval {
             rx member 12
             rx member 13
             rx += 5
@@ -39,11 +39,11 @@ class SetTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testSignal {
-        val ctx = hano.Act()
+        val ctx = hano.Async()
         val a = new hano.Set[Int](2, ctx)
         val b = new hano.Set[Int](2, ctx)
         val ys = for (x <- a; y <- b) yield (x + y)
-        hano.Act().eval {
+        hano.Async().eval {
             a member 1
             b member 2
             a member 7

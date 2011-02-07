@@ -10,10 +10,10 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-class ActTest extends org.scalatest.junit.JUnit3Suite {
+class AsyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def naturals: hano.Seq[Int] = {
-        hano.Act().loop.generate(0 until 1000)
+        hano.Async().loop.generate(0 until 1000)
     }
 
     def testTrivial {
@@ -62,7 +62,7 @@ class ActTest extends org.scalatest.junit.JUnit3Suite {
 */
 
     def testReallyLazy {
-        def anError = hano.Act().loop.generate({throw new Error; Iterator.single(999)})
+        def anError = hano.Async().loop.generate({throw new Error; Iterator.single(999)})
         anError take 100
         ()
     }
