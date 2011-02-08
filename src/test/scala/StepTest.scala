@@ -60,15 +60,15 @@ class StepTest extends org.scalatest.junit.JUnit3Suite {
     def testStepEmpty: Unit = {
         val out = new java.util.ArrayList[Int]
 /*
-        hano.Seq.empty.of[Int].step(0).activate(reactor.make(_ => out.add(99), out.add(_)))
+        hano.Empty.of[Int].step(0).activate(reactor.make(_ => out.add(99), out.add(_)))
         assertEquals(hano.Iter(99), hano.Iter.from(out))
         out.clear
 */
-        hano.Seq.empty.of[Int].step(1).foreach(out.add(_))
+        hano.Empty.of[Int].step(1).foreach(out.add(_))
         assertTrue(out.isEmpty)
         out.clear
 
-        hano.Seq.empty.of[Int].step(2).foreach(out.add(_))
+        hano.Empty.of[Int].step(2).foreach(out.add(_))
         assertTrue(out.isEmpty)
         out.clear
 

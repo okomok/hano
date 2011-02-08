@@ -32,7 +32,7 @@ class ScanLeftTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        hano.Seq.empty.of[Int].scanLeft(0)(_ + _).foreach(s.add(_))
+        hano.Empty.of[Int].scanLeft(0)(_ + _).foreach(s.add(_))
         assertEquals(hano.Iter(0), hano.Iter.from(s))
     }
 
@@ -55,7 +55,7 @@ class ScanLeftTest extends org.scalatest.junit.JUnit3Suite {
 
     def testScan1Empty: Unit = {
         val s = new java.util.ArrayList[Int]
-        hano.Seq.empty.of[Int].scanLeft1(_ + _).activate(reactor.make(_ => s.add(99), s.add(_)))
+        hano.Empty.of[Int].scanLeft1(_ + _).activate(reactor.make(_ => s.add(99), s.add(_)))
         assertEquals(hano.Iter(99), hano.Iter.from(s))
     }
 */
@@ -80,7 +80,7 @@ class ScanLeft1Test extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        hano.Seq.empty.of[Int].scanLeft1(_ + _).foreach(s.add(_))
+        hano.Empty.of[Int].scanLeft1(_ + _).foreach(s.add(_))
         assertTrue(hano.Iter.from(s).able.isEmpty)
     }
 }

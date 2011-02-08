@@ -6,11 +6,12 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
-private[hano]
-class Empty() extends Seq[Nothing] {
+/**
+ * The empty sequence in Self context
+ */
+object Empty extends Seq[Nothing] {
     override def context = Self
     override def forloop(f: Reaction[Nothing]) {
         f.exit(Exit.End)

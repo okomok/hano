@@ -18,21 +18,6 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
      */
     def apply[A](from: A*): Seq[A] = from
 
-    /**
-     * The empty sequence
-     */
-    val empty: Seq[Nothing] = new detail.Empty()
-
-    /**
-     * A single-element sequence
-     */
-    def single[A](x: A): Seq[A] = new detail.Single(x)
-
-    /**
-     * Turns into a by-name expression.
-     */
-    def byName[A](xs: => Seq[A]): Seq[A] = new detail.ByName(xs)
-
     @Annotation.equivalentTo("from(util.optional(body))")
     def optional[A](body: => A): Seq[A] = from {
         try {
@@ -41,9 +26,6 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
             case _ => None
         }
     }
-
-//    @Annotation.equivalentTo("from(util.optionalErr(body))")
-//    def optionalErr[A](body: => A): Seq[A] = from(util.optionalErr(body))
 }
 
 

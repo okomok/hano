@@ -22,7 +22,7 @@ class TailTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        hano.Seq.empty.of[Int].tail.foreach(s.add(_))
+        hano.Empty.of[Int].tail.foreach(s.add(_))
         assertTrue(s.isEmpty)
     }
 }

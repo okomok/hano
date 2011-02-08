@@ -30,7 +30,7 @@ class UniqueTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testUnique0: Unit = {
-        val tr = hano.Seq.empty.of[Int]
+        val tr = hano.Empty.of[Int]
         val out = new java.util.ArrayList[Int]
         tr.unique.foreach(out.add(_))
         assertTrue(out.isEmpty)

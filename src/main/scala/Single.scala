@@ -6,11 +6,12 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
-private[hano]
-class Single[A](_1: A) extends Seq[A] {
+/**
+ * A single-element sequence in Self context
+ */
+case class Single[A](_1: A) extends Seq[A] {
     override def context = Self
     override def forloop(f: Reaction[A]) {
         context onEach { _ =>

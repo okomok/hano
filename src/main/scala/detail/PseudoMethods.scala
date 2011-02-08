@@ -16,12 +16,12 @@ trait PseudoMethods { self: Seq.type =>
         def adapt(body: (Seq[A], Reaction[A]) => Unit): Seq[A] = new Adapt(_this, body)
     }
     implicit def _ofVariant[A](_this: Seq[A]): _OfVariant[A] = new _OfVariant(_this)
-
+/*
     sealed class _OfName[A](_this: => Seq[A]) {
         def byName: Seq[A] = new ByName(_this)
     }
     implicit def _ofName[A](_this: => Seq[A]): _OfName[A] = new _OfName(_this)
-
+*/
     sealed class _OfZip2[T1, T2](_this: Seq[(T1, T2)]) {
         def map2[R](f: (T1, T2) => R): Seq[R] = _this.map{case (v1, v2) => f(v1, v2)}
     }

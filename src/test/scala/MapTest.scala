@@ -22,7 +22,7 @@ class MapTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        hano.Seq.empty.of[String].map(_.length).foreach(s.add(_))
+        hano.Empty.of[String].map(_.length).foreach(s.add(_))
         assertTrue(s.isEmpty)
     }
 }

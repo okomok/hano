@@ -16,7 +16,7 @@ import junit.framework.Assert._
 class EmptyTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq.empty.of[Int]) {
+        for (x <- hano.Empty.of[Int]) {
             s.add(x)
         }
         assertTrue(s.isEmpty)
@@ -25,7 +25,7 @@ class EmptyTest extends org.scalatest.junit.JUnit3Suite {
     def testEnded {
         var ended = false
         var failed = false
-        hano.Seq.empty.of[Int] onExit {
+        hano.Empty.of[Int] onExit {
             case hano.Exit.End => ended = true
             case _ => failed = true
         } start;
@@ -35,7 +35,7 @@ class EmptyTest extends org.scalatest.junit.JUnit3Suite {
 
     def testNoEnd {
         var failed = false
-        hano.Seq.empty.of[Int].noEnd onExit {
+        hano.Empty.of[Int].noEnd onExit {
             case _ => failed = true
         } start;
         assert(!failed)

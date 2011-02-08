@@ -25,7 +25,7 @@ class AdjacentTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testEmpty: Unit = {
-        val t = hano.Seq.empty.of[Int]
+        val t = hano.Empty.of[Int]
         val out = new java.util.ArrayList[IndexedSeq[Int]]
         t.adjacent(2).foreach(out.add(_))
         assertTrue(out.isEmpty)

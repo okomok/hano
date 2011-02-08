@@ -23,7 +23,7 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testEmpty1: Unit = {
-        val t = hano.Seq.empty.of[Int]
+        val t = hano.Empty.of[Int]
         val u = hano.Seq("2","3","4")
         val out = new java.util.ArrayList[(Int, String)]
         t.zip(u).foreach(out.add(_))
@@ -31,8 +31,8 @@ class ZipTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testEmpty2: Unit = {
-        val t = hano.Seq.empty.of[Int]
-        val u = hano.Seq.empty.of[String]
+        val t = hano.Empty.of[Int]
+        val u = hano.Empty.of[String]
         val out = new java.util.ArrayList[(Int, String)]
         t.zip(u).foreach(out.add(_))
         assertTrue(out.isEmpty)

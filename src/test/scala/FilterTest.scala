@@ -24,7 +24,7 @@ class FilterTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <-hano.Seq.empty.of[Int] if x % 2 == 0) {
+        for (x <-hano.Empty.of[Int] if x % 2 == 0) {
             s.add(x)
         }
         assertTrue(s.isEmpty)
