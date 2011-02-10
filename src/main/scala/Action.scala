@@ -13,7 +13,6 @@ package hano
  */
 case class Action(_1: () => Unit) extends Message
 
-
 object Action {
     def apply(body: => Unit)(implicit d: DummyImplicit) = new Action(() => body)
 }
