@@ -3,7 +3,7 @@
 
 `hano` is a reactive sequence combinator library:
 
-    hano.Block { * =>
+    hano.block { * =>
         val mouse = hano.Swing.Mouse(jl)
         for (p <- *.in(mouse.Pressed)) {
             println("pressed at: " + (p.getX, p.getY))
@@ -18,7 +18,7 @@
 
 ## Rationale
 
-* No locks
+* Minimal locks
 * Everything is sequence.
 * Continuations plugin is elective.
 
