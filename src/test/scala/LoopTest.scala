@@ -81,4 +81,18 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
         val xs = hano.ByName(new MyResource).loop
         expect(hano.Iter(1,2,3,1,2,3,1,2))(xs.take(8).toIter)
     }
+
+    def testResource2 {
+        var count = 0
+        class MyResource extends hano.Seq[Int] {
+            count += 1
+            override val context = hano.Self
+            override def forloop(f: hano.Reaction[Int]) {
+                f(1); f(2); f(3); f.end()
+            }
+        }
+        val xs = hano.ByName(new MyResource).loop
+        expect(hano.Iter(1,2,3,1,2,3,1,2))(xs.take(8).toIter)
+        expect(3)(count)
+    }
 }
