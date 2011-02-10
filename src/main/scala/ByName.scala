@@ -11,8 +11,9 @@ package hano
 /**
  * By-name sequence
  */
-case class ByName[A](_1: () => Seq[A]) extends SeqProxy[A] {
-    override def self = _1()
+case class ByName[A](_1: () => Seq[A]) extends Seq[A] {
+    override lazy val context = _1().context
+    override def forloop(f: Reaction[A]) = _1().forloop(f)
 }
 
 object ByName {
