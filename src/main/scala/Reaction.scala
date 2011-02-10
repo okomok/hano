@@ -12,7 +12,7 @@ object Reaction {
 
     def apply[A](f: A => Unit, k: Exit => Unit): Reaction[A] = new Apply(f, k)
 
-    @Annotation.returnThat
+    @annotation.returnThat
     def from[A](that: Reaction[A]): Reaction[A] = that
 
     implicit def fromFunction[A](from: A => Unit): Reaction[A] = new FromFunction(from)
@@ -34,10 +34,10 @@ object Reaction {
  */
 trait Reaction[-A] {
 
-    @Annotation.returnThis @inline
+    @annotation.returnThis @inline
     final def of[B <: A]: Reaction[B] = this
 
-    @Annotation.returnThis @inline
+    @annotation.returnThis @inline
     final def asReaction: Reaction[A] = this
 
     /**
@@ -50,13 +50,13 @@ trait Reaction[-A] {
      */
     def exit(q: Exit): Unit
 
-    @Annotation.equivalentTo("exit(Exit.End)")
+    @annotation.equivalentTo("exit(Exit.End)")
     final def end(): Unit = exit(Exit.End)
 
-    @Annotation.equivalentTo("exit(Exit.Closed)")
+    @annotation.equivalentTo("exit(Exit.Closed)")
     final def closed(): Unit = exit(Exit.Closed)
 
-    @Annotation.equivalentTo("exit(Exit.Failed(why))")
+    @annotation.equivalentTo("exit(Exit.Failed(why))")
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
     private[hano]

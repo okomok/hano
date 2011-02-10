@@ -17,7 +17,7 @@ import scala.util.continuations.{cpsParam, suspendable, reset, shift}
 
 
 private[hano]
-class CpsIterable[A](_1: Generator.Cps.Env[A] => Any @suspendable) extends Iterable[A] {
+class CpsIterable[A](_1: generator.cps.Env[A] => Any @suspendable) extends Iterable[A] {
     override def iterator = {
         import CpsIterable._
         new IteratorImpl(_1).concrete
@@ -28,7 +28,7 @@ class CpsIterable[A](_1: Generator.Cps.Env[A] => Any @suspendable) extends Itera
 private[hano]
 object CpsIterable {
 
-    import Generator.Cps.Env
+    import generator.cps.Env
 
     private class IteratorImpl[A](body: Env[A] => Any @suspendable) extends AbstractIterator[A] {
         private[this] var _x: Option[A] = None

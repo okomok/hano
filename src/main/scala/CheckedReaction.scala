@@ -11,7 +11,7 @@ package hano
 /**
  * Kicks non-conforming Seq.
  */
-@Annotation.mixin
+@annotation.mixin
 trait CheckedReaction[-A] extends Reaction[A] {
 
     protected def checkedApply(x: A): Unit

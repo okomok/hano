@@ -22,7 +22,7 @@ import com.github.okomok.hano
         }
         def testTrivial: Unit = {
             // too many instances.
-            def fibs: hano.Seq[Int] = naturals.take(2) ++ hano.ByName((fibs zip fibs.tail).map2(_ + _))
+            def fibs: hano.Seq[Int] = naturals.take(2) ++ hano.byName((fibs zip fibs.tail).map2(_ + _))
             var answer: Int = 0
             fibs.foreach(println(_))
         }

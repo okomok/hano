@@ -15,12 +15,12 @@ package sequencetest; package reactivetest; package example
         NotSuite {
         //org.scalatest.junit.JUnit3Suite {
         def testTrivial {
-            val frame = hano.Sync.inEdt {
+            val frame = hano.sync.inEdt {
                 val frame = new swing.JFrame("DragDropTest")
                 val label = new swing.JLabel("testTrivial")
                 frame.getContentPane.add(label)
 
-                hano.Block { * =>
+                hano.block { * =>
                     val mouse = hano.Swing.Mouse(label)
                     val p = *.each(mouse.Pressed)
                     println("pressed at: " + (p.getX, p.getY))
@@ -36,7 +36,7 @@ package sequencetest; package reactivetest; package example
             } apply
 
             Thread.sleep(20000)
-            hano.Sync.inEdt {
+            hano.sync.inEdt {
                 frame.setVisible(false)
             } apply
         }

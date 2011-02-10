@@ -11,12 +11,12 @@ package hano
 import scala.util.continuations.{cpsParam, suspendable}
 
 
-object Generator {
+object generator {
 
     /**
      * Yielding thread is blocked.
      */
-    object Sync {
+    object sync {
         type Env[A] = Reaction[A] with java.io.Flushable
         def apply[A](body: Env[A] => Unit): Iterable[A] = new detail.SyncIterable(new BodyToSeq(body))
     }
@@ -24,7 +24,7 @@ object Generator {
     /**
      * Yielding thread is not blocked; elements are buffered.
      */
-    object Async {
+    object async {
         type Env[A] = Reaction[A]
         def apply[A](body: Env[A] => Unit): Iterable[A] = new detail.AsyncIterable(new BodyToSeq(body))
     }
@@ -32,8 +32,8 @@ object Generator {
     /**
      * Single-threaded.
      */
-    object Cps {
-        abstract class Env[A] extends Block.Env1 {
+    object cps {
+        abstract class Env[A] extends block.Env1 {
             def apply(x: A): Unit @suspendable
             def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
         }
@@ -67,7 +67,7 @@ object Generator {
                 _1.exit(q)
             } else {
                 q match {
-                    case Exit.Failed(t) => detail.LogErr(t, "abandoned exception in Generator")
+                    case Exit.Failed(t) => detail.LogErr(t, "abandoned exception in generator")
                     case _ => ()
                 }
             }

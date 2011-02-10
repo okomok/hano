@@ -28,7 +28,7 @@ class BoundGuiTest extends
     private var fx: FrameFixture = null
 
     override protected def onSetUp {
-        val f = hano.Sync.inEdt {
+        val f = hano.sync.inEdt {
             val f = new swing.JFrame("Button Sample")
             val b1 = new swing.JButton("Select Me").textAsName
             val b2 = new swing.JButton("No Select Me").textAsName

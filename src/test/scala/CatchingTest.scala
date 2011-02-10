@@ -67,7 +67,7 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testRethrow {
-        val xs = hano.Async().loop.generate(0 until 10)
+        val xs = hano.async().loop.generate(0 until 10)
 
         object MyError1 extends RuntimeException
         object MyError2 extends RuntimeException

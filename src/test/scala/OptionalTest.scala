@@ -13,17 +13,17 @@ import com.github.okomok.hano
 class OptionalTest extends org.scalatest.junit.JUnit3Suite {
 
     def testOption {
-        hano.Block { Y =>
+        hano.block { Y =>
             import Y._
-            val k = each(hano.Optional(12))
+            val k = each(hano.optional(12))
             expect(12)(k)
         }
     }
 
     def testOptionEmpty {
-        hano.Block { Y =>
+        hano.block { Y =>
             import Y._
-            val k = each(hano.Optional(throw new Error("doh")))
+            val k = each(hano.optional(throw new Error("doh")))
             throw new Error
         }
     }

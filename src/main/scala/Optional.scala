@@ -11,16 +11,17 @@ package hano
 /**
  * Builds single-or-empty sequence from an expression.
  */
-case class Optional[A](_1: () => A) extends SeqProxy[A] {
-    override val self = Seq.from {
-        try {
-            Some(_1())
-        } catch {
-            case _ => None
+object optional {
+
+    def apply[A](body: => A): Seq[A] = new Impl(() => body)
+
+    private class Impl[A](_1: () => A) extends SeqProxy[A] {
+        override val self = Seq.from {
+            try {
+                Some(_1())
+            } catch {
+                case _ => None
+            }
         }
     }
-}
-
-object Optional {
-    def apply[A](body: => A)(implicit d: DummyImplicit) = new Optional(() => body)
 }

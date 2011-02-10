@@ -8,7 +8,7 @@ package com.github.okomok
 package hano
 
 
-object Annotation {
+object annotation {
 
 
     /**

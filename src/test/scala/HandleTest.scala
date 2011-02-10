@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class HandleTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEach {
-        val xs = hano.Async().loop.generate(0 until 5)
+        val xs = hano.async().loop.generate(0 until 5)
         val out = new java.util.ArrayList[Int]
 
         xs handleEach { x =>

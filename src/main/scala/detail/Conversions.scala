@@ -15,7 +15,7 @@ import scala.util.continuations
 private[hano]
 trait Conversions { self: Seq.type =>
 
-    @Annotation.returnThat
+    @annotation.returnThat
     def from[A](that: Seq[A]): Seq[A] = that
 
     implicit def fromArray[A](from: Array[A]): Seq[A] = new FromIter(from)

@@ -18,7 +18,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
     def testThreaded { // force to create a thread.
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
-        for (x <- hano.Async().loop.generate(0 until 10).onExit(_ =>c.countDown)) {
+        for (x <- hano.async().loop.generate(0 until 10).onExit(_ =>c.countDown)) {
             a.add(x)
         }
         c.await
@@ -28,7 +28,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
     def testAsync { // in the thread pool.
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
-        for (x <- hano.Async().loop.generate(0 until 10).onExit(_ =>c.countDown)) {
+        for (x <- hano.async().loop.generate(0 until 10).onExit(_ =>c.countDown)) {
             a.add(x)
         }
         c.await
@@ -37,7 +37,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
 
     /* multiple-foreach-ness rejected
     def testMultipleForloop { // in the thread pool.
-        val s = hano.Async().loop
+        val s = hano.async().loop
         locally {
             val c = new java.util.concurrent.CountDownLatch(1)
             val a = new java.util.ArrayList[Int]

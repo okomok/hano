@@ -11,7 +11,7 @@ package hano
 /**
  * Immutable infinite unordered multi-set
  */
-final class Bag[A](val capacity: Int, override val context: Context = Async()) extends Seq[A] {
+final class Bag[A](val capacity: Int, override val context: Context = async()) extends Seq[A] {
     require(context ne Self)
     require(context ne Unknown)
 
@@ -41,7 +41,7 @@ final class Bag[A](val capacity: Int, override val context: Context = Async()) e
         }
     }
 
-    @Annotation.aliasOf("member")
+    @annotation.aliasOf("member")
     def +=(x: A): Boolean = member(x)
 
     def member(x: A): Boolean = {

@@ -47,8 +47,8 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testEnd {
-        val xs = hano.Async().loop.generate(0 to 5)
-        val ys = hano.Async().loop.generate(6 to 9)
+        val xs = hano.async().loop.generate(0 to 5)
+        val ys = hano.async().loop.generate(6 to 9)
         val out = new Array[Int](10)
         var ends = false
         val gate = new java.util.concurrent.CountDownLatch(1)
@@ -66,8 +66,8 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
 
 /* TODO
     def testWhenThrown {
-        val xs = hano.Async().loopBy(1000).generate(0 until 5)
-        val ys = hano.Async().loopBy(1000).generate(5 until 1000)
+        val xs = hano.async().loopBy(1000).generate(0 until 5)
+        val ys = hano.async().loopBy(1000).generate(5 until 1000)
         val out = new java.util.ArrayList[Int]
         var ends = false
         val gate = new java.util.concurrent.CountDownLatch(1)

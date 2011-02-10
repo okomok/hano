@@ -16,7 +16,7 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     /**
      * Creates a sequence initially containing the specified elements.
      */
-    @Annotation.equivalentTo("Self.loop.generate(from)")
+    @annotation.equivalentTo("Self.loop.generate(from)")
     def apply[A](from: A*): Seq[A] = from
 }
 
@@ -27,10 +27,10 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
 trait Seq[+A] extends java.io.Closeable {
 
 
-    @Annotation.returnThis @inline
+    @annotation.returnThis @inline
     final def of[B >: A]: Seq[B] = this
 
-    @Annotation.returnThis @inline
+    @annotation.returnThis @inline
     final def asSeq: Seq[A] = this
 
 
@@ -51,21 +51,21 @@ trait Seq[+A] extends java.io.Closeable {
      */
     override def close(): Unit = ()
 
-    @Annotation.equivalentTo("forloop(Reaction(f, _ => ()))")
+    @annotation.equivalentTo("forloop(Reaction(f, _ => ()))")
     def foreach(f: A => Unit): Unit = forloop(Reaction(f, Exit.defaultHandler))
 
-    @Annotation.equivalentTo("foreach(_ => ())")
+    @annotation.equivalentTo("foreach(_ => ())")
     def start(): Unit = foreach(_ => ())
 
-    @Annotation.equivalentTo("Sync.untilExit(this)()")
-    def await(): Unit = Sync.untilExit(this)()
+    @annotation.equivalentTo("sync.untilExit(this)()")
+    def await(): Unit = sync.untilExit(this)()
 
 
 // combinator
 
     def append[B >: A](that: Seq[B]): Seq[B] = new detail.Append[B](this, that)
 
-    @Annotation.aliasOf("append")
+    @annotation.aliasOf("append")
     final def ++[B >: A](that: Seq[B]): Seq[B] = append(that)
 
     def merge[B >: A](that: Seq[B]): Seq[B] = new detail.Merge[B](this, that)
@@ -95,7 +95,7 @@ trait Seq[+A] extends java.io.Closeable {
 
     final def scanl[B](z: B): _ScanlBy[B] = new _ScanlBy(z)
     sealed class _ScanlBy[B](z: B) {
-        @Annotation.equivalentTo("scanLeft(z)(op)")
+        @annotation.equivalentTo("scanLeft(z)(op)")
         def by(op: (B, A) => B): Seq[B] = scanLeft(z)(op)
     }
 
@@ -161,22 +161,22 @@ trait Seq[+A] extends java.io.Closeable {
 
 // conversion
 
-    @Annotation.conversion
-    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = Sync.copy(this)(bf)()
+    @annotation.conversion
+    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = sync.copy(this)(bf)()
 
-    @Annotation.conversion @Annotation.pre("synchronous")
+    @annotation.conversion @annotation.pre("synchronous")
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)
 
-    @Annotation.conversion
+    @annotation.conversion
     def toIterable: Iterable[A] = new detail.ToIterable(this)
 
-    @Annotation.conversion
+    @annotation.conversion
     def toIter: Iter[A] = Iter.from(toIterable)
 
-    @Annotation.conversion
+    @annotation.conversion
     def toResponder: Responder[A] = new detail.ToResponder(this)
 
-    @Annotation.conversion
+    @annotation.conversion
     final def toCps: A @continuations.cpsParam[Any, Unit] = {
         continuations.shift {
             (cont: A => Any) => foreach(new detail.DiscardValue(cont))
@@ -223,7 +223,7 @@ trait Seq[+A] extends java.io.Closeable {
      */
     def onEachMatch(f: PartialFunction[A, Unit]): Seq[A] = new detail.OnEachMatch(this, f)
 
-    @Annotation.equivalentTo("onEach(_ => f)")
+    @annotation.equivalentTo("onEach(_ => f)")
     final def doing(f: => Unit): Seq[A] = onEach(_ => f)
 
     /**
@@ -286,7 +286,7 @@ trait Seq[+A] extends java.io.Closeable {
      */
     def using(c: java.io.Closeable): Seq[A] = new detail.Using(this, c)
 
-    @Annotation.aliasOf("using(this)")
+    @annotation.aliasOf("using(this)")
     final def used: Seq[A] = using(this)
 
     /**
@@ -319,7 +319,7 @@ trait Seq[+A] extends java.io.Closeable {
      */
     def replaceRegion[B >: A](n: Int, m: Int, it: => Iter[B]): Seq[B] = new detail.ReplaceRegion[B](this, n, m, it)
 
-    @Annotation.equivalentTo("replace(Stream.from(0))")
+    @annotation.equivalentTo("replace(Stream.from(0))")
     def indices: Seq[Int] = new detail.Indices(this)
 
     /**

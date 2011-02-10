@@ -26,7 +26,7 @@ object Val {
         v
     }
 
-    @Annotation.equivalentTo("new Val[A]")
+    @annotation.equivalentTo("new Val[A]")
     def apply[A]: Val[A] = new Val[A]
 }
 
@@ -34,7 +34,7 @@ object Val {
 /**
  * Single-assignment value
  */
-final class Val[A](override val context: Context = Async()) extends Seq[A] {
+final class Val[A](override val context: Context = async()) extends Seq[A] {
     require(context ne Self)
     require(context ne Unknown)
 

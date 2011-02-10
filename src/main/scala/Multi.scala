@@ -8,7 +8,12 @@ package com.github.okomok
 package hano
 
 
-case class Multi[A](_1: Seq[Reaction[A]]) extends Reaction[A] {
-    override def apply(x: A) = for (f <- _1) f(x)
-    override def exit(q: Exit) = for (f <- _1) f.exit(q)
+object multi {
+
+    def apply[A](xs: Seq[Reaction[A]]): Reaction[A] = new Impl(xs)
+
+    private class Impl[A](_1: Seq[Reaction[A]]) extends Reaction[A] {
+        override def apply(x: A) = for (f <- _1) f(x)
+        override def exit(q: Exit) = for (f <- _1) f.exit(q)
+    }
 }

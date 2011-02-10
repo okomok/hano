@@ -14,7 +14,7 @@ import com.github.okomok.hano
 class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
 
     def testContext {
-        val xs = hano.Async()
+        val xs = hano.async()
 
         var i = 0
         xs onEach { x =>
@@ -27,7 +27,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testContext2 {
-        val xs = hano.Async()
+        val xs = hano.async()
 
         var i = 0
         for (x <- xs) {
@@ -40,7 +40,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testAwait {
-        val xs = hano.Async()
+        val xs = hano.async()
 
         var i = 0
         xs onEach { x =>
@@ -52,7 +52,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testLoop {
-        val xs = hano.Async().loop
+        val xs = hano.async().loop
 
         var i = 0
         xs take {
@@ -66,7 +66,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testGenerate {
-        val xs = hano.Async().loop.generate(0 until 10)
+        val xs = hano.async().loop.generate(0 until 10)
 
         var i = 0
         xs onEach { x =>
@@ -78,7 +78,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testOnEnd {
-        val xs = hano.Async().loop.generate(0 until 10)
+        val xs = hano.async().loop.generate(0 until 10)
 
         var i = 0
         xs onEach { x =>
@@ -93,7 +93,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     def testOnFailed {
         object MyError extends RuntimeException
 
-        val xs = hano.Async().loop.generate(0 until 10) onEach { x =>
+        val xs = hano.async().loop.generate(0 until 10) onEach { x =>
             if (x == 8) {
                 throw MyError
             }
@@ -112,7 +112,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testShift {
-        val xs = hano.Async().loop.generate(0 until 10)
+        val xs = hano.async().loop.generate(0 until 10)
 
         var i = 0
         xs shift {
@@ -149,7 +149,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
         import javax.swing.event.MouseInputAdapter
 
         def clicks(source: java.awt.Component): hano.Seq[MouseEvent] = {
-            hano.Listen[MouseEvent] { * =>
+            hano.listen[MouseEvent] { * =>
                 val l = new MouseInputAdapter {
                     override def mouseClicked(e: MouseEvent) = *(e)
                 }

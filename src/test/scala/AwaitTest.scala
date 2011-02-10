@@ -13,7 +13,7 @@ class AwaitTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
         val out = new java.util.ArrayList[Int]
-        hano.Async().loop.generate {
+        hano.async().loop.generate {
             0 until 1000
         } onEach {
             out.add(_)

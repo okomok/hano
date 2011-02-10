@@ -11,11 +11,11 @@ package hano
 import scala.util.continuations.{cpsParam, reset, shift}
 
 
-object Block {
+object block {
 
     def apply[A](ctx: Env => A @cpsParam[A, Any]): Unit = reset(ctx(Env))
 
-    // One-element sequence is usable also in Generator.Cps.
+    // One-element sequence is usable also in generator.cps.
     private[hano] class Env1 {
         def head[A](xs: Seq[A]): A @cpsParam[Any, Unit] = xs.take(1).toCps
 

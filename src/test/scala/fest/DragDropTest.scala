@@ -78,13 +78,13 @@ class DragDropTest extends
     private var fixt: FrameFixture = null
 
     override protected def onSetUp {
-        val jf = hano.Sync.inEdt {
+        val jf = hano.sync.inEdt {
             val jf = new swing.JFrame("DragDropTest")
             val jl = new swing.JLabel("Drag")
             jl.setName("Drag")
             jf.getContentPane.add(jl)
 
-            hano.Block { * =>
+            hano.block { * =>
                 val mouse = hano.Swing.Mouse(jl)
                 for (p <- *.in(mouse.Pressed)) {
                     println("pressed at: " + (p.getX, p.getY))
@@ -112,7 +112,7 @@ class DragDropTest extends
             }
 */
 /*
-            hano.Block { next =>
+            hano.block { next =>
                 val mouse = hano.Swing.Mouse(jl)
                 val p = next.head(mouse.Pressed)
                 println("pressed at: " + (p.getX, p.getY))

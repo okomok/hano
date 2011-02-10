@@ -14,7 +14,7 @@ object ExitOnce {
     def apply(k: Exit => Unit) = new ExitOnce(k)
 }
 
-@Annotation.notThreadSafe
+@annotation.notThreadSafe
 private[hano]
 class ExitOnce(k: Exit => Unit)
 {

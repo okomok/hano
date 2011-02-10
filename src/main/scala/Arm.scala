@@ -12,7 +12,7 @@ object Arm {
 
     def apply[A](x: A, c: A => Unit): Arm[A] = new Apply(x, c)
 
-    @Annotation.returnThat
+    @annotation.returnThat
     def from[A](that: Arm[A]): Arm[A] = that
 
     implicit def fromJCloseable[A <: java.io.Closeable](from: A): Arm[A] = new FromJCloseable(from)
@@ -38,7 +38,7 @@ object Arm {
         override def close() = _1.close()
         override def context = Self
 
-        @Annotation.pre("f is synchronous")
+        @annotation.pre("f is synchronous")
         override def forloop(f: Reaction[B]) {
             val r = _1.open
             _2(r) onEach { y =>
@@ -61,7 +61,7 @@ trait Arm[+A] extends Seq[A] {
     def open: A
     final override def context = Self
 
-    @Annotation.pre("f is synchronous")
+    @annotation.pre("f is synchronous")
     override def forloop(f: Reaction[A]) {
         val r = open
         var primary: Throwable = null

@@ -10,7 +10,7 @@ package armtest
 
 import com.github.okomok.hano
 
-import hano.{Arm, Block}
+import hano.{Arm, block}
 import junit.framework.Assert._
 import hano.Exit
 
@@ -21,7 +21,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         val r1 = TrivialResource("res1")
         val r2 = TrivialResource("res2")
         val r3 = TrivialResource("res3")
-        Block { * =>
+        block { * =>
             val s1 = *.use(r1)
             val s2 = *.use(r2)
             val s3 = *.use(r3)
@@ -45,7 +45,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         var thrown = false
 
         try {
-            Block { * =>
+            block { * =>
                 val s1 = *.use(r1)
                 val s2 = *.use(r2)
                 val s3 = *.use(r3)
@@ -108,7 +108,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         val r2 = Res2("res2")
         val r3 = Res3("res3")
 
-        hano.Block { Y =>
+        hano.block { Y =>
             import Y._
             val s1 = each(r1)
             val s2 = each(r2)
@@ -127,7 +127,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         val r1 = new TrivialCloseable
         val r2 = new TrivialCloseable
         val r3 = new TrivialCloseable
-        Block { * =>
+        block { * =>
             import *._
             val s1 = use(r1)
             val s2 = use(r2)

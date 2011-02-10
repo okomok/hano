@@ -22,10 +22,10 @@ class TimerTezt {
         s.generate(Stream.iterate(0)(_ + 1))
     }
 
-    // close method access in hano.ByName generates sequences forever, which results in stack overflow.
+    // close method access in hano.byName generates sequences forever, which results in stack overflow.
     def testRecursive: Unit = {
         val b = new java.util.ArrayList[Int]
-        def rx: hano.Seq[Int] = naturals.take(3) ++ hano.ByName(rx)
+        def rx: hano.Seq[Int] = naturals.take(3) ++ hano.byName(rx)
         rx.take(10).foreach(b.add(_))
         Thread.sleep(2000)
         assertEquals(hano.Iter(0,1,2,0,1,2,0,1,2,0), hano.Iter.from(b))

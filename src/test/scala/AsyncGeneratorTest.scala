@@ -10,14 +10,14 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 import junit.framework.Assert._
 
-import hano.Generator
+import hano.generator
 
 
 class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
 
 
     def testEmpty: Unit = {
-        val tr = Generator.Async[Int] { * =>
+        val tr = generator.async[Int] { * =>
             999
             *.end()
         }
@@ -25,7 +25,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         assertTrue(tr.isEmpty) // run again.
     }
 
-    def makeValuesTo(n: Int)(y: Generator.Async.Env[Int]): Unit = {
+    def makeValuesTo(n: Int)(y: generator.async.Env[Int]): Unit = {
         for (i <- 1 to n) {
             y(i)
         }
@@ -33,7 +33,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def withMakeValuesTo(n: Int): Unit = {
-        val tr = Generator.Async(makeValuesTo(n))
+        val tr = generator.async(makeValuesTo(n))
         assertEquals(hano.Iter.from(1 to n), hano.Iter.from(tr))
         assertEquals(hano.Iter.from(1 to n), hano.Iter.from(tr)) // run again.
     }
@@ -58,7 +58,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        def example = Generator.Async[Any] { * =>
+        def example = generator.async[Any] { * =>
             *("first")
             for (i <- 1 until 4) {
                 *(i)
@@ -76,14 +76,14 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     class ForwardedError extends RuntimeException("forward me")
 
     def testExceptionForwarding: Unit = {
-        def throwSome(y: Generator.Async.Env[Int]): Unit = {
+        def throwSome(y: generator.async.Env[Int]): Unit = {
             for (i <- 1 to 27) {
                 y(i)
             }
             throw new ForwardedError
         }
 
-        val tr = Generator.Async(throwSome)
+        val tr = generator.async(throwSome)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
@@ -102,10 +102,10 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
 
 
     def testExceptionForwardingEmpty: Unit = {
-        def throwImmediately(y: Generator.Async.Env[Int]) {
+        def throwImmediately(y: generator.async.Env[Int]) {
             throw new ForwardedError
         }
-        val tr = Generator.Async(throwImmediately)
+        val tr = generator.async(throwImmediately)
 
         var thrown = false
         val arr = new java.util.ArrayList[Int]
@@ -122,7 +122,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testThrowButEnough {
-        def sample = Generator.Async[Int] { y =>
+        def sample = generator.async[Int] { y =>
             for (i <- 0 until 25) {
                 y(i)
             }
@@ -142,17 +142,17 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testToIterable {
-        val sample = hano.Async().loop.generate(0 until 20).toIterable
+        val sample = hano.async().loop.generate(0 until 20).toIterable
         assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
 /*
     def testTraverse {
-        val sample = Generator.Async.traverse(0 until 20)
+        val sample = generator.async.traverse(0 until 20)
         assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
 */
     def testThrowAfterEnd {
-        val sample = Generator.Async[Int] { * =>
+        val sample = generator.async[Int] { * =>
             *(1)
             *(2)
             *(3)
@@ -166,9 +166,9 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
 }
 
 /*
-class Generator.AsyncLockCompile extends Benchmark {
+class generator.AsyncLockCompile extends Benchmark {
     val b = new AsyncGeneratorTest
-    val tr = iterative.Generator.Async(b.makeValuesTo(100000))
+    val tr = iterative.generator.async(b.makeValuesTo(100000))
     override def run = {
         val a = tr.size
         ()

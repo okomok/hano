@@ -8,7 +8,7 @@ package com.github.okomok
 package hano
 
 
-object Listen {
+object listen {
 
     sealed abstract class Env[A] extends Reaction[A] {
         /**

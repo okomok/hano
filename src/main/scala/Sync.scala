@@ -11,10 +11,10 @@ package hano
 /**
  * Contains synchronous algorithms.
  */
-object Sync {
+object sync {
 
 
-    @Annotation.visibleForTesting
+    @annotation.visibleForTesting
     final class Val[A] extends CheckedReaction[A] { self =>
         private[this] var v: Either[Throwable, A] = null
         private[this] val c = new java.util.concurrent.CountDownLatch(1)
@@ -42,7 +42,7 @@ object Sync {
         def get: A = {
             c.await()
             if (v == null) {
-                throw new NoSuchElementException("Sync.Val.apply()")
+                throw new NoSuchElementException("sync.Val.apply()")
             }
             v match {
                 case Left(t) => throw t

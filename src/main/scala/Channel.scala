@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock
  * Asynchronous channel
  * This is mutable one-element sequence; As you foreach, element varies.
  */
-final class Channel[A](override val context: Context = Async()) extends Seq[A] {
+final class Channel[A](override val context: Context = async()) extends Seq[A] {
     require(context ne Self)
     require(context ne Unknown)
 
@@ -60,6 +60,6 @@ final class Channel[A](override val context: Context = Async()) extends Seq[A] {
         } := x
     }
 
-    @Annotation.equivalentTo("Sync.head(this)()")
-    def read: A = Sync.head(this)()
+    @annotation.equivalentTo("sync.head(this)()")
+    def read: A = sync.head(this)()
 }

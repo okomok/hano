@@ -16,14 +16,14 @@ import scala.collection.JavaConversions
  */
 trait Iter[+A] extends Equals {
 
-    @Annotation.returnThis
+    @annotation.returnThis
     final def of[B >: A]: Iter[B] = this
 
     def ator: Iterator[A]
 
     def able: Iterable[A] = new Iter.Able(this)
 
-    @Annotation.pre("finite if result is `true`")
+    @annotation.pre("finite if result is `true`")
     override def equals(that: Any) = that match {
         case that: Iter[_] => (that canEqual this) && equalsIf(that)(_ == _)
         case _ => false
@@ -31,7 +31,7 @@ trait Iter[+A] extends Equals {
 
     override def canEqual(that: Any) = that.isInstanceOf[Iter[_]]
 
-    @Annotation.pre("finite")
+    @annotation.pre("finite")
     override def hashCode = {
         var r = 1
         val it = ator
@@ -41,7 +41,7 @@ trait Iter[+A] extends Equals {
         r
     }
 
-    @Annotation.pre("finite")
+    @annotation.pre("finite")
     override def toString = {
         val sb = new StringBuilder
         sb.append('[')
@@ -77,7 +77,7 @@ object Iter {
 
     def apply[A](xs: A*): Iter[A] = from(xs)
 
-    @Annotation.returnThat
+    @annotation.returnThat
     def from[A](that: Iter[A]): Iter[A] = that
 
     implicit def fromIterator[A](from: => Iterator[A]): Iter[A] = new FromIterator(from)

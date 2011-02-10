@@ -13,7 +13,7 @@ package hano
  */
 trait Context extends Seq[Unit] {
 
-    @Annotation.returnThis @inline
+    @annotation.returnThis @inline
     final def asContext: Context = this
 
     /**
@@ -21,7 +21,7 @@ trait Context extends Seq[Unit] {
      */
     final override def close() = ()
 
-    @Annotation.returnThis
+    @annotation.returnThis
     final override def context = this
 
     /**
@@ -34,7 +34,7 @@ trait Context extends Seq[Unit] {
      */
     override def forloop(f: Reaction[Unit]): Unit
 
-    @Annotation.equivalentTo("foreach(_ => body)")
+    @annotation.equivalentTo("foreach(_ => body)")
     final def eval(body: => Unit): Unit = foreach(_ => body)
 
     private[hano]
@@ -42,7 +42,7 @@ trait Context extends Seq[Unit] {
         // unknown <: self <: other
         if (this eq Unknown) {
             if (that eq Unknown) {
-                Async()
+                async()
             } else {
                 that
             }

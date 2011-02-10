@@ -11,7 +11,7 @@ package hano
 /**
  * Immutable(single-forloop) infinite list
  */
-final class Rist[A](override val context: Context = Async()) extends Resource[A] {
+final class Rist[A](override val context: Context = async()) extends Resource[A] {
     require(context ne Self)
     require(context ne Unknown)
 
@@ -47,7 +47,7 @@ final class Rist[A](override val context: Context = Async()) extends Resource[A]
         }
     }
 
-    @Annotation.aliasOf("add")
+    @annotation.aliasOf("add")
     def +=(x: A): Unit = add(x)
 
     private def eval(f: Reaction[A], x: A) {
