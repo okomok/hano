@@ -16,21 +16,13 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     /**
      * Creates a sequence initially containing the specified elements.
      */
+    @Annotation.equivalentTo("Self.loop.generate(from)")
     def apply[A](from: A*): Seq[A] = from
-
-    @Annotation.equivalentTo("from(util.optional(body))")
-    def optional[A](body: => A): Seq[A] = from {
-        try {
-            Some(body)
-        } catch {
-            case _ => None
-        }
-    }
 }
 
 
 /**
- * Seq sequence, which is built upon asynchronous foreach.
+ * Reactive sequence, which is built upon asynchronous foreach.
  */
 trait Seq[+A] extends java.io.Closeable {
 
