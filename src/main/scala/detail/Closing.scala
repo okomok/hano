@@ -12,7 +12,7 @@ package detail
 private[hano]
 class Closing[A](_1: Seq[A], _2: => Boolean) extends Seq[A] {
     override def close() {
-        context.eval {
+        context eval {
             if (!_2) {
                 _1.close()
             }

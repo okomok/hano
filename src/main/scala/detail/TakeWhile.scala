@@ -16,7 +16,7 @@ class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter[B] {
         val _k = ExitOnce { q => close(); f.exit(q) }
 
         _1 onEach { x =>
-            _k.beforeExit {
+            _k beforeExit {
                 if (_2(x)) {
                     f(x)
                 } else {

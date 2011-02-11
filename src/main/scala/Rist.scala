@@ -52,7 +52,7 @@ final class Rist[A](override val context: Context = async()) extends Resource[A]
 
     private def eval(f: Reaction[A], x: A) {
         context onEach { _ =>
-            _k.beforeExit {
+            _k beforeExit {
                 f(x)
             }
         } onExit {

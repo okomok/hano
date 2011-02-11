@@ -31,7 +31,7 @@ final class Bag[A](val capacity: Int, override val context: Context = async()) e
 
         for (v <- vs) {
             v onEach { x =>
-                _k.beforeExit {
+                _k beforeExit {
                     f(x)
                 }
             } onExit {

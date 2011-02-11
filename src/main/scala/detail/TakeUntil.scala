@@ -25,7 +25,7 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         } start()
 
         _1 onEach { x =>
-            _k.beforeExit {
+            _k beforeExit {
                 if (go) {
                     f(x)
                 } else {

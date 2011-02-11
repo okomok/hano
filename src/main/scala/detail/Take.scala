@@ -16,7 +16,7 @@ class Take[A](_1: Seq[A], _2: Int) extends SeqAdapter[A] {
         val _k = ExitOnce { q => close(); f.exit(q) }
 
         if (_2 == 0) {
-            context.eval {
+            context eval {
                 _k(Exit.End)
             }
         } else {

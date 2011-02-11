@@ -17,7 +17,7 @@ class Generate[A](_1: Seq[_], _2: => Iter[A]) extends SeqAdapter[A] {
 
         val it = _2.ator
         if (!it.hasNext) {
-            context.eval {
+            context eval {
                 _k(Exit.End)
             }
         } else {

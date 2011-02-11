@@ -18,7 +18,7 @@ class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
         val _k = ExitOnce { q => close(); f.exit(q) }
 
         _1 onEach { x =>
-            _k.beforeExit {
+            _k beforeExit {
                 _2(x).shift(_1) onEach {
                     f(_)
                 } onExit {

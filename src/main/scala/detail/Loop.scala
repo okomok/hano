@@ -36,7 +36,7 @@ class LoopSelf[A](_1: Seq[A]) extends Seq[A] {
 
         while (isActive) {
             _1.noEnd onEach { x =>
-                _k.beforeExit {
+                _k beforeExit {
                     f(x)
                 }
             } onExit {
@@ -65,7 +65,7 @@ class LoopOther[A](_1: Seq[A], _2: Int) extends Seq[A] {
 
         def rec() {
             _1 onEach { x =>
-                _k.beforeExit {
+                _k beforeExit {
                     for (i <- 0 until _2) {
                         if (isActive) {
                             f(x)

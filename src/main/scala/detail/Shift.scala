@@ -41,7 +41,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         _1 onEach { x =>
             cur ! Action {
                 context onEach { _ =>
-                    _k.beforeExit {
+                    _k beforeExit {
                         f(x)
                     }
                 } onExit {
@@ -81,7 +81,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
 
         _1 onEach { x =>
             context onEach { _ =>
-                _k.beforeExit {
+                _k beforeExit {
                     f(x)
                 }
             } onExit {

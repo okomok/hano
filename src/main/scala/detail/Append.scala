@@ -14,11 +14,15 @@ class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override def close() = { _1.close(); _2.close() }
     override val context = _1.context upper _2.context
     override def forloop(f: Reaction[A]) {
-        _1.shift(context) onEach {
+        _1 shift {
+            context
+        } onEach {
             f(_)
         } onExit {
             case Exit.End =>
-                _2.shift(context) onEach {
+                _2 shift {
+                    context
+                } onEach {
                     f(_)
                 } onExit {
                     f.exit(_)
