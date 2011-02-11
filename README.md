@@ -3,6 +3,8 @@
 
 `hano` is a reactive sequence combinator library:
 
+```scala
+
     hano.block { * =>
         val mouse = hano.Swing.Mouse(jl)
         for (p <- *.in(mouse.Pressed)) {
@@ -14,7 +16,7 @@
         }
     }
 
-
+```
 
 ## Rationale
 
@@ -28,6 +30,8 @@
 
 A reactive sequence `hano.Seq` is built upon the famous method `foreach`:
 
+```scala
+
     package hano
 
     trait Seq[+A] {
@@ -35,6 +39,8 @@ A reactive sequence `hano.Seq` is built upon the famous method `foreach`:
 
         // map, filter etc
     }
+
+```
 
 Unlike `scala.collection.Traversable`, this `foreach` is allowed to be asynchronous.
 
