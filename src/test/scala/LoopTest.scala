@@ -28,6 +28,11 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
     }
 
+    def testReact {
+        val xs = hano.async.loop.onEach(_ => ()).generate(1 until 4)
+        expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
+    }
+
     def testClose {
         val xs = hano.async.loop.generate(1 until 100)
 

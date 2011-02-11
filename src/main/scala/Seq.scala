@@ -196,7 +196,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Loops with evaluating `f`.
      */
-    def react(f: Reaction[A]): Seq[A] = new detail.React(this, f)
+    def react(f: => Reaction[A]): Seq[A] = new detail.React(this, f)
 
     /**
      * Calls `k` on the exit of sequence.
