@@ -17,7 +17,14 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        val xs = hano.async.loop.generate(1 until 4)
+        for (i <- 0 until 300) {
+            val xs = hano.async.loop.generate(1 until 4)
+            expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
+        }
+    }
+
+    def testClosingShallBeSync {
+        val xs = hano.async.loop.closing{Thread.sleep(100);false}.generate(1 until 4).closing{Thread.sleep(100);false}
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
     }
 
