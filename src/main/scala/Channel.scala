@@ -60,6 +60,6 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
         } := x
     }
 
-    @annotation.equivalentTo("sync.head(this)()")
-    def read: A = sync.head(this)()
+    @annotation.equivalentTo("future.head(this)()")
+    def read: A = future.head(this)()
 }

@@ -11,7 +11,7 @@ package hano
 /**
  * Contains synchronous algorithms.
  */
-object sync {
+object future {
 
 
     @annotation.visibleForTesting
@@ -42,7 +42,7 @@ object sync {
         def get: A = {
             c.await()
             if (v == null) {
-                throw new NoSuchElementException("sync.Val.apply()")
+                throw new NoSuchElementException("future.Val.apply()")
             }
             v match {
                 case Left(t) => throw t
