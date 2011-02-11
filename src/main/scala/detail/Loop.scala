@@ -29,7 +29,7 @@ class LoopSelf[A](_1: Seq[A]) extends Seq[A] {
     @volatile private[this] var isActive = true
     override def close() { isActive = false; _1.close() }
     override def context = _1.context
-    override def forloop(f: Reaction[A]) = synchronized {
+    override def forloop(f: Reaction[A]) {
         isActive = true
         val _k = ExitOnce { q => close(); f.exit(q) }
 
@@ -57,7 +57,7 @@ class LoopOther[A](_1: Seq[A], _2: Int) extends Seq[A] {
     @volatile private[this] var isActive = true
     override def close() { isActive = false; _1.close() }
     override def context = _1.context
-    override def forloop(f: Reaction[A]) = synchronized {
+    override def forloop(f: Reaction[A]) {
         isActive = true
         val _k = ExitOnce { q => close(); f.exit(q) }
 
