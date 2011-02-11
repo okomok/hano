@@ -11,7 +11,7 @@ package hano
 /**
  * Immutable infinite unordered multi-set
  */
-final class Bag[A](val capacity: Int, override val context: Context = async()) extends Seq[A] {
+final class Bag[A](val capacity: Int, override val context: Context = async) extends Seq[A] {
     require(context ne Self)
     require(context ne Unknown)
 

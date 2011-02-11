@@ -50,7 +50,7 @@ class GenerateTest extends org.scalatest.junit.JUnit3Suite {
     def testThen: Unit = {
         val s = new java.util.ArrayList[Int]
         var i = new java.util.concurrent.CountDownLatch(6)
-        for (x <- hano.async().loop.generate(hano.Iter(9,8,7,6,5)).onExit(_ => {s.add(99);i.countDown})) {
+        for (x <- hano.async.loop.generate(hano.Iter(9,8,7,6,5)).onExit(_ => {s.add(99);i.countDown})) {
             s.add(x)
             i.countDown()
         }
@@ -61,7 +61,7 @@ class GenerateTest extends org.scalatest.junit.JUnit3Suite {
     def testThenAppend: Unit = {
         val s = new java.util.ArrayList[Int]
         var i = new java.util.concurrent.CountDownLatch(8)
-        for (x <- hano.async().loop.generate(hano.Iter(9,8,7,6,5)) ++ hano.Seq(2,3,4)) {
+        for (x <- hano.async.loop.generate(hano.Iter(9,8,7,6,5)) ++ hano.Seq(2,3,4)) {
             s.add(x)
             i.countDown()
         }

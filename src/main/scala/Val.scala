@@ -34,7 +34,7 @@ object Val {
 /**
  * Single-assignment value
  */
-final class Val[A](override val context: Context = async()) extends Seq[A] {
+final class Val[A](override val context: Context = async) extends Seq[A] {
     require(context ne Self)
     require(context ne Unknown)
 

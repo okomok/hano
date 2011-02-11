@@ -17,12 +17,12 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        val xs = hano.async().loop.generate(1 until 4)
+        val xs = hano.async.loop.generate(1 until 4)
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
     }
 
     def testClose {
-        val xs = hano.async().loop.generate(1 until 100)
+        val xs = hano.async.loop.generate(1 until 100)
 
         val out = new java.util.ArrayList[Int]
         var i = 0
@@ -39,7 +39,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testCloseIndirect {
-        val xs = hano.async().loop.generate(1 until 100)
+        val xs = hano.async.loop.generate(1 until 100)
 
         val out = new java.util.ArrayList[Int]
         var i = 0
@@ -56,7 +56,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
 
     def testCloseParallel {
         val suite = new ParallelSuite(10)
-        val xs = hano.async().loop.generate(1 until 100)
+        val xs = hano.async.loop.generate(1 until 100)
         suite.add(1) {
             for (x <- xs.loop.take(500)) {
                 ()

@@ -42,7 +42,7 @@ trait Context extends Seq[Unit] {
         // unknown <: self <: other
         if (this eq Unknown) {
             if (that eq Unknown) {
-                async()
+                async
             } else {
                 that
             }

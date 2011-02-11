@@ -60,7 +60,7 @@ trait Reactor extends Actor {
         super.restart
     }
 
-    final val hanoContext: Context = new async.Impl(this)
+    final val hanoContext: Context = new detail.Async(this)
 }
 
 
