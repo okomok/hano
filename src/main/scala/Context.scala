@@ -38,7 +38,8 @@ trait Context extends Seq[Unit] {
     final def eval(body: => Unit): Unit = foreach(_ => body)
 
     private[hano]
-    final def upper(that: Context): Context = {
+    final def upper(_that: => Context): Context = {
+        lazy val that = _that
         // unknown <: self <: other
         if (this eq Unknown) {
             if (that eq Unknown) {

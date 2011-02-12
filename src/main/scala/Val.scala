@@ -30,7 +30,7 @@ object Val {
     def apply[A]: Val[A] = new Val[A]
 
     def length(xs: Seq[_]): Val[Option[Int]] = {
-        val v = new Val[Option[Int]]
+        val v = new Val[Option[Int]](xs.context upper async)
         var acc = 0
         xs onEach { x =>
             acc += 1
