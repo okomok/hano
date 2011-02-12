@@ -36,14 +36,14 @@ object listen {
         env.asSeq
     }
 
-    private class EnvImpl[A] extends Env[A] with CheckedReaction[A] {
+    private class EnvImpl[A] extends Env[A] with Reaction[A] {
         @volatile private[this] var _f: Reaction[A] = null
         private[this] var _add: () => Unit = null
         private[this] var _remove: () => Unit = null
         private[this] var _context: Context = Unknown
 
-        override protected def checkedApply(x: A) = _f(x)
-        override protected def checkedExit(q: Exit) = _f.exit(q)
+        override protected def rawApply(x: A) = _f(x)
+        override protected def rawExit(q: Exit) = _f.exit(q)
 
         override def addBy(add: => Unit) {
             _add = () => add

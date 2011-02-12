@@ -32,13 +32,11 @@ class LoopSelf[A](_1: Seq[A]) extends Seq[A] {
     // requires synchronized in case close-then-forloop from other threads.
     override def forloop(f: Reaction[A]) = synchronized {
         isActive = true
-        val _k = ExitOnce { q => close(); f.exit(q) }
+        def _k(q: Exit) { close(); f.exit(q) }
 
         while (isActive) {
-            _1.noEnd onEach { x =>
-                _k beforeExit {
-                    f(x)
-                }
+            _1.noEnd onEach {
+                f(_)
             } onExit {
                 _k(_)
             } start()
@@ -60,11 +58,11 @@ class LoopOther[A](_1: Seq[A], _2: Int) extends Seq[A] {
     override def context = _1.context
     override def forloop(f: Reaction[A]) = synchronized {
         isActive = true
-        val _k = ExitOnce { q => close(); f.exit(q) }
+        def _k(q: Exit) { close(); f.exit(q) }
 
         def rec() {
             _1 onEach { x =>
-                _k beforeExit {
+                f beforeExit {
                     for (i <- 0 until _2) {
                         if (isActive) {
                             f(x)

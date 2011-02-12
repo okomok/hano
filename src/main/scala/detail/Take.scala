@@ -13,7 +13,7 @@ private[hano]
 class Take[A](_1: Seq[A], _2: Int) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
-        val _k = ExitOnce { q => close(); f.exit(q) }
+        def _k(q: Exit) { close(); f.exit(q) }
 
         if (_2 == 0) {
             context eval {

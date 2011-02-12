@@ -26,10 +26,10 @@ object AsyncIterable {
     private case class Msg(msg: Any)
 
     private class ReactionImpl[A](ch: Channel[Msg]) extends Reaction[A] {
-        override def apply(x: A) {
+        override protected def rawApply(x: A) {
             ch write Msg(x)
         }
-        override def exit(q: Exit) {
+        override protected def rawExit(q: Exit) {
             ch write Msg(q)
         }
     }

@@ -15,10 +15,10 @@ class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
     override def close() = _1.close()
     override val context = _1.context upper Unknown
     override def forloop(f: Reaction[B]) {
-        val _k = ExitOnce { q => close(); f.exit(q) }
+        def _k(q: Exit) { close(); f.exit(q) }
 
         _1 onEach { x =>
-            _k beforeExit {
+            f beforeExit {
                 _2(x).shift(_1) onEach {
                     f(_)
                 } onExit {

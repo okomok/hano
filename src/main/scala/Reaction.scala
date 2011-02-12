@@ -17,14 +17,14 @@ object Reaction {
 
     implicit def fromFunction[A](from: A => Unit): Reaction[A] = new FromFunction(from)
 
-    private class Apply[A](_1: A => Unit, _2: Exit => Unit) extends CheckedReaction[A] {
-        override protected def checkedApply(x: A) = _1(x)
-        override protected def checkedExit(q: Exit) = _2(q)
+    private class Apply[A](_1: A => Unit, _2: Exit => Unit) extends Reaction[A] {
+        override protected def rawApply(x: A) = _1(x)
+        override protected def rawExit(q: Exit) = _2(q)
     }
 
-    private class FromFunction[A](_1: A => Unit) extends CheckedReaction[A] {
-        override protected def checkedApply(x: A) = _1(x)
-        override protected def checkedExit(q: Exit) = ()
+    private class FromFunction[A](_1: A => Unit) extends Reaction[A] {
+        override protected def rawApply(x: A) = _1(x)
+        override protected def rawExit(q: Exit) = ()
     }
 }
 
@@ -41,14 +41,50 @@ trait Reaction[-A] {
     final def asReaction: Reaction[A] = this
 
     /**
+     * Has this reaction been exited?
+     */
+    final def isExited: Boolean = exited
+
+    /**
      * Reacts on each element.
      */
-    def apply(x: A): Unit
+    final def apply(x: A): Unit = mdf {
+        if (!exited) {
+            rawApply(x)
+        }
+    }
 
     /**
      * Reacts on the exit. (should not throw.)
      */
-    def exit(q: Exit): Unit
+    final def exit(q: Exit): Unit = mdf {
+        try {
+            if (!exited) {
+                exited = true
+                rawExit(q)
+            }
+        } catch {
+            case t: scala.util.control.ControlThrowable => throw t
+            case t: Throwable => detail.LogErr(t, "Reaction.exit error")
+        }
+    }
+
+    /**
+     * Override to implement `apply`.
+     */
+    protected def rawApply(x: A): Unit
+
+    /**
+     * Override to implement `exit`.
+     */
+    protected def rawExit(q: Exit): Unit
+
+    @annotation.equivalentTo("if (!isExited) body")
+    final def beforeExit(body: => Unit) {
+        if (!exited) {
+            body
+        }
+    }
 
     @annotation.equivalentTo("exit(Exit.End)")
     final def end(): Unit = exit(Exit.End)
@@ -59,24 +95,18 @@ trait Reaction[-A] {
     @annotation.equivalentTo("exit(Exit.Failed(why))")
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
+    private[this] var exited = false
+    private[this] lazy val mdf = new detail.Modification(toString)
+
     private[hano]
     final def tryRethrow(body: => Unit) {
         try {
             body
         } catch {
             case t: Throwable => {
-                exitNothrow(Exit.Failed(t)) // informs Reaction-site
+                exit(Exit.Failed(t)) // informs Reaction-site
                 throw t // handled in Seq-site
             }
-        }
-    }
-
-    private[hano]
-    final def exitNothrow(q: Exit) {
-        try {
-            exit(q)
-        } catch {
-            case t: Throwable => detail.LogErr(t, "Reaction.exit error")
         }
     }
 }

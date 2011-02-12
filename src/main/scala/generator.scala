@@ -43,34 +43,21 @@ object generator {
     private class BodyToSeq[A](_1: Reaction[A] with java.io.Flushable => Unit) extends Seq[A] {
         override def context = Self
         override def forloop(f: Reaction[A]) {
-            val g = new MultiExitable(f)
+            val g = new ToFlushable(f)
             try {
                 _1(g)
                 g.exit(Exit.End)
             } catch {
-                case t: Throwable => g.exitNothrow(Exit.Failed(t))
+                case t: Throwable => g.exit(Exit.Failed(t))
             }
         }
     }
 
-    // Accepts multiple exit calls, though it's illegal.
-    private class MultiExitable[A](_1: Reaction[A]) extends Reaction[A] with java.io.Flushable {
-        private[this] var exited = false
+    private class ToFlushable[A](_1: Reaction[A]) extends ReactionProxy[A] with java.io.Flushable {
+        override val self = _1
         override def flush() = _1 match {
             case f: java.io.Flushable => f.flush()
             case _ => ()
-        }
-        override def apply(x: A) = _1(x)
-        override def exit(q: Exit) {
-            if (!exited) {
-                exited = true
-                _1.exit(q)
-            } else {
-                q match {
-                    case Exit.Failed(t) => detail.LogErr(t, "abandoned exception in generator")
-                    case _ => ()
-                }
-            }
         }
     }
 }

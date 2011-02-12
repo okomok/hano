@@ -66,18 +66,16 @@ object SyncIterable {
         }
     }
 
-    private class ReactionImpl[A](xch: Exchanger[Data[A]]) extends CheckedReaction[A] with java.io.Flushable {
+    private class ReactionImpl[A](xch: Exchanger[Data[A]]) extends Reaction[A] with java.io.Flushable {
         private[this] var out = new Data[A]
-        private[hano] var exited = false
 
-        override protected def checkedApply(x: A) {
+        override protected def rawApply(x: A) {
             out.buf.addLast(x)
             if (out.buf.size == CAPACITY) {
                 doExchange()
             }
         }
-        override protected def checkedExit(q: Exit) {
-            exited = true
+        override protected def rawExit(q: Exit) {
             q match {
                 case Exit.Failed(t) => {
                     out.exn = Some(t)

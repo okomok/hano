@@ -15,11 +15,11 @@ object future {
 
 
     @annotation.visibleForTesting
-    final class Val[A] extends CheckedReaction[A] { self =>
+    final class Val[A] extends Reaction[A] { self =>
         private[this] var v: Either[Throwable, A] = null
         private[this] val c = new java.util.concurrent.CountDownLatch(1)
 
-        override protected def checkedApply(x: A) {
+        override protected def rawApply(x: A) {
             if (v == null) {
                 try {
                     v = Right(x)
@@ -28,7 +28,7 @@ object future {
                 }
             }
         }
-        override protected def checkedExit(q: Exit) {
+        override protected def rawExit(q: Exit) {
             try {
                 q match {
                     case Exit.Failed(t) if v == null => v = Left(t)

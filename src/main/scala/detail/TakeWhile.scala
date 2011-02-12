@@ -13,10 +13,10 @@ private[hano]
 class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter[B] {
     override protected val underlying = _1
     override def forloop(f: Reaction[B]) {
-        val _k = ExitOnce { q => close(); f.exit(q) }
+        def _k(q: Exit) { close(); f.exit(q) }
 
         _1 onEach { x =>
-            _k beforeExit {
+            f beforeExit {
                 if (_2(x)) {
                     f(x)
                 } else {

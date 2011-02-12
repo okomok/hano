@@ -27,15 +27,11 @@ final class Bag[A](val capacity: Int, override val context: Context = async) ext
     }
 
     override def forloop(f: Reaction[A]) {
-        val _k = detail.ExitOnce { q => f.exit(q) }
-
         for (v <- vs) {
-            v onEach { x =>
-                _k beforeExit {
-                    f(x)
-                }
+            v onEach {
+                f(_)
             } onExit {
-                case q @ Exit.Failed(_) => _k(q)
+                case q @ Exit.Failed(_) => f.exit(q)
                 case q => ()
             } start()
         }

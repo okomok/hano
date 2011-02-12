@@ -18,7 +18,7 @@ final class Rist[A](override val context: Context = async) extends Resource[A] {
     @volatile private[this] var isActive = true
     @volatile private[this] var g: Reaction[A] = null
     private[this] val vs = new java.util.concurrent.ConcurrentLinkedQueue[A]
-    private[this] val _k = detail.ExitOnce { q => g.exit(q); close() }
+    private def _k(q: Exit) { close(); g.exit(q) }
 
     override protected def closeResource() {
         isActive = false
@@ -52,7 +52,7 @@ final class Rist[A](override val context: Context = async) extends Resource[A] {
 
     private def eval(f: Reaction[A], x: A) {
         context onEach { _ =>
-            _k beforeExit {
+            g beforeExit {
                 f(x)
             }
         } onExit {
