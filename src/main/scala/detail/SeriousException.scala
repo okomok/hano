@@ -10,4 +10,4 @@ package detail
 
 
 private[hano]
-trait SeriousException
+trait SeriousException extends Throwable

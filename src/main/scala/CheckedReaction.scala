@@ -20,7 +20,7 @@ trait CheckedReaction[-A] extends Reaction[A] {
     protected def checkedApply(x: A): Unit
     protected def checkedExit(q: Exit): Unit
 
-    private[this] lazy val mdf = new detail.Modification("method calls shall be serialized in " + toString) with SeriousException
+    private[this] lazy val mdf = new detail.Modification("method calls shall be serialized in " + toString)
 
     private[this] val _exit = {
         detail.IfFirst[Exit] { q =>
