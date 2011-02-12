@@ -28,6 +28,55 @@ object Val {
 
     @annotation.equivalentTo("new Val[A]")
     def apply[A]: Val[A] = new Val[A]
+
+    def length(xs: Seq[_]): Val[Option[Int]] = {
+        val v = new Val[Option[Int]]
+        var acc = 0
+        xs onEach { x =>
+            acc += 1
+        } onExit {
+            case Exit.End => v := Some(acc)
+            case q => v := None
+        } start()
+        v
+    }
+
+    private class OnAssign[A](_1: Seq[A], _2: A => Unit) extends SeqProxy[A] {
+        override val self = _1.onHead {
+            case Some(x) => _2(x)
+            case None => ()
+        }
+    }
+
+    private class ToFuture[A](_1: Seq[A]) extends (() => A) {
+        private[this] var v: Either[Throwable, A] = null
+        private[this] val c = new java.util.concurrent.CountDownLatch(1)
+
+        _1 onEach { x =>
+            assert(v == null)
+            v = Right(x)
+        } onExit { q =>
+            try {
+                q match {
+                    case Exit.Failed(t) if v == null => v = Left(t)
+                    case _ => ()
+                }
+            } finally {
+                c.countDown()
+            }
+        } start()
+
+        override def apply: A = {
+            c.await()
+            if (v == null) {
+                throw new NoSuchElementException("Val.toFuture.apply()")
+            }
+            v match {
+                case Left(t) => throw t
+                case Right(r) => r
+            }
+        }
+    }
 }
 
 
@@ -65,6 +114,10 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
             throw new MultipleAssignmentException(v.get.get, x)
         }
     }
+
+    def onAssign(f: A => Unit): Seq[A] = new Val.OnAssign(this, f)
+
+    def toFuture: () => A = new Val.ToFuture(this)
 
     private def eval(f: Reaction[A], x: A) {
         context onEach { _ =>

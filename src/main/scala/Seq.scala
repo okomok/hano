@@ -352,4 +352,9 @@ trait Seq[+A] extends java.io.Closeable {
      */
     def noEnd: Seq[A] = new detail.NoEnd(this)
 
+    /**
+     * Disallows multiple `forloop`s.
+     */
+    def singlePass: Seq[A] = new detail.SinglePass(this)
+
 }

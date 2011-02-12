@@ -22,6 +22,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def close(): Unit = self.close()
     override def foreach(f: A => Unit): Unit = self.foreach(f)
     override def start(): Unit = self.start()
+    override def await(): Unit = self.await()
     override def append[B >: A](that: Seq[B]): Seq[B] = around(self.append(that))
     override def merge[B >: A](that: Seq[B]): Seq[B] = around(self.merge(that))
     override def map[B](f: A => B): Seq[B] = around(self.map(f))
@@ -87,5 +88,5 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def loop: Seq[A] = around(self.loop)
     override def loopBy(grainSize: Int): Seq[A] = around(self.loopBy(grainSize))
     override def noEnd: Seq[A] = around(self.noEnd)
-    override def await(): Unit = self.await()
+    override def singlePass: Seq[A] = around(self.singlePass)
 }

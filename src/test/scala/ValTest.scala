@@ -44,4 +44,22 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
             v := 12
         }
     }
+
+    def testFork {
+        val xs = hano.async.loop.generate(0 until 10).singlePass
+        xs fork { xs =>
+            hano.Val.length(xs) onAssign { n =>
+                println(n)
+            }
+        } fork { xs =>
+            hano.Val.length(xs) onAssign { n =>
+                println(n)
+            }
+        } fork { xs =>
+            hano.Val.length(xs) onAssign { n =>
+                println(n)
+            }
+        } start()
+    }
+
 }
