@@ -15,7 +15,7 @@ class Modification(msg: String) {
 
     def apply[A](body: => A): A = {
         if (_ing) {
-            throw new java.util.ConcurrentModificationException(msg)
+            throw new java.util.ConcurrentModificationException(msg) with SeriousException
         }
         try {
             _ing = true
