@@ -39,7 +39,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
         }
     }
 
-    private def _set(tx: Either[Throwable, A]) {
+    private def _set(tx: Either[Throwable, A]): Boolean = {
         if (v.compareAndSet(null, tx)) {
             while (!fs.isEmpty) {
                 val f = fs.poll
@@ -47,21 +47,50 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
                     _eval(f, tx)
                 }
             }
+            true
         } else {
-            _check(v.get, tx)
+            false
         }
     }
 
-    def set(x: A): Unit = _set(Right(x))
+    /**
+     * Sets the value.
+     */
+    def set(x: A): Boolean = _set(Right(x))
 
-    def get: A = toFuture.apply()
+    /**
+     * Gets the value
+     */
+    def get: A = future.apply()
 
-    def fail(why: Throwable): Unit = _set(Left(why))
+    /**
+     * Fails to produce a value.
+     */
+    def fail(why: Throwable): Boolean = _set(Left(why))
 
-    def assign[B <: A](that: Seq[B]) = that.forloop(toReaction)
+    /**
+     * `Val` assignment
+     */
+    def assign(that: Seq[A]) = that.forloop(toReaction)
 
-    @annotation.aliasOf("set")
-    def update(x: A): Unit = set(x)
+    /**
+     * Gets the value in the future.
+     */
+    def future: () => A = new Val.ToFuture(this)
+
+    /**
+     * Equivalent to `set(x)`, but throws if the value is different.
+     */
+    def update(x: A) {
+        if (!set(x)) {
+            v.get match {
+                case Right(y) if x != y => {
+                    throw new Val.MultipleAssignmentException(y, x)
+                }
+                case _ => ()
+            }
+        }
+    }
 
     @annotation.aliasOf("get")
     def apply(): A = get
@@ -69,10 +98,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     @annotation.aliasOf("assign")
     def :=[B <: A](that: Seq[B]): Unit = assign(that)
 
-    def onAssign(f: A => Unit): Seq[A] = new Val.OnAssign(this, f)
-
-    def toFuture: () => A = new Val.ToFuture(this)
-
+    @annotation.conversion
     def toReaction: Reaction[A] = new Val.ToReaction(this)
 
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
@@ -86,14 +112,8 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
         } start()
     }
 
-    private def _check(old: Either[Throwable, A], New: Either[Throwable, A]) {
-        (old, New) match {
-            case (Right(x), Right(y)) if x != y => {
-                throw new Val.MultipleAssignmentException(old, New)
-            }
-            case _ => ()
-        }
-    }
+    // REMOVE ME
+    def onAssign(f: A => Unit): Seq[A] = new Val.OnAssign(this, f)
 }
 
 
@@ -106,7 +126,7 @@ object Val {
         RuntimeException("expected: " + expected + ", but actual: " + actual)
 
     /**
-     * Returns a Val with initial value.
+     * Creates a `Val` with initial value.
      */
     def apply[A](x: A): Val[A] = {
         val v = new Val[A]
@@ -167,7 +187,7 @@ object Val {
         override def apply(): A = {
             c.await()
             if (v == null) {
-                throw new NoSuchElementException("Val.toFuture.apply()")
+                throw new NoSuchElementException("Val.future.apply()")
             }
             v match {
                 case Left(t) => throw t
