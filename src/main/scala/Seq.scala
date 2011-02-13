@@ -355,6 +355,14 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Disallows multiple `forloop`s.
      */
-    def singlePass: Seq[A] = new detail.SinglePass(this)
+    def once: Seq[A] = new detail.Once(this)
+
+
+// standard algorithms
+
+    def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = new detail.FoldLeft(this, z, op)
+    def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = new detail.ReduceLeft(this, op)
+
+    final def /:[B](z: B)(op: (B, A) => B): Seq[B] = foldLeft(z)(op)
 
 }

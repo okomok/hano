@@ -53,7 +53,7 @@ class ResourceTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         doIt()
-        intercept[hano.ResourceException[_]] {
+        intercept[hano.SeqOnce.MultipleForloopException[_]] {
             doIt()
         }
     }

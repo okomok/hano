@@ -10,27 +10,15 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-import junit.framework.Assert._
-import hano.Exit
-
-/*
 class OnceTest extends org.scalatest.junit.JUnit3Suite {
+
     def testTrivial {
-        val out = new java.util.ArrayList[Int]
+        val xs = hano.async.loop.generate(0 until 5).once
 
-        class Trivial extends hano.Seq[Int] {
-            override def forloop(f: hano.Reaction[Int]) {
-                f(10)
-                f(5)
-            }
-        }
+        expect(hano.Iter.from(0 until 5))(xs.toIter)
 
-        val r = new Trivial().once
-        r.foreach(out.add(_))
-        expect(hano.Iter(10, 5))(hano.Iter.from(out))
-        intercept[hano.OnceException[_]] {
-            r.start
+        intercept[hano.SeqOnce.MultipleForloopException[_]] {
+            xs.start
         }
     }
 }
-*/
