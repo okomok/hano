@@ -19,7 +19,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
 
         val suite = new ParallelSuite(10)
         suite.add(50) {
-            v1 := 12
+            v1() = 12
         }
         suite.add(50) {
             @volatile var called = false
@@ -37,14 +37,14 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
 
     def testThrows {
         val v = new hano.Val[Int]
-        v := 11
-        v := 11
-        intercept[hano.MultipleAssignmentException[_]] {
+        v() = 11
+        v() = 11
+        intercept[hano.Val.MultipleAssignmentException[_]] {
             // throws immediately.
-            v := 12
+            v() = 12
         }
     }
-
+/*
     def testFork {
         val xs = hano.async.loop.generate(0 until 10).singlePass
         xs fork { xs =>
@@ -61,5 +61,5 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
             }
         } start()
     }
-
+*/
 }

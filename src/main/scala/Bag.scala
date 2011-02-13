@@ -48,7 +48,7 @@ final class Bag[A](val capacity: Int, override val context: Context = async) ext
                 tmp
             }
             if (j < capacity) {
-                vs(j) := x
+                vs(j)() = x
                 true
             } else {
                 false

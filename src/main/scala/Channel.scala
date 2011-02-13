@@ -57,7 +57,7 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
             }
             writeNode = writeNode.next
             w
-        } := x
+        } assign(x)
     }
 
     @annotation.equivalentTo("future.head(this)()")
