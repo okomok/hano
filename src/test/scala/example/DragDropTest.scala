@@ -15,7 +15,7 @@ package sequencetest; package reactivetest; package example
         NotSuite {
         //org.scalatest.junit.JUnit3Suite {
         def testTrivial {
-            val frame = hano.future.inEdt {
+            val frame = hano.InEdt.future {
                 val frame = new swing.JFrame("DragDropTest")
                 val label = new swing.JLabel("testTrivial")
                 frame.getContentPane.add(label)
@@ -36,7 +36,7 @@ package sequencetest; package reactivetest; package example
             } apply
 
             Thread.sleep(20000)
-            hano.future.inEdt {
+            hano.InEdt.future {
                 frame.setVisible(false)
             } apply
         }

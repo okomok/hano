@@ -49,6 +49,9 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
         } forloop(f)
     }
 
+    /**
+     * Writes the value.
+     */
     def write(x: A) {
         detail.Synchronized(writeLock) {
             val w = writeNode.value
@@ -60,6 +63,8 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
         } set(x)
     }
 
-    @annotation.equivalentTo("future.head(this)()")
-    def read: A = future.head(this)()
+    /**
+     * Reads and removes the value.
+     */
+    def read: A = Val(this).get
 }

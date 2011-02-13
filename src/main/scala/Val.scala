@@ -61,7 +61,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     /**
      * Gets the value
      */
-    def get: A = future.apply()
+    def get: A = toFuture.apply()
 
     /**
      * Fails to produce a value.
@@ -72,11 +72,6 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
      * `Val` assignment
      */
     def assign(that: Seq[A]) = that.forloop(toReaction)
-
-    /**
-     * Gets the value in the future.
-     */
-    def future: () => A = new Val.ToFuture(this)
 
     /**
      * Equivalent to `set(x)`, but throws if the value is different.
@@ -100,6 +95,11 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
 
     @annotation.conversion
     def toReaction: Reaction[A] = new Val.ToReaction(this)
+
+    /**
+     * Gets the value until the future.
+     */
+    def toFuture: () => A = new Val.ToFuture(this)
 
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
         context onEach { _ =>
@@ -187,7 +187,7 @@ object Val {
         override def apply(): A = {
             c.await()
             if (v == null) {
-                throw new NoSuchElementException("Val.future.apply()")
+                throw new NoSuchElementException("Val.toFuture.apply()")
             }
             v match {
                 case Left(t) => throw t

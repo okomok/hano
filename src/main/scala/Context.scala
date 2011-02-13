@@ -34,8 +34,15 @@ trait Context extends Seq[Unit] {
      */
     override def forloop(f: Reaction[Unit]): Unit
 
-    @annotation.equivalentTo("foreach(_ => body)")
+    /**
+     * Evaluates a `body`.
+     */
     final def eval(body: => Unit): Unit = foreach(_ => body)
+
+    /**
+     * Evaluates a `body` until the future.
+     */
+    final def future[R](body: => R): () => R = Val(map(_ => body)).toFuture
 
     private[hano]
     final def upper(_that: => Context): Context = {

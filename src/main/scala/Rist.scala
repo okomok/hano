@@ -29,7 +29,7 @@ final class Rist[A](override val context: Context = async) extends Resource[A] {
         while (!vs.isEmpty) {
             val v = vs.poll
             if (v != null) {
-                eval(f, v)
+                _eval(f, v)
             }
         }
     }
@@ -37,11 +37,11 @@ final class Rist[A](override val context: Context = async) extends Resource[A] {
     def add(x: A) {
         if (isActive) {
             if (g != null) {
-                eval(g, x)
+                _eval(g, x)
             } else {
                 vs.offer(x)
                 if (g != null && vs.remove(x)) {
-                    eval(g, x)
+                    _eval(g, x)
                 }
             }
         }
@@ -50,7 +50,7 @@ final class Rist[A](override val context: Context = async) extends Resource[A] {
     @annotation.aliasOf("add")
     def +=(x: A): Unit = add(x)
 
-    private def eval(f: Reaction[A], x: A) {
+    private def _eval(f: Reaction[A], x: A) {
         context onEach { _ =>
             g beforeExit {
                 f(x)
