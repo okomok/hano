@@ -26,4 +26,6 @@ object Exit {
             case _ => ()
         }
     }
+
+    class ClosedException extends RuntimeException
 }

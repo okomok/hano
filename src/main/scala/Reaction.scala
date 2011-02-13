@@ -16,7 +16,7 @@ object Reaction {
     def from[A](that: Reaction[A]): Reaction[A] = that
 
     implicit def fromFunction[A](from: A => Unit): Reaction[A] = new FromFunction(from)
-    implicit def fromValOption[A](from: Val[Option[A]]): Reaction[A] = from.toReaction
+    implicit def fromVal[A](from: Val[A]): Reaction[A] = from.toReaction
 
     private class Apply[A](_1: A => Unit, _2: Exit => Unit) extends Reaction[A] {
         override protected def rawApply(x: A) = _1(x)

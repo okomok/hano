@@ -13,6 +13,7 @@ package hano
 
 
 import java.util.concurrent
+import detail.CountDown
 
 
 /**
@@ -29,45 +30,52 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     // subscription order is NOT preserved.
     override def forloop(f: Reaction[A]) {
         if (v.get != null) {
-            eval(f, v.get)
+            _eval(f, v.get)
         } else {
             fs.offer(f)
             if (v.get != null && fs.remove(f)) {
-                eval(f, v.get)
+                _eval(f, v.get)
             }
         }
     }
 
-    private def set(tx: Either[Throwable, A]) {
+    private def _set(tx: Either[Throwable, A]) {
         if (v.compareAndSet(null, tx)) {
             while (!fs.isEmpty) {
                 val f = fs.poll
                 if (f != null) {
-                    eval(f, tx)
+                    _eval(f, tx)
                 }
             }
         } else {
-            check(v.get, tx)
+            _check(v.get, tx)
         }
     }
 
-    def assign(x: A): Unit = set(Right(x))
+    def set(x: A): Unit = _set(Right(x))
 
-    def fail(why: Throwable): Unit = set(Left(why))
+    def get: A = toFuture.apply()
+
+    def fail(why: Throwable): Unit = _set(Left(why))
+
+    def assign[B <: A](that: Seq[B]) = that.forloop(toReaction)
+
+    @annotation.aliasOf("set")
+    def update(x: A): Unit = set(x)
+
+    @annotation.aliasOf("get")
+    def apply(): A = get
+
+    @annotation.aliasOf("assign")
+    def :=[B <: A](that: Seq[B]): Unit = assign(that)
 
     def onAssign(f: A => Unit): Seq[A] = new Val.OnAssign(this, f)
 
     def toFuture: () => A = new Val.ToFuture(this)
 
-    def toReaction[B](implicit pre: Val[A] <:< Val[Option[B]]): Reaction[B] = new Val.ToReaction(pre(this))
+    def toReaction: Reaction[A] = new Val.ToReaction(this)
 
-    @annotation.equivalentTo("toFuture.apply")
-    def apply(): A = toFuture.apply
-
-    @annotation.equivalentTo("assign(x)")
-    def update(x: A): Unit = assign(x)
-
-    private def eval(f: Reaction[A], tx: Either[Throwable, A]) {
+    private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
         context onEach { _ =>
             tx match {
                 case Left(t) => f.exit(Exit.Failed(t))
@@ -78,9 +86,12 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
         } start()
     }
 
-    private def check(old: Either[Throwable, A], New: Either[Throwable, A]) {
-        if (old != New) {
-            throw new Val.MultipleAssignmentException(old, New)
+    private def _check(old: Either[Throwable, A], New: Either[Throwable, A]) {
+        (old, New) match {
+            case (Right(x), Right(y)) if x != y => {
+                throw new Val.MultipleAssignmentException(old, New)
+            }
+            case _ => ()
         }
     }
 }
@@ -106,6 +117,7 @@ object Val {
     @annotation.equivalentTo("new Val[A]")
     def apply[A]: Val[A] = new Val[A]
 
+    // REMOVE ME.
     def length(xs: Seq[_]): Val[Option[Int]] = {
         val v = new Val[Option[Int]](xs.context upper async)
         var acc = 0
@@ -118,7 +130,7 @@ object Val {
         v
     }
 
-    // DEPRECATE ME.
+    // REMOVE ME.
     private class OnAssign[A](_1: Seq[A], _2: A => Unit) extends SeqProxy[A] {
         override val self = _1.onHead {
             case Some(x) => _2(x)
@@ -126,9 +138,13 @@ object Val {
         }
     }
 
-    private class ToReaction[A](_1: Val[Option[A]]) extends Reaction[A] {
-        override protected def rawApply(x: A) = _1.assign(Some(x))
-        override protected def rawExit(q: Exit) = _1.assign(None)
+    private class ToReaction[A](_1: Val[A]) extends Reaction[A] {
+        override protected def rawApply(x: A) = _1.set(x)
+        override protected def rawExit(q: Exit) = q match {
+            case Exit.Failed(t) => _1.fail(t)
+            case Exit.Closed => _1.fail(new NoSuchElementException("source sequence was closed before Val.set"))
+            case _ => ()
+        }
     }
 
     private class ToFuture[A](_1: Seq[A]) extends (() => A) {
@@ -136,20 +152,19 @@ object Val {
         private[this] val c = new java.util.concurrent.CountDownLatch(1)
 
         _1 onEach { x =>
-            assert(v == null)
-            v = Right(x)
+            CountDown(c) {
+                v = Right(x)
+            }
         } onExit { q =>
-            try {
+            CountDown(c) {
                 q match {
                     case Exit.Failed(t) if v == null => v = Left(t)
                     case _ => ()
                 }
-            } finally {
-                c.countDown()
             }
         } start()
 
-        override def apply: A = {
+        override def apply(): A = {
             c.await()
             if (v == null) {
                 throw new NoSuchElementException("Val.toFuture.apply()")
