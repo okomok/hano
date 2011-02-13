@@ -8,6 +8,8 @@ package com.github.okomok
 package hano
 
 
+// WILL BE DEPRECATED.
+
 /**
  * Contains synchronous algorithms.
  */

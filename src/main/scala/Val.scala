@@ -128,9 +128,9 @@ object Val {
     /**
      * Creates a `Val` with initial value.
      */
-    def apply[A](x: A): Val[A] = {
+    def apply[A](x: Seq[A]): Val[A] = {
         val v = new Val[A]
-        v() = x
+        v := x
         v
     }
 

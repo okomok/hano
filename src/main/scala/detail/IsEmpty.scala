@@ -10,16 +10,19 @@ package detail
 
 
 private[hano]
-class Head[A](_1: Seq[A]) extends SeqAdapter[A] {
+class IsEmpty(_1: Seq[_]) extends SeqAdapter[Boolean] {
     override protected val underlying = _1
-    override def forloop(f: Reaction[A]) {
+    override def forloop(f: Reaction[Boolean]) {
         def _k(q: Exit) { close(); f.exit(q) }
 
-        _1 onEach { x =>
-            f(x)
+        _1 onEach { _ =>
+            f(false)
             _k(Exit.End)
         } onExit {
-            case Exit.End => _k(Exit.Failed(new NoSuchElementException("Seq.head")))
+            case q @ Exit.End => {
+                f(true)
+                _k(q)
+            }
             case q => _k(q)
         } start()
     }

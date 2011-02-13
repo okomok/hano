@@ -57,8 +57,16 @@ trait Seq[+A] extends java.io.Closeable {
     @annotation.equivalentTo("foreach(_ => ())")
     def start(): Unit = foreach(_ => ())
 
-    @annotation.equivalentTo("future.untilExit(this)()")
-    def await(): Unit = future.untilExit(this)()
+    /**
+     * Blocks until `onExit` is called.
+     */
+    def await() {
+        val c = new java.util.concurrent.CountDownLatch(1)
+        onExit { _ =>
+            c.countDown()
+        } start()
+        c.await()
+    }
 
 
 // combinator
@@ -360,11 +368,24 @@ trait Seq[+A] extends java.io.Closeable {
 
 // standard algorithms
 
+    def isEmpty: Seq[Boolean] = new detail.IsEmpty(this)
+
+    def length: Seq[Int] = new detail.Length(this)
+
+    final def size: Seq[Int] = length
+
     def head: Seq[A] = new detail.Head(this)
 
+    def last: Seq[A] = new detail.Last(this)
+
+    def nth(n:Int): Seq[A] = new detail.Nth(this, n)
+
     def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = new detail.FoldLeft(this, z, op)
+
     def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = new detail.ReduceLeft(this, op)
 
     final def /:[B](z: B)(op: (B, A) => B): Seq[B] = foldLeft(z)(op)
+
+    def copy[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Seq[To] = new detail.Copy(this, bf)
 
 }

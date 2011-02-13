@@ -89,7 +89,13 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def loopBy(grainSize: Int): Seq[A] = around(self.loopBy(grainSize))
     override def noEnd: Seq[A] = around(self.noEnd)
     override def once: Seq[A] = around(self.once)
+    override def isEmpty: Seq[Boolean] = around(self.isEmpty)
+    override def length: Seq[Int] = around(self.length)
     override def head: Seq[A] = around(self.head)
+    override def last: Seq[A] = around(self.head)
+    override def nth(n: Int): Seq[A] = around(self.nth(n))
     override def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = around(self.foldLeft(z)(op))
     override def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = around(self.reduceLeft(op))
+    override def copy[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Seq[To] = around(self.copy)
+
 }

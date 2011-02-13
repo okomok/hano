@@ -19,16 +19,3 @@ class Fork[A](_1: Seq[A], _2: Seq[A] => Unit) extends SeqProxy[A] {
         ys
     }
 }
-
-
-private[hano]
-class Idempotent[A](_1: Seq[A]) extends SeqAdapter[A] {
-    private[this] var go = true
-    override protected val underlying = _1
-    override def forloop(f: Reaction[A]) {
-        if (go) {
-            go = false
-            _1.forloop(f)
-        }
-    }
-}
