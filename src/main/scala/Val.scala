@@ -23,33 +23,37 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     require(context ne Self)
     require(context ne Unknown)
 
-    private[this] val v = new concurrent.atomic.AtomicReference[Option[A]](None)
+    private[this] val v = new concurrent.atomic.AtomicReference[Either[Throwable, A]](null)
     private[this] val fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]
 
     // subscription order is NOT preserved.
     override def forloop(f: Reaction[A]) {
-        if (!v.get.isEmpty) {
-            eval(f, v.get.get)
+        if (v.get != null) {
+            eval(f, v.get)
         } else {
             fs.offer(f)
-            if (!v.get.isEmpty && fs.remove(f)) {
-                eval(f, v.get.get)
+            if (v.get != null && fs.remove(f)) {
+                eval(f, v.get)
             }
         }
     }
 
-    def assign(x: A) {
-        if (v.compareAndSet(None, Some(x))) {
+    private def set(tx: Either[Throwable, A]) {
+        if (v.compareAndSet(null, tx)) {
             while (!fs.isEmpty) {
                 val f = fs.poll
                 if (f != null) {
-                    eval(f, x)
+                    eval(f, tx)
                 }
             }
-        } else if (v.get.get != x) {
-            throw new Val.MultipleAssignmentException(v.get.get, x)
+        } else {
+            check(v.get, tx)
         }
     }
+
+    def assign(x: A): Unit = set(Right(x))
+
+    def fail(why: Throwable): Unit = set(Left(why))
 
     def onAssign(f: A => Unit): Seq[A] = new Val.OnAssign(this, f)
 
@@ -63,12 +67,21 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     @annotation.equivalentTo("assign(x)")
     def update(x: A): Unit = assign(x)
 
-    private def eval(f: Reaction[A], x: A) {
+    private def eval(f: Reaction[A], tx: Either[Throwable, A]) {
         context onEach { _ =>
-            f(x)
+            tx match {
+                case Left(t) => f.exit(Exit.Failed(t))
+                case Right(x) => f(x)
+            }
         } onExit {
             f.exit(_)
         } start()
+    }
+
+    private def check(old: Either[Throwable, A], New: Either[Throwable, A]) {
+        if (old != New) {
+            throw new Val.MultipleAssignmentException(old, New)
+        }
     }
 }
 
