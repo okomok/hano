@@ -78,7 +78,7 @@ class CloseTest extends org.scalatest.junit.JUnit3Suite {
 
     def testFork {
         val r = new MyResource
-        r.fork{s => s.take(5)}.take(3).start
+        r.fork{s => s.take(5).start}.take(3).start
         r.gen(3)
         r.gen(3)
         r.gen(3)

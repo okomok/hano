@@ -18,10 +18,10 @@ class AdaptTest extends org.scalatest.junit.JUnit3Suite {
         val r = hano.Seq(1,2,3,4,5,6)
         val out = new java.util.ArrayList[Int]
         r.
-            fork{r => r.onEach(e => out.add(e *  2))}.
+            fork{r => r.onEach(e => out.add(e *  2)).start()}.
             fork{r => r}.
             adapt { (xs, _) =>  xs.start() }.
-            fork{r => r.onEach(e => out.add(e + 10))}.
+            fork{r => r.onEach(e => out.add(e + 10)).start()}.
             fork{r => r}.
             start
 

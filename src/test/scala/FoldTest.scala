@@ -22,13 +22,13 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
                 Math.min(a, x)
             } onEach { v =>
                 v1 = Some(v)
-            }
+            } start()
         } fork { xs =>
             xs reduceLeft { (a, x) =>
                Math.max(a, x)
             } onEach { v =>
                 v2 = Some(v)
-            }
+            } start()
         } start()
 
         expect(0)(v1.get)
@@ -47,13 +47,13 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
                 Math.min(a, x)
             } onEach { x =>
                 v1() = x
-            }
+            } start()
         } fork { xs =>
             xs reduceLeft { (a, x) =>
                Math.max(a, x)
             } onEach { x =>
                 v2() = x
-            }
+            } start()
         } start()
 
         expect(0)(v1())

@@ -55,6 +55,8 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
 
     def toFuture: () => A = new Val.ToFuture(this)
 
+    def toReaction[B](implicit pre: Val[A] <:< Val[Option[B]]): Reaction[B] = new Val.ToReaction(pre(this))
+
     @annotation.equivalentTo("toFuture.apply")
     def apply(): A = toFuture.apply
 
@@ -103,11 +105,17 @@ object Val {
         v
     }
 
+    // DEPRECATE ME.
     private class OnAssign[A](_1: Seq[A], _2: A => Unit) extends SeqProxy[A] {
         override val self = _1.onHead {
             case Some(x) => _2(x)
             case None => ()
         }
+    }
+
+    private class ToReaction[A](_1: Val[Option[A]]) extends Reaction[A] {
+        override protected def rawApply(x: A) = _1.assign(Some(x))
+        override protected def rawExit(q: Exit) = _1.assign(None)
     }
 
     private class ToFuture[A](_1: Seq[A]) extends (() => A) {

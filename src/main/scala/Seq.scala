@@ -234,7 +234,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Forks.
      */
-    def fork(f: Seq[A] => Seq[_]): Seq[A] = new detail.Fork(this, f)
+    def fork(f: Seq[A] => Unit): Seq[A] = new detail.Fork(this, f)
 
     /**
      * Creates a duplicate.
@@ -359,6 +359,8 @@ trait Seq[+A] extends java.io.Closeable {
 
 
 // standard algorithms
+
+    def head: Seq[A] = new detail.Head(this)
 
     def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = new detail.FoldLeft(this, z, op)
     def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = new detail.ReduceLeft(this, op)

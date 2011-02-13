@@ -30,8 +30,8 @@ private[hano]
 class ReplaceRegion[A](_1: Seq[A], _2: Int, _3: Int, _4: => Iter[A]) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) =
-        _1.fork{ _.take(_2).onEach(f(_)) }.
-           fork{ _.slice(_2, _3).replace(_4).onEach(f(_)) }.
-           fork{ _.drop(_3).react(f) }.
+        _1.fork{ _.take(_2).onEach(f(_)).start() }.
+           fork{ _.slice(_2, _3).replace(_4).onEach(f(_)).start() }.
+           fork{ _.drop(_3).react(f).start() }.
            start()
 }

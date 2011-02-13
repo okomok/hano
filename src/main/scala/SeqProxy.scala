@@ -65,7 +65,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def onClosed(k: => Unit): Seq[A] = around(self.onClosed(k))
     override def onEach(f: A => Unit): Seq[A] = around(self.onEach(f))
     override def onEachMatch(f: PartialFunction[A, Unit]): Seq[A] = around(self.onEachMatch(f))
-    override def fork(f: Seq[A] => Seq[_]): Seq[A] = around(self.fork(f))
+    override def fork(f: Seq[A] => Unit): Seq[A] = around(self.fork(f))
     override def duplicate: (Seq[A], Seq[A]) = around2(self.duplicate)
     override def takeUntil(that: Seq[_]): Seq[A] = around(self.takeUntil(that))
     override def dropUntil(that: Seq[_]): Seq[A] = around(self.dropUntil(that))
@@ -89,6 +89,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def loopBy(grainSize: Int): Seq[A] = around(self.loopBy(grainSize))
     override def noEnd: Seq[A] = around(self.noEnd)
     override def once: Seq[A] = around(self.once)
+    override def head: Seq[A] = around(self.head)
     override def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = around(self.foldLeft(z)(op))
     override def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = around(self.reduceLeft(op))
 }
