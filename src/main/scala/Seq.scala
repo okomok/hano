@@ -368,6 +368,11 @@ trait Seq[+A] extends java.io.Closeable {
      */
     def once: Seq[A] = new detail.Once(this)
 
+    /**
+     * Turns into never-fail sequence.
+     */
+    def optional: Seq[Option[A]] = new detail.Optional(this)
+
 
 // standard algorithms
 

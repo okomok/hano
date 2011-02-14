@@ -12,6 +12,20 @@ import com.github.okomok.hano
 
 class OptionalTest extends org.scalatest.junit.JUnit3Suite {
 
+    def testNth {
+        val xs = hano.async.loop.generate(Seq(3,1,8,6,7,4,2,9))
+        val nth = hano.Val(xs.nth(6).optional)
+        expect(2)(nth().get)
+    }
+
+    def testNoNth {
+        val xs = hano.async.loop.generate(Seq(3,1,8,6,7,4,2,9))
+        val nth = new hano.Val[Option[Int]]
+        nth := xs.nth(10).optional
+        expect(None)(nth())
+    }
+
+    /*
     def testOption {
         hano.block { Y =>
             import Y._
@@ -27,4 +41,6 @@ class OptionalTest extends org.scalatest.junit.JUnit3Suite {
             throw new Error
         }
     }
+
+    */
 }

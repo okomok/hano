@@ -26,6 +26,6 @@ package object hano {
 
     /**
      * Builds single-or-empty sequence from an expression.
-     */
     def optional[A](body: => A): Seq[A] = new detail.Optional(() => body)
+     */
 }
