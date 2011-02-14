@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Last[A](_1: Seq[A]) extends SeqAdapter[A] {
+class Last[A](_1: Seq[A]) extends SeqAdapter[A] with SeqOptional {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var acc: Option[A] = None

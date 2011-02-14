@@ -10,6 +10,6 @@ package detail
 
 
 private[hano]
-class Length[A](_1: Seq[A]) extends SeqProxy[Int] {
+class Length[A](_1: Seq[A]) extends SeqProxy[Int] with SeqOptional {
     override val self = _1.foldLeft(0)((a, _) => a + 1)
 }

@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Head[A](_1: Seq[A]) extends SeqAdapter[A] {
+class Head[A](_1: Seq[A]) extends SeqAdapter[A] with SeqOptional {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         def _k(q: Exit) { close(); f.exit(q) }

@@ -11,7 +11,7 @@ package hano
 /**
  * Context is one-element sequence of the Unit.
  */
-trait Context extends Seq[Unit] {
+trait Context extends Seq[Unit] with SeqOptional {
 
     @annotation.returnThis @inline
     final def asContext: Context = this
