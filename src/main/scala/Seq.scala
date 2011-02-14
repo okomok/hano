@@ -380,6 +380,8 @@ trait Seq[+A] extends java.io.Closeable {
 
     def nth(n:Int): Seq[A] = new detail.Nth(this, n)
 
+    def find(p: A => Boolean): Seq[A] = new detail.Find(this, p)
+
     def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = new detail.FoldLeft(this, z, op)
 
     def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = new detail.ReduceLeft(this, op)

@@ -77,7 +77,6 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
     def testNth {
         val xs = hano.async.loop.generate(Seq(3,1,8,6,7,4,2,9))
         val nth = hano.Val(xs.nth(6))
-        nth := xs.nth(6)
         expect(2)(nth())
     }
 
@@ -129,6 +128,31 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
             reduce()
         }
     }
+
+    def testFind {
+        val xs = hano.async.loop.generate(Seq(3,1,8,6,7,4,2,9))
+        val find = hano.Val(xs.find(_ == 6))
+        expect(6)(find())
+    }
+
+    def testNoFind {
+        val xs = hano.async.loop.generate(Seq(3,1,8,6,7,4,2,9))
+        val find = new hano.Val[Int]
+        find := xs.find(_ == 10)
+        intercept[NoSuchElementException] {
+            find()
+        }
+    }
+
+    def testNoFindEmpty {
+        val xs = hano.async.loop.generate(Seq[Int]())
+        val find = new hano.Val[Int]
+        find := xs.find(_ == 0)
+        intercept[NoSuchElementException] {
+            find()
+        }
+    }
+
 /* hmmmmmm....
     def testCopy {
         val xs = hano.async.loop.generate(Seq(3,1,2,6,7,4,2,9))
