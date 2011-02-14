@@ -36,6 +36,7 @@ object generator {
         abstract class Env[A] extends block.Env1 {
             def apply(x: A): Unit @suspendable
             def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
+            def each[B](xs: Seq[B]): B @cpsParam[Any, Unit] = new detail.CheckSingle(xs).toCps
         }
         def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = new detail.CpsIterable(body)
     }
