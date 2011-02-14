@@ -21,10 +21,10 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         val r1 = TrivialResource("res1")
         val r2 = TrivialResource("res2")
         val r3 = TrivialResource("res3")
-        block { * =>
-            val s1 = *.use(r1)
-            val s2 = *.use(r2)
-            val s3 = *.use(r3)
+        block {
+            val s1 = hano.use(r1).!
+            val s2 = hano.use(r2).!
+            val s3 = hano.use(r3).!
             assertEquals(s1, "res1")
             assertEquals(s2, "res2")
             assertEquals(s3, "res3")
@@ -45,10 +45,10 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         var thrown = false
 
         try {
-            block { * =>
-                val s1 = *.use(r1)
-                val s2 = *.use(r2)
-                val s3 = *.use(r3)
+            block {
+                val s1 = hano.use(r1).!
+                val s2 = hano.use(r2).!
+                val s3 = hano.use(r3).!
                 assertEquals(s1, "res1")
                 assertEquals(s2, "res2")
                 assertEquals(s3, "res3")
@@ -108,11 +108,10 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         val r2 = Res2("res2")
         val r3 = Res3("res3")
 
-        hano.block { Y =>
-            import Y._
-            val s1 = each(r1)
-            val s2 = each(r2)
-            val s3 = each(r3)
+        hano.block {
+            val s1 = r1.!
+            val s2 = r2.!
+            val s3 = r3.!
             arr.add(1)
             arr.add(2)
             arr.add(3)
@@ -127,11 +126,10 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
         val r1 = new TrivialCloseable
         val r2 = new TrivialCloseable
         val r3 = new TrivialCloseable
-        block { * =>
-            import *._
-            val s1 = use(r1)
-            val s2 = use(r2)
-            val s3 = use(r3)
+        block {
+            val s1 = hano.use(r1).!
+            val s2 = hano.use(r2).!
+            val s3 = hano.use(r3).!
             ()
         }
         assertTrue(r1.ended)

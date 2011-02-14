@@ -9,10 +9,11 @@ package com.github.okomok
 
 package object hano {
 
-    /**
-     * Triggers implicit conversions.
-     */
+    @annotation.returnThat
     def from[A](that: Seq[A]): Seq[A] = that
+
+    @annotation.returnThat
+    def use[A](that: Arm[A]): Arm[A] = that
 
     /**
      * Creates an asynchronous(thread-pool) context

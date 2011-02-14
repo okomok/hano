@@ -33,10 +33,11 @@ object generator {
      * Single-threaded.
      */
     object cps {
-        abstract class Env[A] extends block.Env1 {
+        abstract class Env[A] {
             def apply(x: A): Unit @suspendable
             def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
-            def each[B](xs: Seq[B]): B @cpsParam[Any, Unit] = new detail.CheckSingle(xs).toCps
+            def optional[B](xs: Seq[B]): B @cpsParam[Any, Unit] = new detail.CheckSingle(xs).toCps
+            def require(cond: Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Single(()) else Empty).toCps
         }
         def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = new detail.CpsIterable(body)
     }

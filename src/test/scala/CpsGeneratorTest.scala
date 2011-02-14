@@ -120,7 +120,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     def testAmb1 {
         val it = generator.cps[Int] { * =>
             val x = *.amb(0 until 10)
-            *.require(x % 2 == 0)
+            hano.cps.require(x % 2 == 0)
             *(x)
         }
         expect(Iter(0,2,4,6,8))(Iter.from(it))
@@ -130,7 +130,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         val it = generator.cps[(Int, Int)] { * =>
             val x = *.amb(0 until 5)
             val y = *.amb(5 until 10)
-            *.require(x + y == 7)
+            hano.cps.require(x + y == 7)
             *((x, y))
         }
         expect(Iter((0,7),(1,6),(2,5)))(Iter.from(it))
@@ -140,7 +140,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         val it = generator.cps[(Int, Int)] { * =>
             val x = *.amb(0 until 5)
             val y = *.amb(5 until 10)
-            *.require(x + y == 7)
+            hano.cps.require(x + y == 7)
             *((x, y))
             99
         }
@@ -148,9 +148,9 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testEachValueDiscarding2 {
-        val it = hano.block { * =>
-            val x = *.each(0 until 5)
-            val y = *.each(5 until 10)
+        val it = hano.block {
+            val x = hano.from(0 until 5).!
+            val y = hano.from(5 until 10).!
             (x, y)
         }
     }
@@ -165,7 +165,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     def testAmbWithOneElementSeq {
         val it = generator.cps[(Int, Int, Int)] { * =>
             val x = *.amb(0 until 2)
-            val y = *.find(0 until 9)(_ == 7)
+            val y = *.optional(hano.from(0 until 9).find(_ == 7))
             val z = *.amb(0 until 3)
             *((x, y, z))
         }

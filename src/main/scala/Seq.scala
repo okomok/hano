@@ -190,14 +190,19 @@ trait Seq[+A] extends java.io.Closeable {
     def toResponder: Responder[A] = new detail.ToResponder(this)
 
     @annotation.conversion
-    def toCps: A @continuations.cpsParam[Any, Unit] = {
+    final def toCps: A @continuations.cpsParam[Any, Unit] = {
         continuations.shift {
             (cont: A => Any) => foreach(new detail.DiscardValue(cont))
         }
     }
 
+    final def cpsFor = new detail.CpsFor(this)
+
     @annotation.aliasOf("toCps")
     final def ! : A @continuations.cpsParam[Any, Unit] = toCps
+
+    @annotation.aliasOf("cpsFor")
+    final def !? = cpsFor
 
     def actor: scala.actors.Actor = scala.actors.Actor.actor(start)
 
