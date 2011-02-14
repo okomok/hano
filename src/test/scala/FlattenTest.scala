@@ -18,7 +18,7 @@ class FlattenTest extends org.scalatest.junit.JUnit3Suite {
     def testFlatMap: Unit = {
         val tr = hano.Seq(1,2,3,4,5)
         val out = new java.util.ArrayList[Int]
-        tr.flatMap{e => hano.Seq.from(0 until e)}.foreach(out.add(_))
+        tr.flatMap{e => hano.from(0 until e)}.foreach(out.add(_))
         assertEquals(hano.Iter(0,0,1,0,1,2,0,1,2,3,0,1,2,3,4), hano.Iter.from(out))
     }
 

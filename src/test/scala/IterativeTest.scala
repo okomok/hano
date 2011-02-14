@@ -20,33 +20,33 @@ class IterativeTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testLong: Unit = {
-        val r = hano.Seq.from(0 until 400)
+        val r = hano.from(0 until 400)
         assertEquals(hano.Iter.from(0 until 400), r.toIter)
     }
 
     def testTakeStoppable: Unit = {
-        val r = hano.Seq.from(Stream.from(0))
+        val r = hano.from(Stream.from(0))
         val t = r.take(4)
         expect(hano.Iter(0,1,2,3))(t.toIter)
     }
 
     def testExit: Unit = {
         var exited = false
-        val r = hano.Seq.from(0 until 3).onExit{_ => exited = true}
+        val r = hano.from(0 until 3).onExit{_ => exited = true}
         r.start
         assert(exited)
     }
 
     /* close is NOW exit.
     def testCloseIsNotEnd: Unit = {
-        val r = hano.Seq.from(Stream.from(0)).onExit{_ => fail("shall be no end")}
+        val r = hano.from(Stream.from(0)).onExit{_ => fail("shall be no end")}
         val t = r.take(4)
         expect(hano.Iter(0,1,2,3))(t.toIter)
     }
     */
 
     def testReForeach: Unit = {
-        val r = hano.Seq.from(Stream.from(0))
+        val r = hano.from(Stream.from(0))
         locally {
             val t = r.take(4)
             expect(hano.Iter(0,1,2,3))(t.toIter)

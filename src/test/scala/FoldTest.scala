@@ -16,7 +16,7 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
         import java.lang.Math
 
         val v1, v2 = new hano.Val[Int]
-        hano.Seq.from(Iterator(5,1,6,0,3,2,4)) fork { xs =>
+        hano.from(Iterator(5,1,6,0,3,2,4)) fork { xs =>
             v1 := xs.reduceLeft(Math.min(_, _))
         } fork { xs =>
             v2 := xs.reduceLeft(Math.max(_, _))
@@ -48,7 +48,7 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
 
         var v1, v2: Option[Int] = None
 
-        hano.Seq.from(Iterator(5,1,6,0,3,2,4)) fork { xs =>
+        hano.from(Iterator(5,1,6,0,3,2,4)) fork { xs =>
             xs reduceLeft { (a, x) =>
                 Math.min(a, x)
             } onEach { v =>

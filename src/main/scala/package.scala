@@ -10,6 +10,11 @@ package com.github.okomok
 package object hano {
 
     /**
+     * Triggers implicit conversions.
+     */
+    def from[A](that: Seq[A]): Seq[A] = that
+
+    /**
      * Creates an asynchronous(thread-pool) context
      */
     def async: Context = new detail.Async()

@@ -17,7 +17,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val a = hano.Iter(1,6,7,10,14,17)
         val t = new java.util.ArrayList[Int]
-        hano.Seq.from(a).foreach{ e => t.add(e) }
+        hano.from(a).foreach{ e => t.add(e) }
         assertEquals(a, hano.Iter.from(t))
     }
 }
