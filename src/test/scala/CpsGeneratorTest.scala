@@ -165,7 +165,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     def testAmbWithOneElementSeq {
         val it = generator.cps[(Int, Int, Int)] { * =>
             val x = *.amb(0 until 2)
-            val y = *.optional(hano.from(0 until 9).find(_ == 7))
+            val y = *.get(hano.from(0 until 9).find(_ == 7))
             val z = *.amb(0 until 3)
             *((x, y, z))
         }
