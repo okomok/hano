@@ -11,7 +11,7 @@ package hano
 /**
  * Immutable(single-forloop) infinite list
  */
-final class Rist[A](override val context: Context = async) extends SeqResource[A] {
+final class Rist[A](override val context: Context = async) extends SeqOnce[A] {
     require(context ne Self)
     require(context ne Unknown)
 
@@ -20,11 +20,11 @@ final class Rist[A](override val context: Context = async) extends SeqResource[A
     private[this] val vs = new java.util.concurrent.ConcurrentLinkedQueue[A]
     private def _k(q: Exit) { close(); g.exit(q) }
 
-    override protected def closeResource() {
+    override def close() {
         isActive = false
         vs.clear()
     }
-    override protected def openResource(f: Reaction[A]) {
+    override protected def forloopOnce(f: Reaction[A]) {
         g = f
         while (!vs.isEmpty) {
             val v = vs.poll
