@@ -26,7 +26,7 @@ private[hano]
 class LoopSelf[A](_1: Seq[A]) extends SeqResource[A] {
     assert(_1.context eq Self)
 
-    @volatile private[this] var isActive = true
+    private[this] var isActive = true
     override def context = _1.context
     override def closeResource() { isActive = false; _1.close() }
     // requires synchronized in case close-then-forloop from other threads.
@@ -53,7 +53,7 @@ private[hano]
 class LoopOther[A](_1: Seq[A], _2: Int) extends SeqResource[A] {
     assert(_1.context ne Self)
 
-    @volatile private[this] var isActive = true
+    private[this] var isActive = true
     override def context = _1.context
     override def closeResource() { isActive = false; _1.close() }
     override def openResource(f: Reaction[A]) {
