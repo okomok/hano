@@ -27,12 +27,10 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         _1 shift {
             context
         } onEach { x =>
-            f beforeExit {
-                if (go) {
-                    f(x)
-                } else {
-                    _k(Exit.End)
-                }
+            if (go) {
+                f(x)
+            } else {
+                _k(Exit.End)
             }
         } onExit {
             _k(_)
