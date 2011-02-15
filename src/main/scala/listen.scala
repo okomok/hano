@@ -30,14 +30,10 @@ object listen {
     /**
      * Creates a Seq from listeners.
      */
-    def apply[A](body: Env[A] => Unit): Seq[A] = {
-        val env = new EnvImpl[A]
-        body(env)
-        env.asSeq
-    }
+    def apply[A](body: Env[A] => Unit): Seq[A] = new EnvImpl(body).asSeq
 
-    private class EnvImpl[A] extends Env[A] with Reaction[A] {
-        @volatile private[this] var _f: Reaction[A] = null
+    private class EnvImpl[A](body: Env[A] => Unit) extends Env[A] with Reaction[A] { outer =>
+        private[this] var _f: Reaction[A] = null
         private[this] var _add: () => Unit = null
         private[this] var _remove: () => Unit = null
         private[this] var _context: Context = Unknown
@@ -55,20 +51,19 @@ object listen {
             _context = ctx
         }
 
-        lazy val asSeq: Seq[A] = new Resource[A] {
+        lazy val asSeq: Seq[A] = new SeqResource[A] {
             override def context = _context
             override protected def closeResource() {
                 if (_remove != null) {
                     _remove()
                 }
-                _remove = null
             }
             override protected def openResource(f: Reaction[A]) {
-                _f = f // synchronization point
+                body(outer)
+                _f = f
                 if (_add != null) {
                     _add()
                 }
-                _add = null
             }
         }
     }

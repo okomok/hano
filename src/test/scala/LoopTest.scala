@@ -90,7 +90,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
                 f(1); f(2); f(3); f.end()
             }
         }
-        val xs = new MyResource().take(3).loop
+        val xs = new MyResource().take(3).loop // take(3) guarantees `close`.
         expect(hano.Iter(1,2,3,1,2,3,1,2))(xs.take(8).toIter)
     }
 

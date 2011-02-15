@@ -27,7 +27,12 @@ class ListenTest extends org.scalatest.junit.JUnit3Suite {
         xs.generate(Stream.iterate(0)(_ + 1))
     }
 
-    def testNaturals: Unit = {
+    def testNaturals {
         expect(hano.Iter(0,1,2,3,4,5))(naturals.take(6).toIter)
+    }
+
+    def testLoopable {
+        val xs: hano.Seq[Int] = naturals.take(3).loop.take(7)
+        expect(hano.Iter(0,1,2,0,1,2,0))(xs.toIter)
     }
 }
