@@ -43,7 +43,7 @@ class DragDropTest extends
                     mouse.Released
                 } onEach { d =>
                     println("dragging at: " + (d.getX, d.getY))
-                } onExit { q =>
+                } onEnd {
                     println("released")
                 } start()
             } start()

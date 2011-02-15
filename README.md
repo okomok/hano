@@ -3,16 +3,19 @@
 
 `hano` is a reactive sequence combinator library:
 
-    hano.block { * =>
-        val mouse = hano.Swing.Mouse(jl)
-        for (p <- *.in(mouse.Pressed)) {
-            println("pressed at: " + (p.getX, p.getY))
-            for (d <- *.in(mouse.Dragged.stepTime(100).takeUntil(mouse.Released))) {
-                println("dragging at: " + (d.getX, d.getY))
-            }
+    val mouse = hano.Swing.Mouse(jl)
+    mouse.Pressed onEach { p =>
+        println("pressed at: " + (p.getX, p.getY))
+        mouse.Dragged stepTime {
+            100
+        } takeUntil {
+            mouse.Released
+        } onEach { d =>
+            println("dragging at: " + (d.getX, d.getY))
+        } onEnd {
             println("released")
-        }
-    }
+        } start()
+    } start()
 
 
 
@@ -37,16 +40,6 @@ A reactive sequence `hano.Seq` is built upon the famous method `foreach`:
     }
 
 Unlike `scala.collection.Traversable`, this `foreach` is allowed to be asynchronous.
-
-
-
-
-## Continuations
-
-
-
-## Automatic Resource Management
-
 
 
 
