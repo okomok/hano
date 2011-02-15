@@ -23,14 +23,14 @@ class Loop[A](_1: Seq[A], _2: Int = 1) extends SeqProxy[A] {
 
 // Specialized to avoid stack-overflow.
 private[hano]
-class LoopSelf[A](_1: Seq[A]) extends Seq[A] {
+class LoopSelf[A](_1: Seq[A]) extends SeqResource[A] {
     assert(_1.context eq Self)
 
     @volatile private[this] var isActive = true
-    override def close() { isActive = false; _1.close() }
     override def context = _1.context
+    override def closeResource() { isActive = false; _1.close() }
     // requires synchronized in case close-then-forloop from other threads.
-    override def forloop(f: Reaction[A]) = synchronized {
+    override def openResource(f: Reaction[A]) {
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
 
@@ -50,13 +50,13 @@ class LoopSelf[A](_1: Seq[A]) extends Seq[A] {
 
 
 private[hano]
-class LoopOther[A](_1: Seq[A], _2: Int) extends Seq[A] {
+class LoopOther[A](_1: Seq[A], _2: Int) extends SeqResource[A] {
     assert(_1.context ne Self)
 
     @volatile private[this] var isActive = true
-    override def close() { isActive = false; _1.close() }
     override def context = _1.context
-    override def forloop(f: Reaction[A]) = synchronized {
+    override def closeResource() { isActive = false; _1.close() }
+    override def openResource(f: Reaction[A]) {
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
 
