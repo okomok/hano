@@ -47,7 +47,7 @@ trait Seq[+A] extends java.io.Closeable {
     def context: Context
 
     /**
-     * Shall be idempotent and should be thread-safe.
+     * Shall be idempotent and thread-safe.
      */
     override def close(): Unit = ()
 

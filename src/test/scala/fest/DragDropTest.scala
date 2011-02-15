@@ -21,56 +21,6 @@ import hano.Seq
 import scala.util.continuations
 
 
-/*
-object Rx {
-
-    def block[A](ctx: BlockEnv => A @continuations.cpsParam[A, Any]): Unit = continuations.reset(ctx(new BlockEnv))
-
-    class BlockEnv {
-        // loop{...
-        def apply[A](ctx: BlockEnv => A @continuations.cpsParam[Any, Any]): hano.Exit @continuations.cpsParam[Any, Any] = {
-            println("BlockEnv.apply")
-            val c = new BlockEnv
-            ctx(c)
-            assert(c._xs != null)
-            assert(c._f != null)
-            new hano.BlockEnv{}.each { new hano.Seq[hano.Exit] {
-                override def forloop(f: hano.Exit => Unit, k: hano.Exit => Unit) {
-                    println("hey")
-                    c._xs.onExit(q => f(q)).foreach(x => c._f(x))
-                }
-            } }
-        }
-    }
-
-    class BlockEnv {
-        var _xs: hano.Seq[Any] = null
-        var _f: Any => Any = null
-        // next(...
-        def apply[A](xs: hano.Seq[A]): A @continuations.cpsParam[Any, Any] = {
-            println("BlockEnv.apply")
-            continuations.shift { (k: A => Any) => _xs = xs; _f = k.asInstanceOf[Any => Any] } //xs.foreach(function.discard(k)) }
-        }
-    }
-
-}
-*/
-
-/*
-    class Forloop[A](xs: hano.Seq[A]) {
-        import hano.Exit
-        import hano.BlockEnv.each
-        import scala.util.continuations._
-        def foreach(g: A => Any @cpsParam[Unit, Any]): Exit @cpsParam[Any, Unit] = each {
-            new hano.Seq[Exit] {
-                override def forloop(cp: Exit => Unit, k: Exit => Unit) {
-                    xs.onExit(q => cp(q)).forloop(x => reset{g(x);()}, k)
-                }
-            }
-        }
-    }
-*/
-
 class DragDropTest extends
 //    NotFestSuite
     FestTestNGSuite
@@ -84,6 +34,37 @@ class DragDropTest extends
             jl.setName("Drag")
             jf.getContentPane.add(jl)
 
+            val mouse = hano.Swing.Mouse(jl)
+            mouse.Pressed onEach { p =>
+                println("pressed at: " + (p.getX, p.getY))
+                mouse.Dragged stepTime {
+                    100
+                } takeUntil {
+                    mouse.Released
+                } onEach { d =>
+                    println("dragging at: " + (d.getX, d.getY))
+                } onExit { q =>
+                    println("released")
+                } start()
+            } start()
+
+
+/*
+            hano.block {
+                val mouse = hano.Swing.Mouse(jl)
+                mouse.Pressed.options.! match {
+                    case Some(p) => {
+                        println("pressed at: " + (p.getX, p.getY))
+                        mouse.Dragged.stepTime(100).takeUntil(mouse.Released).options.! match {
+                            case Some(d) => println("dragging at: " + (d.getX, d.getY))
+                            case None => ()
+                        }
+                    }
+                    case None => println("released")
+                }
+            }
+*/
+/*
             hano.block {
                 val mouse = hano.Swing.Mouse(jl)
                 for (p <- mouse.Pressed.!?) {
@@ -94,39 +75,11 @@ class DragDropTest extends
                     println("released")
                 }
             }
-
-/*
-            Rx.block { loop =>
-                val ex = loop { next =>
-                    val mouse = hano.Swing.Mouse(jl)
-                    val p = next(mouse.Pressed)
-                    println("pressed at: " + (p.getX, p.getY))
-                    val ex = loop { next =>
-                        val d = next(mouse.Dragged.stepTime(100).takeUntil(mouse.Released))
-                        println("dragging at: " + (d.getX, d.getY))
-                    }
-                    println("released: " + ex)
-                    99
-                }
-                println("hooo: " + ex)
-            }
-*/
-/*
-            hano.block { next =>
-                val mouse = hano.Swing.Mouse(jl)
-                val p = next.head(mouse.Pressed)
-                println("pressed at: " + (p.getX, p.getY))
-                for (d <- next.until(mouse.Dragged.stepTime(100), mouse.Released)) {
-                    println("dragging at: " + (d.getX, d.getY))
-                }
-                println("released")
-                99
-            }
 */
             jf
-        } apply
+        }
 
-        fixt = new FrameFixture(robot, jf)
+        fixt = new FrameFixture(robot, jf())
         fixt.show()
     }
 

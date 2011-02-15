@@ -11,20 +11,22 @@ package detail
 
 private[hano]
 class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
-    private[this] lazy val close2 = _2.close() // for thread-safety
-    override def close() = { _1.close(); close2 }
-    override def context = _1.context
+    override def close() = { _1.close(); _2.close() }
+    override def context =  _1.context upper _2.context
     override def forloop(f: Reaction[A]) {
-        @volatile var go = true
         def _k(q: Exit) { close(); f.exit(q) }
+        var go = true
 
-        _2 onEach { _ =>
+        _2 shift {
+            context
+        } onEach { _ =>
             go = false
-            close2
-            // _1.close() would send Exit.Closed to f.
+            _k(Exit.End)
         } start()
 
-        _1 onEach { x =>
+        _1 shift {
+            context
+        } onEach { x =>
             f beforeExit {
                 if (go) {
                     f(x)
@@ -35,25 +37,5 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         } onExit {
             _k(_)
         } start()
-
-/*      broken under Unknown.
-        val _k = ExitOnce { q => close(); f.exit(q) }
-
-        _2.shift(_1) onEach { y =>
-            _k(Exit.End)
-        } onExit {
-            _k(_)
-        } start()
-
-        _1 onEach { x =>
-            if (!_k.isExited) {
-                f(x)
-            } else {
-                _k(Exit.End)
-            }
-        } onExit {
-            _k(_)
-        } start()
-*/
     }
 }
