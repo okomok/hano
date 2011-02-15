@@ -15,10 +15,10 @@ import junit.framework.Assert._
 
 class ResourceTest extends org.scalatest.junit.JUnit3Suite {
 
-    class TrivialResource extends hano.NoExitResource[Int] {
+    class TrivialResource extends hano.SeqResource[Int] {
         override def context = hano.Self
         override protected def closeResource = { job = null }
-        override protected def openResource(f: Int => Unit) {
+        override protected def openResource(f: hano.Reaction[Int]) {
             assertEquals(null, job)
             job = { _ => f(10); f(12); f(2); f(8) }
         }
@@ -53,7 +53,7 @@ class ResourceTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         doIt()
-        intercept[hano.SeqOnce.MultipleForloopException[_]] {
+        intercept[IllegalStateException] { // because close is not called.
             doIt()
         }
     }

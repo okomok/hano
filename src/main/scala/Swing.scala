@@ -16,7 +16,7 @@ object Swing {
 
 
     private[hano]
-    trait EdtResource[A] extends Resource[A] {
+    trait EdtResource[A] extends SeqResource[A] {
         final override def context = InEdt
     }
 

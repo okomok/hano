@@ -15,11 +15,11 @@ import junit.framework.Assert._
 
 class CloseTest extends org.scalatest.junit.JUnit3Suite {
 
-    class MyResource extends hano.NoExitResource[Int] {
-        private var out: Int => Unit = null
+    class MyResource extends hano.SeqResource[Int] {
+        private var out: hano.Reaction[Int] = null
         var closed = false
         override def context = hano.Self
-        override protected def openResource(f: Int => Unit) = {
+        override protected def openResource(f: hano.Reaction[Int]) = {
             out = f
         }
         override protected def closeResource = closed = true
@@ -50,7 +50,8 @@ class CloseTest extends org.scalatest.junit.JUnit3Suite {
         val r = new MyResource
         assertFalse(r.closed)
         r.take(0).start
-        assertTrue(r.closed)
+        // take(0) doesn't call forloop, that's why no need to close.
+        assertFalse(r.closed)
     }
 
     def testChain {

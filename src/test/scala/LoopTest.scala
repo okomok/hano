@@ -83,14 +83,14 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testResource {
-        class MyResource extends hano.Resource[Int] {
+        class MyResource extends hano.SeqResource[Int] {
             override val context = hano.Self
             override def closeResource = ()
             override def openResource(f: hano.Reaction[Int]) {
                 f(1); f(2); f(3); f.end()
             }
         }
-        val xs = hano.byName(new MyResource).loop
+        val xs = new MyResource().take(3).loop
         expect(hano.Iter(1,2,3,1,2,3,1,2))(xs.take(8).toIter)
     }
 

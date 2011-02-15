@@ -54,10 +54,10 @@ class UsingTest extends org.scalatest.junit.JUnit3Suite {
         var autoEnd = false
         var thrown = false
 
-        class TrivialResource extends hano.NoExitResource[Int] {
+        class TrivialResource extends hano.SeqResource[Int] {
             override def context = hano.Self
             override def closeResource = autoEnd = true
-            override protected def openResource(f: Int => Unit) {
+            override protected def openResource(f: hano.Reaction[Int]) {
                 job = _ => {f(10); f(12); f(2); f(8)}
             }
             var job: Unit => Unit = null

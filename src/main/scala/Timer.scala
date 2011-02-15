@@ -32,11 +32,11 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
         timer.schedule(l, new Date)
     }
 
-    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends NoExitResource[Unit] {
+    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends SeqResource[Unit] {
         override def context = outer.asContext
-        @volatile private[this] var l: TimerTask = null
+        private[this] var l: TimerTask = null
         override protected def closeResource() = l.cancel()
-        override protected def openResource(f: Unit =>  Unit) {
+        override protected def openResource(f: Reaction[Unit]) {
             l = new TimerTask {
                 override def run() = f()
             }

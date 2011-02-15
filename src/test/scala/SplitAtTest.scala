@@ -15,11 +15,11 @@ import junit.framework.Assert._
 
 class SplitAtTest extends org.scalatest.junit.JUnit3Suite {
 
-    class TrivialResource extends hano.NoExitResource[Int] {
+    class TrivialResource extends hano.SeqResource[Int] {
         var closed = false
         override def context = hano.Self
         override protected def closeResource = closed = true
-        override protected def openResource(f: Int => Unit) = {
+        override protected def openResource(f: hano.Reaction[Int]) = {
             f(1); f(2); f(3); f(4); f(5)
         }
     }
