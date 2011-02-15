@@ -100,7 +100,7 @@ object Reactor {
         }
     }
 
-    private[hano] class Secondary(_1: Reactor) extends Resource[Any] {
+    private[hano] class Secondary(_1: Reactor) extends SeqResource[Any] {
         private[this] var _f: Reaction[Any] = null
         override val context = _1.hanoContext
         override protected def closeResource() {

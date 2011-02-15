@@ -11,7 +11,7 @@ package hano
 /**
  * Immutable(single-forloop) infinite list
  */
-final class Rist[A](override val context: Context = async) extends Resource[A] {
+final class Rist[A](override val context: Context = async) extends SeqResource[A] {
     require(context ne Self)
     require(context ne Unknown)
 
