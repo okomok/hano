@@ -35,7 +35,7 @@ class PrimesProgressGuiTest
     val A = 104729 // 10000th prime
 
     override protected def onSetUp {
-        val f = hano.InEdt.future {
+        val f = hano.Edt.future {
             val frame = new swing.JFrame("ProgressMonitor Sample")
             frame.setLayout(new awt.GridLayout(0, 1))
             val startButton = new swing.JButton("Start") textAsName
@@ -62,7 +62,7 @@ class PrimesProgressGuiTest
                     gate.countDown()
                     false
                 } shift {
-                    hano.InEdt // reactions in EDT.
+                    hano.Edt // reactions in EDT.
                 }
 
                 ps.onNth(Q-1) {

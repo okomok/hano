@@ -28,7 +28,7 @@ class DragDropTest extends
     private var fixt: FrameFixture = null
 
     override protected def onSetUp {
-        val jf = hano.InEdt.future {
+        val jf = hano.Edt.future {
             val jf = new swing.JFrame("DragDropTest")
             val jl = new swing.JLabel("Drag")
             jl.setName("Drag")

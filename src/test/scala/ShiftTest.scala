@@ -27,9 +27,9 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
 */
     def testSwing(off: Int) {
         val s = new java.util.ArrayList[Int]
-//        val k: (=> Unit) => Any = hano.eval.InEdt[Unit]
+//        val k: (=> Unit) => Any = hano.eval.Edt[Unit]
         hano.Seq(0,1,2,3,4) shift {
-            hano.InEdt
+            hano.Edt
         } map { x =>
             x + 1
         } foreach { x =>
