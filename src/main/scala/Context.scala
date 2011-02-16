@@ -42,7 +42,7 @@ trait Context extends Seq[Unit] {
     /**
      * Evaluates a `body` until the future.
      */
-    final def future[R](body: => R): () => R = Val(map(_ => body)).toFuture
+    final def future[R](body: => R): () => R = Val(map(_ => body)).future
 
     private[hano]
     final def upper(_that: => Context): Context = {

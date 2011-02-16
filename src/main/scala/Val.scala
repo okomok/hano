@@ -61,7 +61,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     /**
      * Gets the value
      */
-    def get: A = toFuture.apply()
+    def get: A = future.apply()
 
     /**
      * Fails to produce a value.
@@ -99,7 +99,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     /**
      * Gets the value until the future.
      */
-    def toFuture: () => A = new Val.ToFuture(this)
+    def future: () => A = new Val._Future(this)
 
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
         context onEach { _ =>
@@ -167,7 +167,7 @@ object Val {
         }
     }
 
-    private class ToFuture[A](_1: Seq[A]) extends (() => A) {
+    private class _Future[A](_1: Seq[A]) extends (() => A) {
         private[this] var v: Either[Throwable, A] = null
         private[this] val c = new java.util.concurrent.CountDownLatch(1)
 
@@ -187,7 +187,7 @@ object Val {
         override def apply(): A = {
             c.await()
             if (v == null) {
-                throw new NoSuchElementException("Val.toFuture.apply()")
+                throw new NoSuchElementException("Val.future.apply()")
             }
             v match {
                 case Left(t) => throw t
