@@ -17,6 +17,7 @@ import java.util.{Date, Timer => JTimer, TimerTask}
 final class Timer(isDaemon: Boolean = false) extends Context { outer =>
 
     private[this] val timer = new JTimer(isDaemon)
+    private[this] val zero = new detail.ZeroDelay
 
     override def exit() = timer.cancel()
     override def forloop(f: Reaction[Unit]) {
@@ -29,7 +30,7 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
                 }
             }
         }
-        timer.schedule(l, new Date)
+        timer.schedule(l, zero())
     }
 
     private class Schedule(scheduler: JTimer => TimerTask => Unit) extends SeqResource[Unit] {

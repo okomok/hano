@@ -12,19 +12,20 @@ package detail
 private[hano]
 class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter[Unit] {
     override protected val underlying = _1
+    override def context = FillTime.timer
     override def forloop(f: Reaction[Unit]) {
         var u: Seq[Unit] = null
-        def fill() {
-            u = FillTime.repeatIn(_2)
+        def _fill() {
+            u = FillTime.timer.schedule(_2, _2)
             u onEach { _ =>
                 f()
             } start()
         }
-        fill()
+        _fill()
 
         _1 onEach { _ =>
             u.close()
-            fill()
+            _fill()
         } onExit { q =>
             u.close()
             FillTime.timer eval {
@@ -39,5 +40,4 @@ class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter[Unit] {
 private[hano]
 object FillTime {
     private val timer = new Timer(true)
-    private def repeatIn(i: Long): Seq[Unit] = timer.schedule(i, i)
 }

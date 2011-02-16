@@ -145,9 +145,14 @@ trait Seq[+A] extends java.io.Closeable {
     def stepTime(i: Long): Seq[A] = new detail.StepTime(this, i)
 
     /**
-     * Calls a reaction in case any element doesn't come in specified time-span(millisecond).
+     * Calls a reaction in case any element doesn't come in the specified time-span(millisecond).
      */
     def fillTime(i: Long): Seq[Unit] = new detail.FillTime(this, i)
+
+    /**
+     * Calls reactions with the specified delay(millisecond).
+     */
+    def delay(i: Long): Seq[A] = new detail.Delay(this, i)
 
     /**
      * Removes duplicates using <code>==</code>.
