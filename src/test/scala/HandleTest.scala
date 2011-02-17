@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class HandleTest extends org.scalatest.junit.JUnit3Suite {
 
     def testEach {
-        val xs = hano.async.loop.generate(0 until 5)
+        val xs = hano.async.loop.pull(0 until 5)
         val out = new java.util.ArrayList[Int]
 
         xs handleEach { x =>
@@ -26,7 +26,7 @@ class HandleTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExit {
-        val xs = hano.Self.loop.generate(0 until 10)
+        val xs = hano.Self.loop.pull(0 until 10)
         val out = new java.util.ArrayList[Int]
 
         object MyError1 extends RuntimeException
@@ -48,7 +48,7 @@ class HandleTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testExitNotHandled {
-        val xs = hano.Self.loop.generate(0 until 10)
+        val xs = hano.Self.loop.pull(0 until 10)
         val out = new java.util.ArrayList[Int]
 
         object MyError1 extends RuntimeException

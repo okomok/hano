@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Generate[A](_1: Seq[_], _2: => Iter[A]) extends SeqAdapter[A] {
+class Pull[A](_1: Seq[_], _2: => Iter[A]) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         def _k(q: Exit) { close(); f.exit(q) }

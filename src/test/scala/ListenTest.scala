@@ -24,7 +24,7 @@ class ListenTest extends org.scalatest.junit.JUnit3Suite {
             *.addBy{t.schedule(l, 0, 100)}
             *.removeBy{l.cancel()}
         }
-        xs.generate(Stream.iterate(0)(_ + 1))
+        xs.pull(Stream.iterate(0)(_ + 1))
     }
 
     def testNaturals {

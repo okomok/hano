@@ -29,7 +29,7 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
     def testMinMaxHot {
         import java.lang.Math
 
-        val xs = hano.async.loop.generate(Seq(5,1,6,0,3,2,4)).once
+        val xs = hano.async.loop.pull(Seq(5,1,6,0,3,2,4)).once
 
         val v1, v2 = new hano.Val[Int]
 
@@ -67,14 +67,14 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testNoSuchElement {
-        val xs = hano.async.loop.generate(Seq.empty[Int])
+        val xs = hano.async.loop.pull(Seq.empty[Int])
         var s: Throwable = null
         xs reduceLeft { (a, x) => a + x } onFailed { t => s = t } await()
         assert(s.isInstanceOf[NoSuchElementException])
     }
 
     def testFoldLeft {
-        val xs = hano.async.loop.generate(Seq(5,1,6,0,3,2,4))
+        val xs = hano.async.loop.pull(Seq(5,1,6,0,3,2,4))
 
         val that = new hano.Val[String]
         ("9" /: xs) { (a, x) => a + x.toString } onEach { v => that() = v } start()
@@ -83,7 +83,7 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testFoldLeftEmpty {
-        val xs = hano.async.loop.generate(Seq())
+        val xs = hano.async.loop.pull(Seq())
 
         val that = new hano.Val[String]
         ("9" /: xs) { (a, x) => a + x.toString } onEach { v => that() = v } start()
@@ -93,7 +93,7 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
 
     /*
     def testReduceLeftEmpty {
-        val xs = hano.async.loop.generate(Seq())
+        val xs = hano.async.loop.pull(Seq())
 
         val that = new hano.Val[String]
         xs reduceLeft { (a: String, x) => a + x.toString } onEach { v => that() = v } start()

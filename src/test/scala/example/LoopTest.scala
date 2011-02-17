@@ -27,10 +27,10 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     /**
-     * `generate` replaces the elements with those of `scala.Iterable`.
+     * `pull` replaces the elements with those of `scala.Iterable`.
      */
     def testGenerateIterable {
-        val xs = hano.async.loop.generate(0 until 4)
+        val xs = hano.async.loop.pull(0 until 4)
 
         var out: List[Int] = Nil
         xs onEach { x =>
@@ -44,7 +44,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
      * `loop` can loop.
      */
     def testLoopLoop {
-        val xs = hano.async.loop.generate(0 until 3)
+        val xs = hano.async.loop.pull(0 until 3)
 
         var out: List[Int] = Nil
         xs.loop take {

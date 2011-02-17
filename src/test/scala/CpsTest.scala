@@ -17,7 +17,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
     val t = new hano.Timer(true)
     def naturals: hano.Seq[Int] = {
         val s: hano.Seq[Unit] = t.schedule(0, 100)
-        s.generate(Stream.iterate(0)(_ + 1))
+        s.pull(Stream.iterate(0)(_ + 1))
     }
 
     def testTrivial {

@@ -16,7 +16,7 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     /**
      * Creates a sequence initially containing the specified elements.
      */
-    @annotation.equivalentTo("Self.loop.generate(from)")
+    @annotation.equivalentTo("Self.loop.pull(from)")
     def apply[A](from: A*): Seq[A] = from
 }
 
@@ -333,7 +333,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Replaces elements by those of `it`. The length of this sequence never becomes longer.
      */
-    def generate[B](it: => Iter[B]): Seq[B] = new detail.Generate(this, it)
+    def pull[B](it: => Iter[B]): Seq[B] = new detail.Pull(this, it)
 
     /**
      * Replaces elements by those of `it`. The length of this sequence never be changed.

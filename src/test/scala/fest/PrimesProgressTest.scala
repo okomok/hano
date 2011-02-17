@@ -56,7 +56,7 @@ class PrimesProgressGuiTest
                         t.printStackTrace()
                         //throw t
                     }
-                } generate {
+                } pull {
                     primes
                 } closing {
                     gate.countDown()

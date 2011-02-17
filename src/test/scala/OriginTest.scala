@@ -18,7 +18,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
     def testThreaded { // force to create a thread.
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
-        for (x <- hano.async.loop.generate(0 until 10).onExit(_ =>c.countDown)) {
+        for (x <- hano.async.loop.pull(0 until 10).onExit(_ =>c.countDown)) {
             a.add(x)
         }
         c.await
@@ -28,7 +28,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
     def testAsync { // in the thread pool.
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
-        for (x <- hano.async.loop.generate(0 until 10).onExit(_ =>c.countDown)) {
+        for (x <- hano.async.loop.pull(0 until 10).onExit(_ =>c.countDown)) {
             a.add(x)
         }
         c.await
@@ -41,7 +41,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
         locally {
             val c = new java.util.concurrent.CountDownLatch(1)
             val a = new java.util.ArrayList[Int]
-            for (x <- s.generate(0 until 10).onExit(_ =>c.countDown)) {
+            for (x <- s.pull(0 until 10).onExit(_ =>c.countDown)) {
                 a.add(x)
             }
             c.await
@@ -51,7 +51,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
         locally {
             val c = new java.util.concurrent.CountDownLatch(1)
             val a = new java.util.ArrayList[Int]
-            for (x <- s.generate(0 until 10).onExit(_ =>c.countDown)) {
+            for (x <- s.pull(0 until 10).onExit(_ =>c.countDown)) {
                 a.add(x)
             }
             c.await
@@ -65,7 +65,7 @@ class OriginTest extends org.scalatest.junit.JUnit3Suite {
 class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Self.loop.generate(hano.Iter(9,8,7,6,5))) {
+        for (x <- hano.Self.loop.pull(hano.Iter(9,8,7,6,5))) {
             s.add(x)
         }
         assertEquals(hano.Iter(9,8,7,6,5), hano.Iter.from(s))
@@ -73,7 +73,7 @@ class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
 
     def testEmpty: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Self.loop.generate(hano.Iter().of[Int])) {
+        for (x <- hano.Self.loop.pull(hano.Iter().of[Int])) {
             s.add(x)
         }
         assertTrue(s.isEmpty)
@@ -81,7 +81,7 @@ class OriginStrictTest  extends org.scalatest.junit.JUnit3Suite {
 
     def testRandom: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Self.loop.generate(Stream.continually(scala.math.random.toInt)).take(3)) {
+        for (x <- hano.Self.loop.pull(Stream.continually(scala.math.random.toInt)).take(3)) {
             s.add(x)
             //println(x)
         }

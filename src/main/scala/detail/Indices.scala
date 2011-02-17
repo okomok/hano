@@ -11,5 +11,5 @@ package detail
 
 private[hano]
 class Indices[A](_1: Seq[A]) extends SeqProxy[Int] {
-    override val self = _1.generate((0 until java.lang.Integer.MAX_VALUE).view)
+    override val self = _1.pull((0 until java.lang.Integer.MAX_VALUE).view)
 }

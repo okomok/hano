@@ -41,7 +41,7 @@ class ReplaceTest extends org.scalatest.junit.JUnit3Suite {
 
     def testInfinite: Unit = {
         val s = new java.util.ArrayList[Int]
-        for (x <- hano.Seq(0,1,2,3,4).generate(Stream.continually(9))) {
+        for (x <- hano.Seq(0,1,2,3,4).pull(Stream.continually(9))) {
             s.add(x)
         }
         assertEquals(hano.Iter(9,9,9,9,9), hano.Iter.from(s))

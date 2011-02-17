@@ -66,7 +66,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testGenerate {
-        val xs = hano.async.loop.generate(0 until 10)
+        val xs = hano.async.loop.pull(0 until 10)
 
         var i = 0
         xs onEach { x =>
@@ -78,7 +78,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testOnEnd {
-        val xs = hano.async.loop.generate(0 until 10)
+        val xs = hano.async.loop.pull(0 until 10)
 
         var i = 0
         xs onEach { x =>
@@ -93,7 +93,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     def testOnFailed {
         object MyError extends RuntimeException
 
-        val xs = hano.async.loop.generate(0 until 10) onEach { x =>
+        val xs = hano.async.loop.pull(0 until 10) onEach { x =>
             if (x == 8) {
                 throw MyError
             }
@@ -112,7 +112,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testShift {
-        val xs = hano.async.loop.generate(0 until 10)
+        val xs = hano.async.loop.pull(0 until 10)
 
         var i = 0
         xs shift {
@@ -130,7 +130,7 @@ class ExamplesTest extends org.scalatest.junit.JUnit3Suite {
         def naturals: hano.Seq[Int] = {
             val t = new hano.Timer(true)
             val xs: hano.Seq[Unit] = t.schedule(0, 100)
-            xs.generate(Stream.iterate(0)(_ + 1))
+            xs.pull(Stream.iterate(0)(_ + 1))
         }
 
         var i = 0
