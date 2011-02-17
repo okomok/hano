@@ -48,14 +48,14 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
         val xs = hano.async.loop.generate(0 until 3)
 
         var i = 0
-        val out = new Array[Int](8)
+        var out: List[Int] = Nil
         xs.loop take {
             8
         } onEach { x =>
-            out(i) = x
+            out :+= x
             i += 1
         } await()
 
-        assert(java.util.Arrays.equals(Array(0,1,2,0,1,2,0,1), out))
+        expect(List(0,1,2,0,1,2,0,1))(out)
     }
 }
