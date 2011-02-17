@@ -12,7 +12,7 @@ class OnEachTest extends org.scalatest.junit.JUnit3Suite {
      * `onEach`, the most important method
      */
     def testTrivial {
-        val xs = hano.async.loop.pull(1 until 6)
+        val xs: hano.Seq[Int] = hano.async.loop.pull(1 until 6)
 
         var out: List[Int] = Nil
         xs onEach { x =>
@@ -26,7 +26,7 @@ class OnEachTest extends org.scalatest.junit.JUnit3Suite {
      * You can apply `onEach` many timers.
      */
     def testOnEach2 {
-        val xs = hano.async.loop.pull(1 until 4)
+        val xs: hano.Seq[Int] = hano.async.loop.pull(1 until 4)
 
         var out: List[Int] = Nil
         xs onEach { x =>

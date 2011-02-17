@@ -13,7 +13,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
      */
     def testContext {
         // infinite sequence of the `Unit`s.
-        val xs = hano.async.loop
+        val xs: hano.Seq[Unit] = hano.async.loop
 
         var i = 0
         xs onEach { x =>
@@ -32,7 +32,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
      */
     def testPullIterable {
         // `Unit`s are replaced with the `Iterable`.
-        val xs = hano.async.loop.pull(0 until 4)
+        val xs: hano.Seq[Int] = hano.async.loop.pull(0 until 4)
 
         var out: List[Int] = Nil
         xs onEach { x =>
@@ -46,7 +46,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
      * `loop` can loop.
      */
     def testLoopLoop {
-        val xs = hano.async.loop.pull(0 until 3)
+        val xs: hano.Seq[Int] = hano.async.loop.pull(0 until 3)
 
         var out: List[Int] = Nil
         xs.loop take {
