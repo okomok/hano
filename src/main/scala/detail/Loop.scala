@@ -29,7 +29,6 @@ class LoopSelf[A](_1: Seq[A]) extends SeqResource[A] {
     private[this] var isActive = true
     override def context = _1.context
     override def closeResource() { isActive = false; _1.close() }
-    // requires synchronized in case close-then-forloop from other threads.
     override def openResource(f: Reaction[A]) {
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
