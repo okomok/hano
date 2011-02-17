@@ -32,6 +32,14 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter.from(0 until 100))(hano.Iter.from(b))
     }
 
+    def testReallyLazy {
+        val xs = hano.async.loop.pull(Iterator.continually(10)).take(3)
+
+        expect(hano.Iter(10,10,10))(xs.toIter)
+        expect(hano.Iter(10,10,10))(xs.toIter)
+        expect(hano.Iter(10,10,10))(xs.toIter)
+    }
+
 /*
     def testRejection {
         val b = new java.util.ArrayList[Int]
@@ -60,11 +68,4 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter.from(0 until 100))(hano.Iter.from(b))
     }
 */
-
-    def testReallyLazy {
-        def anError = hano.async.loop.pull({throw new Error; Iterator.single(999)})
-        anError take 100
-        ()
-    }
-
 }
