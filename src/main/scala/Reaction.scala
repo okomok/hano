@@ -96,7 +96,7 @@ trait Reaction[-A] {
     @annotation.equivalentTo("exit(Exit.Failed(why))")
     final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
 
-    private[this] var exited = false
+    @volatile private[this] var exited = false // volatile for slight optimization.
     private[this] lazy val mdf = new detail.Modification(toString)
 
     private[hano]

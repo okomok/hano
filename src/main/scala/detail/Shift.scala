@@ -39,22 +39,26 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         def _k(q: Exit) { cur ! q; close(); f.exit(q) }
 
         _1 onEach { x =>
-            cur ! Action {
-                context onEach { _ =>
-                    f(x)
-                } onExit {
-                    case q @ Exit.Failed(_) => _k(q)
-                    case _ => ()
-                } start()
+            f beforeExit {
+                cur ! Action {
+                    context onEach { _ =>
+                        f(x)
+                    } onExit {
+                        case q @ Exit.Failed(_) => _k(q)
+                        case _ => ()
+                    } start()
+                }
             }
         } onExit { q =>
-            cur ! Action {
-                context onEach { _ =>
-                    _k(q)
-                } onExit {
-                    case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
-                    case _ => ()
-                } start()
+            f beforeExit {
+                cur ! Action {
+                    context onEach { _ =>
+                        _k(q)
+                    } onExit {
+                        case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
+                        case _ => ()
+                    } start()
+                }
             }
         } start()
 
@@ -78,19 +82,23 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         def _k(q: Exit) { close(); f.exit(q) }
 
         _1 onEach { x =>
-            context onEach { _ =>
-                f(x)
-            } onExit {
-                case q @ Exit.Failed(_) => _k(q)
-                case _ => ()
-            } start()
+            f beforeExit {
+                context onEach { _ =>
+                    f(x)
+                } onExit {
+                    case q @ Exit.Failed(_) => _k(q)
+                    case _ => ()
+                } start()
+            }
         } onExit { q =>
-            context onEach { _ =>
-                _k(q)
-            } onExit {
-                case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
-                case _ => ()
-            } start()
+            f beforeExit {
+                context onEach { _ =>
+                    _k(q)
+                } onExit {
+                    case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
+                    case _ => ()
+                } start()
+            }
         } start()
     }
 }
