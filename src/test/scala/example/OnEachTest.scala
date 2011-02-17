@@ -12,34 +12,29 @@ class OnEachTest extends org.scalatest.junit.JUnit3Suite {
      * `onEach`, the most important method
      */
     def testTrivial {
-        val xs = hano.async.loop.generate(0 until 6)
+        val xs = hano.async.loop.generate(1 until 6)
 
-        var i = 0
+        var out: List[Int] = Nil
         xs onEach { x =>
-            expect(i)(x)
-            i += 1
+            out :+= x
         } await()
 
-        expect(6)(i)
+        expect(List(1,2,3,4,5))(out)
     }
 
     /**
      * You can apply `onEach` many timers.
      */
-    def testOnEachOnEach {
-        val xs = hano.async.loop.generate(0 until 6)
+    def testOnEach2 {
+        val xs = hano.async.loop.generate(1 until 4)
 
-        var i = 0
-        var j = 6
+        var out: List[Int] = Nil
         xs onEach { x =>
-            expect(i)(x)
-            j -= 1
+            out :+= x
         } onEach { x =>
-            expect(i)(x)
-            i += 1
+            out :+= x * 10
         } await()
 
-        expect(6)(i)
-        expect(0)(j)
+        expect(List(1,10,2,20,3,30))(out)
     }
 }
