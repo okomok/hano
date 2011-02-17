@@ -12,7 +12,8 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
      * Recall `async` returns a single-element sequence of the Unit.
      */
     def testContext {
-        val xs = hano.async.loop // infinite sequence of the `Unit`s.
+        // infinite sequence of the `Unit`s.
+        val xs = hano.async.loop
 
         var i = 0
         xs onEach { x =>
@@ -29,7 +30,8 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
     /**
      * `pull` replaces the elements with those of `scala.Iterable`.
      */
-    def testGenerateIterable {
+    def testPullIterable {
+        // `Unit`s are replaced with the `Iterable`.
         val xs = hano.async.loop.pull(0 until 4)
 
         var out: List[Int] = Nil
