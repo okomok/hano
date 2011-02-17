@@ -2,7 +2,6 @@
 package com.github.okomok.hanotest.example
 import com.github.okomok.hano
 
-
 /**
  * `onEach` takes a reaction which is invoked by the sequence.
  */

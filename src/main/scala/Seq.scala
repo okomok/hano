@@ -60,13 +60,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Blocks until `onExit` is called.
      */
-    def await() {
-        val c = new java.util.concurrent.CountDownLatch(1)
-        onExit { _ =>
-            c.countDown()
-        } start()
-        c.await()
-    }
+    def await(): Unit = detail.Await(this)
 
 
 // combinator

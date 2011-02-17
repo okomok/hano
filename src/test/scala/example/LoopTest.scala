@@ -2,7 +2,6 @@
 package com.github.okomok.hanotest.example
 import com.github.okomok.hano
 
-
 /**
  * `loop` cycles a sequence until closed.
  */
@@ -13,14 +12,14 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
      */
     def testContext {
         // infinite sequence of the `Unit`s.
-        val xs: hano.Seq[Unit] = hano.async.loop
+        val us: hano.Seq[Unit] = hano.async.loop
 
         var i = 0
-        xs onEach { x =>
+        us onEach { x =>
             expect(())(x)
             i += 1
             if (i == 5) {
-                xs.close()
+                us.close()
             }
         } await()
 

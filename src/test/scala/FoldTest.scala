@@ -69,7 +69,9 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
     def testNoSuchElement {
         val xs = hano.async.loop.pull(Seq.empty[Int])
         var s: Throwable = null
-        xs reduceLeft { (a, x) => a + x } onFailed { t => s = t } await()
+        intercept[NoSuchElementException] {
+            xs reduceLeft { (a, x) => a + x } onFailed { t => s = t } await()
+        }
         assert(s.isInstanceOf[NoSuchElementException])
     }
 
@@ -91,16 +93,14 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
         expect("9")(that())
     }
 
-    /*
     def testReduceLeftEmpty {
         val xs = hano.async.loop.pull(Seq())
 
         val that = new hano.Val[String]
-        xs reduceLeft { (a: String, x) => a + x.toString } onEach { v => that() = v } start()
+        xs reduceLeft { (a: String, x) => a + x.toString } react { that } start()
 
         intercept[NoSuchElementException] {
             that()
         }
     }
-    */
 }

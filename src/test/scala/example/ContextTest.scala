@@ -2,7 +2,6 @@
 package com.github.okomok.hanotest.example
 import com.github.okomok.hano
 
-
 /**
  * `Context` is a single-element sequence of the `Unit`.
  */
@@ -12,11 +11,11 @@ class ContextTest extends org.scalatest.junit.JUnit3Suite {
      * `Self` is a `Context` where reactions are invoked in `start` call-site.
      */
     def testSelf {
-        val xs: hano.Seq[Unit] = hano.Self
+        val us: hano.Seq[Unit] = hano.Self
 
         locally {
             var i = 0
-            xs onEach { x =>
+            us onEach { x =>
             // reaction block
                 expect(())(x) // The element is the `Unit`.
                 i += 1
@@ -28,7 +27,7 @@ class ContextTest extends org.scalatest.junit.JUnit3Suite {
         // By definition, the above expression is equivalent to...
         locally {
             var i = 0
-            for (x <- xs) {
+            for (x <- us) {
                 expect(())(x)
                 i += 1
             }
@@ -41,11 +40,11 @@ class ContextTest extends org.scalatest.junit.JUnit3Suite {
      * `async` creates a `Context` where reactions are invoked in a thread-pool.
      */
     def testAsync {
-        val xs: hano.Seq[Unit] = hano.async
+        val us: hano.Seq[Unit] = hano.async
 
         locally {
             var i = 0
-            xs onEach { x =>
+            us onEach { x =>
             // Don't bother about multi-threaded issue.
             // Any `Seq` guarantees reactions are invoked in serialized fashion.
                 expect(())(x)
@@ -59,7 +58,7 @@ class ContextTest extends org.scalatest.junit.JUnit3Suite {
         // Even better, `await` instead of `start` waits until a sequence ends.
         locally {
             var i = 0
-            xs onEach { x =>
+            us onEach { x =>
                 expect(())(x)
                 i += 1
             } await()
