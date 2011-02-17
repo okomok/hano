@@ -9,7 +9,7 @@ import com.github.okomok.hano
 class LoopTest extends org.scalatest.junit.JUnit3Suite {
 
     /**
-     * Recall `async` returns a single-element sequence of the Unit.
+     * Recall `async` returns a single-element sequence of the `Unit`.
      */
     def testContext {
         // infinite sequence of the `Unit`s.
