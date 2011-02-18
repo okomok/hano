@@ -22,10 +22,12 @@ class Pull[A](_1: Seq[_], _2: Iter[A]) extends SeqAdapter[A] {
             }
         } else {
             _1 onEach { _ =>
-                if (it.hasNext) {
-                    f(it.next)
-                    if (!it.hasNext) {
-                        _k(Exit.End)
+                f beforeExit {
+                    if (it.hasNext) {
+                        f(it.next)
+                        if (!it.hasNext) {
+                            _k(Exit.End)
+                        }
                     }
                 }
             } onExit {

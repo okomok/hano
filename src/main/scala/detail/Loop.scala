@@ -34,30 +34,36 @@ class LoopOther[A](_1: Seq[A], _2: Int) extends SeqResource[A] {
 
         def rec() {
             _1 onEach { x =>
-                f beforeExit {
-                    for (i <- 0 until _2) {
-                        if (isActive) {
-                            f(x)
+                synchronized {
+                    f beforeExit {
+                        for (i <- 0 until _2) {
+                            if (isActive) {
+                                f(x)
+                            }
+                        }
+                        if (!isActive) {
+                            _k(Exit.Closed)
                         }
                     }
-                    if (!isActive) {
-                        _k(Exit.Closed)
+                }
+            } onExit { q =>
+                synchronized {
+                    q match {
+                        case Exit.End => {
+                            if (isActive) {
+                                rec()
+                            } else {
+                                _k(Exit.Closed)
+                            }
+                        }
+                        case q @ Exit.Closed => {
+                            if (isActive) {
+                                _k(q)
+                            }
+                        }
+                        case q => _k(q)
                     }
                 }
-            } onExit {
-                case Exit.End => {
-                    if (isActive) {
-                        rec()
-                    } else {
-                        _k(Exit.Closed)
-                    }
-                }
-                case q @ Exit.Closed => {
-                    if (isActive) {
-                        _k(q)
-                    }
-                }
-                case q => _k(q)
             } start()
         }
         rec()
