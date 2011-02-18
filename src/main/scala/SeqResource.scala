@@ -18,7 +18,6 @@ trait SeqResource[A] extends Seq[A] {
 
     private[this] var _closed = true
 
-    // requires synchronized in case close-then-forloop from other threads.
     final override def forloop(f: Reaction[A]) = synchronized {
         if (!_closed) {
             throw new IllegalStateException(toString + " shall be closed before forloop")
