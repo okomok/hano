@@ -70,6 +70,8 @@ trait Seq[+A] extends java.io.Closeable {
     @annotation.aliasOf("append")
     final def ++[B >: A](that: Seq[B]): Seq[B] = append(that)
 
+    def prepend[B >: A](that: Seq[B]): Seq[B] = new detail.Prepend[B](this, that)
+
     def merge[B >: A](that: Seq[B]): Seq[B] = new detail.Merge[B](this, that)
 
     def map[B](f: A => B): Seq[B] = new detail.Map(this, f)

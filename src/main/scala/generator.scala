@@ -36,7 +36,10 @@ object generator {
         abstract class Env[A] {
             def apply(x: A): Unit @suspendable
             def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
-            def get[B](xs: Seq[B]): B @cpsParam[Any, Unit] = new detail.CheckSingle(xs).toCps
+            def get[B](xs: Seq[B]): B @cpsParam[Any, Unit] = {
+                require(xs.context eq Self)
+                new detail.CheckSingle(xs).toCps
+            }
             def require(cond: Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Single(()) else Empty).toCps
         }
         def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = new detail.CpsIterable(body)

@@ -16,7 +16,7 @@ class AppendTest extends org.scalatest.junit.JUnit3Suite {
         val a = hano.Iter(1,2,3,4,5)
         val xs = hano.Seq(1,2,3)
         val ys = hano.Seq(4,5)
-        expect(hano.Iter(1,2,3,4,5))((xs ++ ys).toIter)
+        expect(a)((xs ++ ys).toIter)
     }
 
     def testNotAppendedIfThrown {
