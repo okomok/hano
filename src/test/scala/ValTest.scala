@@ -39,7 +39,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
         val v = new hano.Val[Int]
         v() = 11
         v() = 11
-        intercept[hano.Val.MultipleAssignmentException[_]] {
+        intercept[hano.Val.MultipleAssignmentException] {
             // throws immediately.
             v() = 12
         }

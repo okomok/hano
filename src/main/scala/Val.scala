@@ -122,7 +122,7 @@ object Val {
     /**
      * Thrown in case multiple assignment
      */
-    class MultipleAssignmentException[A](expected: A, actual: A) extends
+    case class MultipleAssignmentException(expected: Any, actual: Any) extends
         RuntimeException("expected: " + expected + ", but actual: " + actual)
 
     /**
