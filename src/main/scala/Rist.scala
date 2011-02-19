@@ -56,7 +56,7 @@ final class Rist[A](override val context: Context = async) extends SeqOnce[A] {
                 f(x)
             }
         } onExit {
-            case q @ Exit.Failed(t) => _k(q)
+            case q @ Exit.Failed(_) => _k(q)
             case _ => ()
         } start()
     }

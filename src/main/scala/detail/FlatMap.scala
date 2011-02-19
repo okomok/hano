@@ -9,7 +9,7 @@ package hano
 package detail
 
 
-// Exit.End is not sent.
+// No End sequence
 private[hano]
 class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
     override def close() = _1.close()

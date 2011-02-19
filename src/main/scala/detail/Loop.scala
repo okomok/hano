@@ -10,59 +10,48 @@ package detail
 
 
 private[hano]
-class Loop[A](_1: Seq[A], _2: Int = 1) extends SeqProxy[A] {
+class Loop[A](_1: Seq[A]) extends SeqProxy[A] {
     override val self = {
         if (_1.context eq Self) {
             new LoopSelf(_1)
         } else {
-            new LoopOther(_1, _2)
+            new LoopOther(_1)
         }
     }
 }
 
 
 private[hano]
-class LoopOther[A](_1: Seq[A], _2: Int) extends SeqResource[A] {
+class LoopOther[A](_1: Seq[A]) extends SeqResource[A] {
     assert(_1.context ne Self)
 
-    private[this] var isActive = true
+    private[this] var isActive = false
     override def context = _1.context
     override def closeResource() { isActive = false; _1.close() }
     override def openResource(f: Reaction[A]) {
+        require(!isActive)
+
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
 
         def rec() {
             _1 onEach { x =>
-                synchronized {
-                    f beforeExit {
-                        for (i <- 0 until _2) {
-                            if (isActive) {
-                                f(x)
-                            }
-                        }
-                        if (!isActive) {
-                            _k(Exit.Closed)
-                        }
+                synchronized { // is needed because...
+                    f(x) // may reenter `forloop` from other threads.
+                    if (!isActive) {
+                        _k(Exit.Closed)
+                        // `isActive` is out of play for me.
                     }
                 }
+                // Now you can reenter `forloop`.
             } onExit { q =>
-                synchronized {
-                    q match {
-                        case Exit.End => {
-                            if (isActive) {
-                                rec()
-                            } else {
-                                _k(Exit.Closed)
-                            }
+                q match {
+                    case Exit.End => {
+                        if (isActive) {
+                            rec()
                         }
-                        case q @ Exit.Closed => {
-                            if (isActive) {
-                                _k(q)
-                            }
-                        }
-                        case q => _k(q)
                     }
+                    case q => _k(q)
                 }
             } start()
         }

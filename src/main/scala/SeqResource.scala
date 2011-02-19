@@ -17,6 +17,7 @@ trait SeqResource[A] extends Seq[A] {
     protected def closeResource(): Unit
 
     private[this] var _closed = true
+    private[this] val _notRecur = new detail.NotRecur
 
     final override def forloop(f: Reaction[A]) = synchronized {
         if (!_closed) {
@@ -27,9 +28,11 @@ trait SeqResource[A] extends Seq[A] {
     }
 
     final override def close() = synchronized {
-        if (!_closed) {
-            closeResource()
-            _closed = true
+        _notRecur {
+            if (!_closed) {
+                closeResource() // can't call `forloop`.
+                _closed = true
+            }
         }
     }
 }

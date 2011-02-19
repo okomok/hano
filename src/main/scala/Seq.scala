@@ -360,11 +360,6 @@ trait Seq[+A] extends java.io.Closeable {
     def loop: Seq[A] = new detail.Loop(this)
 
     /**
-     * Turns into a closeable infinite sequence of the first elements.
-     */
-    def loopBy(grainSize: Int): Seq[A] = new detail.Loop(this, grainSize)
-
-    /**
      * Ignores `Exit.End`.
      */
     def noEnd: Seq[A] = new detail.NoEnd(this)
