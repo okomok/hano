@@ -37,6 +37,8 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
     override def close() = isActive = false
     override def context = Self
     override def forloop(f: Reaction[A]) = synchronized {
+        assert(!isActive)
+
         isActive = true
         f.tryRethrow {
             val it = _1.ator

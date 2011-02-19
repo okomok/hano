@@ -22,14 +22,14 @@ class Loop[A](_1: Seq[A]) extends SeqProxy[A] {
 
 
 private[hano]
-class LoopOther[A](_1: Seq[A]) extends SeqResource[A] {
+class LoopOther[A](_1: Seq[A], _2: Int = 1) extends SeqResource[A] {
     assert(_1.context ne Self)
 
     private[this] var isActive = false
     override def context = _1.context
     override def closeResource() { isActive = false; _1.close() }
     override def openResource(f: Reaction[A]) {
-        require(!isActive)
+        assert(!isActive)
 
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
@@ -37,7 +37,11 @@ class LoopOther[A](_1: Seq[A]) extends SeqResource[A] {
         def rec() {
             _1 onEach { x =>
                 synchronized { // is needed because...
-                    f(x) // may reenter `forloop` from other threads.
+                    var i = 0
+                    while (isActive && (i != _2)) {
+                        i += 1
+                        f(x) // may reenter `forloop` from other threads.
+                    }
                     if (!isActive) {
                         _k(Exit.Closed)
                         // `isActive` is out of play for me.
@@ -70,7 +74,9 @@ class LoopSelf[A](_1: Seq[A]) extends Seq[A] {
     override def close() { isActive = false; _1.close() }
 
     // requires synchronized in case close-then-forloop from other threads.
-    override def forloop(f: Reaction[A]): Unit = synchronized {
+    override def forloop(f: Reaction[A]) = synchronized {
+        assert(!isActive)
+
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
 

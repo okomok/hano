@@ -16,6 +16,8 @@ class Multiply[A](_1: Seq[A], _2: Int) extends SeqResource[A] {
     override def context = _1.context
     override def closeResource() { isActive = false; _1.close() }
     override def openResource(f: Reaction[A]) {
+        assert(!isActive)
+
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
 
@@ -32,13 +34,9 @@ class Multiply[A](_1: Seq[A], _2: Int) extends SeqResource[A] {
                     }
                 }
             }
-        } onExit { q =>
-            synchronized {
-                q match {
-                    case q @ Exit.End => ()
-                    case q => _k(q)
-                }
-            }
+        } onExit {
+            case q @ Exit.End => ()
+            case q => _k(q)
         } start()
     }
 }

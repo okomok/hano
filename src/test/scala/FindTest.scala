@@ -11,7 +11,7 @@ import com.github.okomok.hano
 
 
 object Impl {
-
+/*
     import hano._
 
     class LoopOther[A](_1: Seq[A]) extends SeqResource[A] {
@@ -50,7 +50,7 @@ object Impl {
             rec()
         }
     }
-
+*/
 }
 
 
@@ -59,21 +59,21 @@ class FindTest extends org.scalatest.junit.JUnit3Suite {
      def testAssign {
          for (i <- 0 until 1000) {
 
-             val xs = new Impl.LoopOther(hano.async).pull(0 until 9)
+             val xs = hano.async.loop.pull(0 until 90)
 
              // Recall a `Seq` algorithm returns a single-element `Seq`.
-             val x: hano.Seq[Int] = xs find { x => x == 7 }
+             val x: hano.Seq[Int] = xs find { x => x == 70 }
 
              locally {
                  val v = new hano.Val[Int]
                  v := x // assign
-                 expect(7)(v())
+                 expect(70)(v())
              }
 
              // The above expression is equivalent to...
              locally {
                  val v = hano.Val(x)
-                 expect(7)(v())
+                 expect(70)(v())
              }
          }
      }
