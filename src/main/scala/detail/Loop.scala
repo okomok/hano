@@ -32,30 +32,41 @@ class LoopOther[A](_1: Seq[A], _2: Int = 1) extends SeqResource[A] {
         assert(!isActive)
 
         isActive = true
-        def _k(q: Exit) { close(); f.exit(q) }
+
+        var _released = false
+        def _k(q: Exit) {
+            assert(!_released)
+            _released = true
+            close()
+            f.exit(q)
+        }
 
         def rec() {
             _1 onEach { x =>
                 synchronized { // is needed because...
-                    var i = 0
-                    while (isActive && (i != _2)) {
-                        i += 1
-                        f(x) // may reenter `forloop` from other threads.
-                    }
-                    if (!isActive) {
-                        _k(Exit.Closed)
-                        // `isActive` is out of play for me.
+                    if (!_released) {
+                        var i = 0
+                        while (isActive && (i != _2)) {
+                            i += 1
+                            f(x) // may reenter `forloop` from other threads.
+                        }
+                        if (!isActive) {
+                            _k(Exit.Closed)
+                            // `isActive` is out of play for me.
+                        }
                     }
                 }
                 // Now you can reenter `forloop`.
             } onExit { q =>
-                q match {
-                    case Exit.End => {
-                        if (isActive) {
-                            rec()
+                if (!_released) { // Don't refer `isActive` after `_k`
+                    q match {
+                        case Exit.End => {
+                            if (isActive) {
+                                rec()
+                            }
                         }
+                        case q => _k(q)
                     }
-                    case q => _k(q)
                 }
             } start()
         }
