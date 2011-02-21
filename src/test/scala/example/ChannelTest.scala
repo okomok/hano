@@ -3,7 +3,7 @@ package com.github.okomok.hanotest.example
 import com.github.okomok.hano
 
 /**
- * `Channel` is a mutable single-element sequence whose value varis every forloop you do.
+ * `Channel` is a mutable single-element sequence whose value varies every foreach you call.
  * `Channel` methods are thread-safe.
  */
 class ChannelTest extends org.scalatest.junit.JUnit3Suite {
