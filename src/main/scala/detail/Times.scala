@@ -32,21 +32,21 @@ class TimesOther[A](_1: Seq[A], _2: IntVar, grainSize: Int = 1) extends SeqResou
         assert(!isActive)
 
         isActive = true
+        def _k(q: Exit) { close(); f.exit(q) }
 
         val _c = _2.Copy
-        var _released = false
-
-        def _k(q: Exit) {
-            assert(!_released)
-            _released = true
-            close()
-            f.exit(q)
-        }
 
         def rec() {
+            if (!_c.postDec) {
+                context eval {
+                    _k(Exit.End)
+                }
+                return
+            }
+
             _1 onEach { x =>
                 synchronized { // is needed because...
-                    if (!_released) {
+                    f beforeExit {
                         var i = 0
                         while (isActive && (i != grainSize)) {
                             i += 1
@@ -60,10 +60,10 @@ class TimesOther[A](_1: Seq[A], _2: IntVar, grainSize: Int = 1) extends SeqResou
                 }
                 // Now you can reenter `forloop`.
             } onExit { q =>
-                if (!_released) { // Don't refer `isActive` after `_k`
+                f beforeExit { // Don't refer `isActive` after `_k`
                     q match {
                         case Exit.End => {
-                            if (isActive && _c.--) {
+                            if (isActive) {
                                 rec()
                             }
                         }
@@ -72,6 +72,7 @@ class TimesOther[A](_1: Seq[A], _2: IntVar, grainSize: Int = 1) extends SeqResou
                 }
             } start()
         }
+
         rec()
     }
 }
@@ -94,14 +95,29 @@ class TimesSelf[A](_1: Seq[A], _2: IntVar) extends Seq[A] {
         def _k(q: Exit) { close(); f.exit(q) }
 
         val _c = _2.Copy
-        while (isActive && _c.--) {
+
+        @scala.annotation.tailrec
+        def rec() {
+            if (!_c.postDec) {
+                context eval {
+                    _k(Exit.End)
+                }
+                return
+            }
+
             _1.noEnd onEach {
                 f(_)
             } onExit {
                 _k(_)
             } start()
+
+            if (isActive) {
+                rec()
+            } else {
+                _k(Exit.Closed)
+            }
         }
 
-        _k(Exit.Closed)
+        rec()
     }
 }

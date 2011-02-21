@@ -9,6 +9,8 @@ package hano
 package detail
 
 
+// USELESS, REMOVE ME.
+
 // No End sequence
 private[hano]
 class Multiply[A](_1: Seq[A], _2: Int) extends SeqResource[A] {
