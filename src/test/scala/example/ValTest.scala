@@ -4,7 +4,7 @@ import com.github.okomok.hano
 
 /**
  * `Val` is an immutable single-element sequence whose value can be set later.
- * `Val` methods are thread-safe.
+ * `Val` methods are thread-safe and lock-free.
  */
 class ValTest extends org.scalatest.junit.JUnit3Suite {
 
