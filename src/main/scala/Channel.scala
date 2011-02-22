@@ -34,7 +34,27 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
     private[this] val readLock = new ReentrantLock
     private[this] val writeLock = new ReentrantLock
 
-    override def forloop(f: Reaction[A]) {
+    override def forloop(f: Reaction[A]): Unit = _readable.forloop(f)
+
+    /**
+     * Writes the value.
+     */
+    def write(x: A): Unit = _writable.set(x)
+
+    /**
+     * Reads and removes the value.
+     */
+    def read: A = Val(this).get
+
+    /**
+     * Sends a value as single-element sequence.
+     */
+    def send(that: Seq[A]): Unit = _writable.assign(that)
+
+    @annotation.aliasOf("send")
+    def !(that: Seq[A]): Unit = send(that)
+
+    private def _readable: Val[A] = {
         detail.Synchronized(readLock) {
             if (readNode.next == null) {
                 detail.Synchronized(writeLock) {
@@ -46,13 +66,10 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
             val w = readNode.value
             readNode = readNode.next
             w
-        } forloop(f)
+        }
     }
 
-    /**
-     * Writes the value.
-     */
-    def write(x: A) {
+    private def _writable: Val[A] = {
         detail.Synchronized(writeLock) {
             val w = writeNode.value
             if (writeNode.next == null) {
@@ -60,11 +77,6 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
             }
             writeNode = writeNode.next
             w
-        } set(x)
+        }
     }
-
-    /**
-     * Reads and removes the value.
-     */
-    def read: A = Val(this).get
 }

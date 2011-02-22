@@ -27,31 +27,10 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     private[this] val v = new concurrent.atomic.AtomicReference[Either[Throwable, A]](null)
     private[this] val fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]
 
-    // subscription order is NOT preserved.
-    override def forloop(f: Reaction[A]) {
-        if (v.get != null) {
-            _eval(f, v.get)
-        } else {
-            fs.offer(f)
-            if (v.get != null && fs.remove(f)) {
-                _eval(f, v.get)
-            }
-        }
-    }
-
-    private def _set(tx: Either[Throwable, A]): Boolean = {
-        if (v.compareAndSet(null, tx)) {
-            while (!fs.isEmpty) {
-                val f = fs.poll
-                if (f != null) {
-                    _eval(f, tx)
-                }
-            }
-            true
-        } else {
-            false
-        }
-    }
+    /**
+     * subscription order is NOT preserved.
+     */
+    override def forloop(f: Reaction[A]): Unit = _onSet(f)
 
     /**
      * Sets the value.
@@ -101,6 +80,31 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
      */
     def future: () => A = new Val._Future(this)
 
+    private def _onSet(f: Reaction[A]) {
+        if (v.get != null) {
+            _eval(f, v.get)
+        } else {
+            fs.offer(f)
+            if (v.get != null && fs.remove(f)) {
+                _eval(f, v.get)
+            }
+        }
+    }
+
+    private def _set(tx: Either[Throwable, A]): Boolean = {
+        if (v.compareAndSet(null, tx)) {
+            while (!fs.isEmpty) {
+                val f = fs.poll
+                if (f != null) {
+                    _eval(f, tx)
+                }
+            }
+            true
+        } else {
+            false
+        }
+    }
+
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
         context onEach { _ =>
             tx match {
@@ -111,9 +115,6 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
             f.exit(_)
         } start()
     }
-
-    // REMOVE ME
-    def onAssign(f: A => Unit): Seq[A] = new Val.OnAssign(this, f)
 }
 
 
@@ -136,27 +137,6 @@ object Val {
 
     @annotation.equivalentTo("new Val[A]")
     def apply[A]: Val[A] = new Val[A]
-
-    // REMOVE ME.
-    def length(xs: Seq[_]): Val[Option[Int]] = {
-        val v = new Val[Option[Int]](xs.context upper async)
-        var acc = 0
-        xs onEach { x =>
-            acc += 1
-        } onExit {
-            case Exit.End => v() = Some(acc)
-            case q => v() = None
-        } start()
-        v
-    }
-
-    // REMOVE ME.
-    private class OnAssign[A](_1: Seq[A], _2: A => Unit) extends SeqProxy[A] {
-        override val self = _1.onHead {
-            case Some(x) => _2(x)
-            case None => ()
-        }
-    }
 
     private class ToReaction[A](_1: Val[A]) extends Reaction[A] {
         override protected def rawApply(x: A) = _1.set(x)
