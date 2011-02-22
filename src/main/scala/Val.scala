@@ -28,7 +28,8 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     private[this] val fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]
 
     /**
-     * subscription order is NOT preserved.
+     * Will call a reaction when the value is initialized.
+     * Subscription order is NOT preserved.
      */
     override def forloop(f: Reaction[A]): Unit = _onSet(f)
 
@@ -38,7 +39,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     def set(x: A): Boolean = _set(Right(x))
 
     /**
-     * Gets the value
+     * Gets the value.
      */
     def get: A = future.apply()
 
