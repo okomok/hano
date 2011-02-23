@@ -16,13 +16,11 @@ object Await {
         var s: Throwable = null
 
         xs onExit { q =>
-            try {
+            CountDown(c) {
                 q match {
                      case Exit.Failed(t) => s = t
                      case _ => ()
                 }
-            } finally {
-                c.countDown()
             }
         } start()
 

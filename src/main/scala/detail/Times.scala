@@ -34,7 +34,7 @@ class TimesOther[A](_1: Seq[A], _2: IntVar, grainSize: Int = 1) extends SeqResou
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
 
-        val _c = _2.Copy
+        val _c = _2._copy
 
         def rec() {
             if (!_c.postDec) {
@@ -94,7 +94,7 @@ class TimesSelf[A](_1: Seq[A], _2: IntVar) extends Seq[A] {
         isActive = true
         def _k(q: Exit) { close(); f.exit(q) }
 
-        val _c = _2.Copy
+        val _c = _2._copy
 
         @scala.annotation.tailrec
         def rec() {

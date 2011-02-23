@@ -11,8 +11,7 @@ package detail
 
 private[hano]
 sealed abstract class IntVar {
-    def Copy: IntVar
-    def isZero: Boolean
+    def _copy: IntVar
     def postDec: Boolean
 }
 
@@ -21,15 +20,13 @@ private[hano]
 object IntVar {
 
     case object Inf extends IntVar {
-        override def Copy: IntVar = this
-        override def isZero = false
+        override def _copy: IntVar = this
         override def postDec = true
     }
 
     case class Of(n: Int) extends IntVar {
         private[this] var _n = n
-        override def Copy: IntVar = new Of(n)
-        override def isZero = _n == 0
+        override def _copy: IntVar = new Of(n)
         override def postDec = { val that = _n != 0; _n -= 1; that }
     }
 
