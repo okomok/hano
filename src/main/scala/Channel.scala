@@ -53,10 +53,10 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
     /**
      * Writes a value as single-element sequence.
      */
-    def output(that: Seq[A]): this.type = { _writable.assign(that); this }
+    def output(x: Seq[A]): this.type = { _writable.assign(x); this }
 
     @annotation.aliasOf("output")
-    def <<(that: Seq[A]): this.type = output(that)
+    def <<(x: Seq[A]): this.type = output(x)
 
     private def _readable: Val[A] = Synchronized(readLock) {
         if (readNode.next == null) {

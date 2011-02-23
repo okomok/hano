@@ -62,7 +62,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     /**
      * `Val` assignment
      */
-    def assign(that: Seq[A]) = that.forloop(toReaction)
+    def assign(that: Seq[A]): Unit = that.forloop(toReaction)
 
     /**
      * Equivalent to `set(x)`, but throws if the value is different.

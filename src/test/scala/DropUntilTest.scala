@@ -45,7 +45,7 @@ class DropUntilTest extends org.scalatest.junit.JUnit3Suite {
 
         val suite = new ParallelSuite(10)
         suite.add(100) {
-            xs member ()
+            xs add ()
         }
         suite.add(10) {
             Thread.sleep(100)

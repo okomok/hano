@@ -37,24 +37,46 @@ final class Bag[A](val capacity: Int, override val context: Context = async) ext
         }
     }
 
-    @annotation.aliasOf("member")
-    def +=(x: A): Boolean = member(x)
+    /**
+     * Adds the specified element to this set.
+     */
+    def add(x: A): Boolean = _next match {
+        case Some(v) => {
+            val ok = v.set(x)
+            assert(ok)
+            true
+        }
+        case None => false
+    }
 
-    def member(x: A): Boolean = {
+    /**
+     * Adds the specified element as single-element sequence to this set.
+     */
+    def member(x: Seq[A]): Boolean = _next match {
+        case Some(v) => {
+            v.assign(x)
+            true
+        }
+        case None => false
+    }
+
+    @annotation.aliasOf("add")
+    def +=(x: A): Boolean = add(x)
+
+    private def _next: Option[Val[A]] = {
         if (cur < capacity) {
             val j = detail.Synchronized(curLock) {
-                val tmp = cur
+                val that = cur
                 cur += 1
-                tmp
+                that
             }
             if (j < capacity) {
-                vs(j)() = x
-                true
+                Some(vs(j))
             } else {
-                false
+                None
             }
         } else {
-            false
+            None
         }
     }
 }
