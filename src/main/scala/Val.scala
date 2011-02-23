@@ -39,6 +39,11 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     def set(x: A): Boolean = _set(Right(x))
 
     /**
+     * Informs a failure to a reaction.
+     */
+    def setFailed(why: Throwable): Boolean = _set(Left(why))
+
+    /**
      * Gets the value. (blocking)
      */
     def get: A = {
@@ -53,11 +58,6 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
         }
         that.get
     }
-
-    /**
-     * Informs a failure to a reaction.
-     */
-    def failed(why: Throwable): Boolean = _set(Left(why))
 
     /**
      * `Val` assignment
@@ -150,9 +150,9 @@ object Val {
     private class ToReaction[A](_1: Val[A]) extends Reaction[A] {
         override protected def rawApply(x: A) = _1.set(x)
         override protected def rawExit(q: Exit) = q match {
-            case Exit.Failed(t) => _1.failed(t)
-            case Exit.Closed => _1.failed(new NoSuchElementException("source sequence was closed before Val.set"))
-            case _ => ()
+            case Exit.Failed(t) => _1.setFailed(t)
+            case Exit.End => _1.setFailed(new NoSuchElementException("sequence end before Val.set"))
+            case Exit.Closed => _1.setFailed(new NoSuchElementException("sequence closed before Val.set"))
         }
     }
 
