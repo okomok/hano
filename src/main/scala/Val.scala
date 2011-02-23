@@ -44,9 +44,9 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     def get: A = future.apply()
 
     /**
-     * Fails to produce a value.
+     * Informs a failure to a reaction.
      */
-    def fail(why: Throwable): Boolean = _set(Left(why))
+    def failed(why: Throwable): Boolean = _set(Left(why))
 
     /**
      * `Val` assignment
@@ -142,8 +142,8 @@ object Val {
     private class ToReaction[A](_1: Val[A]) extends Reaction[A] {
         override protected def rawApply(x: A) = _1.set(x)
         override protected def rawExit(q: Exit) = q match {
-            case Exit.Failed(t) => _1.fail(t)
-            case Exit.Closed => _1.fail(new NoSuchElementException("source sequence was closed before Val.set"))
+            case Exit.Failed(t) => _1.failed(t)
+            case Exit.Closed => _1.failed(new NoSuchElementException("source sequence was closed before Val.set"))
             case _ => ()
         }
     }
