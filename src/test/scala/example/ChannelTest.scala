@@ -60,6 +60,25 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     /**
+     * Recall `loop` cycles a sequence infinitely. So that, ...
+     */
+    def testLoop {
+        val ch = new hano.Channel[Int]
+        ch write 1
+        ch write 2
+        ch write 3
+
+        var out: List[Int] = Nil
+        ch.loop take {
+            3
+        } onEach { x =>
+            out :+= x
+        } await()
+
+        expect(List(1,2,3))(out)
+    }
+
+    /**
      * Like `Val`, you can write a single-element sequence into `Channel`.
      */
     def testOutput {
