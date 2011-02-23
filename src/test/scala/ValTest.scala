@@ -44,4 +44,13 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
             v() = 12
         }
     }
+
+    def testValAssignVal {
+        val v1 = new hano.Val[Int]
+        val v2 = new hano.Val[Int]
+
+        v2 := v1
+        v1() = 11
+        expect(11)(v2())
+    }
 }
