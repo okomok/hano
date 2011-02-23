@@ -58,4 +58,20 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
 
         expect(List(1,2,3))(out)
     }
+
+    /**
+     * Like `Val`, you can write a single-element sequence into `Channel`.
+     */
+    def testOutput {
+        val xs = hano.async.loop.pull(1 until 6)
+
+        val ch = new hano.Channel[Int]
+        ch << xs.reduceLeft(_ + _) << xs.reduceLeft(_ * _)
+
+        var out: List[Int] = Nil
+        out :+= ch.read
+        out :+= ch.read
+
+        expect(List(1+2+3+4+5,1*2*3*4*5))(out)
+    }
 }
