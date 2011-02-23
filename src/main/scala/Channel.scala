@@ -41,22 +41,22 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
     override def forloop(f: Reaction[A]): Unit = _readable.forloop(f)
 
     /**
-     * Writes the value.
+     * Writes a value.
      */
     def write(x: A): Unit = _writable.set(x)
 
     /**
-     * Reads and removes the value.
+     * Reads and removes a value.
      */
     def read: A = _readable.apply()
 
     /**
-     * Sends a value as single-element sequence.
+     * Writes a value as single-element sequence.
      */
-    def send(that: Seq[A]): Unit = _writable.assign(that)
+    def output(that: Seq[A]): this.type = { _writable.assign(that); this }
 
-    @annotation.aliasOf("send")
-    def !(that: Seq[A]): Unit = send(that)
+    @annotation.aliasOf("output")
+    def <<(that: Seq[A]): this.type = output(that)
 
     private def _readable: Val[A] = Synchronized(readLock) {
         if (readNode.next == null) {
