@@ -39,9 +39,20 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     def set(x: A): Boolean = _set(Right(x))
 
     /**
-     * Gets the value.
+     * Gets the value. (blocking)
      */
-    def get: A = future.apply()
+    def get: A = {
+        var that: Option[A] = None
+
+        onEach { x =>
+            that = Some(x)
+        } await()
+
+        if (that.isEmpty) {
+            throw new NoSuchElementException("Val.get")
+        }
+        that.get
+    }
 
     /**
      * Informs a failure to a reaction.
@@ -135,9 +146,6 @@ object Val {
         v := x
         v
     }
-
-    @annotation.equivalentTo("new Val[A]")
-    def apply[A]: Val[A] = new Val[A]
 
     private class ToReaction[A](_1: Val[A]) extends Reaction[A] {
         override protected def rawApply(x: A) = _1.set(x)
