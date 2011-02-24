@@ -12,6 +12,7 @@ package detail
 private[hano]
 class Pull[A](_1: Seq[_], _2: Iter[A]) extends SeqAdapter[A] {
     override protected val underlying = _1
+    override val context = _1.context.known
     override def forloop(f: Reaction[A]) {
         def _k(q: Exit) { close(); f.exit(q) }
 

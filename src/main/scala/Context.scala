@@ -47,10 +47,10 @@ trait Context extends Seq[Unit] {
     private[hano]
     final def upper(_that: => Context): Context = {
         lazy val that = _that
-        // unknown <: self <: other
+        // Unknown <: Self <: other
         if (this eq Unknown) {
             if (that eq Unknown) {
-                async
+                async // make it "known".
             } else {
                 that
             }
@@ -64,4 +64,7 @@ trait Context extends Seq[Unit] {
             this
         }
     }
+
+    private[hano]
+    final def known: Context = this upper Unknown
 }

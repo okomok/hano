@@ -13,7 +13,7 @@ package detail
 private[hano]
 class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
     override def close() = _1.close()
-    override val context = _1.context upper Unknown
+    override val context = _1.context.known
     override def forloop(f: Reaction[B]) {
         def _k(q: Exit) { close(); f.exit(q) }
 

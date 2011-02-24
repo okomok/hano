@@ -37,13 +37,13 @@ object listen {
         private[this] var _f: Reaction[A] = null
         private[this] var _add: () => Unit = null
         private[this] var _remove: () => Unit = null
-        private[this] var _context: Context = null
+        private[this] var _context: Context = Unknown
         private[this] val _env = new EnvImpl
 
         private[this] var _firstTime = true
         body(_env) // saves context as soon as possible.
 
-        override val context = if (_context == null) async else _context
+        override def context = _context
 
         override protected def closeResource() {
             if (_remove != null) {
