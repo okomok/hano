@@ -11,5 +11,5 @@ package detail
 
 private[hano]
 class Loop[A](_1: Seq[A]) extends SeqProxy[A] {
-    override val self: Seq[A] = new Times(_1, IntVar.Inf)
+    override val self = _1.loopWhile(true)
 }

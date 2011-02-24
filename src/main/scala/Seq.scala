@@ -357,7 +357,13 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Cycles this sequence infinitely.
      */
+    @annotation.equivalentTo("loopWhile(true)")
     def loop: Seq[A] = new detail.Loop(this)
+
+    /**
+     * Cycles this sequence while the predicate holds.
+     */
+    def loopWhile(p: => Boolean): Seq[A] = new detail.LoopWhile(this, p)
 
     /**
      * Cycles this sequence `n` times.
