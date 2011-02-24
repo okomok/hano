@@ -116,5 +116,4 @@ object Iter {
     private class Able[A](_1: Iter[A]) extends Iterable[A] {
         override def iterator = _1.ator
     }
-
 }
