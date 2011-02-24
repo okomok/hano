@@ -70,15 +70,23 @@ class BagTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testMember {
-        val as = hano.async.loop.pull(1 until 6)
-        val xs = new hano.Bag[Int](50)
-        assert(xs member as.reduceLeft(_ + _))
-        assert(xs member as.reduceLeft(_ * _))
-        assert(xs member hano.Single(99))
+        for (i <- 0 until 100) {
+            val as = hano.async.loop.pull(1 until 6)
+            val xs = new hano.Bag[Int](50)
+            as fork { as =>
+                xs member as.reduceLeft(_ + _)
+            } fork { as =>
+                xs member as.reduceLeft(_ * _)
+            } start()
+// hmm...
+//            assert(xs member as.reduceLeft(_ + _))
+//            assert(xs member as.reduceLeft(_ * _))
+            assert(xs member hano.Single(99))
 
-        val it = xs.take(3).toIter
-        assert(it.able.find(_ == 1+2+3+4+5).isDefined)
-        assert(it.able.find(_ == 1*2*3*4*5).isDefined)
-        assert(it.able.find(_ == 99).isDefined)
+            val it = xs.take(3).toIter
+            assert(it.able.find(_ == 1+2+3+4+5).isDefined)
+            assert(it.able.find(_ == 1*2*3*4*5).isDefined)
+            assert(it.able.find(_ == 99).isDefined)
+        }
     }
 }
