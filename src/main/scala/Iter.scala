@@ -80,24 +80,24 @@ object Iter {
     @annotation.returnThat
     def from[A](that: Iter[A]): Iter[A] = that
 
-    implicit def fromIterator[A](from: => Iterator[A]): Iter[A] = new FromIterator(from)
+    implicit def fromIterator[A](from: => Iterator[A]): Iter[A] = new FromIterator(() => from)
     implicit def fromIterable[A](from: Iterable[A]): Iter[A] = new FromIterable(from)
-    implicit def fromJIterator[A](from: => java.util.Iterator[A]): Iter[A] = new FromJIterator(from)
+    implicit def fromJIterator[A](from: => java.util.Iterator[A]): Iter[A] = new FromJIterator(() => from)
     implicit def fromJIterable[A](from: java.lang.Iterable[A]): Iter[A] = new FromJIterable(from)
     implicit def fromArray[A](from: Array[A]): Iter[A] = new FromArray(from)
     implicit def fromOption[A](from: Option[A]): Iter[A] = new FromOption(from)
 
-    private class FromIterator[A](_1: => Iterator[A]) extends Iter[A] {
-        override def ator = _1
+    private class FromIterator[A](_1: () => Iterator[A]) extends Iter[A] {
+        override def ator = _1()
     }
 
     private class FromIterable[A](_1: Iterable[A]) extends Iter[A] {
         override def ator = _1.iterator
     }
 
-    private class FromJIterator[A](_1: => java.util.Iterator[A]) extends Iter[A] {
+    private class FromJIterator[A](_1: () => java.util.Iterator[A]) extends Iter[A] {
         import JavaConversions._
-        override def ator = _1
+        override def ator = _1()
     }
 
     private class FromJIterable[A](_1: java.lang.Iterable[A]) extends Iter[A] {

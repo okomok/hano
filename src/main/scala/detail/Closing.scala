@@ -10,9 +10,9 @@ package detail
 
 
 private[hano]
-class Closing[A](_1: Seq[A], _2: => Boolean) extends Seq[A] {
+class Closing[A](_1: Seq[A], _2: () => Boolean) extends Seq[A] {
     override def close() {
-        if (!_2) {
+        if (!_2()) {
             _1.close()
         }
     }

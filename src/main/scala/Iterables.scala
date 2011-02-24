@@ -9,14 +9,14 @@ package hano
 
 
 /**
- * Contains methods missing from the stardard.
+ * Contains methods missing from the standard.
  */
 object Iterables {
 
     /**
      * Creates an `Iterable` from an `Iterator`.
      */
-    def bind[A](it: => Iterator[A]): Iterable[A] = new Bind(it)
+    def bind[A](it: => Iterator[A]): Iterable[A] = new Bind(() => it)
 
     /**
      * The dual of foldRight
@@ -34,8 +34,8 @@ object Iterables {
     def cycle[A](iter: Iter[A]): Iterable[A] = bind(Iterator.continually(()).flatMap(_ => iter.ator)).view
 
 
-    private class Bind[A](_1: => Iterator[A]) extends Iterable[A] {
-        override def iterator = _1
+    private class Bind[A](_1: () => Iterator[A]) extends Iterable[A] {
+        override def iterator = _1()
     }
 
     private class Unfold[A, +B](_1: A, _2: A => Option[(B, A)]) extends Iterable[B] {

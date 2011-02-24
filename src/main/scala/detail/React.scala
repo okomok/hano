@@ -10,10 +10,10 @@ package detail
 
 
 private[hano]
-class React[A](_1: Seq[A], _2: => Reaction[A]) extends SeqAdapter[A] {
+class React[A](_1: Seq[A], _2: () => Reaction[A]) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
-        val _g = _2
+        val _g = _2()
         _1.forloop {
             Reaction(
                 x => { _g(x); f(x) },
@@ -25,7 +25,7 @@ class React[A](_1: Seq[A], _2: => Reaction[A]) extends SeqAdapter[A] {
     override def react(f: => Reaction[A]): Seq[A] = { // react.react fusion
         _1.react {
             val _f = f
-            val _g = _2
+            val _g = _2()
             Reaction(
                 x => { _g(x); _f(x) },
                 q => { _g.exit(q); _f.exit(q) }
@@ -34,7 +34,7 @@ class React[A](_1: Seq[A], _2: => Reaction[A]) extends SeqAdapter[A] {
     }
 
     override def foreach(f: A => Unit) { // react.foreach fusion
-        val _g = _2
+        val _g = _2()
         _1.forloop {
             Reaction(
                 x => { _g(x); f(x) },
@@ -44,7 +44,7 @@ class React[A](_1: Seq[A], _2: => Reaction[A]) extends SeqAdapter[A] {
     }
 
     override def start() { // react.start fusion
-        val _g = _2
+        val _g = _2()
         _1.forloop {
             Reaction(
                 _g(_),

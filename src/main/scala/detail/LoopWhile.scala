@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class LoopWhile[A](_1: Seq[A], _2: => Boolean) extends SeqProxy[A] {
+class LoopWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
     override val self = {
         if (_1.context eq Self) {
             new LoopWhileSelf(_1, _2)
@@ -22,7 +22,7 @@ class LoopWhile[A](_1: Seq[A], _2: => Boolean) extends SeqProxy[A] {
 
 
 private[hano]
-class LoopWhileOther[A](_1: Seq[A], _2: => Boolean, grainSize: Int = 1) extends SeqResource[A] {
+class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) extends SeqResource[A] {
     assert(_1.context ne Self)
 
     private[this] var isActive = false
@@ -35,7 +35,7 @@ class LoopWhileOther[A](_1: Seq[A], _2: => Boolean, grainSize: Int = 1) extends 
         def _k(q: Exit) { close(); f.exit(q) }
 
         def rec() {
-            if (!_2) {
+            if (!_2()) {
                 context eval {
                     _k(Exit.End)
                 }
@@ -78,7 +78,7 @@ class LoopWhileOther[A](_1: Seq[A], _2: => Boolean, grainSize: Int = 1) extends 
 
 // Specialized to avoid stack-overflow.
 private[hano]
-class LoopWhileSelf[A](_1: Seq[A], _2: => Boolean) extends Seq[A] {
+class LoopWhileSelf[A](_1: Seq[A], _2: () => Boolean) extends Seq[A] {
     assert(_1.context eq Self)
 
     @volatile private[this] var isActive = false
@@ -94,7 +94,7 @@ class LoopWhileSelf[A](_1: Seq[A], _2: => Boolean) extends Seq[A] {
 
         @scala.annotation.tailrec
         def rec() {
-            if (!_2) {
+            if (!_2()) {
                 context eval {
                     _k(Exit.End)
                 }

@@ -213,7 +213,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Loops with evaluating `f`.
      */
-    def react(f: => Reaction[A]): Seq[A] = new detail.React(this, f)
+    def react(f: => Reaction[A]): Seq[A] = new detail.React(this, () => f)
 
     /**
      * Calls `k` on the exit of sequence.
@@ -223,7 +223,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Calls `k` on the end of sequence.
      */
-    def onEnd(k: => Unit): Seq[A] = new detail.OnEnd(this, k)
+    def onEnd(k: => Unit): Seq[A] = new detail.OnEnd(this, () => k)
 
     /**
      * Calls `k` on the failure of sequence.
@@ -233,7 +233,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Calls `k` on the closing of sequence.
      */
-    def onClosed(k: => Unit): Seq[A] = new detail.OnClosed(this, k)
+    def onClosed(k: => Unit): Seq[A] = new detail.OnClosed(this, () => k)
 
     /**
      * Loops with evaluating `f`.
@@ -286,7 +286,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Calls `f` on the closing of sequence.
      */
-    def closing(f: => Boolean): Seq[A] = new detail.Closing(this, f)
+    def closing(f: => Boolean): Seq[A] = new detail.Closing(this, () => f)
 
     /**
      * Pseudo catch-statement
@@ -363,7 +363,7 @@ trait Seq[+A] extends java.io.Closeable {
     /**
      * Cycles this sequence while the predicate holds.
      */
-    def loopWhile(p: => Boolean): Seq[A] = new detail.LoopWhile(this, p)
+    def loopWhile(p: => Boolean): Seq[A] = new detail.LoopWhile(this, () => p)
 
     /**
      * Cycles this sequence `n` times.
