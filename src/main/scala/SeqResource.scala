@@ -21,7 +21,7 @@ trait SeqResource[A] extends Seq[A] {
 
     final override def forloop(f: Reaction[A]) = synchronized {
         if (!_closed) {
-            throw new IllegalStateException(toString + " shall be closed before forloop")
+            throw new IllegalStateException(toString + " shall be closed before forloop") with detail.SeriousException
         }
         _closed = false
         openResource(f)
