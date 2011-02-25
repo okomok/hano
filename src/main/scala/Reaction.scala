@@ -33,7 +33,7 @@ object Reaction {
 /**
  * Triggered by Seq.forloop
  */
-trait Reaction[-A] {
+trait Reaction[-A] extends java.io.Closeable {
 
     @annotation.returnThis @inline
     final def of[B <: A]: Reaction[B] = this
@@ -42,62 +42,83 @@ trait Reaction[-A] {
     final def asReaction: Reaction[A] = this
 
     /**
+     * Has this reaction been entered?
+     */
+    final def isEntered: Boolean = _enter.isDone
+
+    /**
      * Has this reaction been exited?
      */
-    final def isExited: Boolean = exited
+    final def isExited: Boolean = _exit.isDone
+
+    /**
+     * Informs the entrance.
+     */
+    final def enter(c: => Unit) = _mdf { _enter {
+        _close = c
+    } }
 
     /**
      * Reacts on each element.
      */
-    final def apply(x: A): Unit = mdf {
-        if (!exited) {
-            rawApply(x)
+    final def apply(x: A) = _mdf {
+        if (_enter.isDone && !_exit.isDone) {
+            try {
+                rawApply(x)
+            } catch {
+                case detail.CloseException => exit(Exit.Closed)
+            }
         }
     }
 
     /**
      * Reacts on the exit. (should not throw.)
      */
-    final def exit(q: Exit): Unit = mdf {
+    final def exit(q: Exit) = _mdf { _exit {
         try {
-            if (!exited) {
-                exited = true
+            if (_enter.isDone) {
+                _close()
+                _close = null
                 rawExit(q)
             }
         } catch {
+            case detail.CloseException => ()
             case t: scala.util.control.ControlThrowable => throw t
             case t: Throwable => detail.LogErr(t, "Reaction.exit error")
         }
-    }
+    } }
+
+    @annotation.equivalentTo("exit(Exit.End)")
+    final def end() = exit(Exit.End)
+
+    @annotation.equivalentTo("exit(Exit.Closed)")
+    final override def close() = exit(Exit.Closed)
+
+    @annotation.equivalentTo("exit(Exit.Failed(why))")
+    final def failed(why: Throwable) = exit(Exit.Failed(why))
 
     /**
-     * Override to implement `apply`.
+     * Override this to implement `apply`.
      */
-    protected def rawApply(x: A): Unit
+    protected def rawApply(x: A)
 
     /**
-     * Override to implement `exit`.
+     * Override this to implement `exit`.
      */
-    protected def rawExit(q: Exit): Unit
+    protected def rawExit(q: Exit)
+
 
     @annotation.equivalentTo("if (!isExited) body")
     final def beforeExit(body: => Unit) {
-        if (!exited) {
+        if (!_exit.isDone) {
             body
         }
     }
 
-    @annotation.equivalentTo("exit(Exit.End)")
-    final def end(): Unit = exit(Exit.End)
-
-    @annotation.equivalentTo("exit(Exit.Closed)")
-    final def closed(): Unit = exit(Exit.Closed)
-
-    @annotation.equivalentTo("exit(Exit.Failed(why))")
-    final def failed(why: Throwable): Unit = exit(Exit.Failed(why))
-
-    @volatile private[this] var exited = false // volatile for slight optimization.
-    private[this] lazy val mdf = new detail.Modification(toString)
+    private[this] val _mdf = new detail.Modification(toString)
+    private[this] val _enter = new detail.Once
+    private[this] val _exit = new detailOnce
+    private[this] var _close: () => Unit = null
 
     private[hano]
     final def tryRethrow(body: => Unit) {

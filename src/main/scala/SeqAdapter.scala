@@ -13,6 +13,5 @@ package hano
  */
 trait SeqAdapter[+A] extends Seq[A] {
     protected def underlying: Seq[_]
-    override def close() = underlying.close()
     override def context = underlying.context
 }

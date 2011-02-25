@@ -18,9 +18,8 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
         (around(l), around(r))
     }
 
-    override def forloop(f: Reaction[A]): Unit = self.forloop(f)
     override def context: Context = self.context
-    override def close(): Unit = self.close()
+    override def forloop(f: Reaction[A]): Unit = self.forloop(f)
     override def foreach(f: A => Unit): Unit = self.foreach(f)
     override def start(): Unit = self.start()
     override def await(): Unit = self.await()

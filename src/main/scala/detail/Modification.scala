@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Modification(msg: String) {
+final class Modification(msg: => String) {
     @volatile private[this] var _ing = false
 
     def apply[A](body: => A): A = {

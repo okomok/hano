@@ -57,7 +57,7 @@ object Arm {
 /**
  * Mixin for automatic resource management
  */
-trait Arm[+A] extends Seq[A] {
+trait Arm[+A] extends Seq[A] with java.io.Closeable {
     def open: A
     final override def context = Self
 

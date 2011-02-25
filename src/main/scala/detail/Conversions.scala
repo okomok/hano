@@ -33,13 +33,12 @@ trait Conversions { self: Seq.type =>
 
 private[hano]
 class FromIter[A](_1: Iter[A]) extends Seq[A] {
-    @volatile private[this] var isActive = false
-    override def close() = isActive = false
     override def context = Self
-    override def forloop(f: Reaction[A]) = synchronized {
-        assert(!isActive)
-
-        isActive = true
+    override def forloop(f: Reaction[A]) {
+        var isActive = true
+        f.enter {
+            isActive = false
+        }
         f.tryRethrow {
             val it = _1.ator
             while (isActive && it.hasNext) {
@@ -47,10 +46,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
             }
         }
         if (isActive) {
-            isActive = false
             f.exit(Exit.End)
-        } else {
-            f.exit(Exit.Closed)
         }
     }
 }

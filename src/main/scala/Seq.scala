@@ -24,7 +24,7 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
 /**
  * Reactive sequence, which is built upon asynchronous foreach.
  */
-trait Seq[+A] extends java.io.Closeable {
+trait Seq[+A] {
 
 
     @annotation.returnThis @inline
@@ -37,30 +37,25 @@ trait Seq[+A] extends java.io.Closeable {
 // kernel
 
     /**
-     * (Possibly) asynchronous foreach with end reaction.
-     */
-    def forloop(f: Reaction[A]): Unit
-
-    /**
      * Context where Reactions are invoked.
      */
     def context: Context
 
     /**
-     * Shall be idempotent and thread-safe.
+     * (Possibly) asynchronous foreach with the end reaction.
      */
-    override def close(): Unit = ()
+    def forloop(f: Reaction[A])
 
     @annotation.equivalentTo("forloop(Reaction(f, _ => ()))")
-    def foreach(f: A => Unit): Unit = forloop(Reaction(f, Exit.defaultHandler))
+    def foreach(f: A => Unit) = forloop(Reaction(f, Exit.defaultHandler))
 
     @annotation.equivalentTo("foreach(_ => ())")
-    def start(): Unit = foreach(_ => ())
+    def start() = foreach(_ => ())
 
     /**
      * Blocks until `onExit` is called.
      */
-    def await(): Unit = detail.Await(this)
+    def await() = detail.Await(this)
 
 
 // combinator
