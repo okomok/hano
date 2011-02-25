@@ -26,7 +26,7 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
     assert(_1.context ne Self)
 
     private[this] var isActive = false
-    override val context = _1.context.known
+    override val context = _1.context.toKnown
     override def closeResource() { isActive = false; _1.close() }
     override def openResource(f: Reaction[A]) {
         assert(!isActive)
@@ -82,7 +82,7 @@ class LoopWhileSelf[A](_1: Seq[A], _2: () => Boolean) extends Seq[A] {
     assert(_1.context eq Self)
 
     @volatile private[this] var isActive = false
-    override val context = _1.context.known
+    override val context = _1.context.toKnown
     override def close() { isActive = false; _1.close() }
 
     // requires synchronized in case close-then-forloop from other threads.

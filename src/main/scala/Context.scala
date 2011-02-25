@@ -66,5 +66,5 @@ trait Context extends Seq[Unit] {
     }
 
     private[hano]
-    final def known: Context = this upper Unknown
+    final def toKnown: Context = this upper Unknown
 }
