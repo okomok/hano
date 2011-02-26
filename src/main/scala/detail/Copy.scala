@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class Copy[A, To](_1: Seq[A], _2: scala.collection.generic.CanBuildFrom[Nothing, A, To])
-    extends SeqAdapter.Class[To](_1)
+    extends SeqAdapter.Of[To](_1)
 {
     override def forloop(f: Reaction[To]) {
         var b = _2()

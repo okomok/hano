@@ -12,7 +12,7 @@ package detail
 // step 0 is meaningful?
 
 private[hano]
-class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter.Class[A](_1) {
+class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
     Pre.positive(_2, "step")
 
     override def forloop(f: Reaction[A]) {
@@ -38,7 +38,7 @@ class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter.Class[A](_1) {
 
 
 private[hano]
-class StepTime[A](_1: Seq[A], _2: Long) extends SeqAdapter.Class[A](_1) {
+class StepTime[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var past = 0L
 

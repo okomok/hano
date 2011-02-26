@@ -16,6 +16,7 @@ object LogErr {
         java.lang.System.err.println("[hano][" + msg + "]["+ d + "] " + t)
         t match {
             case _: SeriousException => t.printStackTrace()
+            case _: StackOverflowError => t.printStackTrace()
             case _ => ()
         }
     }

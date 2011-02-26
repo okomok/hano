@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class React[A](_1: Seq[A], _2: () => Reaction[A]) extends SeqAdapter.Class[A](_1) {
+class React[A](_1: Seq[A], _2: () => Reaction[A]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         val _g = _2()
 

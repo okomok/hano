@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class OnHead[A](_1: Seq[A], _2: Option[A] => Unit) extends SeqAdapter.Class[A](_1) {
+class OnHead[A](_1: Seq[A], _2: Option[A] => Unit) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var go = true
 

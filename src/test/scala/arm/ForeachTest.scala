@@ -74,6 +74,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
         override def context = hano.Self
         override def forloop(f: hano.Reaction[A]) = {
             arr.add(10)
+            f.enter()
             try {
                 f(res)
             } finally {
@@ -85,6 +86,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
         override def context = hano.Self
         override def forloop(f: hano.Reaction[A]) = {
             arr.add(20)
+            f.enter()
             try {
                 f(res)
             } finally {
@@ -96,6 +98,7 @@ class ForeachTest extends org.scalatest.junit.JUnit3Suite {
         override def context = hano.Self
         override def forloop(f: hano.Reaction[A]) = {
             arr.add(30)
+            f.enter()
             try {
                 f(res)
             } finally {

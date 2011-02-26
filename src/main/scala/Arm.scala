@@ -66,6 +66,8 @@ trait Arm[+A] extends Seq[A] with java.io.Closeable {
     override def forloop(f: Reaction[A]) {
         val r = open
         var primary: Throwable = null
+
+        f.enter()
         try {
             f(r)
         } catch {

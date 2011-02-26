@@ -50,6 +50,7 @@ object generator {
         override def forloop(f: Reaction[A]) {
             val g = new ToFlushable(f)
             try {
+                g.enter()
                 _1(g)
                 g.exit(Exit.End)
             } catch {

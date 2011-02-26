@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class FoldLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter.Class[B](_1) {
+class FoldLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter.Of[B](_1) {
     override def forloop(f: Reaction[B]) {
         var acc = _2
 
@@ -27,7 +27,7 @@ class FoldLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter.Clas
 
 
 private[hano]
-class ReduceLeft[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends SeqAdapter.Class[B](_1) {
+class ReduceLeft[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends SeqAdapter.Of[B](_1) {
     override def forloop(f: Reaction[B]) {
         var acc: Option[B] = None
 

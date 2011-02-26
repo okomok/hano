@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Pull[A](_1: Seq[_], _2: Iter[A]) extends SeqAdapter.Class[A](_1) {
+class Pull[A](_1: Seq[_], _2: Iter[A]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         val it = _2.ator
 

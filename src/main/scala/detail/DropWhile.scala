@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class DropWhile[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Class[A](_1) {
+class DropWhile[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var go = false
 

@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Class[B](_1) {
+class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[B](_1) {
     override def forloop(f: Reaction[B]) {
         _1.onEnter {
             f.enter(_)

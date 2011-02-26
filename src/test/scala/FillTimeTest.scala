@@ -14,6 +14,7 @@ class FillTimeTezt { // extends org.scalatest.junit.JUnit3Suite {
     class MySeq extends hano.Seq[Int] {
         override def context = hano.Self
         override def forloop(f: hano.Reaction[Int]) {
+            f.enter()
             println("sleeping0")
             Thread.sleep(100)
             f(0)

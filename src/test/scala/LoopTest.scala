@@ -23,17 +23,19 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
         }
     }
 
+    /*
     def testClosingShallBeSync {
         val xs = hano.async.loop.closing{Thread.sleep(100);false}.pull(1 until 4).closing{Thread.sleep(100);false}
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
     }
+    */
 
     def testReact {
         val xs = hano.async.loop.onEach(_ => ()).pull(1 until 4)
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
     }
 
-    def testClose {
+    def testBreak {
         val xs = hano.async.loop.pull(1 until 100)
 
         val out = new java.util.ArrayList[Int]
@@ -43,7 +45,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
             out add i
             i += 1
             if (i == 50) {
-                ys.close()
+                hano.break()
             }
         } await()
 
@@ -59,13 +61,14 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
             out add i
             i += 1
             if (i == 50) {
-                xs.close()
+                hano.break()
             }
         } await()
 
         expect(hano.Iter.from(0 until 50))(hano.Iter.from(out))
     }
 
+/*
     def testCloseParallel {
         val suite = new ParallelSuite(10)
         val xs = hano.async.loop.pull(1 until 100)
@@ -81,7 +84,6 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
         suite.start()
         Thread.sleep(1500)
     }
-
     def testResource {
         class MyResource extends hano.SeqResource[Int] {
             override val context = hano.Self
@@ -107,4 +109,5 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter(1,2,3,1,2,3,1,2))(xs.take(8).toIter)
         expect(3)(count)
     }
+*/
 }

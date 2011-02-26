@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Replace[A](_1: Seq[A], _2: Iter[A]) extends SeqAdapter.Class[A](_1) {
+class Replace[A](_1: Seq[A], _2: Iter[A]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         val it = _2.ator
 
@@ -29,11 +29,9 @@ class Replace[A](_1: Seq[A], _2: Iter[A]) extends SeqAdapter.Class[A](_1) {
 }
 
 private[hano]
-class ReplaceRegion[A](_1: Seq[A], _2: Int, _3: Int, _4: Iter[A]) extends SeqAdapter.Class[A](_1) {
+class ReplaceRegion[A](_1: Seq[A], _2: Int, _3: Int, _4: Iter[A]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
-        _1.onEnter {
-            f.enter(_)
-        } fork { xs =>
+        _1 fork { xs =>
             xs.take(_2).onEach(f(_)).start()
         } fork { xs =>
             xs.slice(_2, _3).replace(_4).onEach(f(_)).start()

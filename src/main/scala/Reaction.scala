@@ -44,7 +44,7 @@ trait Reaction[-A] {
      * Reacts on each element.
      */
     final def apply(x: A) = _mdf {
-        require(_enter.isDone)
+        require(_enter.isDone, "`enter` shall be called before `apply`")
 
         if (_enter.isDone && !_exit.isDone) {
             try {
@@ -60,7 +60,7 @@ trait Reaction[-A] {
      */
     @annotation.idempotent
     final def exit(q: Exit) = _mdf {
-        require(_enter.isDone)
+        require(_enter.isDone, "`enter` shall be called before `exit`")
 
         _exit {
             try {
@@ -69,13 +69,13 @@ trait Reaction[-A] {
             } catch {
                 case detail.BreakControl => ()
                 case t: scala.util.control.ControlThrowable => throw t
-                case t: Throwable => detail.LogErr(t, "Reaction.exit should not throw")
+                case t: Throwable => detail.LogErr(t, "aReaction.exit")
             }
         }
     }
 
     @annotation.equivalentTo("enter(new Entrance(() => ()))")
-    final def enter(b: => Unit): Unit = enter(new Entrance(() => ()))
+    final def enter(b: => Unit): Unit = enter(new Entrance(() => b))
 
     @annotation.equivalentTo("exit(Exit.End)")
     final def end() = exit(Exit.End)

@@ -17,5 +17,5 @@ trait SeqAdapter[+A] extends Seq[A] {
 }
 
 object SeqAdapter {
-    abstract class Class[+A](final override protected val underlying: Seq[_]) extends SeqAdapter[A]
+    abstract class Of[+A](final override protected val underlying: Seq[_]) extends SeqAdapter[A]
 }

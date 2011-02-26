@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Take[A](_1: Seq[A], _2: Int) extends SeqAdapter.Class[A](_1) {
+class Take[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var c = _2
 

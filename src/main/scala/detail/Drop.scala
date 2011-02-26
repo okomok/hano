@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Drop[A](_1: Seq[A], _2: Int) extends SeqAdapter.Class[A](_1) {
+class Drop[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
     Pre.nonnegative(_2, "drop")
     override def forloop(f: Reaction[A]) {
         var c = _2

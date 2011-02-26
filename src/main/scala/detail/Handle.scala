@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class HandleEach[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Class[A](_1) {
+class HandleEach[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         _1.onEnter {
             f.enter(_)
@@ -26,7 +26,7 @@ class HandleEach[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Class[A](_1
 
 
 private[hano]
-class HandleExit[A](_1: Seq[A], _2: PartialFunction[Exit, Unit]) extends SeqAdapter.Class[A](_1) {
+class HandleExit[A](_1: Seq[A], _2: PartialFunction[Exit, Unit]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         _1.onEnter {
             f.enter(_)

@@ -54,6 +54,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         override def forloop(f: hano.Reaction[A]) {
             var g: hano.Reaction[A] = null
             g = new hano.Reaction[A] {
+                override protected def rawEnter(p: hano.Entrance) = ()
                 override protected def rawApply(x: A) = synchronized { f(x); xs.forloop(g) }
                 override protected def rawExit(q: hano.Exit) = synchronized {  }
             }

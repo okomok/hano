@@ -28,7 +28,7 @@ class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Context {
         }
     }
 
-    override def loop: Seq[Unit] = new LoopWhileOther(this, () => true, Async.grainSize)
+    //override def loop: Seq[Unit] = new LoopWhileOther(this, () => true, Async.grainSize)
 }
 
 

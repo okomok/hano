@@ -20,10 +20,10 @@ class BreakableTest extends org.scalatest.junit.JUnit3Suite {
         val b = new java.util.ArrayList[Int]
         val c = new java.util.concurrent.CountDownLatch(1)
 
-        naturals.breakable.foreach { case (x, break) =>
+        naturals.foreach { x =>
             if (x == 50) {
                 c.countDown()
-                break()
+                hano.break()
             } else {
                 b.add(x)
             }

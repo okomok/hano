@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Map[A, B](_1: Seq[A], _2: A => B) extends SeqAdapter.Class[B](_1) {
+class Map[A, B](_1: Seq[A], _2: A => B) extends SeqAdapter.Of[B](_1) {
     override def forloop(f: Reaction[B]) {
         _1.onEnter {
             f.enter(_)

@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Init[A](_1: Seq[A]) extends SeqAdapter.Class[A](_1) {
+class Init[A](_1: Seq[A]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var prev: Option[A] = None
 

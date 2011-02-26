@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) extends SeqAdapter.Class[A](_1) {
+class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         _1.onEnter {
             f.enter(_)

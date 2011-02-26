@@ -118,7 +118,9 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     }
 
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
-        context onEach { _ =>
+        context onEnter {
+            f.enter(_)
+        } onEach { _ =>
             tx match {
                 case Left(t) => f.exit(Exit.Failed(t))
                 case Right(x) => f(x)

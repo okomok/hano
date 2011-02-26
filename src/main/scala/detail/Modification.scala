@@ -11,17 +11,21 @@ package detail
 
 private[hano]
 final class Modification(msg: => String) {
-    @volatile private[this] var _ing = false
+    @volatile private[this] var _ing: Thread = null
 
     def apply[A](body: => A): A = {
-        if (_ing) {
+        if (_ing eq null) {
+            _ing = Thread.currentThread()
+        }
+
+        if (_ing ne Thread.currentThread()) {
             throw new java.util.ConcurrentModificationException(msg) with SeriousException
         }
         try {
-            _ing = true
+            _ing = Thread.currentThread()
             body
         } finally {
-            _ing = false
+            _ing = null
         }
     }
 }

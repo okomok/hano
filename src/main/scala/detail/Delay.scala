@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Class[A](_1) {
+class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     override def context = Delay.timer
 
     override def forloop(f: Reaction[A]) {

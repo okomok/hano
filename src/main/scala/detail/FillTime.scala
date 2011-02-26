@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter.Class[Unit](_1) {
+class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter.Of[Unit](_1) {
     override def context = FillTime.timer
 
     override def forloop(f: Reaction[Unit]) {

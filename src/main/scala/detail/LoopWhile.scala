@@ -25,13 +25,15 @@ class LoopWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
 
 
 private[hano]
-class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) extends SeqAdapter.Class[A](_1) {
+class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) extends SeqAdapter.Of[A](_1) {
     //assert(_1.context ne Self)
 
-    override def forloop(f: Reaction[A]) {
-        def rec() {
-            var isActive = true
+    case class IsActive(var _var: Boolean, id: Int)
 
+    override def forloop(f: Reaction[A]) {
+        var isActive = true
+
+        def rec() {
             _1 onEnter { p =>
                 f.enter {
                     p.close()
@@ -52,6 +54,8 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
                 case Exit.End => {
                     if (isActive) {
                         rec()
+                    } else {
+                        f.exit(Exit.End)
                     }
                 }
                 case q => f.exit(q)

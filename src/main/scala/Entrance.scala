@@ -15,12 +15,20 @@ final class Entrance(c: () => Unit) extends java.io.Closeable {
 
 
 object Entrance {
-
     val Nil = new Entrance(() => ())
 
     def apply(c: => Unit)(implicit d: DummyImplicit) = new Entrance(() => c)
 
-    final class Two(_1: Reaction[_]) extends (Entrance => Unit) {
+    private[hano]
+    def second(p: Entrance): Entrance = {
+        val np = detail.IfFirst[Unit] { _ => () } Else { _ => p.close() }
+        Entrance {
+            np()
+        }
+    }
+
+    private[hano]
+    class Two(_1: Reaction[_]) extends (Entrance => Unit) {
         private[this] var en1, en2 = Entrance.Nil
         override def apply(p: Entrance) {
             if (_1.isExited) {

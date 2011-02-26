@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Tail[A](_1: Seq[A]) extends SeqAdapter.Class[A](_1) {
+class Tail[A](_1: Seq[A]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var first = true
 

@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Find[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Class[A](_1) {
+class Find[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         _1.onEnter {
             f.enter(_)

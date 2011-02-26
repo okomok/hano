@@ -17,7 +17,14 @@ class Duplicate[A](_1: Seq[A]) extends Seq[A] {
         IfFirst[Reaction[A]] { f =>
             _f = f
         } Else { f =>
-            _1.react(_f).forloop(f)
+            _1.onEnter { p =>
+                val p2 = Entrance.second(p)
+                _f.enter(p2); f.enter(p2)
+            } onEach { x =>
+                _f(x); f(x)
+            } onExit { q =>
+                _f.exit(q); f.exit(q)
+            } start()
         }
     }
 
