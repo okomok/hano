@@ -28,15 +28,20 @@ class Replace[A](_1: Seq[A], _2: Iter[A]) extends SeqAdapter.Of[A](_1) {
     }
 }
 
+
 private[hano]
 class ReplaceRegion[A](_1: Seq[A], _2: Int, _3: Int, _4: Iter[A]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
-        _1 fork { xs =>
+        _1 onEnter {
+            f.enter(_)
+        } fork { xs =>
             xs.take(_2).onEach(f(_)).start()
         } fork { xs =>
             xs.slice(_2, _3).replace(_4).onEach(f(_)).start()
         } fork { xs =>
-            xs.drop(_3).react(f).start()
+            xs.drop(_3).onEach(f(_)).start()
+        } onExit {
+            f.exit(_)
         } start()
     }
 }
