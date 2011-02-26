@@ -12,6 +12,8 @@ package hano
  * Event-dispatch-thread context
  */
 object Edt extends Context {
+    override def close() = ()
+
     override def forloop(f: Reaction[Unit]) {
         javax.swing.SwingUtilities.invokeLater {
             new Runnable {

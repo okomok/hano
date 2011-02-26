@@ -10,8 +10,7 @@ package detail
 
 
 private[hano]
-class IsEmpty(_1: Seq[_]) extends SeqAdapter[Boolean] {
-    override protected val underlying = _1
+class IsEmpty(_1: Seq[_]) extends SeqAdapter.Class[Boolean](_1) {
     override def forloop(f: Reaction[Boolean]) {
         _1.onEnter {
             f.enter(_)

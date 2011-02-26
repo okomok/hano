@@ -47,7 +47,7 @@ trait Seq[+A] {
     def forloop(f: Reaction[A])
 
     @annotation.equivalentTo("forloop(Reaction(f, _ => ()))")
-    def foreach(f: A => Unit) = forloop(Reaction(f, Exit.defaultHandler))
+    def foreach(f: A => Unit) = forloop(Reaction(_ => (), f, Exit.defaultHandler))
 
     @annotation.equivalentTo("foreach(_ => ())")
     def start() = foreach(_ => ())
@@ -231,11 +231,6 @@ trait Seq[+A] {
     def onFailed(k: Throwable => Unit): Seq[A] = new detail.OnFailed(this, k)
 
     /**
-     * Calls `k` on the closing of sequence.
-     */
-    def onClosed(k: => Unit): Seq[A] = new detail.OnClosed(this, () => k)
-
-    /**
      * Loops with evaluating `f`.
      */
     def onEach(f: A => Unit): Seq[A] = new detail.OnEach(this, f)
@@ -284,11 +279,6 @@ trait Seq[+A] {
     def onNth(n: Int)(f: Option[A] => Unit): Seq[A] = new detail.OnNth(this, n, f)
 
     /**
-     * Calls `f` on the closing of sequence.
-     */
-    def closing(f: => Boolean): Seq[A] = new detail.Closing(this, () => f)
-
-    /**
      * Pseudo catch-statement
      */
     def catching(f: PartialFunction[Throwable, Unit]): Seq[A] = new detail.Catching(this, f)
@@ -307,19 +297,6 @@ trait Seq[+A] {
      * Attach a resource.
      */
     def using(c: java.io.Closeable): Seq[A] = new detail.Using(this, c)
-
-    @annotation.aliasOf("using(this)")
-    final def used: Seq[A] = using(this)
-
-    /**
-     * Ignores `close()` call.
-     */
-    def protect: Seq[A] = new detail.Protect(this)
-
-    /*
-     * Tokenized by Peg.
-    def tokenize[B >: A](p: Peg[B]): Seq[Vector[B]] = new detail.Tokenize[B](this, p)
-     */
 
     /**
      * Retrieves adjacent sequences.
@@ -348,11 +325,6 @@ trait Seq[+A] {
      * Reactions are invoked in the context of `that`.
      */
     def shift(that: Seq[_]): Seq[A] = new detail.Shift(this, that)
-
-    /**
-     * Elements with a break function.
-     */
-    def breakable: Seq[(A, () => Unit)] = new detail.Breakable(this)
 
     /**
      * Cycles this sequence infinitely.

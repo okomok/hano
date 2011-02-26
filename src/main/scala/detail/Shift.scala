@@ -45,6 +45,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                 } onExit {
                     _exit
                 } start()
+            }
         } onEach { x =>
             f beforeExit {
                 cur ! Action {
@@ -59,7 +60,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
             f beforeExit {
                 cur ! Action {
                     context.onEach { _ =>
-                        _k(q)
+                        _exit(q)
                     } onExit {
                         case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
                         case _ => ()

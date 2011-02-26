@@ -148,11 +148,11 @@ object Val {
     }
 
     private class ToReaction[A](_1: Val[A]) extends Reaction[A] {
+        override protected def rawEnter(p: Entrance) = ()
         override protected def rawApply(x: A) = _1.set(x)
         override protected def rawExit(q: Exit) = q match {
             case Exit.Failed(t) => _1.setFailed(t)
             case Exit.End => _1.setFailed(new NoSuchElementException("sequence end before Val.set"))
-            case Exit.Closed => _1.setFailed(new NoSuchElementException("sequence closed before Val.set"))
         }
     }
 

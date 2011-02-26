@@ -10,11 +10,10 @@ package detail
 
 
 private[hano]
-class Tail[A](_1: Seq[A]) extends SeqAdapter[A] {
-    override protected val underlying = _1
-
+class Tail[A](_1: Seq[A]) extends SeqAdapter.Class[A](_1) {
     override def forloop(f: Reaction[A]) {
         var first = true
+
         _1.onEnter {
             f.enter(_)
         } onEach { x =>

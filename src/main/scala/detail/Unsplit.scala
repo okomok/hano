@@ -12,10 +12,10 @@ package detail
 // BROKEN: _2 shall be Iter.
 
 private[hano]
-class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends SeqAdapter[A] {
-    override protected val underlying = _1
+class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends SeqAdapter.Class[A](_1) {
     override def forloop(f: Reaction[A]) {
         var first = true
+
         _1.onEnter {
             f.enter(_)
         } onEach { s =>

@@ -10,9 +10,9 @@ package detail
 
 
 private[hano]
-class Idempotent[A](_1: Seq[A]) extends SeqAdapter[A] {
+class Idempotent[A](_1: Seq[A]) extends SeqAdapter.Class[A](_1) {
     private[this] var go = true
-    override protected val underlying = _1
+
     override def forloop(f: Reaction[A]) {
         if (go) {
             go = false

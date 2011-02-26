@@ -10,12 +10,10 @@ package detail
 
 
 private[hano]
-class DropWhile[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter[A] {
-
-    override protected val underlying = _1
-
+class DropWhile[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Class[A](_1) {
     override def forloop(f: Reaction[A]) {
         var go = false
+
         _1.onEnter {
             f.enter
         } onEach { x =>

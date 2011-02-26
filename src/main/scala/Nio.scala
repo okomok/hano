@@ -27,7 +27,7 @@ object Nio {
     private class _Selection(_1: Selector, _2: Selector => Long) extends Seq[SelectionKey] {
         override def context = Self
         override def forloop(f: Reaction[SelectionKey]) {
-            f.tryRethrow {
+            f._do {
                 try {
                     while (true) {
                         if (_2(_1) != 0) {
@@ -42,7 +42,7 @@ object Nio {
                     case _: ClosedSelectorException => ()
                 }
             }
-            f.exit(Exit.Closed)
+            f.exit(Exit.End)
         }
     }
 }

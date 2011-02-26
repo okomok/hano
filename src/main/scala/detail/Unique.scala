@@ -16,10 +16,10 @@ class Unique[A](_1: Seq[A]) extends SeqProxy[A] {
 }
 
 private[hano]
-class UniqueBy[A](_1: Seq[A], _2: (A, A) => Boolean) extends SeqAdapter[A] {
-    override protected val underlying = _1
+class UniqueBy[A](_1: Seq[A], _2: (A, A) => Boolean) extends SeqAdapter.Class[A](_1) {
     override def forloop(f: Reaction[A]) {
         var prev: Option[A] = None
+
         _1.onEnter {
             f.enter(_)
         } onEach { x =>

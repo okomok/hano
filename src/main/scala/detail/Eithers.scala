@@ -10,9 +10,7 @@ package detail
 
 
 private[hano]
-class Eithers[A](_1: Seq[A]) extends SeqAdapter[Either[Exit, A]] {
-    override protected val underlying = _1
-
+class Eithers[A](_1: Seq[A]) extends SeqAdapter.Class[Either[Exit, A]](_1) {
     override def forloop(f: Reaction[Either[Exit, A]]) {
         _1.onEnter {
             f.enter(_)

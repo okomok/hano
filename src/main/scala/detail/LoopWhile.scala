@@ -11,6 +11,8 @@ package detail
 
 private[hano]
 class LoopWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
+    override val self = new LoopWhileOther(_1, _2)
+/*
     override val self = {
         if (_1.context eq Self) {
             new LoopWhileSelf(_1, _2)
@@ -18,56 +20,41 @@ class LoopWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
             new LoopWhileOther(_1, _2)
         }
     }
+*/
 }
 
 
 private[hano]
-class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) extends SeqResource[A] {
-    assert(_1.context ne Self)
+class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) extends SeqAdapter.Class[A](_1) {
+    //assert(_1.context ne Self)
 
-    private[this] var isActive = false
-    override val context = _1.context.toKnown
-    override def closeResource() { isActive = false; _1.close() }
-    override def openResource(f: Reaction[A]) {
-        assert(!isActive)
-
-        isActive = true
-        def _k(q: Exit) { close(); f.exit(q) }
-
+    override def forloop(f: Reaction[A]) {
         def rec() {
-            if (!_2()) {
-                context eval {
-                    _k(Exit.End)
-                }
-                return
-            }
+            var isActive = true
 
-            _1 onEach { x =>
-                synchronized { // is needed because...
-                    f beforeExit {
-                        var i = 0
-                        while (isActive && (i != grainSize)) {
-                            i += 1
-                            f(x) // may reenter `forloop` from other threads.
-                        }
-                        if (!isActive) {
-                            _k(Exit.Closed)
-                            // `isActive` is out of play for me.
-                        }
+            _1 onEnter { p =>
+                f.enter {
+                    p.close()
+                    isActive = false
+                }
+                if (!_2()) {
+                    f.exit(Exit.End)
+                }
+            } onEach { x =>
+                f beforeExit {
+                    var i = 0
+                    while (isActive && (i != grainSize)) {
+                        i += 1
+                        f(x)
                     }
                 }
-                // Now you can reenter `forloop`.
-            } onExit { q =>
-                f beforeExit { // Don't refer `isActive` after `_k`
-                    q match {
-                        case Exit.End => {
-                            if (isActive) {
-                                rec()
-                            }
-                        }
-                        case q => _k(q)
+            } onExit {
+                case Exit.End => {
+                    if (isActive) {
+                        rec()
                     }
                 }
+                case q => f.exit(q)
             } start()
         }
 
@@ -75,7 +62,7 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
     }
 }
 
-
+/*
 // Specialized to avoid stack-overflow.
 private[hano]
 class LoopWhileSelf[A](_1: Seq[A], _2: () => Boolean) extends Seq[A] {
@@ -117,3 +104,4 @@ class LoopWhileSelf[A](_1: Seq[A], _2: () => Boolean) extends Seq[A] {
         rec()
     }
 }
+*/

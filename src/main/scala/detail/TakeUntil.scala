@@ -11,29 +11,26 @@ package detail
 
 private[hano]
 class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
-    override def close() = { _1.close(); _2.close() }
     override def context =  _1.context upper _2.context
-    override def forloop(f: Reaction[A]) {
-        def _k(q: Exit) { close(); f.exit(q) }
-        var go = true
 
-        _2 shift {
+    override def forloop(f: Reaction[A]) {
+        val _enter = new Entrance.Two(f)
+
+        _2.shift {
             context
-        } onEach { _ =>
-            go = false
-            _k(Exit.End)
+        } onEnter { p =>
+            _enter(p)
+            f.exit(Exit.End)
         } start()
 
-        _1 shift {
+        _1.shift {
             context
-        } onEach { x =>
-            if (go) {
-                f(x)
-            } else {
-                _k(Exit.End)
-            }
+        } onEnter {
+            _enter
+        } onEach {
+            f(_)
         } onExit {
-            _k(_)
+            f.exit(_)
         } start()
     }
 }

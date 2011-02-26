@@ -15,3 +15,7 @@ trait SeqAdapter[+A] extends Seq[A] {
     protected def underlying: Seq[_]
     override def context = underlying.context
 }
+
+object SeqAdapter {
+    abstract class Class[+A](final override protected val underlying: Seq[_]) extends SeqAdapter[A]
+}

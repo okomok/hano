@@ -33,7 +33,7 @@ object Arm {
         override def close() = _1.unlock
     }
 
-    // BROKEN
+    /* BROKEN
     private class UsedBy[A, B](_1: Arm[A], _2: A => Seq[B]) extends Seq[B] {
         override def close() = _1.close()
         override def context = Self
@@ -51,6 +51,7 @@ object Arm {
             } start()
         }
     }
+    */
 }
 
 
@@ -87,5 +88,5 @@ trait Arm[+A] extends Seq[A] with java.io.Closeable {
         }
     }
 
-    def usedBy[B](f: A => Seq[B]): Seq[B] = new Arm.UsedBy(this, f)
+    //def usedBy[B](f: A => Seq[B]): Seq[B] = new Arm.UsedBy(this, f)
 }

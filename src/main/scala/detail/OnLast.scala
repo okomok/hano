@@ -10,10 +10,10 @@ package detail
 
 
 private[hano]
-class OnLast[A](_1: Seq[A], _2: Option[A] => Unit) extends SeqAdapter[A] {
-    override protected val underlying = _1
+class OnLast[A](_1: Seq[A], _2: Option[A] => Unit) extends SeqAdapter.Class[A](_1) {
     override def forloop(f: Reaction[A]) {
         var acc: Option[A] = None
+
         _1.onEnter {
             f.enter(_)
         } onEach { x =>

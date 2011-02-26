@@ -12,7 +12,7 @@ package detail
 private[hano]
 class Duplicate[A](_1: Seq[A]) extends Seq[A] {
     private[this] var _f: Reaction[A] = null
-    private[this] val _close = IfFirst[Unit] { _ => () } Else { _ => _1.close() }
+
     private[this] val _forloop = {
         IfFirst[Reaction[A]] { f =>
             _f = f
@@ -20,7 +20,7 @@ class Duplicate[A](_1: Seq[A]) extends Seq[A] {
             _1.react(_f).forloop(f)
         }
     }
-    override def close() = _close()
+
     override def context = _1.context
     override def forloop(f: Reaction[A]) = _forloop(f)
 }

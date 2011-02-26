@@ -10,11 +10,10 @@ package detail
 
 
 private[hano]
-class ZipWithIndex[A](_1: Seq[A]) extends SeqAdapter[(A, Int)] {
-    override protected val underlying = _1
-
+class ZipWithIndex[A](_1: Seq[A]) extends SeqAdapter.Class[(A, Int)](_1) {
     override def forloop(f: Reaction[(A, Int)]) {
         var i = 0
+
         _1.onEnter {
             f.enter(_)
         } onEach { x =>

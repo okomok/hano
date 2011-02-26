@@ -75,7 +75,7 @@ trait Reaction[-A] {
     }
 
     @annotation.equivalentTo("enter(new Entrance(() => ()))")
-    final def enter(b: => Unit) = enter(new Entrance(() => ()))
+    final def enter(b: => Unit): Unit = enter(new Entrance(() => ()))
 
     @annotation.equivalentTo("exit(Exit.End)")
     final def end() = exit(Exit.End)
@@ -104,18 +104,15 @@ trait Reaction[-A] {
 
     private[this] var _entrance: Entrance = null
     private[this] val _mdf = new detail.Modification(toString)
-    private[this] val _enter = new DoOnce
-    private[this] val _exit = new DoOnce
+    private[this] val _enter = new detail.DoOnce
+    private[this] val _exit = new detail.DoOnce
 
     private[hano]
     final def _do(body: => Unit) {
         try {
             body
         } catch {
-            case t @ detail.BreakControl => {
-                c // closes a resource
-                failed(t) // informs Reaction-site
-            }
+            case t @ detail.BreakControl => failed(t)
             case t: Throwable => {
                 failed(t) // informs Reaction-site
                 throw t // handled in Seq-site
@@ -142,7 +139,7 @@ object Reaction {
     }
 
     private class FromFunction[A](_1: A => Unit) extends Reaction[A] {
-        override protected def rawEnter(p: Entrance) => ()
+        override protected def rawEnter(p: Entrance) = ()
         override protected def rawApply(x: A) = _1(x)
         override protected def rawExit(q: Exit) = ()
     }

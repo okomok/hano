@@ -17,6 +17,7 @@ class ZeroDelay {
 
     def apply(): Long = {
         val now = java.lang.System.currentTimeMillis()
+
         if (past == now) {
             i += 1
         } else {

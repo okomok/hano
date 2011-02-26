@@ -10,8 +10,7 @@ package detail
 
 
 private[hano]
-class Filter[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter[A] {
-    override protected val underlying = _1
+class Filter[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Class[A](_1) {
     override def forloop(f: Reaction[A]) {
         _1.onEnter {
             f.enter(_)
@@ -24,6 +23,7 @@ class Filter[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter[A] {
         } start()
     }
 }
+
 
 private[hano]
 class Remove[A](_1: Seq[A], _2: A => Boolean) extends SeqProxy[A] {

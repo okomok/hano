@@ -10,9 +10,7 @@ package detail
 
 
 private[hano]
-class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter[A] {
-    override protected val underlying = _1
-
+class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Class[A](_1) {
     override def context = Delay.timer
 
     override def forloop(f: Reaction[A]) {
@@ -27,7 +25,7 @@ class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter[A] {
         }
 
         _1.onEnter { p =>
-            _detaly {
+            _delay {
                 f.enter(p)
             }
         } onEach { x =>
@@ -43,6 +41,7 @@ class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter[A] {
 
     override def delay(i: Long): Seq[A] = _1.delay(_2 + i) // delay.delay fusion
 }
+
 
 private[hano]
 object Delay {
