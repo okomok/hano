@@ -13,7 +13,9 @@ private[hano]
 class Filter[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             if (_2(x)) {
                 f(x)
             }

@@ -10,22 +10,16 @@ package detail
 
 
 private[hano]
-class ByName[A](_1: () => Seq[A]) extends SeqResource[A] {
-    private[this] var _xs: Seq[A] = null
-    override val context = async
-    override def closeResource() { _xs.close(); _xs = null }
-    override def openResource(f: Reaction[A]) {
-        assert(_xs == null)
-        def _k(q: Exit) { close(); f.exit(q) }
+class ByName[A](_1: () => Seq[A]) extends Seq[A] {
+    override def context = Unknown
 
-        _xs = _1()
-
-        _xs shift {
-            context
+    override def forloop(f: Reaction[A]) {
+        _1().onEnter {
+            f.enter(_)
         } onEach {
             f(_)
         } onExit {
-            _k(_)
+            f.exit(_)
         } start()
     }
 }

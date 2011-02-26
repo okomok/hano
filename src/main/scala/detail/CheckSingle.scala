@@ -9,6 +9,8 @@ package hano
 package detail
 
 
+// this is Rx.Single
+
 private[hano]
 class CheckSingle[A](_1: Seq[A]) extends SeqProxy[A] {
     override val self = {

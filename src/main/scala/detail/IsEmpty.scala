@@ -13,17 +13,17 @@ private[hano]
 class IsEmpty(_1: Seq[_]) extends SeqAdapter[Boolean] {
     override protected val underlying = _1
     override def forloop(f: Reaction[Boolean]) {
-        def _k(q: Exit) { close(); f.exit(q) }
-
-        _1 onEach { _ =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { _ =>
             f(false)
-            _k(Exit.End)
+            f.exit(Exit.End)
         } onExit {
             case q @ Exit.End => {
                 f(true)
-                _k(q)
+                f.exit(q)
             }
-            case q => _k(q)
+            case q => f.exit(q)
         } start()
     }
 }

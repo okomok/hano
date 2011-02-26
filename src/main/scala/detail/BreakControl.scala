@@ -10,4 +10,4 @@ package detail
 
 
 private[hano]
-object CloseException extends scala.util.control.ControlThrowable
+object BreakControl extends scala.util.control.ControlThrowable

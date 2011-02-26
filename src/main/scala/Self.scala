@@ -12,8 +12,10 @@ package hano
  * Call-site context
  */
 object Self extends Context {
+    override def close() = ()
     override def forloop(f: Reaction[Unit]) {
-        f.tryRethrow {
+        f.enter()
+        f._do {
             f()
         }
         f.exit(Exit.End)

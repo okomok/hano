@@ -27,7 +27,6 @@ class CpsIterable[A](_1: generator.cps.Env[A] => Any @suspendable) extends Itera
 
 private[hano]
 object CpsIterable {
-
     import generator.cps.Env
 
     private class IteratorImpl[A](body: Env[A] => Any @suspendable) extends AbstractIterator[A] {

@@ -22,7 +22,6 @@ class AsyncIterable[A](_1: Seq[A]) extends Iterable[A] {
 
 private[hano]
 object AsyncIterable {
-
     private case class Msg(msg: Any)
 
     private class ReactionImpl[A](ch: Channel[Msg]) extends Reaction[A] {

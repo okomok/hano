@@ -23,7 +23,9 @@ class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter[Unit] {
         }
         _fill()
 
-        _1 onEach { _ =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { _ =>
             u.close()
             _fill()
         } onExit { q =>

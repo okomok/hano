@@ -11,6 +11,7 @@ package detail
 
 private[hano]
 object CountDown {
+
     def apply[A](c: java.util.concurrent.CountDownLatch)(body: => A): A = {
         try {
             body

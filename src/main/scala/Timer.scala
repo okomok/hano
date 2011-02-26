@@ -19,7 +19,7 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
     private[this] val timer = new JTimer(isDaemon)
     private[this] val zero = new detail.ZeroDelay
 
-    override def exit() = timer.cancel()
+    override def close() = timer.cancel()
     override def forloop(f: Reaction[Unit]) {
         val l = new TimerTask {
             override def run() {
@@ -33,13 +33,13 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
         timer.schedule(l, zero())
     }
 
-    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends SeqResource[Unit] {
+    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends Seq[Unit] {
         override def context = outer.asContext
-        private[this] var l: TimerTask = null
-        override protected def closeResource() = l.cancel()
         override protected def openResource(f: Reaction[Unit]) {
-            l = new TimerTask {
-                override def run() = f()
+            val l = new TimerTask {
+                override def run() {
+                    f.enter { l.cancel() }
+                    f._do { f() }
             }
             scheduler(timer)(l)
         }

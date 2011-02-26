@@ -32,27 +32,33 @@ class Shift[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
 
 private[hano]
 class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
-    override def close() = _1.close()
     override def context = Self
+
     override def forloop(f: Reaction[A]) {
         val cur = Actor.self
-        def _k(q: Exit) { cur ! q; close(); f.exit(q) }
+        def _exit(q: Exit) { cur ! q; f.exit(q) }
 
-        _1 onEach { x =>
+        _1.onEnter { p =>
+            cur ! Action {
+                context.noEnd.onEach { _ =>
+                    f.enter(p)
+                } onExit {
+                    _exit
+                } start()
+        } onEach { x =>
             f beforeExit {
                 cur ! Action {
-                    context onEach { _ =>
+                    context.noEnd.onEach { _ =>
                         f(x)
                     } onExit {
-                        case q @ Exit.Failed(_) => _k(q)
-                        case _ => ()
+                        _exit
                     } start()
                 }
             }
         } onExit { q =>
             f beforeExit {
                 cur ! Action {
-                    context onEach { _ =>
+                    context.onEach { _ =>
                         _k(q)
                     } onExit {
                         case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
@@ -76,24 +82,28 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
 private[hano]
 class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     assert(_2.context ne Self)
-    override def close() = _1.close()
     override def context = _2.context
-    override def forloop(f: Reaction[A]) {
-        def _k(q: Exit) { close(); f.exit(q) }
 
-        _1 onEach { x =>
+    override def forloop(f: Reaction[A]) {
+        _1.onEnter { p =>
+            context.noEnd.onEach { _ =>
+                f.enter(p)
+            } onExit {
+                f.exit
+            } start()
+
+        } onEach { x =>
             f beforeExit {
-                context onEach { _ =>
+                context.noEnd.onEach { _ =>
                     f(x)
                 } onExit {
-                    case q @ Exit.Failed(_) => _k(q)
-                    case _ => ()
+                    f.exit
                 } start()
             }
         } onExit { q =>
             f beforeExit {
-                context onEach { _ =>
-                    _k(q)
+                context.onEach { _ =>
+                    f.exit(q)
                 } onExit {
                     case Exit.Failed(t) => LogErr(t, "Reaction.exit error")
                     case _ => ()

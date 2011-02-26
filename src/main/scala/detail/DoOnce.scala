@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-final class CallOnce {
+class DoOnce {
     @volatile private[this] var _done = false
 
     def apply(body: => Unit) {
@@ -20,5 +20,5 @@ final class CallOnce {
         }
     }
 
-    def isDone: Boolean = _done
+    def isDone : Boolean = _done
 }

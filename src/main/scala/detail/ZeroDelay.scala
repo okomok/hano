@@ -14,6 +14,7 @@ private[hano]
 class ZeroDelay {
     private[this] var i = 0L
     private[this] var past = 0L
+
     def apply(): Long = {
         val now = java.lang.System.currentTimeMillis()
         if (past == now) {

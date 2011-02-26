@@ -16,7 +16,9 @@ class Unsplit[A](_1: Seq[Seq[A]], _2: Seq[A]) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var first = true
-        _1 onEach { s =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { s =>
             if (first) {
                 first = false
             } else {

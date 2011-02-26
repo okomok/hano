@@ -18,7 +18,9 @@ class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var c = 0
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             if (c == 0) {
                 f(x)
             }
@@ -40,7 +42,9 @@ class StepTime[A](_1: Seq[A], _2: Long) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var past = 0L
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             val now = System.currentTimeMillis
             if (now - past >= _2) {
                 past = now

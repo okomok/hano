@@ -15,8 +15,6 @@ object Exit {
 
     case object End extends Exit
 
-    case object Closed extends Exit
-
     case class Failed(why: Throwable) extends Exit
 
     private[hano]

@@ -14,21 +14,23 @@ import java.util.LinkedList
 
 private[hano]
 class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
-    override def close() = { _1.close(); _2.close() }
     override val context = _1.context upper _2.context
+
     override def forloop(f: Reaction[(A, B)]) {
         var ends1 = false
         var ends2 = false
         val c1 = new LinkedList[A]
         val c2 = new LinkedList[B]
-        def _k(q: Exit) { close(); f.exit(q) }
-        def invariant = assert(c1.isEmpty || c2.isEmpty)
+        val _enter = new Entrance.Two(f)
+        def invariant() = assert(c1.isEmpty || c2.isEmpty)
 
         _1 shift {
             context
+        } onEnter {
+            _enter
         } onEach { x =>
             f beforeExit {
-                invariant
+                _invariant()
                 if (c2.isEmpty) {
                     c1.add(x)
                 } else {
@@ -37,19 +39,22 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
             }
         } onExit {
             case Exit.End => {
+                invariant()
                 ends1 = true
                 if (ends2 || c1.isEmpty) {
-                    _k(Exit.End)
+                    f.exit(Exit.End)
                 }
             }
-            case q => _k(q) // fail-immediately
+            case q => f.exit(q) // fail-immediately
         } start()
 
         _2 shift {
             context
+        } onEnter {
+            _enter
         } onEach { y =>
             f beforeExit {
-                invariant
+                invariant()
                 if (c1.isEmpty) {
                     c2.add(y)
                 } else {
@@ -58,13 +63,13 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
             }
         } onExit {
             case Exit.End => {
-                invariant
+                invariant()
                 ends2 = true
                 if (ends1 || c2.isEmpty) {
-                    _k(Exit.End)
+                    f.exit(Exit.End)
                 }
             }
-            case q => _k(q)
+            case q => f.exit(q)
         } start()
     }
 }

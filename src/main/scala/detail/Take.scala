@@ -12,28 +12,27 @@ package detail
 private[hano]
 class Take[A](_1: Seq[A], _2: Int) extends SeqAdapter[A] {
     override protected val underlying = _1
-    override val context = _1.context.toKnown
-    override def forloop(f: Reaction[A]) {
-        def _k(q: Exit) { close(); f.exit(q) }
 
-        if (_2 == 0) {
-            context eval {
-                _k(Exit.End)
-            }
-        } else {
-            var c = _2
-            _1 onEach { x =>
-                if (c != 0) {
+    override def forloop(f: Reaction[A]) {
+        var c = _2
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
+            f.beforeExit {
+                if (c == 0) {
+                    f.exit(Exit.End)
+                } else {
                     f(x)
                     c -= 1
                     if (c == 0) {
-                        _k(Exit.End)
+                        f.exit(Exit.End)
                     }
                 }
-            } onExit {
-                _k(_)
-            } start()
-        }
+            }
+        } onExit {
+            f.exit(_)
+        } start()
     }
+
     override def take(n: Int): Seq[A] = _1.take(java.lang.Math.min(_2, n)) // take.take fusion
 }

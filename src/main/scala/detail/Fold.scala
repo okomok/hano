@@ -14,7 +14,9 @@ class FoldLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter[B] {
     override protected val underlying = _1
     override def forloop(f: Reaction[B]) {
         var acc = _2
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             acc = _3(acc, x)
         } onExit {
             case Exit.End => f(acc)
@@ -29,7 +31,9 @@ class ReduceLeft[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends SeqAdapter[B] {
     override protected val underlying = _1
     override def forloop(f: Reaction[B]) {
         var acc: Option[B] = None
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             if (acc.isEmpty) {
                 acc = Some(x)
             } else {

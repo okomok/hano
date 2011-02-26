@@ -14,15 +14,16 @@ import scala.actors
 
 private[hano]
 class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Context {
-    override def exit() {
+    override def close() {
         out ! Exit.Closed
     }
+
     override def forloop(f: Reaction[Unit]) {
         out ! Action {
             try {
                 Self.forloop(f)
             } catch {
-                case t: Throwable => LogErr(t, "Reaction.apply error in async context")
+                case t: Throwable => LogErr(t, "aReaction.apply error in async context")
             }
         }
     }
@@ -33,7 +34,6 @@ class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Context {
 
 private[hano]
 object Async {
-
     private val grainSize = 20
 
     private[hano]

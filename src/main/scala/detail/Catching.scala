@@ -12,8 +12,11 @@ package detail
 private[hano]
 class Catching[A](_1: Seq[A], _2: PartialFunction[Throwable, Unit]) extends SeqAdapter[A] {
     override protected val underlying = _1
+
     override def forloop(f: Reaction[A]) {
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             try {
                 f(x)
             } catch {

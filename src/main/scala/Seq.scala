@@ -211,6 +211,11 @@ trait Seq[+A] {
     def react(f: => Reaction[A]): Seq[A] = new detail.React(this, () => f)
 
     /**
+     * Calls `j` on the entrance of sequence.
+     */
+    def onEnter(j: Entrance => Unit): Seq[A] = new detail.OnEnter(this, j)
+
+    /**
      * Calls `k` on the exit of sequence.
      */
     def onExit(k: Exit => Unit): Seq[A] = new detail.OnExit(this, k)

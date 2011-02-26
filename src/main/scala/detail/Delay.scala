@@ -12,16 +12,25 @@ package detail
 private[hano]
 class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter[A] {
     override protected val underlying = _1
+
     override def context = Delay.timer
+
     override def forloop(f: Reaction[A]) {
         val zero = new ZeroDelay
+
         def _delay(body: => Unit) {
-            Delay.timer.schedule(_2 + zero()) onEach { _ =>
+            Delay.timer.schedule {
+                _2 + zero()
+            } onEach { _ =>
                 body
             } start()
         }
 
-        _1 onEach { x =>
+        _1.onEnter { p =>
+            _detaly {
+                f.enter(p)
+            }
+        } onEach { x =>
             _delay {
                 f(x)
             }

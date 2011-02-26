@@ -13,16 +13,16 @@ private[hano]
 class Find[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
-        def _k(q: Exit) { close(); f.exit(q) }
-
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             if (_2(x)) {
                 f(x)
-                _k(Exit.End)
+                f.exit(Exit.End)
             }
         } onExit {
-            case Exit.End => _k(Exit.Failed(new NoSuchElementException("Seq.find")))
-            case q => _k(q)
+            case Exit.End => f.exit(Exit.Failed(new NoSuchElementException("Seq.find")))
+            case q => f.exit(q)
         } start()
     }
 }

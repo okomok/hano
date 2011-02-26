@@ -11,28 +11,18 @@ package hano
 /**
  * Context is one-element sequence of the Unit.
  */
-trait Context extends Seq[Unit] {
+trait Context extends Seq[Unit] extends java.io.Closeable {
 
     @annotation.returnThis @inline
     final def asContext: Context = this
-
-    /**
-     * No effects; context shall be anytime reusable.
-     */
-    final override def close() = ()
 
     @annotation.returnThis
     final override def context = this
 
     /**
-     * Terminates this context.
-     */
-    def exit: Unit = ()
-
-    /**
      * Shall be thread-safe, and preserve order of subscription.
      */
-    override def forloop(f: Reaction[Unit]): Unit
+    override def forloop(f: Reaction[Unit])
 
     /**
      * Evaluates a `body`.

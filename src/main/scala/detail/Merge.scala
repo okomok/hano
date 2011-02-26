@@ -11,28 +11,35 @@ package detail
 
 private[hano]
 class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
-    override def close() = { _1.close(); _2.close() }
     override val context = _1.context upper _2.context
     override def forloop(f: Reaction[A]) {
-        val _ok = IfFirst[Exit] { _ => () } Else { q => f.exit(q) }
-        def _no(q: Exit) { close(); f.exit(q) }
+        val _enter = new Entrance.Two(f)
+        val _end = IfFirst[Unit] { _ =>
+            ()
+        } Else { q =>
+            f.exit(Exit.End)
+        }
 
-        _1 shift {
+        _1.shift {
             context
+        } onEnter {
+            _enter
         } onEach {
             f(_)
         } onExit {
-            case Exit.End => _ok(Exit.End)
-            case q => _no(q)
+            case Exit.End => _end()
+            case q => f.exit(q)
         } start()
 
-        _2 shift {
+        _2.shift {
             context
+        } onEnter {
+            _enter
         } onEach {
             f(_)
         } onExit {
-            case Exit.End => _ok(Exit.End)
-            case q => _no(q)
+            case Exit.End => _end()
+            case q => f.exit(q)
         } start()
     }
 }

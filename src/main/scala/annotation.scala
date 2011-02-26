@@ -116,6 +116,12 @@ object annotation {
 
 
     /**
+     * Marks as an idempotent method.
+     */
+    class idempotent extends StaticAnnotation
+
+
+    /**
      * Describes method time-complexity.
      */
     sealed trait TimeComplexity extends StaticAnnotation

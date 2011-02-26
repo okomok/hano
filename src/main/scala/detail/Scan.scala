@@ -12,9 +12,12 @@ package detail
 private[hano]
 class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter[B] {
     override protected val underlying = _1
+
     override def forloop(f: Reaction[B]) {
         var acc = _2
-        context onEach { _ =>
+        context.onEnter { // FIXME. Doesn't use context when possible.
+            f.enter(_)
+        } onEach { _ =>
             f(acc)
         } onExit {
             case Exit.End => {
@@ -35,7 +38,9 @@ class ScanLeft1[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends SeqAdapter[B] {
     override protected val underlying = _1
     override def forloop(f: Reaction[B]) {
         var acc: Option[B] = None
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             if (acc.isEmpty) {
                 acc = Some(x)
             } else {

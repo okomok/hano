@@ -11,12 +11,16 @@ package detail
 
 private[hano]
 class Drop[A](_1: Seq[A], _2: Int) extends SeqAdapter[A] {
+
     Pre.nonnegative(_2, "drop")
 
     override protected val underlying = _1
+
     override def forloop(f: Reaction[A]) {
         var c = _2
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             if (c == 0) {
                 f(x)
             } else {

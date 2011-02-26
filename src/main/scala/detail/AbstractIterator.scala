@@ -60,7 +60,6 @@ trait AbstractIterator[+A] {
 
 private[hano]
 object AbstractIterator {
-
     private class Concrete[A](_1: AbstractIterator[A]) extends Iterator[A] {
         override def hasNext = _1.hasNext
         override def next = _1.next

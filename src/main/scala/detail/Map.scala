@@ -13,7 +13,9 @@ private[hano]
 class Map[A, B](_1: Seq[A], _2: A => B) extends SeqAdapter[B] {
     override protected val underlying = _1
     override def forloop(f: Reaction[B]) {
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             f(_2(x))
         } onExit {
             f.exit(_)

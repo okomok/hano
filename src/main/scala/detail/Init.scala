@@ -12,9 +12,12 @@ package detail
 private[hano]
 class Init[A](_1: Seq[A]) extends SeqAdapter[A] {
     override protected val underlying = _1
+
     override def forloop(f: Reaction[A]) {
         var prev: Option[A] = None
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             if (!prev.isEmpty) {
                 f(prev.get)
             }

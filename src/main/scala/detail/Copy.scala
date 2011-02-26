@@ -14,9 +14,12 @@ class Copy[A, To](_1: Seq[A], _2: scala.collection.generic.CanBuildFrom[Nothing,
     extends SeqAdapter[To]
 {
     override protected val underlying = _1
+
     override def forloop(f: Reaction[To]) {
         var b = _2()
-        _1 onEach {
+        _1.onEnter {
+            f.enter(_)
+        } onEach {
             b += _
         } onExit {
             case Exit.End => {

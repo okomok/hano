@@ -12,8 +12,11 @@ package detail
 private[hano]
 class NoEnd[A](_1: Seq[A]) extends SeqAdapter[A] {
     override protected val underlying = _1
+
     override def forloop(f: Reaction[A]) {
-        _1 onEach {
+        _1.onEnter {
+            f.enter(_)
+        } onEach {
             f(_)
         } onExit {
             case Exit.End => ()

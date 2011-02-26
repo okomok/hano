@@ -18,7 +18,7 @@ package object hano {
     /**
      * Closes the current reaction.
      */
-    def close(): Unit = throw detail.CloseException
+    def break(): Unit = throw detail.BreakControl
 
     /**
      * Creates an asynchronous(thread-pool) context

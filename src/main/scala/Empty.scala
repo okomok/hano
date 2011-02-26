@@ -14,6 +14,7 @@ package hano
 object Empty extends Seq[Nothing] {
     override def context = Self
     override def forloop(f: Reaction[Nothing]) {
+        f.enter()
         f.exit(Exit.End)
     }
 }

@@ -14,7 +14,9 @@ class OnHead[A](_1: Seq[A], _2: Option[A] => Unit) extends SeqAdapter[A] {
     override protected val underlying = _1
     override def forloop(f: Reaction[A]) {
         var go = true
-        _1 onEach { x =>
+        _1.onEnter {
+            f.enter(_)
+        } onEach { x =>
             if (go) {
                 go = false
                 _2(Some(x))
