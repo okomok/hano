@@ -148,7 +148,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testEachValueDiscarding2 {
-        val it = hano.block {
+        val it = hano.cps {
             val x = hano.from(0 until 5).!
             val y = hano.from(5 until 10).!
             (x, y)

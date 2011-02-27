@@ -16,7 +16,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
         val a = new java.util.ArrayList[Int]
-        hano.block {
+        hano.cps {
             for (x <- hano.Seq(1,2,3).!?) {
                 a.add(x); ()
             }
@@ -27,7 +27,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
 
     def testValueDiscarding {
         val a = new java.util.ArrayList[Int]
-        hano.block {
+        hano.cps {
             for (x <- hano.Seq(1,2,3).!?) {
                 a.add(x)
                 "discard me"
@@ -40,7 +40,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
 
     def testNested {
         val a = new java.util.ArrayList[Int]
-        hano.block {
+        hano.cps {
             for (x <- hano.Seq(1,2,3).!?) {
                 a.add(x)
                 for (y <- hano.Seq(10+x,20+x).!?) {
@@ -55,7 +55,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
 
     def testNestedValueDiscarding {
         val a = new java.util.ArrayList[Int]
-        hano.block {
+        hano.cps {
             for (x <- hano.Seq(1,2,3).!?) {
                 a.add(x)
                 for (y <- hano.Seq(10+x,20+x).!?) {
@@ -73,7 +73,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
 
     def testRequire {
         val a = new java.util.ArrayList[(Int, Int)]
-        hano.block {
+        hano.cps {
             val x = hano.Seq(1,2,3).!
             val y = hano.Seq(2,3,4).!
             hano.cps.require(x + y == 5)
@@ -84,7 +84,7 @@ class BlockTest extends org.scalatest.junit.JUnit3Suite {
 
     def testRequire2 {
         val a = new java.util.ArrayList[(Int, Int)]
-        hano.block {
+        hano.cps {
             val x = hano.Seq(1,2,3).!
             val y = hano.Seq(2,3,4).!
             hano.cps.require(x + y == 5)

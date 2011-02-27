@@ -22,7 +22,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
         val arr = new java.util.ArrayList[(Int, Int)]
-        hano.block {
+        hano.cps {
             val x = naturals.take(2).! // 0, 1
             val y = naturals.take(3).! // 0, 1, 2
             arr.add((x, y))
@@ -35,7 +35,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
 
     def testNth {
         val arr = new java.util.ArrayList[(Int, Int, Int)]
-        hano.block {
+        hano.cps {
             val x = naturals.nth(3).!
             val y = naturals.head.!
             val z = naturals.find(_ == 5).!
@@ -47,7 +47,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
 
     def testNthEmpty {
         val arr = new java.util.ArrayList[(Int, Int, Int)]
-        hano.block {
+        hano.cps {
             val x = naturals.take(3).nth(4).!
             val y = naturals.head.!
             val z = naturals.find(_ == 5).!
@@ -69,7 +69,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
     def testToFrom {
         val arr = new java.util.ArrayList[Int]
         val xs = hano.Seq(0,1,2)
-        hano.block {
+        hano.cps {
             val x = hano.Seq.fromCps(xs.toCps).toCps
             arr.add(x)
         }

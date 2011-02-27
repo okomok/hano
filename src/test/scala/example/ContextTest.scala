@@ -16,7 +16,7 @@ class ContextTest extends org.scalatest.junit.JUnit3Suite {
         locally {
             var i = 0
             us onEach { x =>
-            // reaction block
+            // reaction cps
                 expect(())(x) // The element is the `Unit`.
                 i += 1
             } start()

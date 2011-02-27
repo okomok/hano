@@ -15,7 +15,7 @@ import org.testng.annotations._
 class ChannelTest extends org.scalatest.junit.JUnit3Suite {
 
     /* Equivalent to
-        hano.block { * =>
+        hano.cps { * =>
             while (true) {
                 val x = ch.read
                 q.offer(x)

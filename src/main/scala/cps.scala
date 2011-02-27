@@ -15,7 +15,18 @@ import scala.util.continuations.{cpsParam, reset, shift}
  * Contains utilities for cps.
  */
 object cps {
+    @annotation.equivalentTo("scala.util.continuations.reset")
+    def apply[A](ctx: => A @cpsParam[A, Any]): Unit = reset(ctx)
 
     def require(cond: Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Single(()) else Empty).toCps
 
+    private[hano]
+    def discardValue[A](v: => A @cpsParam[Unit, Unit]): A @cpsParam[Any, Unit] = {
+        shift { k: (A => Any) =>
+            reset {
+                k(v)
+                ()
+            }
+        }
+    }
 }

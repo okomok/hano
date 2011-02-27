@@ -13,14 +13,14 @@ import com.github.okomok.hano
 class OptionalTest extends org.scalatest.junit.JUnit3Suite {
 
     def testOptional {
-        hano.block {
+        hano.cps {
             val k = hano.optional(12).!
             expect(12)(k)
         }
     }
 
     def testOptionEmpty {
-        hano.block {
+        hano.cps {
             val k = hano.optional(throw new Error("doh")).!
             throw new Error
         }

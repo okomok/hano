@@ -14,7 +14,7 @@ package armtest
 
     class DocTezt { // extends org.scalatest.junit.JUnit3Suite {
         def testTrivial {
-            hano.block {
+            hano.cps {
                 val source = hano.use(Channels.newChannel(System.in)).!
                 val dest = hano.use(Channels.newChannel(System.out)).!
                 channelCopy(source, dest)
