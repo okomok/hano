@@ -40,7 +40,7 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
             l = new TimerTask {
                 override def run() {
                     f.enter { l.cancel(); () }
-                    f()
+                    f._do { f() }
                 }
             }
             scheduler(timer)(l)
