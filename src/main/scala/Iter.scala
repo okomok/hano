@@ -15,7 +15,6 @@ import scala.collection.JavaConversions
  * Trivial wrapper for Iterators (used internally)
  */
 trait Iter[+A] extends Equals {
-
     @annotation.returnThis
     final def of[B >: A]: Iter[B] = this
 
@@ -69,12 +68,10 @@ trait Iter[+A] extends Equals {
         }
         !it.hasNext && !jt.hasNext
     }
-
 }
 
 
 object Iter {
-
     def apply[A](xs: A*): Iter[A] = from(xs)
 
     @annotation.returnThat

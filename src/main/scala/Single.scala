@@ -13,6 +13,7 @@ package hano
  */
 case class Single[A](_1: A) extends Seq[A] {
     override def context = Self
+
     override def forloop(f: Reaction[A]) {
         context.onEnter {
             f.enter(_)

@@ -12,7 +12,6 @@ sealed abstract class Exit extends Message
 
 
 object Exit {
-
     case object End extends Exit
 
     case class Failed(why: Throwable) extends Exit

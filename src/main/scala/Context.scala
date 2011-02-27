@@ -12,7 +12,6 @@ package hano
  * Context is one-element sequence of the Unit.
  */
 trait Context extends Seq[Unit] with java.io.Closeable {
-
     @annotation.returnThis @inline
     final def asContext: Context = this
 

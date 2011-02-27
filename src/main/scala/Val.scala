@@ -20,7 +20,6 @@ import detail.CountDown
  * Single-assignment value as single-element sequence
  */
 final class Val[A](override val context: Context = async) extends Seq[A] {
-
     require(context ne Self)
     require(context ne Unknown)
 

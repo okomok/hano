@@ -13,6 +13,7 @@ package hano
  */
 case class Fail(why: Throwable) extends Seq[Nothing] {
     override def context = Self
+
     override def forloop(f: Reaction[Nothing]) {
         f.enter()
         f.exit(Exit.Failed(why))

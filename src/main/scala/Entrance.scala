@@ -17,7 +17,7 @@ final class Entrance(c: () => Unit) extends java.io.Closeable {
 object Entrance {
     val Nil = new Entrance(() => ())
 
-    def apply(c: => Unit)(implicit d: DummyImplicit) = new Entrance(() => c)
+    def apply[U](c: => U)(implicit d: DummyImplicit) = new Entrance(() => c)
 
     private[hano]
     def second(p: Entrance): Entrance = {

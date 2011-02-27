@@ -9,7 +9,6 @@ package hano
 
 
 object break {
-
     /**
      * Breaks the current reaction.
      */
@@ -19,5 +18,4 @@ object break {
      * Thrown by `break()`.
      */
     object Control extends scala.util.control.ControlThrowable
-
 }

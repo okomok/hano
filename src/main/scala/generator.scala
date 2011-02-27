@@ -12,7 +12,6 @@ import scala.util.continuations.{cpsParam, suspendable}
 
 
 object generator {
-
     /**
      * Yielding thread is blocked.
      */

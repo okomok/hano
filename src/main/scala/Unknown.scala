@@ -13,6 +13,7 @@ package hano
  */
 object Unknown extends Context {
     override def close() = ()
+
     override def forloop(f: Reaction[Unit]) {
         throw new UnsupportedOperationException("Unknown.forloop")
     }

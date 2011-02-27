@@ -12,7 +12,6 @@ package hano
  * Contains methods missing from the standard.
  */
 object Iterables {
-
     /**
      * Creates an `Iterable` from an `Iterator`.
      */
@@ -32,7 +31,6 @@ object Iterables {
      * Cycles an `Iterable` indefinitely.
      */
     def cycle[A](iter: Iter[A]): Iterable[A] = bind(Iterator.continually(()).flatMap(_ => iter.ator)).view
-
 
     private class Bind[A](_1: () => Iterator[A]) extends Iterable[A] {
         override def iterator = _1()

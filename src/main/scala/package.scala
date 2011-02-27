@@ -8,7 +8,6 @@ package com.github.okomok
 
 
 package object hano {
-
     @annotation.returnThat
     def from[A](that: Seq[A]): Seq[A] = that
 

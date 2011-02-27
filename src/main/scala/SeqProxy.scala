@@ -9,7 +9,6 @@ package hano
 
 
 trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
-
     def self: Seq[A]
 
     protected def around[B](that: => Seq[B]): Seq[B] = that

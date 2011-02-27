@@ -12,7 +12,6 @@ import scala.util.continuations.{cpsParam, reset, shift}
 
 
 object block {
-
     @annotation.equivalentTo("scala.util.continuations.reset")
     def apply[A](ctx: => A @cpsParam[A, Any]): Unit = reset(ctx)
 

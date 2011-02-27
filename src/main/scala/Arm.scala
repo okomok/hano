@@ -9,7 +9,6 @@ package hano
 
 
 object Arm {
-
     def apply[A](x: A, c: A => Unit): Arm[A] = new Apply(x, c)
 
     @annotation.returnThat

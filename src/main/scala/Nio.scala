@@ -12,7 +12,6 @@ import java.nio.channels.{Selector, SelectionKey, ClosedSelectorException}
 
 
 object Nio {
-
     def selection(s: Selector): Seq[SelectionKey] = Selection1(s)
     def selection(s: Selector, t: Long): Seq[SelectionKey] = Selection2(s, t)
 

@@ -12,7 +12,6 @@ package hano
  * Triggered by Seq.forloop
  */
 trait Reaction[-A] {
-
     @annotation.returnThis @inline
     final def of[B <: A]: Reaction[B] = this
 
@@ -75,7 +74,7 @@ trait Reaction[-A] {
     }
 
     @annotation.equivalentTo("enter(new Entrance(() => ()))")
-    final def enter(b: => Unit): Unit = enter(new Entrance(() => b))
+    final def enter[U](b: => U): Unit = enter(new Entrance(() => b))
 
     @annotation.equivalentTo("exit(Exit.End)")
     final def end() = exit(Exit.End)
@@ -123,7 +122,6 @@ trait Reaction[-A] {
 
 
 object Reaction {
-
     def apply[A](j: Entrance => Unit, f: A => Unit, k: Exit => Unit): Reaction[A] = new Apply(j, f, k)
 
     @annotation.returnThat

@@ -16,7 +16,6 @@ import scala.actors.Actor
  * An actor built upon Seq
  */
 trait Reactor extends Actor {
-
     /**
      * Override to build up a Seq.
      */
@@ -74,18 +73,17 @@ trait Reactor extends Actor {
     private def _hanoAddSecondary(f: Reaction[Any]) {
         this ! Action {
             f.enter {
-                _fs.remove(f); ()
+                _fs.remove(f);
             }
         }
         this ! Action {
-            _fs.add(f); ()
+            _fs.add(f);
         }
     }
 }
 
 
 object Reactor {
-
     /**
      * Constructs a trivial Reactor.
      */

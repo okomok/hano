@@ -15,7 +15,6 @@ import java.util.{Date, Timer => JTimer, TimerTask}
  * Timer creates a sequence of Units.
  */
 final class Timer(isDaemon: Boolean = false) extends Context { outer =>
-
     private[this] val timer = new JTimer(isDaemon)
     private[this] val zero = new detail.ZeroDelay
 
@@ -39,9 +38,12 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
             var l: TimerTask = null
             l = new TimerTask {
                 override def run() {
-                    f.enter { l.cancel(); () }
+                    f.enter { l.cancel() }
                     f._do { f() }
                 }
+            }
+            context eval {
+                f.enter { l.cancel() }
             }
             scheduler(timer)(l)
         }

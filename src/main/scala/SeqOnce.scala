@@ -12,7 +12,6 @@ package hano
  * Disallows multiple `forloop`s.
  */
 trait SeqOnce[A] extends Seq[A] {
-
     protected def forloopOnce(f: Reaction[A]): Unit
 
     private[this] val _forloop = {
@@ -28,7 +27,6 @@ trait SeqOnce[A] extends Seq[A] {
 
 
 object SeqOnce {
-
     case class MultipleForloopException[A](seq: Seq[A]) extends
         RuntimeException("multiple `forloop` calls not allowed")
 
