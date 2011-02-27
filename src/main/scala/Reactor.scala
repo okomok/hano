@@ -19,7 +19,7 @@ trait Reactor extends Actor {
     /**
      * Override to build up a Seq.
      */
-    protected def hanoStart(xs: Seq[Any]): Unit
+    protected def hanoStart(xs: Seq[Any])
 
     private var _f: Reaction[Any] = null // primary
     private val _fs = new CopyOnWriteArrayList[Reaction[Any]] // secondaries

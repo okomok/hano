@@ -12,7 +12,7 @@ package hano
  * Disallows multiple `forloop`s.
  */
 trait SeqOnce[A] extends Seq[A] {
-    protected def forloopOnce(f: Reaction[A]): Unit
+    protected def forloopOnce(f: Reaction[A])
 
     private[this] val _forloop = {
         detail.IfFirst[Reaction[A]] { f =>

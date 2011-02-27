@@ -28,7 +28,7 @@ trait AbstractIterator[+A] {
     /**
      * Traverses to the next position.
      */
-    def increment(): Unit
+    def increment()
 
     private[this] var err: Throwable = null
 
