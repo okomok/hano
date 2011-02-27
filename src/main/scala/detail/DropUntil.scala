@@ -13,10 +13,13 @@ private[hano]
 class DropUntil[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         @volatile var go = false
+        var _p: Entrance = null
 
         _2.onEnter { p =>
+            _p = p
+        } onEach { _ =>
             go = true
-            p.close()
+            _p.close()
         } start()
 
         _1.onEnter {

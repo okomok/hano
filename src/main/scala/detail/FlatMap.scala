@@ -18,7 +18,7 @@ class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
         _1.noEnd.onEnter {
             f.enter(_)
         } onEach { x =>
-            f beforeExit {
+            f.beforeExit {
                 _2(x).noEnd.shift {
                     _1
                 } onEach {

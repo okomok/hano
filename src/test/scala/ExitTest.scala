@@ -19,7 +19,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
         for (x <- hano.async.loop.onExit {
-            case hano.Exit.Closed => c.countDown
+            case hano.Exit.Failed(hano.break.Control) => c.countDown
             case _ => ()
         }.pull(0 until 10)) {
             a.add(x)
@@ -32,7 +32,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
         for (x <- hano.async.loop.pull(0 until 10).onExit{
-            case hano.Exit.Closed => ()
+            case hano.Exit.Failed(hano.break.Control) => ()
             case _ => c.countDown
         }) {
             a.add(x)
@@ -45,7 +45,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
         val a = new java.util.ArrayList[Int]
         var closed = false
         for (x <- hano.from(0 until 10).onExit {
-            case hano.Exit.Closed => closed = true
+            case hano.Exit.Failed(hano.break.Control) => closed = true
             case _ => ()
         }.pull(0 until 10)) {
             a.add(x)
@@ -58,7 +58,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
         val a = new java.util.ArrayList[Int]
         var closed = false
         for (x <- hano.from(0 until 10).onExit{
-            case hano.Exit.Closed => closed = true
+            case hano.Exit.Failed(hano.break.Control) => closed = true
             case _ => ()
         }) {
             a.add(x)

@@ -44,7 +44,7 @@ trait Reactor extends Actor {
 
     final override def exceptionHandler = {
         if (_f != null) {
-            case t => _f.exit(Exit.Failed(t))
+            case t => _f.exit(Exit.Failed(t)) // context seems broken.
         } else {
             super.exceptionHandler
         }
@@ -61,6 +61,26 @@ trait Reactor extends Actor {
     }
 
     final val hanoContext: Context = new detail.Async(this)
+
+    private def _hanoAddPrimary(f: Reaction[Any]) {
+        this ! Action {
+            f.enter()
+        }
+        this ! Action {
+            _f = f
+        }
+    }
+
+    private def _hanoAddSecondary(f: Reaction[Any]) {
+        this ! Action {
+            f.enter {
+                _fs.remove(f); ()
+            }
+        }
+        this ! Action {
+            _fs.add(f); ()
+        }
+    }
 }
 
 
@@ -96,19 +116,14 @@ object Reactor {
     private class Primary(_1: Reactor) extends Seq[Any] {
         override val context = _1.hanoContext
         override def forloop(f: Reaction[Any]) {
-            _1._f = f
+            _1._hanoAddPrimary(f)
         }
     }
 
-    private[hano] class Secondary(_1: Reactor) extends SeqResource[Any] {
-        private[this] var _f: Reaction[Any] = null
+    private[hano] class Secondary(_1: Reactor) extends Seq[Any] {
         override val context = _1.hanoContext
-        override protected def closeResource() {
-            _1._fs.remove(_f)
-        }
-        override protected def openResource(f: Reaction[Any]) {
-            _f = new detail.WrappedReaction(f)
-            _1._fs.add(_f)
+        override def forloop(f: Reaction[Any]) {
+            _1._hanoAddSecondary(new detail.WrappedReaction(f))
         }
     }
 }

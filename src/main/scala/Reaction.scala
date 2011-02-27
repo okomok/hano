@@ -50,7 +50,7 @@ trait Reaction[-A] {
             try {
                 rawApply(x)
             } catch {
-                case t @ detail.BreakControl => exit(Exit.Failed(t))
+                case t @ break.Control => exit(Exit.Failed(t))
             }
         }
     }
@@ -67,7 +67,7 @@ trait Reaction[-A] {
                 _entrance.close()
                 rawExit(q)
             } catch {
-                case detail.BreakControl => ()
+                case break.Control => ()
                 case t: scala.util.control.ControlThrowable => throw t
                 case t: Throwable => detail.LogErr(t, "aReaction.exit")
             }
@@ -112,7 +112,7 @@ trait Reaction[-A] {
         try {
             body
         } catch {
-            case t @ detail.BreakControl => failed(t)
+            case t @ break.Control => failed(t)
             case t: Throwable => {
                 failed(t) // informs Reaction-site
                 throw t // handled in Seq-site

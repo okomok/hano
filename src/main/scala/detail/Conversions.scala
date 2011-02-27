@@ -25,7 +25,7 @@ trait Conversions { self: Seq.type =>
     implicit def fromJIterable[A](from: java.lang.Iterable[A]): Seq[A] = new FromIter(from)
     implicit def fromOption[A](from: Option[A]): Seq[A] = new FromIter(from)
     implicit def fromResponder[A](from: Responder[A]): Seq[A] = new FromResponder(from)
-    //implicit def fromReactor(from: Reactor): Seq[Any] = new Reactor.Secondary(from)
+    implicit def fromReactor(from: Reactor): Seq[Any] = new Reactor.Secondary(from)
     /*implicit not work*/ def fromCps[A](from: => A @continuations.suspendable): Seq[A] = new FromCps(from)
 
 }
@@ -48,6 +48,8 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
         }
         if (isActive) {
             f.exit(Exit.End)
+        } else {
+            f.exit(Exit.Failed(break.Control))
         }
     }
 }

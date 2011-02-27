@@ -29,7 +29,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         } onEnter {
             _enter
         } onEach { x =>
-            f beforeExit {
+            f.beforeExit {
                 _invariant()
                 if (c2.isEmpty) {
                     c1.add(x)
@@ -53,7 +53,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         } onEnter {
             _enter
         } onEach { y =>
-            f beforeExit {
+            f.beforeExit {
                 _invariant()
                 if (c1.isEmpty) {
                     c2.add(y)

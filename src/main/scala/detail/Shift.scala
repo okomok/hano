@@ -47,7 +47,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                 } start()
             }
         } onEach { x =>
-            f beforeExit {
+            f.beforeExit {
                 cur ! Action {
                     context.noEnd.onEach { _ =>
                         f(x)
@@ -57,7 +57,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                 }
             }
         } onExit { q =>
-            f beforeExit {
+            f.beforeExit {
                 cur ! Action {
                     context.onEach { _ =>
                         _exit(q)
@@ -94,7 +94,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
             } start()
 
         } onEach { x =>
-            f beforeExit {
+            f.beforeExit {
                 context.noEnd.onEach { _ =>
                     f(x)
                 } onExit {
@@ -102,7 +102,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
                 } start()
             }
         } onExit { q =>
-            f beforeExit {
+            f.beforeExit {
                 context.onEach { _ =>
                     f.exit(q)
                 } onExit {

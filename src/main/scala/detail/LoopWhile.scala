@@ -43,18 +43,18 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
                     f.exit(Exit.End)
                 }
             } onEach { x =>
-                f beforeExit {
+                f.beforeExit {
                     var i = 0
                     while (isActive && (i != grainSize)) {
                         i += 1
                         f(x)
                     }
                     if (!isActive) {
-                        f.exit(Exit.End)
+                        f.exit(Exit.Failed(break.Control))
                     }
                 }
             } onExit { q =>
-                f beforeExit {
+                f.beforeExit {
                     q match {
                         case Exit.End => {
                             if (isActive) {

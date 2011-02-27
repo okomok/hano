@@ -18,8 +18,9 @@ object Await {
         xs onExit { q =>
             CountDown(c) {
                 q match {
-                     case Exit.Failed(t) => s = t
-                     case _ => ()
+                    case Exit.Failed(break.Control) => ()
+                    case Exit.Failed(t) => s = t
+                    case _ => ()
                 }
             }
         } start()

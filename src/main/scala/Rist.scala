@@ -53,6 +53,7 @@ final class Rist[A](override val context: Context = async) extends SeqOnce[A] wi
     private def _eval(f: Reaction[A], x: A) {
         context onEach { _ =>
             g beforeExit {
+                f.enter()
                 f(x)
             }
         } onExit {

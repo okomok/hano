@@ -16,11 +16,6 @@ package object hano {
     def use[A](that: Arm[A]): Arm[A] = that
 
     /**
-     * Closes the current reaction.
-     */
-    def break(): Unit = throw detail.BreakControl
-
-    /**
      * Creates an asynchronous(thread-pool) context
      */
     def async: Context = new detail.Async()

@@ -14,18 +14,17 @@ class Take[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var c = _2
 
-        _1.onEnter {
-            f.enter(_)
+        _1.onEnter { p =>
+            f.enter(p)
+            if (c == 0) {
+                f.exit(Exit.End)
+            }
         } onEach { x =>
             f.beforeExit {
+                f(x)
+                c -= 1
                 if (c == 0) {
                     f.exit(Exit.End)
-                } else {
-                    f(x)
-                    c -= 1
-                    if (c == 0) {
-                        f.exit(Exit.End)
-                    }
                 }
             }
         } onExit {
