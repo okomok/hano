@@ -54,7 +54,7 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
                 assertEquals(s3, "res3")
             }
         } catch {
-            case _: Error => thrown = true
+            case _: TrivialResourceException => thrown = true
         }
         assertTrue(thrown)
 

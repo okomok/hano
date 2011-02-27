@@ -44,13 +44,16 @@ class TrivialTest extends org.scalatest.junit.JUnit3Suite {
         var thrown = false
         assertFalse(r.ended)
         assertFalse(thrown)
+
+        class MyException extends RuntimeException("wow")
+
         try {
             r foreach { s =>
                 assertEquals("res", s)
-                throw new Error("wow")
+                throw new MyException
             }
         } catch {
-            case _: Error => thrown = true
+            case _: MyException => thrown = true
         }
         assertTrue(thrown)
         assertTrue(r.ended)

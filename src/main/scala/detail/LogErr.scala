@@ -15,8 +15,8 @@ object LogErr {
         val d = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date())
         java.lang.System.err.println("[hano][" + msg + "]["+ d + "] " + t)
         t match {
+            case _: java.lang.Error => t.printStackTrace()
             case _: SeriousException => t.printStackTrace()
-            case _: StackOverflowError => t.printStackTrace()
             case _ => ()
         }
     }

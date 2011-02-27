@@ -11,12 +11,15 @@ package armtest
 import com.github.okomok.hano
 
 
+case class TrivialResourceException(msg: String) extends RuntimeException(msg)
+
+
 case class TrivialResource[A](res: A, b: Boolean = false) extends hano.Arm[A] {
     var began = false
     var ended = false
 
     override def open = {
-        if (b) throw new Error
+        if (b) throw new TrivialResourceException("from TrivialResource")
         began = true
         res
     }

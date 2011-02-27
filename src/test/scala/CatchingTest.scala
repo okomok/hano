@@ -43,6 +43,7 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
         val out = new java.util.ArrayList[Int]
 
         class MyError extends Error
+        class PassThrough extends RuntimeException
 
         var thrown = false
         try {
@@ -52,7 +53,7 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
                 case x: MyError => out.add(88)
             } map { e =>
                 if (e == 8) {
-                    throw new AssertionError
+                    throw new PassThrough
                 } else {
                     e + 10
                 }
@@ -60,7 +61,7 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
                 out.add(e)
             }
         } catch {
-            case x: AssertionError => thrown = true
+            case x: PassThrough => thrown = true
         }
 
         assertTrue(thrown)

@@ -49,16 +49,23 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
                         i += 1
                         f(x)
                     }
-                }
-            } onExit {
-                case Exit.End => {
-                    if (isActive) {
-                        rec()
-                    } else {
+                    if (!isActive) {
                         f.exit(Exit.End)
                     }
                 }
-                case q => f.exit(q)
+            } onExit { q =>
+                f beforeExit {
+                    q match {
+                        case Exit.End => {
+                            if (isActive) {
+                                rec()
+                            } else {
+                                assert(f.isExited)
+                            }
+                        }
+                        case q => f.exit(q)
+                    }
+                }
             } start()
         }
 
