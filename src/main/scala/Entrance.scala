@@ -8,8 +8,11 @@ package com.github.okomok
 package hano
 
 
+@annotation.pre("`c` shall be thread-safe.")
 final class Entrance(c: () => Unit) extends java.io.Closeable {
     private[this] lazy val _close = c()
+
+    @annotation.threadSafe @annotation.idempotent
     override def close() = _close
 }
 

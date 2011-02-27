@@ -36,7 +36,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
     override def context = Self
 
     override def forloop(f: Reaction[A]) {
-        var isActive = true
+        @volatile var isActive = true
         f.enter {
             isActive = false
         }

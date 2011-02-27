@@ -45,6 +45,11 @@ object annotation {
 
 
     /**
+     * Thread-safe.
+     */
+    class threadSafe extends StaticAnnotation
+
+    /**
      * Not thread-safe.
      */
     class notThreadSafe extends StaticAnnotation
