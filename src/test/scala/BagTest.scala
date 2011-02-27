@@ -73,14 +73,15 @@ class BagTest extends org.scalatest.junit.JUnit3Suite {
         for (i <- 0 until 100) {
             val as = hano.async.loop.pull(1 until 6)
             val xs = new hano.Bag[Int](50)
+/*
             as fork { as =>
                 xs member as.reduceLeft(_ + _)
             } fork { as =>
                 xs member as.reduceLeft(_ * _)
             } start()
-// hmm...
-//            assert(xs member as.reduceLeft(_ + _))
-//            assert(xs member as.reduceLeft(_ * _))
+*/
+            assert(xs member as.reduceLeft(_ + _))
+            assert(xs member as.reduceLeft(_ * _))
             assert(xs member hano.Single(99))
 
             val it = xs.take(3).toIter

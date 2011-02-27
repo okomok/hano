@@ -85,11 +85,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         val xs = hano.async.loop.pull(1 until 6)
 
         val ch = new hano.Channel[Int]
-        xs fork { xs =>
-            ch << xs.reduceLeft(_ + _)
-        } fork { xs =>
-            ch << xs.reduceLeft(_ * _)
-        } start()
+        ch << xs.reduceLeft(_ + _) << xs.reduceLeft(_ * _)
 
         var out: List[Int] = Nil
         out :+= ch.read
