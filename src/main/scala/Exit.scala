@@ -8,16 +8,19 @@ package com.github.okomok
 package hano
 
 
+/**
+ * An exit function
+ */
 trait Exit {
     @annotation.threadSafe
     protected def rawApply(q: Exit.Status)
 
     @annotation.threadSafe @annotation.idempotent
-    final def apply(q: Exit.Status = Exit.Success) = _close(q)
-
-    private[this] val _close = detail.IfFirst[Exit.Status] { q => rawApply(q) } Else { _ => () }
+    final def apply(q: Exit.Status = Exit.Success) = _apply(q)
 
     final def second: Exit = new Exit.Second(this)
+
+    private[this] val _apply = detail.IfFirst[Exit.Status] { q => rawApply(q) } Else { _ => () }
 }
 
 
