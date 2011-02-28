@@ -32,7 +32,7 @@ trait Reaction[-A] {
      * Informs the entrance.
      */
     @annotation.idempotent
-    final def enter(p: Entrance = Entrance.Nil) = _mdf {
+    final def enter(p: Exit = Exit.Nil) = _mdf {
         _enter {
             _entrance = p
             rawEnter(p)
@@ -49,7 +49,7 @@ trait Reaction[-A] {
             try {
                 rawApply(x)
             } catch {
-                case t @ break.Control => exit(Exit.Failed(t))
+                case t @ break.Control => exit(Exit.Failure(t))
             }
         }
     }
@@ -58,12 +58,12 @@ trait Reaction[-A] {
      * Reacts on the exit. (should not throw.)
      */
     @annotation.idempotent
-    final def exit(q: Exit) = _mdf {
+    final def exit(q: Exit.Status = Exit.Success) = _mdf {
         require(_enter.isDone, "`enter` shall be called before `exit`")
 
         _exit {
             try {
-                _entrance.close(q)
+                _entrance(q)
                 rawExit(q)
             } catch {
                 case break.Control => ()
@@ -73,19 +73,13 @@ trait Reaction[-A] {
         }
     }
 
-    @annotation.equivalentTo("exit(Exit.End)")
-    final def end() = exit(Exit.End)
-
-    @annotation.equivalentTo("exit(Exit.Failed(why))")
-    final def failed(why: Throwable) = exit(Exit.Failed(why))
-
     @annotation.equivalentTo("if (!isExited) body")
     final def beforeExit(body: => Unit) = if (!_exit.isDone) body
 
     /**
      * Override this to implement `enter`.
      */
-    protected def rawEnter(p: Entrance)
+    protected def rawEnter(p: Exit)
 
     /**
      * Override this to implement `apply`.
@@ -95,10 +89,10 @@ trait Reaction[-A] {
     /**
      * Override this to implement `exit`.
      */
-    protected def rawExit(q: Exit)
+    protected def rawExit(q: Exit.Status)
 
 
-    private[this] var _entrance: Entrance = null
+    private[this] var _entrance: Exit = null
     private[this] val _mdf = new detail.Modification(toString)
     private[this] val _enter = new detail.DoOnce
     private[this] val _exit = new detail.DoOnce
@@ -108,9 +102,9 @@ trait Reaction[-A] {
         try {
             body
         } catch {
-            case t @ break.Control => failed(t)
+            case t @ break.Control => exit(Exit.Failure(t))
             case t: Throwable => {
-                failed(t) // informs Reaction-site
+                exit(Exit.Failure(t)) // informs Reaction-site
                 throw t // handled in Seq-site
             }
         }
@@ -119,7 +113,7 @@ trait Reaction[-A] {
 
 
 object Reaction {
-    def apply[A](j: Entrance => Unit, f: A => Unit, k: Exit => Unit): Reaction[A] = new Apply(j, f, k)
+    def apply[A](j: Exit => Unit, f: A => Unit, k: Exit.Status => Unit): Reaction[A] = new Apply(j, f, k)
 
     @annotation.returnThat
     def from[A](that: Reaction[A]): Reaction[A] = that
@@ -127,15 +121,15 @@ object Reaction {
     implicit def fromFunction[A](from: A => Unit): Reaction[A] = new FromFunction(from)
     implicit def fromVal[A](from: Val[A]): Reaction[A] = from.toReaction
 
-    private class Apply[A](_1: Entrance => Unit, _2: A => Unit, _3: Exit => Unit) extends Reaction[A] {
-        override protected def rawEnter(p: Entrance) = _1(p)
+    private class Apply[A](_1: Exit => Unit, _2: A => Unit, _3: Exit.Status => Unit) extends Reaction[A] {
+        override protected def rawEnter(p: Exit) = _1(p)
         override protected def rawApply(x: A) = _2(x)
-        override protected def rawExit(q: Exit) = _3(q)
+        override protected def rawExit(q: Exit.Status) = _3(q)
     }
 
     private class FromFunction[A](_1: A => Unit) extends Reaction[A] {
-        override protected def rawEnter(p: Entrance) = ()
+        override protected def rawEnter(p: Exit) = ()
         override protected def rawApply(x: A) = _1(x)
-        override protected def rawExit(q: Exit) = ()
+        override protected def rawExit(q: Exit.Status) = ()
     }
 }

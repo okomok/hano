@@ -17,7 +17,7 @@ class NoEnd[A](_1: Seq[A]) extends SeqAdapter.Of[A](_1) {
         } onEach {
             f(_)
         } onExit {
-            case Exit.End => ()
+            case Exit.Success => ()
             case q => f.exit(q)
         } start()
     }

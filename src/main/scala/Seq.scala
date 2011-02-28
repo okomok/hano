@@ -213,12 +213,12 @@ trait Seq[+A] {
     /**
      * Calls `j` on the entrance of sequence.
      */
-    def onEnter(j: Entrance => Unit): Seq[A] = new detail.OnEnter(this, j)
+    def onEnter(j: Exit => Unit): Seq[A] = new detail.OnEnter(this, j)
 
     /**
      * Calls `k` on the exit of sequence.
      */
-    def onExit(k: Exit => Unit): Seq[A] = new detail.OnExit(this, k)
+    def onExit(k: Exit.Status => Unit): Seq[A] = new detail.OnExit(this, k)
 
     /**
      * Calls `k` on the end of sequence.
@@ -291,7 +291,7 @@ trait Seq[+A] {
     /**
      * Event-style handler for Exit message
      */
-    def handleExit(k: PartialFunction[Exit, Unit]): Seq[A] = new detail.HandleExit(this, k)
+    def handleExit(k: PartialFunction[Exit.Status, Unit]): Seq[A] = new detail.HandleExit(this, k)
 
     /**
      * Attach a resource.
@@ -343,7 +343,7 @@ trait Seq[+A] {
     def times(n: Int): Seq[A] = new detail.Times(this, n)
 
     /**
-     * Ignores `Exit.End`.
+     * Ignores `Exit.Success`.
      */
     def noEnd: Seq[A] = new detail.NoEnd(this)
 
@@ -360,7 +360,7 @@ trait Seq[+A] {
     /**
      * Turns into never-fail sequence.
      */
-    def eithers: Seq[Either[Exit, A]] = new detail.Eithers(this)
+    def eithers: Seq[Either[Exit.Status, A]] = new detail.Eithers(this)
 
 
 // standard algorithms

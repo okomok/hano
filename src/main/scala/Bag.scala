@@ -33,7 +33,7 @@ final class Bag[A](val capacity: Int, override val context: Context = async) ext
             } onEach {
                 f(_)
             } onExit {
-                case q @ Exit.Failed(_) => f.exit(q)
+                case q @ Exit.Failure(_) => f.exit(q)
                 case q => ()
             } start()
         }

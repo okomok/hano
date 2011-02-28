@@ -30,7 +30,7 @@ class DelayTezt { // extends org.scalatest.junit.JUnit3Suite {
             f(6)
             f(7)
             f(8)
-            f.end()
+            f.exit()
         }
     }
 

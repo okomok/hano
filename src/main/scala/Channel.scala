@@ -38,12 +38,12 @@ final class Channel[A](override val context: Context = async) extends Seq[A] {
     /**
      * Will call a reaction when a value is written.
      */
-    override def forloop(f: Reaction[A]): Unit = _readable.forloop(f)
+    override def forloop(f: Reaction[A]) = _readable.forloop(f)
 
     /**
      * Writes a value.
      */
-    def write(x: A): Unit = _writable.set(x)
+    def write(x: A) = _writable.set(x)
 
     /**
      * Reads and removes a value.

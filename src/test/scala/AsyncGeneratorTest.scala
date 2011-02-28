@@ -19,7 +19,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     def testEmpty: Unit = {
         val tr = generator.async[Int] { * =>
             999
-            *.end()
+            *.exit()
         }
         assertTrue(tr.isEmpty)
         assertTrue(tr.isEmpty) // run again.
@@ -29,7 +29,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         for (i <- 1 to n) {
             y(i)
         }
-        y.end()
+        y.exit()
     }
 
     def withMakeValuesTo(n: Int): Unit = {
@@ -64,8 +64,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
                 *(i)
             }
             *("last")
-            *.end()
-            *.end() // idempotent (illegal, but accepted.).
+            *.exit()
         }
         for (a <- example) {
             //println(a)
@@ -156,7 +155,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
             *(1)
             *(2)
             *(3)
-            *.end()
+            *.exit()
             throw new IgnoredError // abandoned.
         }
         val ret = new java.util.ArrayList[Int]

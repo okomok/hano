@@ -18,10 +18,10 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     }
 
     override def context: Context = self.context
-    override def forloop(f: Reaction[A]): Unit = self.forloop(f)
-    override def foreach(f: A => Unit): Unit = self.foreach(f)
-    override def start(): Unit = self.start()
-    override def await(): Unit = self.await()
+    override def forloop(f: Reaction[A]) = self.forloop(f)
+    override def foreach(f: A => Unit) = self.foreach(f)
+    override def start() = self.start()
+    override def await() = self.await()
     override def append[B >: A](that: Seq[B]): Seq[B] = around(self.append(that))
     override def prepend[B >: A](that: Seq[B]): Seq[B] = around(self.prepend(that))
     override def merge[B >: A](that: Seq[B]): Seq[B] = around(self.merge(that))
@@ -60,8 +60,8 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def toResponder: Responder[A] = self.toResponder
     override def actor: scala.actors.Actor = self.actor
     override def react(f: => Reaction[A]): Seq[A] = around(self.react(f))
-    override def onEnter(j: Entrance => Unit): Seq[A] = around(self.onEnter(j))
-    override def onExit(k: Exit => Unit): Seq[A] = around(self.onExit(k))
+    override def onEnter(j: Exit => Unit): Seq[A] = around(self.onEnter(j))
+    override def onExit(k: Exit.Status => Unit): Seq[A] = around(self.onExit(k))
     override def onEnd(k: => Unit): Seq[A] = around(self.onEnd(k))
     override def onFailed(k: Throwable => Unit): Seq[A] = around(self.onFailed(k))
     override def onEach(f: A => Unit): Seq[A] = around(self.onEach(f))
@@ -75,7 +75,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def onNth(n: Int)(f: Option[A] => Unit): Seq[A] = around(self.onNth(n)(f))
     override def catching(f: PartialFunction[Throwable, Unit]): Seq[A] = around(self.catching(f))
     override def handleEach(f: A => Boolean): Seq[A] = around(self.handleEach(f))
-    override def handleExit(k: PartialFunction[Exit, Unit]): Seq[A] = around(self.handleExit(k))
+    override def handleExit(k: PartialFunction[Exit.Status, Unit]): Seq[A] = around(self.handleExit(k))
     override def using(c: java.io.Closeable): Seq[A] = around(self.using(c))
     override def adjacent(n: Int): Seq[scala.collection.immutable.IndexedSeq[A]] = around(self.adjacent(n))
     override def pull[B](it: Iter[B]): Seq[B] = around(self.pull(it))
@@ -89,7 +89,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def noEnd: Seq[A] = around(self.noEnd)
     override def once: Seq[A] = around(self.once)
     override def options: Seq[Option[A]] = around(self.options)
-    override def eithers: Seq[Either[Exit, A]] = around(self.eithers)
+    override def eithers: Seq[Either[Exit.Status, A]] = around(self.eithers)
     override def isEmpty: Seq[Boolean] = around(self.isEmpty)
     override def length: Seq[Int] = around(self.length)
     override def head: Seq[A] = around(self.head)

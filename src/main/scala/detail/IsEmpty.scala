@@ -16,9 +16,9 @@ class IsEmpty(_1: Seq[_]) extends SeqAdapter.Of[Boolean](_1) {
             f.enter(_)
         } onEach { _ =>
             f(false)
-            f.exit(Exit.End)
+            f.exit(Exit.Success)
         } onExit {
-            case q @ Exit.End => {
+            case q @ Exit.Success => {
                 f(true)
                 f.exit(q)
             }

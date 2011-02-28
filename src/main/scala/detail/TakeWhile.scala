@@ -19,7 +19,7 @@ class TakeWhile[A, B >: A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[B
                 if (_2(x)) {
                     f(x)
                 } else {
-                    f.exit(Exit.End)
+                    f.exit(Exit.Success)
                 }
             }
         } onExit {

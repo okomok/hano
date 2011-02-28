@@ -55,7 +55,7 @@ object listen {
             if (_context ne Unknown) {
                 _context eval {
                     _f.enter {
-                        Entrance { _ =>
+                        Exit { _ =>
                             if (_remove != null) {
                                 _remove()
                             }
@@ -70,10 +70,10 @@ object listen {
         }
 
         private class EnvImpl extends Env[A] {
-            override protected def rawEnter(p: Entrance) = ()
+            override protected def rawEnter(p: Exit) = ()
             override protected def rawApply(x: A) {
                 _f.enter {
-                    Entrance { _ =>
+                    Exit { _ =>
                         if (_remove != null) {
                             _remove()
                         }
@@ -81,7 +81,7 @@ object listen {
                 }
                 _f(x)
             }
-            override protected def rawExit(q: Exit) = _f.exit(q)
+            override protected def rawExit(q: Exit.Status) = _f.exit(q)
 
             override def addBy(body: => Unit) {
                 _add = () => body

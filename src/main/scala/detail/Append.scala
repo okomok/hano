@@ -14,7 +14,7 @@ class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override val context = _1.context upper _2.context
 
     override def forloop(f: Reaction[A]) {
-        val _enter = new Entrance.Two(f)
+        val _enter = new Exit.Two(f)
 
         _1.shift {
             context
@@ -23,7 +23,7 @@ class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         } onEach {
             f(_)
         } onExit {
-            case Exit.End => {
+            case Exit.Success => {
                 _2.shift {
                     context
                 } onEnter {

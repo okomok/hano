@@ -10,7 +10,7 @@ package hano
 
 trait ReactionProxy[-A] extends Reaction[A] with scala.Proxy {
     def self: Reaction[A]
-    override protected def rawEnter(p: Entrance) = self.enter(p)
+    override protected def rawEnter(p: Exit) = self.enter(p)
     override protected def rawApply(x: A) = self.apply(x)
-    override protected def rawExit(q: Exit) = self.exit(q)
+    override protected def rawExit(q: Exit.Status) = self.exit(q)
 }

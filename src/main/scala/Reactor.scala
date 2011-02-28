@@ -28,7 +28,7 @@ trait Reactor extends Actor {
         Actor.loop {
             react {
                 case Action(f) => f()
-                case _: Exit => Actor.exit()
+                case _: Exit.Status => Actor.exit()
                 case x => {
                     if (_f != null) {
                         _f(x)
@@ -43,7 +43,7 @@ trait Reactor extends Actor {
 
     final override def exceptionHandler = {
         if (_f != null) {
-            case t => _f.exit(Exit.Failed(t)) // context seems broken.
+            case t => _f.exit(Exit.Failure(t)) // context seems broken.
         } else {
             super.exceptionHandler
         }
@@ -73,7 +73,7 @@ trait Reactor extends Actor {
     private def _hanoAddSecondary(f: Reaction[Any]) {
         this ! Action {
             f.enter {
-                Entrance { _ =>
+                Exit { _ =>
                     _fs.remove(f)
                 }
             }

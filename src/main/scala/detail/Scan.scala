@@ -19,7 +19,7 @@ class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter.Of[B
         } onEach { _ =>
             f(acc)
         } onExit {
-            case Exit.End => {
+            case Exit.Success => {
                 _1 onEach { x =>
                     acc = _3(acc, x)
                     f(acc)

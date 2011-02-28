@@ -38,12 +38,12 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
             var l: TimerTask = null
             l = new TimerTask {
                 override def run() {
-                    f.enter { Entrance { _ => l.cancel() } }
+                    f.enter { Exit { _ => l.cancel() } }
                     f._do { f() }
                 }
             }
             context eval {
-                f.enter { Entrance { _ => l.cancel() } }
+                f.enter { Exit { _ => l.cancel() } }
             }
             scheduler(timer)(l)
         }

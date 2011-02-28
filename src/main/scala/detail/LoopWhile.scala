@@ -36,13 +36,13 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
         def rec() {
             _1 onEnter { p =>
                 f.enter {
-                    Entrance { q =>
-                        p.close(q)
+                    Exit { q =>
+                        p(q)
                         isActive = false
                     }
                 }
                 if (!_2()) {
-                    f.exit(Exit.End)
+                    f.exit(Exit.Success)
                 }
             } onEach { x =>
                 f.beforeExit {
@@ -52,13 +52,13 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
                         f(x)
                     }
                     if (!isActive) {
-                        f.exit(Exit.Failed(break.Control))
+                        f.exit(Exit.Failure(break.Control))
                     }
                 }
             } onExit { q =>
                 f.beforeExit {
                     q match {
-                        case Exit.End => {
+                        case Exit.Success => {
                             if (isActive) {
                                 rec()
                             } else {
@@ -90,13 +90,13 @@ class LoopWhileSelf[A](_1: Seq[A], _2: () => Boolean) extends Seq[A] {
         assert(!isActive)
 
         isActive = true
-        def _k(q: Exit) { close(); f.exit(q) }
+        def _k(q: Exit.Status) { close(); f.exit(q) }
 
         @scala.annotation.tailrec
         def rec() {
             if (!_2()) {
                 context eval {
-                    _k(Exit.End)
+                    _k(Exit.Success)
                 }
                 return
             }

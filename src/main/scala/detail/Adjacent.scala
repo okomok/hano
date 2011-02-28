@@ -41,7 +41,7 @@ class AdjacentBuffer[A](capacity: Int) {
 
     def isFull: Boolean = impl.size == capacity
 
-    def removeFirst(): Unit = impl.remove(0)
+    def removeFirst() = impl.remove(0)
 
     def addLast(x: A) {
         assert(!isFull)

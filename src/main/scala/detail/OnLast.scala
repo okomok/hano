@@ -19,7 +19,7 @@ class OnLast[A](_1: Seq[A], _2: Option[A] => Unit) extends SeqAdapter.Of[A](_1) 
         } onEach { x =>
             acc = Some(x)
         } onExit {
-            case Exit.End => _2(acc)
+            case Exit.Success => _2(acc)
             case _ => _2(None)
         } forloop(f)
     }

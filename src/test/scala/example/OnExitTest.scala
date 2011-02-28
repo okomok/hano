@@ -19,8 +19,8 @@ class OnExitTest extends org.scalatest.junit.JUnit3Suite {
             xs onEach { x =>
                 out :+= x
             } onExit {
-                case hano.Exit.End => out :+= 99
-                case hano.Exit.Failed(t) => println("something bad happens:" + t)
+                case hano.Exit.Success => out :+= 99
+                case hano.Exit.Failure(t) => println("something bad happens:" + t)
             } await()
 
             expect(List(0,1,2,3,4,99))(out)

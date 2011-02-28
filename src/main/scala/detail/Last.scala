@@ -19,9 +19,9 @@ class Last[A](_1: Seq[A]) extends SeqAdapter.Of[A](_1) {
         } onEach { x =>
             acc = Some(x)
         } onExit {
-            case Exit.End => {
+            case Exit.Success => {
                 if (acc.isEmpty) {
-                    f.exit(Exit.Failed(new NoSuchElementException("Seq.last")))
+                    f.exit(Exit.Failure(new NoSuchElementException("Seq.last")))
                 } else {
                     f(acc.get)
                 }

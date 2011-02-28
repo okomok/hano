@@ -14,7 +14,6 @@ import scala.util.continuations
 
 private[hano]
 trait Conversions { self: Seq.type =>
-
     @annotation.returnThat
     def from[A](that: Seq[A]): Seq[A] = that
 
@@ -27,7 +26,6 @@ trait Conversions { self: Seq.type =>
     implicit def fromResponder[A](from: Responder[A]): Seq[A] = new FromResponder(from)
     implicit def fromReactor(from: Reactor): Seq[Any] = new Reactor.Secondary(from)
     /*implicit not work*/ def fromCps[A](from: => A @continuations.suspendable): Seq[A] = new FromCps(from)
-
 }
 
 
@@ -38,7 +36,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
         @volatile var isActive = true
         f.enter {
-            Entrance { _ =>
+            Exit { _ =>
                 isActive = false
             }
         }
@@ -49,9 +47,9 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
             }
         }
         if (isActive) {
-            f.exit(Exit.End)
+            f.exit(Exit.Success)
         } else {
-            f.exit(Exit.Failed(break.Control))
+            f.exit(Exit.Failure(break.Control))
         }
     }
 }

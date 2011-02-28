@@ -68,7 +68,7 @@ object SyncIterable {
     private class ReactionImpl[A](xch: Exchanger[Data[A]]) extends Reaction[A] with java.io.Flushable {
         private[this] var out = new Data[A]
 
-        override protected def rawEnter(p: Entrance) = ()
+        override protected def rawEnter(p: Exit) = ()
 
         override protected def rawApply(x: A) {
             out.buf.addLast(x)
@@ -76,9 +76,9 @@ object SyncIterable {
                 doExchange()
             }
         }
-        override protected def rawExit(q: Exit) {
+        override protected def rawExit(q: Exit.Status) {
             q match {
-                case Exit.Failed(t) => {
+                case Exit.Failure(t) => {
                     out.exn = Some(t)
                 }
                 case _ => ()

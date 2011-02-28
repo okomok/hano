@@ -54,7 +54,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         val gate = new java.util.concurrent.CountDownLatch(1)
         var i = 0
         var exitCount = 0
-        for (x <- (xs merge ys).onExit{ case hano.Exit.End => { exitCount += 1; gate.countDown() }; case _ => () }) {
+        for (x <- (xs merge ys).onExit{ case hano.Exit.Success => { exitCount += 1; gate.countDown() }; case _ => () }) {
             out(i) = x
             i += 1
         }
@@ -72,7 +72,7 @@ class MergeTest extends org.scalatest.junit.JUnit3Suite {
         var ends = false
         val gate = new java.util.concurrent.CountDownLatch(1)
          var exitCount = 0
-        for (x <- (xs merge ys).onExit{ case hano.Exit.Failed(_) => { exitCount += 1; gate.countDown() }; case _ => () }) {
+        for (x <- (xs merge ys).onExit{ case hano.Exit.Failure(_) => { exitCount += 1; gate.countDown() }; case _ => () }) {
             //println(x)
             //println(Thread.currentThread)
             if (x == 2) {

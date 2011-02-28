@@ -42,7 +42,7 @@ object Nio {
                     case _: ClosedSelectorException => ()
                 }
             }
-            f.exit(Exit.End)
+            f.exit(Exit.Success)
         }
     }
 }

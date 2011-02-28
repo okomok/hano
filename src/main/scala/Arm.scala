@@ -72,7 +72,7 @@ trait Arm[+A] extends Seq[A] with java.io.Closeable {
         } catch {
             case t: Throwable => {
                 primary = t
-                f.exit(Exit.Failed(t))
+                f.exit(Exit.Failure(t))
                 throw t
             }
         } finally {
@@ -83,7 +83,7 @@ trait Arm[+A] extends Seq[A] with java.io.Closeable {
                     case s: Exception => /*primary.addSuppressedException(s)*/
                 }
             } else {
-                f.exit(Exit.End)
+                f.exit(Exit.Success)
                 close()
             }
         }

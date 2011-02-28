@@ -26,7 +26,7 @@ class EmptyTest extends org.scalatest.junit.JUnit3Suite {
         var ended = false
         var failed = false
         hano.Empty.of[Int] onExit {
-            case hano.Exit.End => ended = true
+            case hano.Exit.Success => ended = true
             case _ => failed = true
         } start;
         assert(!failed)

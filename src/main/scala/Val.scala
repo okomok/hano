@@ -30,7 +30,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
      * Will call a reaction when the value is initialized.
      * Subscription order is NOT preserved.
      */
-    override def forloop(f: Reaction[A]): Unit = _onSet(f)
+    override def forloop(f: Reaction[A]) = _onSet(f)
 
     /**
      * Sets the value.
@@ -61,7 +61,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     /**
      * `Val` assignment
      */
-    def assign(that: Seq[A]): Unit = that.forloop(toReaction)
+    def assign(that: Seq[A]) = that.forloop(toReaction)
 
     /**
      * Equivalent to `set(x)`, but throws if the value is different.
@@ -81,7 +81,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     def apply(): A = get
 
     @annotation.aliasOf("assign")
-    def :=[B <: A](that: Seq[B]): Unit = assign(that)
+    def :=[B <: A](that: Seq[B]) = assign(that)
 
     @annotation.conversion
     def toReaction: Reaction[A] = new Val.ToReaction(this)
@@ -121,7 +121,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
             f.enter(_)
         } onEach { _ =>
             tx match {
-                case Left(t) => f.exit(Exit.Failed(t))
+                case Left(t) => f.exit(Exit.Failure(t))
                 case Right(x) => f(x)
             }
         } onExit {
@@ -149,11 +149,11 @@ object Val {
     }
 
     private class ToReaction[A](_1: Val[A]) extends Reaction[A] {
-        override protected def rawEnter(p: Entrance) = ()
+        override protected def rawEnter(p: Exit) = ()
         override protected def rawApply(x: A) = _1.set(x)
-        override protected def rawExit(q: Exit) = q match {
-            case Exit.Failed(t) => _1.setFailed(t)
-            case Exit.End => _1.setFailed(new NoSuchElementException("sequence end before Val.set"))
+        override protected def rawExit(q: Exit.Status) = q match {
+            case Exit.Failure(t) => _1.setFailed(t)
+            case Exit.Success => _1.setFailed(new NoSuchElementException("sequence end before Val.set"))
         }
     }
 
@@ -168,7 +168,7 @@ object Val {
         } onExit { q =>
             CountDown(c) {
                 q match {
-                    case Exit.Failed(t) if v == null => v = Left(t)
+                    case Exit.Failure(t) if v == null => v = Left(t)
                     case _ => ()
                 }
             }

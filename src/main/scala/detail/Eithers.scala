@@ -10,8 +10,8 @@ package detail
 
 
 private[hano]
-class Eithers[A](_1: Seq[A]) extends SeqAdapter.Of[Either[Exit, A]](_1) {
-    override def forloop(f: Reaction[Either[Exit, A]]) {
+class Eithers[A](_1: Seq[A]) extends SeqAdapter.Of[Either[Exit.Status, A]](_1) {
+    override def forloop(f: Reaction[Either[Exit.Status, A]]) {
         _1.onEnter {
             f.enter(_)
         } onEach { x =>

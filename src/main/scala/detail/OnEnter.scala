@@ -10,6 +10,6 @@ package detail
 
 
 private[hano]
-class OnEnter[A](_1: Seq[A], _2: Entrance => Unit) extends SeqProxy[A] {
+class OnEnter[A](_1: Seq[A], _2: Exit => Unit) extends SeqProxy[A] {
     override val self = _1.react(Reaction(_2, _ => (), _ => ()))
 }

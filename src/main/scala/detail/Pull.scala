@@ -17,14 +17,14 @@ class Pull[A](_1: Seq[_], _2: Iter[A]) extends SeqAdapter.Of[A](_1) {
         _1.onEnter { p =>
             f.enter(p)
             if (!it.hasNext) {
-                f.exit(Exit.End)
+                f.exit(Exit.Success)
             }
         } onEach { _ =>
             f.beforeExit {
                 if (it.hasNext) {
                     f(it.next)
                     if (!it.hasNext) {
-                        f.exit(Exit.End)
+                        f.exit(Exit.Success)
                     }
                 }
             }

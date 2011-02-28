@@ -26,7 +26,7 @@ trait Context extends Seq[Unit] with java.io.Closeable {
     /**
      * Evaluates a `body`.
      */
-    final def eval(body: => Unit): Unit = foreach(_ => body)
+    final def eval(body: => Unit) = foreach(_ => body)
 
     /**
      * Evaluates a `body` until the future.

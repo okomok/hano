@@ -21,7 +21,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         var ends2 = false
         val c1 = new LinkedList[A]
         val c2 = new LinkedList[B]
-        val _enter = new Entrance.Two(f)
+        val _enter = new Exit.Two(f)
         def _invariant() = assert(c1.isEmpty || c2.isEmpty)
 
         _1 shift {
@@ -38,11 +38,11 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                 }
             }
         } onExit {
-            case Exit.End => {
+            case Exit.Success => {
                 _invariant()
                 ends1 = true
                 if (ends2 || c1.isEmpty) {
-                    f.exit(Exit.End)
+                    f.exit(Exit.Success)
                 }
             }
             case q => f.exit(q) // fail-immediately
@@ -62,11 +62,11 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                 }
             }
         } onExit {
-            case Exit.End => {
+            case Exit.Success => {
                 _invariant()
                 ends2 = true
                 if (ends1 || c2.isEmpty) {
-                    f.exit(Exit.End)
+                    f.exit(Exit.Success)
                 }
             }
             case q => f.exit(q)

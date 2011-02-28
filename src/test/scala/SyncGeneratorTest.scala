@@ -19,7 +19,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     def testEmpty: Unit = {
         val tr = generator.sync[Int] { * =>
             999
-            *.end()
+            *.exit()
         }
         assertTrue(tr.isEmpty)
         assertTrue(tr.isEmpty) // run again.
@@ -29,7 +29,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
         for (i <- 1 to n) {
             y(i)
         }
-        y.end()
+        y.exit()
     }
 
     def withMakeValuesTo(n: Int): Unit = {
@@ -64,8 +64,8 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
                 *(i)
             }
             *("last")
-            *.end()
-//            *.end() // never idempotent
+            *.exit()
+//            *.exit() // never idempotent
         }
         for (a <- example) {
             //println(a)
@@ -130,7 +130,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
             y.flush() // exchange.
             throw new Error("after flush")
 //            Thread.sleep(10000)
-            y.end()
+            y.exit()
         }
         val ret = new java.util.ArrayList[Int]
         val it = sample.iterator
@@ -156,7 +156,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
             *(1)
             *(2)
             *(3)
-            *.end()
+            *.exit()
             throw new Error("after end")
         }
         val ret = new java.util.ArrayList[Int]

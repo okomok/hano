@@ -16,7 +16,7 @@ import scala.util.continuations.{cpsParam, reset, shift}
  */
 object cps {
     @annotation.equivalentTo("scala.util.continuations.reset")
-    def apply[A](ctx: => A @cpsParam[A, Any]): Unit = reset(ctx)
+    def apply[A](ctx: => A @cpsParam[A, Any]) = reset(ctx)
 
     def require(cond: Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Single(()) else Empty).toCps
 

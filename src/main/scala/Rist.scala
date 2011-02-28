@@ -18,7 +18,7 @@ final class Rist[A](override val context: Context = async) extends SeqOnce[A] wi
     @volatile private[this] var isActive = true
     @volatile private[this] var g: Reaction[A] = null
     private[this] val vs = new java.util.concurrent.ConcurrentLinkedQueue[A]
-    private def _k(q: Exit) { close(); g.exit(q) }
+    private def _k(q: Exit.Status) { close(); g.exit(q) }
 
     override def close() {
         isActive = false
@@ -48,7 +48,7 @@ final class Rist[A](override val context: Context = async) extends SeqOnce[A] wi
     }
 
     @annotation.aliasOf("add")
-    def +=(x: A): Unit = add(x)
+    def +=(x: A) = add(x)
 
     private def _eval(f: Reaction[A], x: A) {
         context onEach { _ =>
@@ -57,7 +57,7 @@ final class Rist[A](override val context: Context = async) extends SeqOnce[A] wi
                 f(x)
             }
         } onExit {
-            case q @ Exit.Failed(_) => _k(q)
+            case q @ Exit.Failure(_) => _k(q)
             case _ => ()
         } start()
     }

@@ -28,7 +28,7 @@ class AppendTest extends org.scalatest.junit.JUnit3Suite {
         object MyError extends Error
         var failed = false
         try {
-            for (x <- (xs ++ ys).onExit{case hano.Exit.Failed(_) => out.add(99); case _ => failed = true}) {
+            for (x <- (xs ++ ys).onExit{case hano.Exit.Failure(_) => out.add(99); case _ => failed = true}) {
                 if (x == 3)
                     throw MyError
                 out.add(x)

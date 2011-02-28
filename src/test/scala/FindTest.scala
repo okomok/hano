@@ -24,7 +24,7 @@ object Impl {
             require(!isActive)
 
             isActive = true
-            def _k(q: Exit) { close(); f.exit(q) }
+            def _k(q: Exit.Status) { close(); f.exit(q) }
 
             def rec() {
                 _1 onEach { x =>
@@ -38,7 +38,7 @@ object Impl {
                     // Now you can reenter `forloop`.
                 } onExit { q =>
                     q match {
-                        case Exit.End => {
+                        case Exit.Success => {
                             if (isActive) {
                                 rec()
                             }

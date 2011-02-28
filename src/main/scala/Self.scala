@@ -19,6 +19,6 @@ object Self extends Context {
         f._do {
             f()
         }
-        f.exit(Exit.End)
+        f.exit(Exit.Success)
     }
 }

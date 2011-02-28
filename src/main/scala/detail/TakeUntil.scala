@@ -14,14 +14,14 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
     override val context =  _1.context upper _2.context
 
     override def forloop(f: Reaction[A]) {
-        val _enter = new Entrance.Two(f)
+        val _enter = new Exit.Two(f)
 
         _2.shift {
             context
         } onEnter {
             _enter
         } onEach { _ =>
-            f.exit(Exit.End)
+            f.exit(Exit.Success)
         } start()
 
         _1.shift {

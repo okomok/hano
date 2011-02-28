@@ -16,9 +16,9 @@ class Head[A](_1: Seq[A]) extends SeqAdapter.Of[A](_1) {
             f.enter(_)
         } onEach { x =>
             f(x)
-            f.exit(Exit.End)
+            f.exit(Exit.Success)
         } onExit {
-            case Exit.End => f.exit(Exit.Failed(new NoSuchElementException("Seq.head")))
+            case Exit.Success => f.exit(Exit.Failure(new NoSuchElementException("Seq.head")))
             case q => f.exit(q)
         } start()
     }

@@ -20,10 +20,10 @@ class EithersTest extends org.scalatest.junit.JUnit3Suite {
 
     def testNoNth {
         val xs = hano.async.loop.pull(Seq(3,1,8,6,7,4,2,9))
-        val nth = new hano.Val[Either[hano.Exit, Int]]
+        val nth = new hano.Val[Either[hano.Exit.Status, Int]]
         nth := xs.nth(10).eithers
         nth() match {
-            case Left(hano.Exit.Failed(_)) => ()
+            case Left(hano.Exit.Failure(_)) => ()
             case _ => fail("doh")
         }
     }

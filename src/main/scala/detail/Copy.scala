@@ -20,9 +20,9 @@ class Copy[A, To](_1: Seq[A], _2: scala.collection.generic.CanBuildFrom[Nothing,
         } onEach {
             b += _
         } onExit {
-            case Exit.End => {
+            case Exit.Success => {
                 f(b.result)
-                f.exit(Exit.End)
+                f.exit(Exit.Success)
             }
             case q => f.exit(q)
         } start()

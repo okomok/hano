@@ -89,7 +89,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
             override val context = hano.Self
             override def closeResource = ()
             override def openResource(f: hano.Reaction[Int]) {
-                f(1); f(2); f(3); f.end()
+                f(1); f(2); f(3); f.exit()
             }
         }
         val xs = new MyResource().take(3).loop // take(3) guarantees `close`.
@@ -102,7 +102,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
             count += 1
             override val context = hano.Self
             override def forloop(f: hano.Reaction[Int]) {
-                f(1); f(2); f(3); f.end()
+                f(1); f(2); f(3); f.exit()
             }
         }
         val xs = hano.byName(new MyResource).loop
