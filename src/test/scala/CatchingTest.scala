@@ -15,18 +15,22 @@ import junit.framework.Assert._
 
 class CatchingTest extends org.scalatest.junit.JUnit3Suite {
 
+
+   class MyError extends RuntimeException
+
     def testCatch: Unit = {
         val t = hano.Seq(1,2,3,4,5,6,7,8,9)
 
         val out = new java.util.ArrayList[Int]
 
+
         t.filter {
             _ > 3
         } catching {
-            case x: AssertionError => out.add(88)
+            case x: MyError => out.add(88)
         } map { e =>
             if (e == 8) {
-                throw new AssertionError
+                throw new MyError
             } else {
                 e + 10
             }
@@ -34,7 +38,8 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
             out.add(e)
         }
 
-        assertEquals(hano.Iter(14,15,16,17,88,19), hano.Iter.from(out))
+        // 19 is not sent, for exit(Failure) immediately.
+        assertEquals(hano.Iter(14,15,16,17,88/*,19*/), hano.Iter.from(out))
     }
 
     def testThrough: Unit = {
@@ -42,7 +47,6 @@ class CatchingTest extends org.scalatest.junit.JUnit3Suite {
 
         val out = new java.util.ArrayList[Int]
 
-        class MyError extends Error
         class PassThrough extends RuntimeException
 
         var thrown = false

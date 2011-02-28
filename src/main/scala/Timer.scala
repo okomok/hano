@@ -19,6 +19,7 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
     private[this] val zero = new detail.ZeroDelay
 
     override def close() = timer.cancel()
+
     override def forloop(f: Reaction[Unit]) {
         val l = new TimerTask {
             override def run() {
@@ -34,12 +35,13 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
 
     private class Schedule(scheduler: JTimer => TimerTask => Unit) extends Seq[Unit] {
         override def context = outer.asContext
+
         override def forloop(f: Reaction[Unit]) {
             var l: TimerTask = null
             l = new TimerTask {
                 override def run() {
                     f.enter { Exit { _ => l.cancel() } }
-                    f._do { f() }
+                    f()
                 }
             }
             context eval {

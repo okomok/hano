@@ -45,7 +45,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
         val a = new java.util.ArrayList[Int]
         var closed = false
         for (x <- hano.from(0 until 10).onExit {
-            case hano.Exit.Failure(hano.break.Control) => closed = true
+            case hano.Exit.Success => closed = true
             case _ => ()
         }.pull(0 until 10)) {
             a.add(x)

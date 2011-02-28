@@ -34,7 +34,7 @@ trait Reaction[-A] {
     @annotation.idempotent
     final def enter(p: Exit = Exit.Nil) = _mdf {
         _enter {
-            _entrance = p
+            _exitFunc = p
             rawEnter(p)
         }
     }
@@ -46,10 +46,8 @@ trait Reaction[-A] {
         require(_enter.isDone, "`enter` shall be called before `apply`")
 
         if (_enter.isDone && !_exit.isDone) {
-            try {
+            applying {
                 rawApply(x)
-            } catch {
-                case t @ break.Control => exit(Exit.Failure(t))
             }
         }
     }
@@ -63,7 +61,7 @@ trait Reaction[-A] {
 
         _exit {
             try {
-                _entrance(q)
+                _exitFunc(q)
                 rawExit(q)
             } catch {
                 case break.Control => ()
@@ -91,14 +89,10 @@ trait Reaction[-A] {
      */
     protected def rawExit(q: Exit.Status)
 
-
-    private[this] var _entrance: Exit = null
-    private[this] val _mdf = new detail.Modification(toString)
-    private[this] val _enter = new detail.DoOnce
-    private[this] val _exit = new detail.DoOnce
-
-    private[hano]
-    final def _do(body: => Unit) {
+    /**
+     * Specifies an applying block.
+     */
+    final def applying(body: => Unit) {
         try {
             body
         } catch {
@@ -109,6 +103,11 @@ trait Reaction[-A] {
             }
         }
     }
+
+    private[this] var _exitFunc: Exit = null
+    private[this] val _mdf = new detail.Modification(toString)
+    private[this] val _enter = new detail.DoOnce
+    private[this] val _exit = new detail.DoOnce
 }
 
 

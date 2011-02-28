@@ -27,7 +27,7 @@ object Nio {
         override def context = Self
         override def forloop(f: Reaction[SelectionKey]) {
             f.enter()
-            f._do {
+            f.applying {
                 try {
                     while (true) {
                         if (_2(_1) != 0) {
