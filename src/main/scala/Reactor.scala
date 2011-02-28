@@ -73,11 +73,13 @@ trait Reactor extends Actor {
     private def _hanoAddSecondary(f: Reaction[Any]) {
         this ! Action {
             f.enter {
-                _fs.remove(f);
+                Entrance { _ =>
+                    _fs.remove(f)
+                }
             }
         }
         this ! Action {
-            _fs.add(f);
+            _fs.add(f)
         }
     }
 }

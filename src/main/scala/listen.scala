@@ -55,8 +55,10 @@ object listen {
             if (_context ne Unknown) {
                 _context eval {
                     _f.enter {
-                        if (_remove != null) {
-                            _remove()
+                        Entrance { _ =>
+                            if (_remove != null) {
+                                _remove()
+                            }
                         }
                     }
                 }
@@ -71,8 +73,10 @@ object listen {
             override protected def rawEnter(p: Entrance) = ()
             override protected def rawApply(x: A) {
                 _f.enter {
-                    if (_remove != null) {
-                        _remove()
+                    Entrance { _ =>
+                        if (_remove != null) {
+                            _remove()
+                        }
                     }
                 }
                 _f(x)

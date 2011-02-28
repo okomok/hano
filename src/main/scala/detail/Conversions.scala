@@ -38,7 +38,9 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
     override def forloop(f: Reaction[A]) {
         @volatile var isActive = true
         f.enter {
-            isActive = false
+            Entrance { _ =>
+                isActive = false
+            }
         }
         f._do {
             val it = _1.ator

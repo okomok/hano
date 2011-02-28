@@ -32,7 +32,7 @@ trait Reaction[-A] {
      * Informs the entrance.
      */
     @annotation.idempotent
-    final def enter(p: Entrance) = _mdf {
+    final def enter(p: Entrance = Entrance.Nil) = _mdf {
         _enter {
             _entrance = p
             rawEnter(p)
@@ -63,7 +63,7 @@ trait Reaction[-A] {
 
         _exit {
             try {
-                _entrance.close()
+                _entrance.close(q)
                 rawExit(q)
             } catch {
                 case break.Control => ()
@@ -72,9 +72,6 @@ trait Reaction[-A] {
             }
         }
     }
-
-    @annotation.equivalentTo("enter(new Entrance(() => ()))")
-    final def enter[U](b: => U): Unit = enter(new Entrance(() => b))
 
     @annotation.equivalentTo("exit(Exit.End)")
     final def end() = exit(Exit.End)

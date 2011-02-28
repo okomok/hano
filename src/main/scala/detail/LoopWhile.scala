@@ -36,8 +36,10 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
         def rec() {
             _1 onEnter { p =>
                 f.enter {
-                    p.close()
-                    isActive = false
+                    Entrance { q =>
+                        p.close(q)
+                        isActive = false
+                    }
                 }
                 if (!_2()) {
                     f.exit(Exit.End)
