@@ -22,15 +22,13 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
                 status = Exit.Failure(Exit.ByOther(q))
                 isActive = false
             }
-        }
-
-        f.applying {
+        } applying {
             val it = _1.ator
             while (isActive && it.hasNext) {
                 f(it.next)
             }
+        } exit {
+            status
         }
-
-        f.exit(status)
     }
 }

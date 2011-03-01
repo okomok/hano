@@ -44,14 +44,12 @@ trait Reaction[-A] {
     /**
      * Reacts on each element.
      */
-    final def apply(x: A): this.type = _mdf {
-        require(_enter.isDone, "`enter` shall be called before `apply`")
+    final def apply(x: A) = _mdf {
+        require(_enter.isDone, "`enter` shall be called before `apply` to: " + toString)
 
         if (_enter.isDone && !_exit.isDone) {
             rawApply(x)
         }
-
-        this
     }
 
     /**
@@ -59,7 +57,7 @@ trait Reaction[-A] {
      */
     @annotation.idempotent
     final def exit(q: Exit.Status = Exit.Success) = _mdf {
-        require(_enter.isDone, "`enter` shall be called before `exit`")
+        require(_enter.isDone, "`enter` shall be called before `exit` to: " + toString)
 
         _exit {
             try {
@@ -102,6 +100,7 @@ trait Reaction[-A] {
             case t @ break.Control => {
                 exit(Exit.Failure(t))
                 this
+            }
             case t: Throwable => {
                 exit(Exit.Failure(t)) // informs Reaction-site
                 throw t // handled in Seq-site

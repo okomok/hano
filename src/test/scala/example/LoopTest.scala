@@ -19,7 +19,6 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
             expect(())(x)
             i += 1
             if (i == 5) {
-                println("breaking: " + i)
                 hano.break()
             }
         } await()

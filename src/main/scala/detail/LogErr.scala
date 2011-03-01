@@ -17,6 +17,7 @@ object LogErr {
         t match {
             case _: java.lang.Error => t.printStackTrace()
             case _: SeriousException => t.printStackTrace()
+            case _: IllegalArgumentException => t.printStackTrace()
             case _ => ()
         }
     }

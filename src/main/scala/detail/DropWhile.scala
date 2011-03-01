@@ -15,7 +15,7 @@ class DropWhile[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[A](_1) {
         var go = false
 
         _1.onEnter {
-            f.enter
+            f.enter(_)
         } onEach { x =>
             if (!go && !_2(x)) {
                 go = true
@@ -24,7 +24,7 @@ class DropWhile[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[A](_1) {
                 f(x)
             }
         } onExit {
-            f.exit
+            f.exit(_)
         } start()
     }
 }

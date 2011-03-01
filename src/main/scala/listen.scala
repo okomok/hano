@@ -82,9 +82,7 @@ object listen {
                             }
                         }
                     }
-                }
-
-                f.applying {
+                } applying {
                     f(x)
                 }
             }
