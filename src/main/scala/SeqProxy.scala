@@ -87,7 +87,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def loop: Seq[A] = around(self.loop)
     override def loopWhile(p: => Boolean): Seq[A] = around(self.loopWhile(p))
     override def times(n: Int): Seq[A] = around(self.times(n))
-    override def noEnd: Seq[A] = around(self.noEnd)
+    override def noSuccess: Seq[A] = around(self.noSuccess)
     override def once: Seq[A] = around(self.once)
     override def options: Seq[Option[A]] = around(self.options)
     override def eithers: Seq[Either[Exit.Status, A]] = around(self.eithers)

@@ -350,7 +350,7 @@ trait Seq[+A] {
     /**
      * Ignores `Exit.Success`.
      */
-    def noEnd: Seq[A] = new detail.NoEnd(this)
+    def noSuccess: Seq[A] = new detail.NoSuccess(this)
 
     /**
      * Disallows multiple `forloop`s.

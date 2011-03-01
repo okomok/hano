@@ -40,7 +40,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
 
         _1.onEnter { p =>
             cur ! Action {
-                context.noEnd.onEach { _ =>
+                context.noSuccess.onEach { _ =>
                     f.enter(p)
                 } onExit {
                     _exit
@@ -49,7 +49,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         } onEach { x =>
             f.beforeExit {
                 cur ! Action {
-                    context.noEnd.onEach { _ =>
+                    context.noSuccess.onEach { _ =>
                         f(x)
                     } onExit {
                         _exit
@@ -87,7 +87,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
 
     override def forloop(f: Reaction[A]) {
         _1.onEnter { p =>
-            context.noEnd.onEach { _ =>
+            context.noSuccess.onEach { _ =>
                 f.enter(p)
             } onExit {
                 f.exit
@@ -95,7 +95,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
 
         } onEach { x =>
             f.beforeExit {
-                context.noEnd.onEach { _ =>
+                context.noSuccess.onEach { _ =>
                     f(x)
                 } onExit {
                     f.exit

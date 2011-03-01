@@ -101,7 +101,7 @@ class LoopWhileSelf[A](_1: Seq[A], _2: () => Boolean) extends Seq[A] {
                 return
             }
 
-            _1.noEnd onEach {
+            _1.noSuccess onEach {
                 f(_)
             } onExit {
                 _k(_)
