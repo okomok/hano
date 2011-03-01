@@ -21,10 +21,10 @@ class ListenTest extends org.scalatest.junit.JUnit3Suite {
                     *()
                 }
             }
-            *.addBy {
+            *.add {
                 t.schedule(l, 0, 100)
             }
-            *.removeBy{
+            *.remove{
                 l.cancel()
             }
         }

@@ -18,10 +18,10 @@ class ListenTest extends org.scalatest.junit.JUnit3Suite {
             val l = new MouseInputAdapter {
                 override def mouseClicked(e: MouseEvent) = *(e)
             }
-            *.addBy {
+            *.add {
                 source.addMouseListener(l)
             }
-            *.removeBy {
+            *.remove {
                 source.removeMouseListener(l)
             }
         }

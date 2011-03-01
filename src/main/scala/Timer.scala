@@ -12,7 +12,7 @@ import java.util.{Date, Timer => JTimer, TimerTask}
 
 
 /**
- * Timer creates a sequence of Units.
+ * Creates a sequence of Units.
  */
 final class Timer(isDaemon: Boolean = false) extends Context { outer =>
     private[this] val timer = new JTimer(isDaemon)
@@ -30,41 +30,22 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
                 }
             }
         }
+
         timer.schedule(l, zero())
     }
 
-    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends Seq[Unit] {
-        override def context = outer.asContext
-
-        override def forloop(f: Reaction[Unit]) {
-            var l: TimerTask = null
-
-            l = new TimerTask {
-                override def run() {
-                    f.enter {
-                        Exit { q =>
-                            l.cancel()
-                            context.eval { // wrapped for thread-safety
-                                f.exit(q)
-                            }
-                        }
-                    }
-                    f()
-                }
+    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends SeqProxy[Unit] {
+        override val self = listen[Unit](outer) { * =>
+            val l = new TimerTask {
+                override def run() = *()
             }
 
-            context.eval {
-                f.enter {
-                    Exit { q =>
-                        l.cancel()
-                        context.eval {
-                            f.exit(q)
-                        }
-                    }
-                }
+            *.add {
+                scheduler(timer)(l)
             }
-
-            scheduler(timer)(l)
+            *.remove {
+                l.cancel()
+            }
         }
     }
 

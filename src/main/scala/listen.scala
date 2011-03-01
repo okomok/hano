@@ -14,12 +14,12 @@ object listen {
         /**
          * How to add a listener
          */
-        def addBy(body: => Unit)
+        def add(body: => Unit)
 
         /**
          * How to remove a listener
          */
-        def removeBy(body: => Unit)
+        def remove(body: => Unit)
     }
 
     /**
@@ -73,10 +73,10 @@ object listen {
             }
             override protected def rawExit(q: Exit.Status) = f.exit(q)
 
-            override def addBy(body: => Unit) {
+            override def add(body: => Unit) {
                 _add := body
             }
-            override def removeBy(body: => Unit) {
+            override def remove(body: => Unit) {
                 _remove := body
             }
         }
