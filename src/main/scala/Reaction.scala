@@ -32,22 +32,26 @@ trait Reaction[-A] {
      * Informs the entrance.
      */
     @annotation.idempotent
-    final def enter(p: Exit = Exit.Empty) = _mdf {
+    final def enter(p: Exit = Exit.Empty): this.type = _mdf[this.type] {
         _enter {
             _exitFunc = p
             rawEnter(p)
         }
+
+        this
     }
 
     /**
      * Reacts on each element.
      */
-    final def apply(x: A) = _mdf {
+    final def apply(x: A): this.type = _mdf {
         require(_enter.isDone, "`enter` shall be called before `apply`")
 
         if (_enter.isDone && !_exit.isDone) {
             rawApply(x)
         }
+
+        this
     }
 
     /**
@@ -90,11 +94,14 @@ trait Reaction[-A] {
     /**
      * Specifies an applying block.
      */
-    final def applying(body: => Unit) {
+    final def applying(body: => Unit): this.type = {
         try {
             body
+            this
         } catch {
-            case t @ break.Control => exit(Exit.Failure(t))
+            case t @ break.Control => {
+                exit(Exit.Failure(t))
+                this
             case t: Throwable => {
                 exit(Exit.Failure(t)) // informs Reaction-site
                 throw t // handled in Seq-site
