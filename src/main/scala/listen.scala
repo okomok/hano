@@ -53,11 +53,14 @@ object listen {
             _f = f
 
             if (_context ne Unknown) {
-                _context eval {
+                _context.eval {
                     _f.enter {
-                        Exit { _ =>
+                        Exit { q =>
                             if (_remove != null) {
                                 _remove()
+                            }
+                            _context.eval { // wrapped for thread-safety
+                                _f.exit(q)
                             }
                         }
                     }
@@ -73,9 +76,14 @@ object listen {
             override protected def rawEnter(p: Exit) = ()
             override protected def rawApply(x: A) {
                 _f.enter {
-                    Exit { _ =>
+                    Exit { q =>
                         if (_remove != null) {
                             _remove()
+                        }
+                        if (_context ne Unknown) {
+                            _context.eval {
+                                _f.exit(q)
+                            }
                         }
                     }
                 }

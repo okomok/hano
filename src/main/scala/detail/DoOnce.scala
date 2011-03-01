@@ -9,9 +9,14 @@ package hano
 package detail
 
 
+// Note this is not thread-safe.
+// @volatile is nothing but a hint.
+
 private[hano]
 class DoOnce {
     @volatile private[this] var _done = false
+
+    def isDone: Boolean = _done
 
     def apply(body: => Unit) {
         if (!_done) {
@@ -19,6 +24,4 @@ class DoOnce {
             body
         }
     }
-
-    def isDone : Boolean = _done
 }

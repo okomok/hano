@@ -294,6 +294,11 @@ trait Seq[+A] {
     def handleExit(k: PartialFunction[Exit.Status, Unit]): Seq[A] = new detail.HandleExit(this, k)
 
     /**
+     * Doesn't pass an exit function.
+     */
+    def protect: Seq[A] = new detail.Protect(this)
+
+    /**
      * Attach a resource.
      */
     def using(c: java.io.Closeable): Seq[A] = new detail.Using(this, c)

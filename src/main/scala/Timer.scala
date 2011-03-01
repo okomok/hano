@@ -44,7 +44,7 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
                     f()
                 }
             }
-            context eval {
+            context.eval {
                 f.enter { Exit { _ => l.cancel() } }
             }
             scheduler(timer)(l)
