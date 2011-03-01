@@ -56,9 +56,11 @@ object listen {
                     f.enter {
                         Exit { q =>
                             env._remove()
+/*
                             context.eval { // wrapped for thread-safety
                                 f.exit(Exit.Failure(Exit.ByOther(q)))
                             }
+*/
                         }
                     }
                 }
@@ -76,11 +78,13 @@ object listen {
                 f.enter {
                     Exit { q =>
                         _remove()
+/*
                         if (context ne Unknown) {
                             context.eval {
                                 f.exit(Exit.Failure(Exit.ByOther(q)))
                             }
                         }
+*/
                     }
                 } applying {
                     f(x)

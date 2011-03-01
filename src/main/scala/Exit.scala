@@ -28,7 +28,10 @@ object Exit {
     /**
      * Exit status
      */
-    sealed abstract class Status extends Message
+    sealed abstract class Status extends Message {
+        @annotation.returnThis @inline
+        final def asStatus: Status = this
+    }
 
     /**
      * Success

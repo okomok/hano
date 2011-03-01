@@ -15,7 +15,7 @@ object Self extends Context {
     override def close() = ()
 
     override def forloop(f: Reaction[Unit]) {
-        @volatile var status: Exit.Status = Exit.Success
+        @volatile var status = Exit.Success.asStatus
 
         f.enter {
             Exit { q  =>
