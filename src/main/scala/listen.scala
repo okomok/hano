@@ -57,7 +57,7 @@ object listen {
                         Exit { q =>
                             env._remove()
                             context.eval { // wrapped for thread-safety
-                                f.exit(q)
+                                f.exit(Exit.Failure(Exit.ByOther(q)))
                             }
                         }
                     }
@@ -78,7 +78,7 @@ object listen {
                         _remove()
                         if (context ne Unknown) {
                             context.eval {
-                                f.exit(q)
+                                f.exit(Exit.Failure(Exit.ByOther(q)))
                             }
                         }
                     }

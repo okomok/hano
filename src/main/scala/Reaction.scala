@@ -32,7 +32,7 @@ trait Reaction[-A] {
      * Informs the entrance.
      */
     @annotation.idempotent
-    final def enter(p: Exit = Exit.Nil) = _mdf {
+    final def enter(p: Exit = Exit.Empty) = _mdf {
         _enter {
             _exitFunc = p
             rawEnter(p)

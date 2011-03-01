@@ -9,7 +9,7 @@ package hano
 
 
 /**
- * An exit function
+ * Exit function
  */
 trait Exit {
     @annotation.threadSafe
@@ -25,12 +25,25 @@ trait Exit {
 
 
 object Exit {
+
+    /**
+     * Exit status
+     */
     sealed abstract class Status extends Message
 
+    /**
+     * Success
+     */
     case object Success extends Status
 
+    /**
+     * Failure
+     */
     case class Failure(why: Throwable) extends Status
 
+    /**
+     * Used to handle an exit by default.
+     */
     object defaultHandler extends (Exit.Status => Unit) {
         override def apply(q: Exit.Status) = q match {
             case Exit.Failure(t) => detail.LogErr(t, "unhandled failure")
@@ -38,11 +51,24 @@ object Exit {
         }
     }
 
+    /**
+     * Creates an exit function from `k`.
+     */
+    @annotation.pre("`k` is thread-safe")
     def apply(k: Exit.Status => Unit): Exit = new Apply(k)
 
-    object Nil extends Exit {
+    /**
+     * The exit function to do nothing
+     */
+    object Empty extends Exit {
         override protected def rawApply(q: Exit.Status) = ()
     }
+
+    /**
+     * Specifies a failure that reaction is exited by downstream.
+     */
+    case class ByOther(status: Status) extends RuntimeException
+
 
     private class Apply(_1: Exit.Status => Unit) extends Exit {
         override protected def rawApply(q: Exit.Status) = _1(q)
@@ -55,7 +81,7 @@ object Exit {
 
     private[hano]
     class Two(_1: Reaction[_]) extends (Exit => Unit) {
-        private[this] var en1, en2: Exit = Nil
+        private[this] var en1, en2: Exit = Empty
 
         override def apply(p: Exit) {
             if (_1.isExited) {

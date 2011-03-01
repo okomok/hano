@@ -39,7 +39,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
 
         f.enter {
             Exit { q =>
-                status = q
+                status = Exit.Failure(Exit.ByOther(q))
                 isActive = false
             }
         }

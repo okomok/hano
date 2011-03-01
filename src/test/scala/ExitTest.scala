@@ -45,13 +45,13 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
         val a = new java.util.ArrayList[Int]
         var closed = false
         for (x <- hano.from(0 until 10).onExit {
-            case hano.Exit.Success => closed = true
+            case hano.Exit.Failure(hano.Exit.ByOther(hano.Exit.Success)) => closed = true
             case _ => ()
-        }.pull(0 until 10)) {
+        }.pull(0 until 9)) {
             a.add(x)
         }
         assert(closed)
-        expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
+        expect(hano.Iter.from(0 until 9))(hano.Iter.from(a))
     }
 
     def testIterClosedNotSent {
