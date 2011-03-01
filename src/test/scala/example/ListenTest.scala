@@ -14,12 +14,16 @@ class ListenTest extends org.scalatest.junit.JUnit3Suite {
      * Creates a sequence of mouse clicks.
      */
     def clicks(source: java.awt.Component): hano.Seq[MouseEvent] = {
-        hano.listen[MouseEvent] { * =>
+        hano.listen[MouseEvent]() { * =>
             val l = new MouseInputAdapter {
                 override def mouseClicked(e: MouseEvent) = *(e)
             }
-            *.addBy{source.addMouseListener(l)}
-            *.removeBy{source.removeMouseListener(l)}
+            *.addBy {
+                source.addMouseListener(l)
+            }
+            *.removeBy {
+                source.removeMouseListener(l)
+            }
         }
     }
 

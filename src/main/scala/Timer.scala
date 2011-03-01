@@ -38,15 +38,32 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
 
         override def forloop(f: Reaction[Unit]) {
             var l: TimerTask = null
+
             l = new TimerTask {
                 override def run() {
-                    f.enter { Exit { _ => l.cancel() } }
+                    f.enter {
+                        Exit { q =>
+                            l.cancel()
+                            context.eval { // wrapped for thread-safety
+                                f.exit(q)
+                            }
+                        }
+                    }
                     f()
                 }
             }
+
             context.eval {
-                f.enter { Exit { _ => l.cancel() } }
+                f.enter {
+                    Exit { q =>
+                        l.cancel()
+                        context.eval {
+                            f.exit(q)
+                        }
+                    }
+                }
             }
+
             scheduler(timer)(l)
         }
     }

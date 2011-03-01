@@ -20,85 +20,64 @@ object listen {
          * How to remove a listener
          */
         def removeBy(body: => Unit)
-
-        /**
-         * Where to evaluate a reaction (`Unknown` if omitted.)
-         */
-        def contextIs(cxt: Context)
     }
 
     /**
      * Creates a Seq from listeners.
      */
-    def apply[A](body: Env[A] => Unit): Seq[A] = new Apply(body)
+    def apply[A](ctx: Context = Unknown)(body: Env[A] => Unit): Seq[A] = new Apply(ctx, body)
 
-    private class Apply[A](body: Env[A] => Unit) extends Seq[A] {
-        private[this] var _f: Reaction[A] = null
-        private[this] var _add: () => Unit = null
-        private[this] var _remove: () => Unit = null
-        private[this] var _context: Context = Unknown
 
-        body(_makeEnv) // saves context as soon as possible.
-        private[this] val _evalBody = detail.IfFirst[Unit] { _ => () } Else { _ => body(_makeEnv) }
+    private class Apply[A](_1: Context, _2: Env[A] => Unit) extends Seq[A] {
+        override def context = _1
 
-        private def _makeEnv = {
-            val that = new EnvImpl
-            that.enter()
-            that
-        }
-
-        override def context = _context
         override def forloop(f: Reaction[A]) {
-            _evalBody()
-            _f = f
+            val env = new EnvImpl(f)
 
-            if (_context ne Unknown) {
-                _context.eval {
-                    _f.enter {
+            env.enter()
+            _2(env)
+
+            if (context ne Unknown) {
+                context.eval {
+                    f.enter {
                         Exit { q =>
-                            if (_remove != null) {
-                                _remove()
-                            }
-                            _context.eval { // wrapped for thread-safety
-                                _f.exit(q)
+                            env._remove()
+                            context.eval { // wrapped for thread-safety
+                                f.exit(q)
                             }
                         }
                     }
                 }
             }
 
-            if (_add != null) {
-                _add()
-            }
+            env._add()
         }
 
-        private class EnvImpl extends Env[A] {
+        private class EnvImpl[A](f: Reaction[A]) extends Env[A] {
+            private[hano] var _add = new detail.VarFunc0
+            private[hano] var _remove = new detail.VarFunc0
+
             override protected def rawEnter(p: Exit) = ()
             override protected def rawApply(x: A) {
-                _f.enter {
+                f.enter {
                     Exit { q =>
-                        if (_remove != null) {
-                            _remove()
-                        }
-                        if (_context ne Unknown) {
-                            _context.eval {
-                                _f.exit(q)
+                        _remove()
+                        if (context ne Unknown) {
+                            context.eval {
+                                f.exit(q)
                             }
                         }
                     }
                 }
-                _f(x)
+                f(x)
             }
-            override protected def rawExit(q: Exit.Status) = _f.exit(q)
+            override protected def rawExit(q: Exit.Status) = f.exit(q)
 
             override def addBy(body: => Unit) {
-                _add = () => body
+                _add := body
             }
             override def removeBy(body: => Unit) {
-                _remove = () => body
-            }
-            override def contextIs(ctx: Context) {
-                _context = ctx
+                _remove := body
             }
         }
     }
