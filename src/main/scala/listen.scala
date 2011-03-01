@@ -27,6 +27,20 @@ object listen {
      */
     def apply[A](ctx: Context = Unknown)(body: Env[A] => Unit): Seq[A] = new Apply(ctx, body)
 
+    /**
+     * Trivial helper to define a `Seq` directly.
+     */
+    trait To[A] extends SeqProxy[A] {
+        override lazy val self = hano.listen[A](context) { env =>
+            listen(env)
+        }
+
+        override def context = Unknown.asContext
+
+        protected type Env = hano.listen.Env[A]
+        protected def listen(env: Env)
+    }
+
 
     private class Apply[A](_1: Context, _2: Env[A] => Unit) extends Seq[A] {
         override def context = _1

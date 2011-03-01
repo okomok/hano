@@ -34,16 +34,17 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
         timer.schedule(l, zero())
     }
 
-    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends SeqProxy[Unit] {
-        override val self = listen[Unit](outer) { * =>
+    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends listen.To[Unit] {
+        override def context = outer.asContext
+        override protected def listen(env: Env) {
             val l = new TimerTask {
-                override def run() = *()
+                override def run() = env()
             }
 
-            *.add {
+            env.add {
                 scheduler(timer)(l)
             }
-            *.remove {
+            env.remove {
                 l.cancel()
             }
         }
