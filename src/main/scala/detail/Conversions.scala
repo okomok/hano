@@ -30,33 +30,6 @@ trait Conversions { self: Seq.type =>
 
 
 private[hano]
-class FromIter[A](_1: Iter[A]) extends Seq[A] {
-    override def context = Self
-
-    override def forloop(f: Reaction[A]) {
-        @volatile var status: Exit.Status = Exit.Success
-        @volatile var isActive = true
-
-        f.enter {
-            Exit { q =>
-                status = Exit.Failure(Exit.ByOther(q))
-                isActive = false
-            }
-        }
-
-        f.applying {
-            val it = _1.ator
-            while (isActive && it.hasNext) {
-                f(it.next)
-            }
-        }
-
-        f.exit(status)
-    }
-}
-
-
-private[hano]
 class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Seq[A] {
     override def context = Self
 

@@ -83,7 +83,10 @@ object listen {
                         }
                     }
                 }
-                f(x)
+
+                f.applying {
+                    f(x)
+                }
             }
             override protected def rawExit(q: Exit.Status) = f.exit(q)
 

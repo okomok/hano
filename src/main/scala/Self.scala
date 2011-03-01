@@ -15,8 +15,16 @@ object Self extends Context {
     override def close() = ()
 
     override def forloop(f: Reaction[Unit]) {
-        f.enter()
-        f()
+        f.enter {
+            Exit { q  =>
+                f.exit(Exit.Failure(Exit.ByOther(q)))
+            }
+        }
+
+        f.applying {
+            f()
+        }
+
         f.exit(Exit.Success)
     }
 }

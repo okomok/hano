@@ -46,9 +46,7 @@ trait Reaction[-A] {
         require(_enter.isDone, "`enter` shall be called before `apply`")
 
         if (_enter.isDone && !_exit.isDone) {
-            applying {
-                rawApply(x)
-            }
+            rawApply(x)
         }
     }
 
