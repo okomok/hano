@@ -223,12 +223,12 @@ trait Seq[+A] {
     /**
      * Calls `k` on the end of sequence.
      */
-    def onEnd(k: => Unit): Seq[A] = new detail.OnEnd(this, () => k)
+    def onSuccess(k: => Unit): Seq[A] = new detail.OnSuccess(this, () => k)
 
     /**
      * Calls `k` on the failure of sequence.
      */
-    def onFailed(k: Throwable => Unit): Seq[A] = new detail.OnFailed(this, k)
+    def onFailure(k: Throwable => Unit): Seq[A] = new detail.OnFailure(this, k)
 
     /**
      * Loops with evaluating `f`.

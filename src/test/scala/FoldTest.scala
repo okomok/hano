@@ -70,7 +70,7 @@ class FoldTest extends org.scalatest.junit.JUnit3Suite {
         val xs = hano.async.loop.pull(Seq.empty[Int])
         var s: Throwable = null
         intercept[NoSuchElementException] {
-            xs reduceLeft { (a, x) => a + x } onFailed { t => s = t } await()
+            xs reduceLeft { (a, x) => a + x } onFailure { t => s = t } await()
         }
         assert(s.isInstanceOf[NoSuchElementException])
     }

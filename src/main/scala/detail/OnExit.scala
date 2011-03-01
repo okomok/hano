@@ -16,7 +16,7 @@ class OnExit[A](_1: Seq[A], _2: Exit.Status => Unit) extends SeqProxy[A] {
 
 
 private[hano]
-class OnEnd[A](_1: Seq[A], _2: () => Unit) extends SeqProxy[A] {
+class OnSuccess[A](_1: Seq[A], _2: () => Unit) extends SeqProxy[A] {
     override val self = _1.onExit {
         case Exit.Success => _2()
         case _ => ()
@@ -24,7 +24,7 @@ class OnEnd[A](_1: Seq[A], _2: () => Unit) extends SeqProxy[A] {
 }
 
 private[hano]
-class OnFailed[A](_1: Seq[A], _2: Throwable => Unit) extends SeqProxy[A] {
+class OnFailure[A](_1: Seq[A], _2: Throwable => Unit) extends SeqProxy[A] {
     override val self = _1.onExit {
         case Exit.Failure(t) => _2(t)
         case _ => ()

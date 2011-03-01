@@ -32,9 +32,9 @@ class OnExitTest extends org.scalatest.junit.JUnit3Suite {
 
             xs onEach { x =>
                 out :+= x
-            } onEnd {
+            } onSuccess {
                 out :+= 99
-            } onFailed { t =>
+            } onFailure { t =>
                 println("something bad happens: " + t)
             } await()
 
