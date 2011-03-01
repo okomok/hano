@@ -9,20 +9,19 @@ package hano
 package detail
 
 
-private[hano]
+@annotation.visibleForTesting
 final class Modification(msg: => String) {
     @volatile private[this] var _ing: Thread = null
 
     def apply[A](body: => A): A = {
-        if (_ing eq null) {
-            _ing = Thread.currentThread()
-        }
+        val cur = Thread.currentThread()
 
-        if (_ing ne Thread.currentThread()) {
+        if ((_ing ne null) && (_ing ne cur)) {
             throw new java.util.ConcurrentModificationException(msg) with SeriousException
         }
+
         try {
-            _ing = Thread.currentThread()
+            _ing = cur
             body
         } finally {
             _ing = null
