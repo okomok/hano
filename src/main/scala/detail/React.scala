@@ -18,7 +18,8 @@ class React[A](_1: Seq[A], _2: () => Reaction[A]) extends SeqAdapter.Of[A](_1) {
             Reaction(
                 p => { _g.enter(p); f.enter(p) },
                 x => { _g(x); f(x) },
-                q => { _g.exit(q); f.exit(q) }
+                // Force to enter f, for _g may exit the reaction tree.
+                q => { _g.exit(q); f.enter(); f.exit(q) }
             )
         }
     }
@@ -31,7 +32,7 @@ class React[A](_1: Seq[A], _2: () => Reaction[A]) extends SeqAdapter.Of[A](_1) {
             Reaction(
                 p => { _g.enter(p); _f.enter(p) },
                 x => { _g(x); _f(x) },
-                q => { _g.exit(q); _f.exit(q) }
+                q => { _g.exit(q); _f.enter(); _f.exit(q) }
             )
         }
     }

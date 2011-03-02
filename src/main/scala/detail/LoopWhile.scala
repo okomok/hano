@@ -28,10 +28,8 @@ private[hano]
 class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) extends SeqAdapter.Of[A](_1) {
     //assert(_1.context ne Self)
 
-    case class IsActive(var _var: Boolean, id: Int)
-
     override def forloop(f: Reaction[A]) {
-        @volatile var status = Exit.Success.asStatus
+        //@volatile var status = Exit.Success.asStatus
         @volatile var isActive = true
 
         def rec() {
