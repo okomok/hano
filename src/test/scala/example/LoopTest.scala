@@ -3,7 +3,7 @@ package com.github.okomok.hanotest.example
 import com.github.okomok.hano
 
 /**
- * `loop` cycles a sequence until closed.
+ * `loop` cycles a sequence until break-ed.
  */
 class LoopTest extends org.scalatest.junit.JUnit3Suite {
 

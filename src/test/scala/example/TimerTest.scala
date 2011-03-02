@@ -14,7 +14,7 @@ class TimerTest extends org.scalatest.junit.JUnit3Suite {
         // Prepare a `Timer` in a daemon thread.
         val t = new hano.Timer(true)
 
-        // `schedule` method creates a closeable infinite sequence of the `Unit`s.
+        // `schedule` method creates a breakable infinite sequence of the `Unit`s.
         val us: hano.Seq[Unit] = t.schedule(0, 1000)
 
         // Replace the `Unit`s with `Stream` elements.
