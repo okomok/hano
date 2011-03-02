@@ -29,7 +29,7 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
     //assert(_1.context ne Self)
 
     override def forloop(f: Reaction[A]) {
-        //@volatile var status = Exit.Success.asStatus
+        @volatile var status = Exit.Success.asStatus
         @volatile var isActive = true
 
         def rec() {
@@ -37,6 +37,7 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
                 f.enter {
                     Exit { q =>
                         p(q)
+                        status = Exit.Failure(Exit.ByOther(q))
                         isActive = false
                     }
                 }
@@ -45,13 +46,15 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
                 }
             } onEach { x =>
                 f.beforeExit {
-                    var i = 0
-                    while (isActive && (i != grainSize)) {
-                        i += 1
-                        f(x)
+                    f.applying {
+                        var i = 0
+                        while (isActive && (i != grainSize)) {
+                            i += 1
+                            f(x)
+                        }
                     }
                     if (!isActive) {
-                        f.exit(Exit.Failure(break.Control))
+                        f.exit(status)
                     }
                 }
             } onExit { q =>

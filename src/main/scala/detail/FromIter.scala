@@ -17,18 +17,24 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
         @volatile var status = Exit.Success.asStatus
         @volatile var isActive = true
 
+        var it: Iterator[A] = null
+
         f.enter {
             Exit { q =>
                 status = Exit.Failure(Exit.ByOther(q))
                 isActive = false
             }
         } applying {
-            val it = _1.ator
+            it = _1.ator
             while (isActive && it.hasNext) {
                 f(it.next)
             }
         } exit {
-            status
+            if (it.hasNext) {
+                status
+            } else {
+                Exit.Success
+            }
         }
     }
 }

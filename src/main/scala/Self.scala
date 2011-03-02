@@ -15,16 +15,12 @@ object Self extends Context {
     override def close() = ()
 
     override def forloop(f: Reaction[Unit]) {
-        @volatile var status = Exit.Success.asStatus
-
         f.enter {
-            Exit { q  =>
-                status = Exit.Failure(Exit.ByOther(q))
-            }
+            Exit.Empty
         } applying {
             f()
         } exit {
-            status
+            Exit.Success
         }
     }
 }

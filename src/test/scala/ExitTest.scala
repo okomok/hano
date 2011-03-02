@@ -19,7 +19,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
         for (x <- hano.async.loop.onExit {
-            case hano.Exit.Failure(hano.break.Control) => c.countDown
+            case hano.Exit.Failure(hano.Exit.ByOther(hano.Exit.Success)) => c.countDown
             case _ => ()
         }.pull(0 until 10)) {
             a.add(x)
