@@ -15,7 +15,10 @@ case class Fail(why: Throwable) extends Seq[Nothing] {
     override def context = Self
 
     override def forloop(f: Reaction[Nothing]) {
-        f.enter()
-        f.exit(Exit.Failure(why))
+        f.enter {
+            Exit.Empty
+        } exit {
+            Exit.Failure(why)
+        }
     }
 }
