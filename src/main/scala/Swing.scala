@@ -53,7 +53,7 @@ object Swing {
 
     case class Ancestor(source: JComponent) {
 
-        private class Event extends EdtListener[AncestorEvent] {
+        object Event extends EdtListener[AncestorEvent] {
             override protected def listen(env: Env) {
                 val l = new AncestorAdapter {
                     override def ancestorAdded(e: AncestorEvent) = env(e)
@@ -64,9 +64,8 @@ object Swing {
                 env.remove { source.removeAncestorListener(l) }
             }
         }
-        def Event: Seq[AncestorEvent] = new Event
 
-        private class Added extends EdtListener[AncestorEvent] {
+        object Added extends EdtListener[AncestorEvent] {
             override protected def listen(env: Env) {
                 val l = new AncestorAdapter {
                     override def ancestorAdded(e: AncestorEvent) = env(e)
@@ -75,9 +74,8 @@ object Swing {
                 env.remove { source.removeAncestorListener(l) }
             }
         }
-        def Added: Seq[AncestorEvent] = new Added
 
-        private class Moved extends EdtListener[AncestorEvent] {
+        object Moved extends EdtListener[AncestorEvent] {
             override protected def listen(env: Env) {
                 val l = new AncestorAdapter {
                     override def ancestorMoved(e: AncestorEvent) = env(e)
@@ -86,9 +84,8 @@ object Swing {
                 env.remove { source.removeAncestorListener(l) }
             }
         }
-        def Moved: Seq[AncestorEvent] = new Moved
 
-        private class Removed extends EdtListener[AncestorEvent] {
+        object Removed extends EdtListener[AncestorEvent] {
             override protected def listen(env: Env) {
                 val l = new AncestorAdapter {
                     override def ancestorRemoved(e: AncestorEvent) = env(e)
@@ -97,7 +94,6 @@ object Swing {
                 env.remove { source.removeAncestorListener(l) }
             }
         }
-        def Removed: Seq[AncestorEvent] = new Removed
 
     }
 
@@ -128,7 +124,7 @@ object Swing {
 
     case class Component(source: AComponent) {
 
-        private class Event extends EdtListener[ComponentEvent] {
+        object Event extends EdtListener[ComponentEvent] {
             override protected def listen(env: Env) {
                 val l = new ComponentAdapter {
                     override def componentHidden(e: ComponentEvent) = env(e)
@@ -140,9 +136,8 @@ object Swing {
                 env.remove { source.removeComponentListener(l) }
             }
         }
-        def Event: Seq[ComponentEvent] = new Event
 
-        private class Hidden extends EdtListener[ComponentEvent] {
+        object Hidden extends EdtListener[ComponentEvent] {
             override protected def listen(env: Env) {
                 val l = new ComponentAdapter {
                     override def componentHidden(e: ComponentEvent) = env(e)
@@ -151,9 +146,8 @@ object Swing {
                 env.remove { source.removeComponentListener(l) }
             }
         }
-        def Hidden: Seq[ComponentEvent] = new Hidden
 
-        private class Moved extends EdtListener[ComponentEvent] {
+        object Moved extends EdtListener[ComponentEvent] {
             override protected def listen(env: Env) {
                 val l = new ComponentAdapter {
                     override def componentMoved(e: ComponentEvent) = env(e)
@@ -162,9 +156,8 @@ object Swing {
                 env.remove { source.removeComponentListener(l) }
             }
         }
-        def Moved: Seq[ComponentEvent] = new Moved
 
-        private class Resized extends EdtListener[ComponentEvent] {
+        object Resized extends EdtListener[ComponentEvent] {
             override protected def listen(env: Env) {
                 val l = new ComponentAdapter {
                     override def componentResized(e: ComponentEvent) = env(e)
@@ -173,9 +166,8 @@ object Swing {
                 env.remove { source.removeComponentListener(l) }
             }
         }
-        def Resized: Seq[ComponentEvent] = new Resized
 
-        private class Shown extends EdtListener[ComponentEvent] {
+        object Shown extends EdtListener[ComponentEvent] {
             override protected def listen(env: Env) {
                 val l = new ComponentAdapter {
                     override def componentShown(e: ComponentEvent) = env(e)
@@ -184,7 +176,6 @@ object Swing {
                 env.remove { source.removeComponentListener(l) }
             }
         }
-        def Shown: Seq[ComponentEvent] = new Shown
     }
 
 
@@ -194,7 +185,7 @@ object Swing {
 
     case class Container(source: AContainer) {
 
-        private class Event extends EdtListener[ContainerEvent] {
+        object Event extends EdtListener[ContainerEvent] {
             override protected def listen(env: Env) {
                 val l = new ContainerAdapter {
                     override def componentAdded(e: ContainerEvent) = env(e)
@@ -204,9 +195,8 @@ object Swing {
                 env.remove { source.removeContainerListener(l) }
             }
         }
-        def Event: Seq[ContainerEvent] = new Event
 
-        private class Added extends EdtListener[ContainerEvent] {
+        object Added extends EdtListener[ContainerEvent] {
             override protected def listen(env: Env) {
                 val l = new ContainerAdapter {
                     override def componentAdded(e: ContainerEvent) = env(e)
@@ -215,9 +205,8 @@ object Swing {
                 env.remove { source.removeContainerListener(l) }
             }
         }
-        def Added: Seq[ContainerEvent] = new Added
 
-        private class Removed extends EdtListener[ContainerEvent] {
+        object Removed extends EdtListener[ContainerEvent] {
             override protected def listen(env: Env) {
                 val l = new ContainerAdapter {
                     override def componentRemoved(e: ContainerEvent) = env(e)
@@ -226,7 +215,6 @@ object Swing {
                 env.remove { source.removeContainerListener(l) }
             }
         }
-        def Removed: Seq[ContainerEvent] = new Removed
 
     }
 
@@ -237,7 +225,7 @@ object Swing {
 
     case class Focus(source: AComponent) {
 
-        private class Event extends EdtListener[FocusEvent] {
+        object Event extends EdtListener[FocusEvent] {
             override protected def listen(env: Env) {
                 val l = new FocusAdapter {
                     override def focusGained(e: FocusEvent) = env(e)
@@ -247,9 +235,8 @@ object Swing {
                 env.remove { source.removeFocusListener(l) }
             }
         }
-        def Event: Seq[FocusEvent] = new Event
 
-        private class Gained extends EdtListener[FocusEvent] {
+        object Gained extends EdtListener[FocusEvent] {
             override protected def listen(env: Env) {
                 val l = new FocusAdapter {
                     override def focusGained(e: FocusEvent) = env(e)
@@ -258,9 +245,8 @@ object Swing {
                 env.remove { source.removeFocusListener(l) }
             }
         }
-        def Gained: Seq[FocusEvent] = new Gained
 
-        private class Lost extends EdtListener[FocusEvent] {
+        object Lost extends EdtListener[FocusEvent] {
             override protected def listen(env: Env) {
                 val l = new FocusAdapter {
                     override def focusLost(e: FocusEvent) = env(e)
@@ -269,7 +255,6 @@ object Swing {
                 env.remove { source.removeFocusListener(l) }
             }
         }
-        def Lost: Seq[FocusEvent] = new Lost
 
     }
 
@@ -280,7 +265,7 @@ object Swing {
 
     case class Hierarchy(source: AComponent) {
 
-        private class Changed extends EdtListener[HierarchyEvent] {
+        object Changed extends EdtListener[HierarchyEvent] {
             override protected def listen(env: Env) {
                 val l = new HierarchyListener {
                     override def hierarchyChanged(e: HierarchyEvent) = env(e)
@@ -289,9 +274,8 @@ object Swing {
                 env.remove { source.removeHierarchyListener(l) }
             }
         }
-        def Changed: Seq[HierarchyEvent] = new Changed
 
-        private class Bounds extends EdtListener[HierarchyEvent] {
+        object Bounds extends EdtListener[HierarchyEvent] {
             override protected def listen(env: Env) {
                 val l = new HierarchyBoundsAdapter {
                     override def ancestorMoved(e: HierarchyEvent) = env(e)
@@ -301,9 +285,8 @@ object Swing {
                 env.remove { source.removeHierarchyBoundsListener(l) }
             }
         }
-        def Bounds: Seq[HierarchyEvent] = new Bounds
 
-        private class Moved extends EdtListener[HierarchyEvent] {
+        object Moved extends EdtListener[HierarchyEvent] {
             override protected def listen(env: Env) {
                 val l = new HierarchyBoundsAdapter {
                     override def ancestorMoved(e: HierarchyEvent) = env(e)
@@ -312,9 +295,8 @@ object Swing {
                 env.remove { source.removeHierarchyBoundsListener(l) }
             }
         }
-        def Moved: Seq[HierarchyEvent] = new Moved
 
-        private class Resized extends EdtListener[HierarchyEvent] {
+        object Resized extends EdtListener[HierarchyEvent] {
             override protected def listen(env: Env) {
                 val l = new HierarchyBoundsAdapter {
                     override def ancestorResized(e: HierarchyEvent) = env(e)
@@ -323,7 +305,6 @@ object Swing {
                 env.remove { source.removeHierarchyBoundsListener(l) }
             }
         }
-        def Resized: Seq[HierarchyEvent] = new Resized
 
     }
 
@@ -369,7 +350,7 @@ object Swing {
 
     case class InputMethod(source: AComponent) {
 
-        private class Event extends EdtListener[InputMethodEvent] {
+        object Event extends EdtListener[InputMethodEvent] {
             override protected def listen(env: Env) {
                 val l = new InputMethodAdapter {
                         override def caretPositionChanged(e: InputMethodEvent) = env(e)
@@ -379,9 +360,8 @@ object Swing {
                 env.remove { source.removeInputMethodListener(l) }
             }
         }
-        def Event: Seq[InputMethodEvent] = new Event
 
-        private class CaretPositionChanged extends EdtListener[InputMethodEvent] {
+        object CaretPositionChanged extends EdtListener[InputMethodEvent] {
             override protected def listen(env: Env) {
                 val l = new InputMethodAdapter {
                     override def caretPositionChanged(e: InputMethodEvent) = env(e)
@@ -390,9 +370,8 @@ object Swing {
                 env.remove { source.removeInputMethodListener(l) }
             }
         }
-        def CaretPositionChanged: Seq[InputMethodEvent] = new CaretPositionChanged
 
-        private class TextChanged extends EdtListener[InputMethodEvent] {
+        object TextChanged extends EdtListener[InputMethodEvent] {
             override protected def listen(env: Env) {
                 val l = new InputMethodAdapter {
                     override def inputMethodTextChanged(e: InputMethodEvent) = env(e)
@@ -401,7 +380,6 @@ object Swing {
                 env.remove { source.removeInputMethodListener(l) }
             }
         }
-        def TextChanged: Seq[InputMethodEvent] = new TextChanged
 
     }
 
@@ -432,7 +410,7 @@ object Swing {
 
     case class Key(source: AComponent) {
 
-        private class Event extends EdtListener[KeyEvent] {
+        object Event extends EdtListener[KeyEvent] {
             override protected def listen(env: Env) {
                 val l = new KeyAdapter {
                     override def keyPressed(e: KeyEvent) = env(e)
@@ -443,9 +421,8 @@ object Swing {
                 env.remove { source.removeKeyListener(l) }
             }
         }
-        def Event: Seq[KeyEvent] = new Event
 
-        private class Pressed extends EdtListener[KeyEvent] {
+        object Pressed extends EdtListener[KeyEvent] {
             override protected def listen(env: Env) {
                 val l = new KeyAdapter {
                     override def keyPressed(e: KeyEvent) = env(e)
@@ -454,9 +431,8 @@ object Swing {
                 env.remove { source.removeKeyListener(l) }
             }
         }
-        def Pressed: Seq[KeyEvent] = new Pressed
 
-        private class Released extends EdtListener[KeyEvent] {
+        object Released extends EdtListener[KeyEvent] {
             override protected def listen(env: Env) {
                 val l = new KeyAdapter {
                     override def keyReleased(e: KeyEvent) = env(e)
@@ -465,9 +441,8 @@ object Swing {
                 env.remove { source.removeKeyListener(l) }
             }
         }
-        def Released: Seq[KeyEvent] = new Released
 
-        private class Typed extends EdtListener[KeyEvent] {
+        object Typed extends EdtListener[KeyEvent] {
             override protected def listen(env: Env) {
                 val l = new KeyAdapter {
                     override def keyTyped(e: KeyEvent) = env(e)
@@ -476,7 +451,6 @@ object Swing {
                 env.remove { source.removeKeyListener(l) }
             }
         }
-        def Typed: Seq[KeyEvent] = new Typed
 
     }
 
@@ -498,7 +472,7 @@ object Swing {
 
     case class Menu(source: MenuEventSource) {
 
-        private class Event extends EdtListener[MenuEvent] {
+        object Event extends EdtListener[MenuEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuAdapter {
                     override def menuCanceled(e: MenuEvent) = env(e)
@@ -509,9 +483,8 @@ object Swing {
                 env.remove { source.removeMenuListener(l) }
             }
         }
-        def Event: Seq[MenuEvent] = new Event
 
-        private class Canceled extends EdtListener[MenuEvent] {
+        object Canceled extends EdtListener[MenuEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuAdapter {
                     override def menuCanceled(e: MenuEvent) = env(e)
@@ -520,9 +493,8 @@ object Swing {
                 env.remove { source.removeMenuListener(l) }
             }
         }
-        def Canceled: Seq[MenuEvent] = new Canceled
 
-        private class Deselected extends EdtListener[MenuEvent] {
+        object Deselected extends EdtListener[MenuEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuAdapter {
                     override def menuDeselected(e: MenuEvent) = env(e)
@@ -531,9 +503,8 @@ object Swing {
                 env.remove { source.removeMenuListener(l) }
             }
         }
-        def Deselected: Seq[MenuEvent] = new Deselected
 
-        private class Selected extends EdtListener[MenuEvent] {
+        object Selected extends EdtListener[MenuEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuAdapter {
                     override def menuSelected(e: MenuEvent) = env(e)
@@ -542,7 +513,6 @@ object Swing {
                 env.remove { source.removeMenuListener(l) }
             }
         }
-        def Selected: Seq[MenuEvent] = new Selected
 
     }
 
@@ -565,7 +535,7 @@ object Swing {
 
     case class MenuDragMouse(source: MenuDragMouseEventSource) {
 
-        private class Event extends EdtListener[MenuDragMouseEvent] {
+        object Event extends EdtListener[MenuDragMouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuDragMouseAdapter {
                     override def menuDragMouseDragged(e: MenuDragMouseEvent) = env(e)
@@ -577,9 +547,8 @@ object Swing {
                 env.remove { source.removeMenuDragMouseListener(l) }
             }
         }
-        def Event: Seq[MenuDragMouseEvent] = new Event
 
-        private class Dragged extends EdtListener[MenuDragMouseEvent] {
+        object Dragged extends EdtListener[MenuDragMouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuDragMouseAdapter {
                     override def menuDragMouseDragged(e: MenuDragMouseEvent) = env(e)
@@ -588,9 +557,8 @@ object Swing {
                 env.remove { source.removeMenuDragMouseListener(l) }
             }
         }
-        def Dragged: Seq[MenuDragMouseEvent] = new Dragged
 
-        private class Entered extends EdtListener[MenuDragMouseEvent] {
+        object Entered extends EdtListener[MenuDragMouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuDragMouseAdapter {
                     override def menuDragMouseEntered(e: MenuDragMouseEvent) = env(e)
@@ -599,9 +567,8 @@ object Swing {
                 env.remove { source.removeMenuDragMouseListener(l) }
             }
         }
-        def Entered: Seq[MenuDragMouseEvent] = new Entered
 
-        private class Exited extends EdtListener[MenuDragMouseEvent] {
+        object Exited extends EdtListener[MenuDragMouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuDragMouseAdapter {
                     override def menuDragMouseExited(e: MenuDragMouseEvent) = env(e)
@@ -610,9 +577,8 @@ object Swing {
                 env.remove { source.removeMenuDragMouseListener(l) }
             }
         }
-        def Exited: Seq[MenuDragMouseEvent] = new Exited
 
-        private class Released extends EdtListener[MenuDragMouseEvent] {
+        object Released extends EdtListener[MenuDragMouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuDragMouseAdapter {
                     override def menuDragMouseReleased(e: MenuDragMouseEvent) = env(e)
@@ -621,7 +587,6 @@ object Swing {
                 env.remove { source.removeMenuDragMouseListener(l) }
             }
         }
-        def Released: Seq[MenuDragMouseEvent] = new Released
 
     }
 
@@ -643,7 +608,7 @@ object Swing {
 
     case class MenuKey(source: MenuKeyEventSource) {
 
-        private class Event extends EdtListener[MenuKeyEvent] {
+        object Event extends EdtListener[MenuKeyEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuKeyAdapter {
                     override def menuKeyPressed(e: MenuKeyEvent) = env(e)
@@ -654,9 +619,8 @@ object Swing {
                 env.remove { source.removeMenuKeyListener(l) }
             }
         }
-        def Event: Seq[MenuKeyEvent] = new Event
 
-        private class Pressed extends EdtListener[MenuKeyEvent] {
+        object Pressed extends EdtListener[MenuKeyEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuKeyAdapter {
                     override def menuKeyPressed(e: MenuKeyEvent) = env(e)
@@ -665,9 +629,8 @@ object Swing {
                 env.remove { source.removeMenuKeyListener(l) }
             }
         }
-        def Pressed: Seq[MenuKeyEvent] = new Pressed
 
-        private class Released extends EdtListener[MenuKeyEvent] {
+        object Released extends EdtListener[MenuKeyEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuKeyAdapter {
                     override def menuKeyReleased(e: MenuKeyEvent) = env(e)
@@ -676,9 +639,8 @@ object Swing {
                 env.remove { source.removeMenuKeyListener(l) }
             }
         }
-        def Released: Seq[MenuKeyEvent] = new Released
 
-        private class Typed extends EdtListener[MenuKeyEvent] {
+        object Typed extends EdtListener[MenuKeyEvent] {
             override protected def listen(env: Env) {
                 val l = new MenuKeyAdapter {
                     override def menuKeyTyped(e: MenuKeyEvent) = env(e)
@@ -687,7 +649,6 @@ object Swing {
                 env.remove { source.removeMenuKeyListener(l) }
             }
         }
-        def Typed: Seq[MenuKeyEvent] = new Typed
 
     }
 
@@ -699,7 +660,7 @@ object Swing {
 
     case class Mouse(source: AComponent) {
 
-        private class Event extends EdtListener[MouseEvent] {
+        object Event extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseClicked(e: MouseEvent) = env(e)
@@ -712,9 +673,8 @@ object Swing {
                 env.remove { source.removeMouseListener(l) }
             }
         }
-        def Event: Seq[MouseEvent] = new Event
 
-        private class Clicked extends EdtListener[MouseEvent] {
+        object Clicked extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseClicked(e: MouseEvent) = env(e)
@@ -723,9 +683,8 @@ object Swing {
                 env.remove { source.removeMouseListener(l) }
             }
         }
-        def Clicked: Seq[MouseEvent] = new Clicked
 
-        private class Entered extends EdtListener[MouseEvent] {
+        object Entered extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseEntered(e: MouseEvent) = env(e)
@@ -734,9 +693,8 @@ object Swing {
                 env.remove { source.removeMouseListener(l) }
             }
         }
-        def Entered: Seq[MouseEvent] = new Entered
 
-        private class Exited extends EdtListener[MouseEvent] {
+        object Exited extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseExited(e: MouseEvent) = env(e)
@@ -745,9 +703,8 @@ object Swing {
                 env.remove { source.removeMouseListener(l) }
             }
         }
-        def Exited: Seq[MouseEvent] = new Exited
 
-        private class Pressed extends EdtListener[MouseEvent] {
+        object Pressed extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mousePressed(e: MouseEvent) = env(e)
@@ -756,9 +713,8 @@ object Swing {
                 env.remove { source.removeMouseListener(l) }
             }
         }
-        def Pressed: Seq[MouseEvent] = new Pressed
 
-        private class Released extends EdtListener[MouseEvent] {
+        object Released extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseReleased(e: MouseEvent) = env(e)
@@ -767,11 +723,10 @@ object Swing {
                 env.remove { source.removeMouseListener(l) }
             }
         }
-        def Released: Seq[MouseEvent] = new Released
 
         // Motion MouseEvent
 
-        private class Motion extends EdtListener[MouseEvent] {
+        object Motion extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseDragged(e: MouseEvent) = env(e)
@@ -781,9 +736,8 @@ object Swing {
                 env.remove { source.removeMouseMotionListener(l) }
             }
         }
-        def Motion: Seq[MouseEvent] = new Motion
 
-        private class Dragged extends EdtListener[MouseEvent] {
+        object Dragged extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseDragged(e: MouseEvent) = env(e)
@@ -792,9 +746,8 @@ object Swing {
                 env.remove { source.removeMouseMotionListener(l) }
             }
         }
-        def Dragged: Seq[MouseEvent] = new Dragged
 
-        private class Moved extends EdtListener[MouseEvent] {
+        object Moved extends EdtListener[MouseEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseMoved(e: MouseEvent) = env(e)
@@ -803,11 +756,10 @@ object Swing {
                 env.remove { source.removeMouseMotionListener(l) }
             }
         }
-        def Moved: Seq[MouseEvent] = new Moved
 
         // MouseWheelEvent
 
-        private class WheelMoved extends EdtListener[MouseWheelEvent] {
+        object WheelMoved extends EdtListener[MouseWheelEvent] {
             override protected def listen(env: Env) {
                 val l = new MouseInputAdapter {
                     override def mouseWheelMoved(e: MouseWheelEvent) = env(e)
@@ -816,7 +768,6 @@ object Swing {
                 env.remove { source.removeMouseWheelListener(l) }
             }
         }
-        def WheelMoved: Seq[MouseEvent] = new WheelMoved
 
     }
 
@@ -838,7 +789,7 @@ object Swing {
 
     case class PopupMenu(source: PopupMenuEventSource) {
 
-        private class Event extends EdtListener[PopupMenuEvent] {
+        object Event extends EdtListener[PopupMenuEvent] {
             override protected def listen(env: Env) {
                 val l = new PopupMenuAdapter {
                     override def popupMenuCanceled(e: PopupMenuEvent) = env(e)
@@ -849,9 +800,8 @@ object Swing {
                 env.remove { source.removePopupMenuListener(l) }
             }
         }
-        def Event: Seq[PopupMenuEvent] = new Event
 
-        private class Canceled extends EdtListener[PopupMenuEvent] {
+        object Canceled extends EdtListener[PopupMenuEvent] {
             override protected def listen(env: Env) {
                 val l = new PopupMenuAdapter {
                     override def popupMenuCanceled(e: PopupMenuEvent) = env(e)
@@ -860,9 +810,8 @@ object Swing {
                 env.remove { source.removePopupMenuListener(l) }
             }
         }
-        def Canceled: Seq[PopupMenuEvent] = new Canceled
 
-        private class WillBecomeInvisible extends EdtListener[PopupMenuEvent] {
+        object WillBecomeInvisible extends EdtListener[PopupMenuEvent] {
             override protected def listen(env: Env) {
                 val l = new PopupMenuAdapter {
                     override def popupMenuWillBecomeVisible(e: PopupMenuEvent) = env(e)
@@ -871,9 +820,8 @@ object Swing {
                 env.remove { source.removePopupMenuListener(l) }
             }
         }
-        def WillBecomeInvisible: Seq[PopupMenuEvent] = new WillBecomeInvisible
 
-        private class WillBecomeVisible extends EdtListener[PopupMenuEvent] {
+        object WillBecomeVisible extends EdtListener[PopupMenuEvent] {
             override protected def listen(env: Env) {
                 val l = new PopupMenuAdapter {
                     override def popupMenuWillBecomeVisible(e: PopupMenuEvent) = env(e)
@@ -882,7 +830,6 @@ object Swing {
                 env.remove { source.removePopupMenuListener(l) }
             }
         }
-        def WillBecomeVisible: Seq[PopupMenuEvent] = new WillBecomeVisible
 
     }
 
