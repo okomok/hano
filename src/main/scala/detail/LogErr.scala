@@ -11,13 +11,16 @@ package detail
 
 private[hano]
 object LogErr {
-    def apply(t: Throwable, msg: Any) {
+    def apply(t: Throwable, msg: Any, rethrow: Boolean = false) {
         val d = new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date())
         java.lang.System.err.println("[hano][" + msg + "]["+ d + "] " + t)
         t match {
-            case _: java.lang.Error => t.printStackTrace()
-            case _: SeriousException => t.printStackTrace()
-            case _: IllegalArgumentException => t.printStackTrace()
+            case SeriousError(t) => {
+                t.printStackTrace()
+                if (rethrow) {
+                    throw t
+                }
+            }
             case _ => ()
         }
     }

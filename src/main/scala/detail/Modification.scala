@@ -17,7 +17,7 @@ final class Modification(msg: => String) {
         val cur = Thread.currentThread()
 
         if ((_ing ne null) && (_ing ne cur)) {
-            throw new java.util.ConcurrentModificationException(msg) with SeriousException
+            throw new java.util.ConcurrentModificationException(msg)
         }
 
         try {

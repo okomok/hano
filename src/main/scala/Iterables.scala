@@ -20,7 +20,7 @@ object Iterables {
     /**
      * The dual of foldRight
      */
-    def unfold[A, B](z: A)(op: A => Option[(B, A)]): Iterable[B] = new Unfold(z, op)
+    def unfold[A, B](z: A)(op: A => Option[(B, A)]): Iterable[B] = new Unfold(z, op).view
 
     /**
      * Creates an infinite iterator that repeatedly applies a given function to the previous result.

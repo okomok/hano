@@ -66,7 +66,7 @@ trait Reaction[-A] {
             } catch {
                 case break.Control => ()
                 case t: scala.util.control.ControlThrowable => throw t
-                case t: Throwable => detail.LogErr(t, "aReaction.exit")
+                case t: Throwable => detail.LogErr(t, "aReaction.exit", true)
             }
         }
     }
