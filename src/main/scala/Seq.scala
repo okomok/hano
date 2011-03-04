@@ -341,6 +341,11 @@ trait Seq[+A] {
     def shift(that: Seq[_]): Seq[A] = new detail.Shift(this, that)
 
     /**
+     * `forloop` are invoked in the context of `that`.
+     */
+    def shiftStart(that: Seq[_]): Seq[A] = new detail.ShiftStart(this, that)
+
+    /**
      * Cycles this sequence infinitely.
      */
     @annotation.equivalentTo("loopWhile(true)")
