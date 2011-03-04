@@ -16,7 +16,7 @@ import java.util.{Date, Timer => JTimer, TimerTask}
  */
 final class Timer(isDaemon: Boolean = false) extends Context { outer =>
     private[this] val timer = new JTimer(isDaemon)
-    private[this] val zero = new detail.ZeroDelay
+    private[this] val now = new detail.Now
 
     override def close() = timer.cancel()
 
@@ -31,7 +31,7 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
             }
         }
 
-        timer.schedule(l, zero())
+        timer.schedule(l, now())
     }
 
     private class Schedule(scheduler: JTimer => TimerTask => Unit) extends listen.To[Unit] {

@@ -45,6 +45,7 @@ class TimerContextTest extends org.scalatest.junit.JUnit3Suite {
             t eval { out.add(2) }
             t eval { out.add(3) }
             t eval { out.add(4) }
+            Thread.sleep(100)
             t eval { out.add(5) }
             Thread.sleep(100)
             expect(hano.Iter.from(0 until 6))(hano.Iter.from(out))
