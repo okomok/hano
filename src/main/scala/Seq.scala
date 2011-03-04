@@ -310,7 +310,7 @@ trait Seq[+A] {
     /**
      * Attach a resource.
      */
-    def using(c: java.io.Closeable): Seq[A] = new detail.Using(this, c)
+    def using(c: => java.io.Closeable): Seq[A] = new detail.Using(this, () => c)
 
     /**
      * Retrieves adjacent sequences.

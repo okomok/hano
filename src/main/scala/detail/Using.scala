@@ -10,20 +10,17 @@ package detail
 
 
 private[hano]
-class Using[A](_1: Seq[A], _2: java.io.Closeable) extends SeqProxy[A] {
-    override val self = {
-        _1 catching {
-            case t => {
-                try {
-                    _2.close()
-                } catch {
-                    case s: Exception => /*t.addSuppressedException(s)*/
-                } finally {
-                    throw t
-                }
-            }
-        } onExit { _ =>
-            _2.close()
-        }
+class Using[A](_1: Seq[A], _2: () => java.io.Closeable) extends SeqAdapter.Of[A](_1) {
+    override def forloop(f: Reaction[A]) {
+        val c = _2()
+
+        _1.onEnter {
+            f.enter(_)
+        } onEach {
+            f(_)
+        } onExit { q =>
+            c.close()
+            f.exit(q)
+        } start()
     }
 }
