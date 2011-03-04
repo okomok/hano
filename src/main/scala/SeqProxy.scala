@@ -95,7 +95,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def isEmpty: Seq[Boolean] = around(self.isEmpty)
     override def length: Seq[Int] = around(self.length)
     override def head: Seq[A] = around(self.head)
-    override def last: Seq[A] = around(self.head)
+    override def last: Seq[A] = around(self.last)
     override def nth(n: Int): Seq[A] = around(self.nth(n))
     override def find(p: A => Boolean): Seq[A] = around(self.find(p))
     override def forall(p: A => Boolean): Seq[Boolean] = around(self.forall(p))

@@ -9,9 +9,6 @@ package hano
 package detail
 
 
-import java.util.Date
-
-
 private[hano]
 class ZipWith[A, B](_1: Seq[A], _2: Iter[B]) extends SeqAdapter.Of[(A, B)](_1) {
     override def forloop(f: Reaction[(A, B)]) {
@@ -31,20 +28,6 @@ class ZipWith[A, B](_1: Seq[A], _2: Iter[B]) extends SeqAdapter.Of[(A, B)](_1) {
                     }
                 }
             }
-        } onExit {
-            f.exit(_)
-        } start()
-    }
-}
-
-
-private[hano]
-class ZipWithTime[A](_1: Seq[A]) extends SeqAdapter.Of[(A, Date)](_1) {
-    override def forloop(f: Reaction[(A, Date)]) {
-        _1.onEnter {
-            f.enter(_)
-        } onEach { x =>
-            f((x, new Date))
         } onExit {
             f.exit(_)
         } start()

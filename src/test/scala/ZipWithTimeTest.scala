@@ -18,8 +18,8 @@ class ZipWithTimeTest extends org.scalatest.junit.JUnit3Suite {
         s.pull(Stream.iterate(0)(_ + 1))
     }
 
-    def testTrivial {
-        naturals.zipWith(Iterator.continually(new java.util.Date)).take(10).onEach { x =>
+    def teztTrivial {
+        naturals.zipWith(hano.Iterators.currentDate).take(10).onEach { x =>
             println(x)
         } start()
     }
