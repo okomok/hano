@@ -363,7 +363,7 @@ trait Seq[+A] {
     def option: Seq[Option[A]] = new detail._Option(this)
 
     /**
-     * Turns into never-fail sequence.
+     * Turns into never-fail sequence. REMOVE ME.
      */
     def options: Seq[Option[A]] = new detail.Options(this)
 
@@ -396,6 +396,10 @@ trait Seq[+A] {
     def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = new detail.FoldLeft(this, z, op)
 
     def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = new detail.ReduceLeft(this, op)
+
+    def min[B >: A](implicit ord: Ordering[B]): Seq[B] = new detail.Min[B](this, ord)
+
+    def max[B >: A](implicit ord: Ordering[B]): Seq[B] = new detail.Max[B](this, ord)
 
     final def /:[B](z: B)(op: (B, A) => B): Seq[B] = foldLeft(z)(op)
 

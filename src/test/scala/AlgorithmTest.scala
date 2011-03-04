@@ -181,6 +181,20 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
         expect(false)(v())
     }
 
+    def testMin {
+        val xs = hano.async.loop.pull(Seq(8,5,1,2,10,4,3,9))
+        val v = new hano.Val[Int]
+        v := xs.min
+        expect(1)(v())
+    }
+
+    def testMax {
+        val xs = hano.async.loop.pull(Seq(8,5,1,2,10,4,3,9))
+        val v = new hano.Val[Int]
+        v := xs.max
+        expect(10)(v())
+    }
+
 
 /* hmmmmmm....
     def testCopy {
