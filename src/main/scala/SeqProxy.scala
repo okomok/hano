@@ -90,6 +90,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def noSuccess: Seq[A] = around(self.noSuccess)
     override def once: Seq[A] = around(self.once)
     override def option: Seq[Option[A]] = around(self.option)
+    override def orElse[B >: A](default: => B): Seq[B] = around(self.orElse(default))
     override def options: Seq[Option[A]] = around(self.options)
     override def eithers: Seq[Either[Exit.Status, A]] = around(self.eithers)
     override def isEmpty: Seq[Boolean] = around(self.isEmpty)

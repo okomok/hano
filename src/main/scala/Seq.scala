@@ -367,6 +367,11 @@ trait Seq[+A] {
     def option: Seq[Option[A]] = new detail._Option(this)
 
     /**
+     * Turns an algorithm into a default value form.
+     */
+    def orElse[B >: A](default: => B): Seq[B] = new detail.OrElse[B](this, () => default)
+
+    /**
      * Turns into never-fail sequence. REMOVE ME.
      */
     def options: Seq[Option[A]] = new detail.Options(this)

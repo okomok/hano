@@ -195,6 +195,14 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
         expect(10)(v())
     }
 
+    def testOrElse {
+        val xs = hano.async.loop.pull(Seq[Int]())
+        val v = new hano.Val[Int]
+        v := xs.max.orElse(10)
+        expect(10)(v())
+    }
+
+
 
 /* hmmmmmm....
     def testCopy {
