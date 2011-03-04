@@ -10,23 +10,6 @@ package detail
 
 
 private[hano]
-class Last[A](_1: Seq[A]) extends SeqAdapter.Of[A](_1) {
-    override def forloop(f: Reaction[A]) {
-        var acc: Option[A] = None
-
-        _1.onEnter {
-            f.enter(_)
-        } onEach { x =>
-            acc = Some(x)
-        } onExit {
-            case Exit.Success => {
-                if (acc.isEmpty) {
-                    f.exit(Exit.Failure(new NoSuchElementException("Seq.last")))
-                } else {
-                    f(acc.get)
-                }
-            }
-            case q => f.exit(q)
-        } start()
-    }
+class Last[A](_1: Seq[A]) extends SeqProxy[A] {
+    override val self = _1.reduceLeft { (a, x) => x }
 }
