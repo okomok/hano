@@ -161,7 +161,11 @@ trait Seq[+A] {
     def unsplit[B](sep: Seq[B])(implicit pre: Seq[A] <:< Seq[Seq[B]]): Seq[B] = new detail.Unsplit(pre(this), sep)
 
     def zip[B](that: Seq[B]): Seq[(A, B)] = new detail.Zip(this, that)
-    def zipWithIndex: Seq[(A, Int)] = new detail.ZipWithIndex(this)
+
+    /**
+     * Zips with an `Iterable`. Its length is the minimum of the two.
+     */
+    def zipWith[B](it: Iter[B]): Seq[(A, B)] = new detail.ZipWith(this, it)
 
     def unzip[B, C](implicit pre: Seq[A] <:< Seq[(B, C)]): (Seq[B], Seq[C]) = pre(this).duplicate match {
         case (xs, ys) => (xs.map(_._1), ys.map(_._2))

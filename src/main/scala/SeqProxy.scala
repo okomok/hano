@@ -51,7 +51,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def uniqueBy(p: (A, A) => Boolean): Seq[A] = around(self.uniqueBy(p))
     override def unsplit[B](sep: Seq[B])(implicit pre : Seq[A] <:< Seq[Seq[B]]): Seq[B] = around(self.unsplit(sep))
     override def zip[B](that: Seq[B]): Seq[(A, B)] = around(self.zip(that))
-    override def zipWithIndex: Seq[(A, Int)] = around(self.zipWithIndex)
+    override def zipWith[B](it: Iter[B]): Seq[(A, B)] = around(self.zipWith(it))
     override def unzip[B, C](implicit pre: Seq[A] <:< Seq[(B, C)]): (Seq[B], Seq[C]) = around2(self.unzip)
     override def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = self.breakOut
     override def toTraversable: scala.collection.Traversable[A] = self.toTraversable

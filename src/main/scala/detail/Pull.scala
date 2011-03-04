@@ -10,26 +10,6 @@ package detail
 
 
 private[hano]
-class Pull[A](_1: Seq[_], _2: Iter[A]) extends SeqAdapter.Of[A](_1) {
-    override def forloop(f: Reaction[A]) {
-        val it = _2.ator
-
-        _1.onEnter { p =>
-            f.enter(p)
-            if (!it.hasNext) {
-                f.exit(Exit.Success)
-            }
-        } onEach { _ =>
-            f.beforeExit {
-                if (it.hasNext) {
-                    f(it.next)
-                    if (!it.hasNext) {
-                        f.exit(Exit.Success)
-                    }
-                }
-            }
-        } onExit {
-            f.exit(_)
-        } start()
-    }
+class Pull[A](_1: Seq[_], _2: Iter[A]) extends SeqProxy[A] {
+    override val self = _1.zipWith(_2).map(_._2)
 }
