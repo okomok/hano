@@ -11,13 +11,13 @@ package detail
 
 private[hano]
 class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter.Of[Unit](_1) {
-    override def context = FillTime.timer
+    override def context = _Timer.daemon
 
     override def forloop(f: Reaction[Unit]) {
         var u: Seq[Unit] = null
 
         def _fill() {
-            u = FillTime.timer.schedule(_2, _2)
+            u = _Timer.daemon.schedule(_2, _2)
             u onEach { _ =>
                 f()
             } start()
@@ -30,17 +30,11 @@ class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter.Of[Unit](_1) {
         } onEach { _ =>
             _fill()
         } onExit { q =>
-            FillTime.timer.eval {
+            _Timer.daemon.eval {
                 f.exit(q)
             }
         } start()
     }
 
     override def fillTime(i: Long): Seq[Unit] = _1.fillTime(java.lang.Math.min(_2, i)) // fillTime.fillTime fusion
-}
-
-
-private[hano]
-object FillTime {
-    private val timer = new Timer(true)
 }

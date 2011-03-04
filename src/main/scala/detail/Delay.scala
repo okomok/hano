@@ -11,13 +11,13 @@ package detail
 
 private[hano]
 class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
-    override def context = Delay.timer
+    override def context = _Timer.nondaemon
 
     override def forloop(f: Reaction[A]) {
         val zero = new ZeroDelay
 
         def _delay(body: => Unit) {
-            Delay.timer.schedule {
+            _Timer.nondaemon.schedule {
                 _2 + zero()
             } onEach { _ =>
                 body
@@ -40,10 +40,4 @@ class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     }
 
     override def delay(i: Long): Seq[A] = _1.delay(_2 + i) // delay.delay fusion
-}
-
-
-private[hano]
-object Delay {
-    private val timer = new Timer(false)
 }
