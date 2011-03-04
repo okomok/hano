@@ -153,6 +153,35 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
         }
     }
 
+    def testForallYes {
+        val xs = hano.async.loop.pull(Seq(2,4,6,8,10))
+        val v = new hano.Val[Boolean]
+        v := xs.forall(_ % 2 == 0)
+        expect(true)(v())
+    }
+
+    def testForallNo {
+        val xs = hano.async.loop.pull(Seq(2,4,6,7,8,10))
+        val v = new hano.Val[Boolean]
+        v := xs.forall(_ % 2 == 0)
+        expect(false)(v())
+    }
+
+    def testExistsYes {
+        val xs = hano.async.loop.pull(Seq(2,4,6,8,10))
+        val v = new hano.Val[Boolean]
+        v := xs.exists(_ == 8)
+        expect(true)(v())
+    }
+
+    def testExistsNo {
+        val xs = hano.async.loop.pull(Seq(2,4,6,7,8,10))
+        val v = new hano.Val[Boolean]
+        v := xs.exists(_ == 9)
+        expect(false)(v())
+    }
+
+
 /* hmmmmmm....
     def testCopy {
         val xs = hano.async.loop.pull(Seq(3,1,2,6,7,4,2,9))

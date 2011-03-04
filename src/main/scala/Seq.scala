@@ -358,6 +358,11 @@ trait Seq[+A] {
     def once: Seq[A] = new detail.Once(this)
 
     /**
+     * Turns an algorithm into a `Option` form.
+     */
+    def option: Seq[Option[A]] = new detail._Option(this)
+
+    /**
      * Turns into never-fail sequence.
      */
     def options: Seq[Option[A]] = new detail.Options(this)
@@ -383,6 +388,10 @@ trait Seq[+A] {
     def nth(n:Int): Seq[A] = new detail.Nth(this, n)
 
     def find(p: A => Boolean): Seq[A] = new detail.Find(this, p)
+
+    def forall(p: A => Boolean): Seq[Boolean] = new detail.Forall(this, p)
+
+    def exists(p: A => Boolean): Seq[Boolean] = new detail.Exists(this, p)
 
     def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = new detail.FoldLeft(this, z, op)
 
