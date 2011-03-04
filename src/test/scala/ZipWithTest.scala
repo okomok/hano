@@ -10,7 +10,7 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-class ZipWithTimeTest extends org.scalatest.junit.JUnit3Suite {
+class ZipWithTest extends org.scalatest.junit.JUnit3Suite {
 
     val t = new hano.Timer(true)
     def naturals: hano.Seq[Int] = {
@@ -20,6 +20,13 @@ class ZipWithTimeTest extends org.scalatest.junit.JUnit3Suite {
 
     def teztTrivial {
         naturals.zipWith(hano.Iterators.currentDate).take(10).onEach { x =>
+            println(x)
+        } start()
+    }
+
+    def teztTimeSpan {
+        naturals.zipWith(hano.Iterators.timeSpan).take(10).onEach { x =>
+            Thread.sleep(300)
             println(x)
         } start()
     }

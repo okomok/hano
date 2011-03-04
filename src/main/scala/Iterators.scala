@@ -23,7 +23,7 @@ object Iterators {
     def unfold[A, B](z: A)(op: A => Option[(B, A)]): Iterator[B] = new Unfold(z, op).concrete
 
     /**
-     * Cycles an `Iterable` indefinitely.
+     * Cycles an `Iterator` indefinitely.
      */
     def cycle[A](it: => Iterator[A]): Iterator[A] = Iterator.continually(()).flatMap(_ => it)
 
@@ -31,6 +31,19 @@ object Iterators {
      * An infinite sequence of the current times.
      */
     def currentDate: Iterator[java.util.Date] = Iterator.continually(new java.util.Date)
+
+    /**
+     * An infinite sequence of `next` time spans. (cf. JSR-310)
+     */
+    def timeSpan: Iterator[Long] = {
+        var past = System.currentTimeMillis
+        Iterator.continually {
+            val cur  = System.currentTimeMillis
+            val that = cur - past
+            past = cur
+            that
+        }
+    }
 
 
     private class ToIterable[A](_1: () => Iterator[A]) extends Iterable[A] {
