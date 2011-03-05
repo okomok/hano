@@ -34,11 +34,17 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
         timer.schedule(l, now())
     }
 
-    private class Schedule(scheduler: JTimer => TimerTask => Unit) extends listen.To[Unit] {
+    private class Schedule(scheduler: JTimer => TimerTask => Unit, oneShot: Boolean) extends listen.To[Unit] {
         override def context = outer.asContext
         override protected def listen(env: Env) {
             val l = new TimerTask {
-                override def run() = env()
+                override def run() = {
+                    env()
+
+                    if (oneShot) {
+                        env.exit(Exit.Success)
+                    }
+                }
             }
 
             env.add {
@@ -50,10 +56,10 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
         }
     }
 
-    def schedule(time: Date): Seq[Unit] = new Schedule(ti => ta => ti.schedule(ta, time))
-    def schedule(firstTime: Date, period: Long): Seq[Unit] = new Schedule(ti => ta => ti.schedule(ta, firstTime, period))
-    def schedule(delay: Long): Seq[Unit] = new Schedule(ti => ta => ti.schedule(ta, delay))
-    def schedule(delay: Long, period: Long): Seq[Unit] = new Schedule(ti => ta => ti.schedule(ta, delay, period))
-    def scheduleAtFixedRate(firstTime: Date, period: Long): Seq[Unit] = new Schedule(ti => ta => ti.scheduleAtFixedRate(ta, firstTime, period))
-    def scheduleAtFixedRate(delay: Long, period: Long): Seq[Unit] = new Schedule(ti => ta => ti.scheduleAtFixedRate(ta, delay, period))
+    def schedule(time: Date): Seq[Unit] = new Schedule(ti => ta => ti.schedule(ta, time), true)
+    def schedule(firstTime: Date, period: Long): Seq[Unit] = new Schedule(ti => ta => ti.schedule(ta, firstTime, period), false)
+    def schedule(delay: Long): Seq[Unit] = new Schedule(ti => ta => ti.schedule(ta, delay), true)
+    def schedule(delay: Long, period: Long): Seq[Unit] = new Schedule(ti => ta => ti.schedule(ta, delay, period), false)
+    def scheduleAtFixedRate(firstTime: Date, period: Long): Seq[Unit] = new Schedule(ti => ta => ti.scheduleAtFixedRate(ta, firstTime, period), false)
+    def scheduleAtFixedRate(delay: Long, period: Long): Seq[Unit] = new Schedule(ti => ta => ti.scheduleAtFixedRate(ta, delay, period), false)
 }
