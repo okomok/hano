@@ -184,21 +184,21 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
     def testMin {
         val xs = hano.async.loop.pull(Seq(8,5,1,2,10,4,3,9))
         val v = new hano.Val[Int]
-        v := xs.min
+        v := xs.reduce(_ min _)
         expect(1)(v())
     }
 
     def testMax {
         val xs = hano.async.loop.pull(Seq(8,5,1,2,10,4,3,9))
         val v = new hano.Val[Int]
-        v := xs.max
+        v := xs.reduce(_ max _)
         expect(10)(v())
     }
 
     def testOrElse {
         val xs = hano.async.loop.pull(Seq[Int]())
         val v = new hano.Val[Int]
-        v := xs.max.orElse(10)
+        v := xs.reduce(_ max _).orElse(10)
         expect(10)(v())
     }
 

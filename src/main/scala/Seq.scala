@@ -92,11 +92,11 @@ trait Seq[+A] {
 
     def scanLeft1[B >: A](op: (B, A) => B): Seq[B] = new detail.ScanLeft1(this, op)
 
-    final def scanl[B](z: B): _ScanlBy[B] = new _ScanlBy(z)
-    sealed class _ScanlBy[B](z: B) {
-        @annotation.equivalentTo("scanLeft(z)(op)")
-        def by(op: (B, A) => B): Seq[B] = scanLeft(z)(op)
-    }
+    @annotation.aliasOf("scanLeft")
+    final def scan[B](z: B)(op: (B, A) => B): Seq[B] = scanLeft(z)(op)
+
+    @annotation.aliasOf("scanLeft1")
+    final def scan1[B >: A](op: (B, A) => B): Seq[B] = scanLeft1(op)
 
     def tail: Seq[A] = new detail.Tail(this)
 
@@ -416,11 +416,13 @@ trait Seq[+A] {
 
     def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = new detail.ReduceLeft(this, op)
 
-    def min[B >: A](implicit ord: Ordering[B]): Seq[B] = new detail.Min[B](this, ord)
-
-    def max[B >: A](implicit ord: Ordering[B]): Seq[B] = new detail.Max[B](this, ord)
-
     final def /:[B](z: B)(op: (B, A) => B): Seq[B] = foldLeft(z)(op)
+
+    @annotation.aliasOf("foldLeft")
+    final def fold[B](z: B)(op: (B, A) => B): Seq[B] = foldLeft(z)(op)
+
+    @annotation.aliasOf("reduceLeft")
+    final def reduce[B >: A](op: (B, A) => B): Seq[B] = reduceLeft(op)
 
     def copy[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Seq[To] = new detail.Copy(this, bf)
 

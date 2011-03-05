@@ -105,7 +105,5 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def exists(p: A => Boolean): Seq[Boolean] = around(self.exists(p))
     override def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = around(self.foldLeft(z)(op))
     override def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = around(self.reduceLeft(op))
-    override def min[B >: A](implicit ord: Ordering[B]): Seq[B] = around(self.min(ord))
-    override def max[B >: A](implicit ord: Ordering[B]): Seq[B] = around(self.max(ord))
     override def copy[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Seq[To] = around(self.copy)
 }

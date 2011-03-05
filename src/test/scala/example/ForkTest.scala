@@ -16,7 +16,7 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
         val xs: hano.Seq[Int] = hano.async.loop.pull(it)
 
         // The first time is ok.
-        expect(0)(hano.Val(xs.reduceLeft(Math.min(_, _))).get)
+        expect(0)(hano.Val(xs.reduce(_ min _)).get)
 
         // For the second time, `xs` is mutated to empty one.
         expect(true)(hano.Val(xs.isEmpty).get)
@@ -31,9 +31,9 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
         xs fork { xs =>
             // Recall `Seq` algorithms return a single-element sequence, and
             // `Val` can be assigned with a single-element sequence.
-            v1 := xs.reduceLeft(Math.min(_, _))
+            v1 := xs.reduce(_ min _)
         } fork { xs =>
-            v2 := xs.reduceLeft(Math.max(_, _))
+            v2 := xs.reduce(_ max _)
         } start()
 
         expect(0)(v1())

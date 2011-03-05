@@ -198,7 +198,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         val ch = new hano.Channel[Int]
 
         val xs = hano.async.loop.pull(Seq(5,1,3,6,2,0,4))
-        ch << xs.reduceLeft(java.lang.Math.min(_, _)) << xs.reduceLeft(java.lang.Math.max(_, _))
+        ch << xs.reduceLeft(_ min _) << xs.reduceLeft(_ max _)
 
         expect(0)(ch.read)
         expect(6)(ch.read)
