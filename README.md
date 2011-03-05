@@ -12,7 +12,7 @@
             mouse.Released
         } onEach { d =>
             println("dragging at: " + (d.getX, d.getY))
-        } onEnd {
+        } onExit {
             println("released")
         } start()
     } start()
@@ -67,7 +67,7 @@ Shunsuke Sogame <<okomok@gmail.com>>
 [The Scala Programming Language]: http://www.scala-lang.org/ "The Scala Programming Language"
 [scala.react]: http://lamp.epfl.ch/~imaier/ "scala.react"
 [Reactive Extensions]: http://msdn.microsoft.com/en-us/devlabs/ee794896.aspx "Reactive Extensions"
-[neue cc - Reactive Extensions Introduction]: http://neue.cc/2010/07/28_269.html "neue cc - Reactive Extensions入門 + メソッド早見解説表"
+[neue cc - Reactive Extensions Introduction]: http://neue.cc/2010/07/28_269.html "neue cc - Reactive Extensions?u?a + ???\?b?h???c?d?a?\"
 [scala.Responder]: http://scala.sygneca.com/libs/responder "scala.Responder"
 [scala.collection.Traversable]: http://www.scala-lang.org/archives/downloads/distrib/files/nightly/docs/library/scala/collection/Traversable.html "scala.collection.Traversable"
 [scala-arm]: http://github.com/jsuereth/scala-arm "scala-arm"
