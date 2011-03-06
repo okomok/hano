@@ -27,6 +27,8 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def merge[B >: A](that: Seq[B]): Seq[B] = around(self.merge(that))
     override def race[B >: A](that: Seq[B]): Seq[B] = around(self.race(that))
     override def map[B](f: A => B): Seq[B] = around(self.map(f))
+    override def appendOnExit[B >: A](that: Seq[B]): Seq[B] = around(self.appendOnExit(that))
+    override def substitute[B >: A](that: PartialFunction[Throwable, Seq[B]]): Seq[B] = around(self.substitute(that))
     override def flatMap[B](f: A => Seq[B]): Seq[B] = around(self.flatMap(f))
     override def filter(p: A => Boolean): Seq[A] = around(self.filter(p))
     override def collect[B](f: PartialFunction[A, B]): Seq[B] = around(self.collect(f))

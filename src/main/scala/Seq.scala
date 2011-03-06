@@ -74,6 +74,16 @@ trait Seq[+A] {
     def map[B](f: A => B): Seq[B] = new detail.Map(this, f)
 
     /**
+     * Appends `that` on the exit; `that` is always appended.
+     */
+    def appendOnExit[B >: A](that: Seq[B]): Seq[B] = new detail.AppendOnExit[B](this, that)
+
+    /**
+     * Appends `that` in case of a failure.
+     */
+    def substitute[B >: A](that: PartialFunction[Throwable, Seq[B]]): Seq[B] = new detail.Substitute[B](this, that)
+
+    /**
      * Returns an infinite sequence.
      */
     def flatMap[B](f: A => Seq[B]): Seq[B] = new detail.FlatMap(this, f)
