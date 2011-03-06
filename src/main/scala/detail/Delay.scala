@@ -11,13 +11,13 @@ package detail
 
 private[hano]
 class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
-    override def context = _Timer.nondaemon
+    override def context = Timer.nondaemon
 
     override def forloop(f: Reaction[A]) {
         val now = new Now
 
         def _delay(body: => Unit) {
-            _Timer.nondaemon.schedule {
+            Timer.nondaemon.schedule {
                now + _2
             } onEach { _ =>
                 body

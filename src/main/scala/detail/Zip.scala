@@ -21,13 +21,13 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         var ends2 = false
         val c1 = new LinkedList[A]
         val c2 = new LinkedList[B]
-        val _enter = new Exit.Two(f)
+        val _enter = new MergeEnter(f, context)
         def _invariant() = assert(c1.isEmpty || c2.isEmpty)
 
         _1 shift {
             context
         } onEnter {
-            _enter
+            _enter(_)
         } onEach { x =>
             f.beforeExit {
                 _invariant()
@@ -51,7 +51,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         _2 shift {
             context
         } onEnter {
-            _enter
+            _enter(_)
         } onEach { y =>
             f.beforeExit {
                 _invariant()

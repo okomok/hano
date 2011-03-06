@@ -18,6 +18,8 @@ trait Exit {
     @annotation.threadSafe @annotation.idempotent
     final def apply(q: Exit.Status = Exit.Success) = _apply(q)
 
+    final def isDone: Boolean = _apply.isSecond
+
     final def second: Exit = new Exit.Second(this)
 
     private[this] val _apply = detail.IfFirst[Exit.Status] { q => rawApply(q) } Else { _ => () }
@@ -79,26 +81,5 @@ object Exit {
     private class Second(_1: Exit) extends Exit {
         private[this] val _c = detail.IfFirst[Exit.Status] { _ => () } Else { q => _1(q) }
         override protected def rawApply(q: Exit.Status) = _c(q)
-    }
-
-    private[hano]
-    class Two(_1: Reaction[_]) extends (Exit => Unit) {
-        private[this] var en1, en2: Exit = Empty
-
-        override def apply(p: Exit) {
-            if (_1.isExited) {
-                p()
-            } else if (_1.isEntered) {
-                en2 = p
-            } else {
-                en1 = p
-                _1.enter {
-                    Exit { _ =>
-                        en1()
-                        en2()
-                    }
-                }
-            }
-        }
     }
 }

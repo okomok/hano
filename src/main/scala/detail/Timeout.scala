@@ -15,7 +15,7 @@ class Timeout[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
         val out = new java.util.concurrent.atomic.AtomicBoolean(false)
         var safe = false
 
-        _Timer.nondaemon.schedule(_2).onEach { _ =>
+        Timer.nondaemon.schedule(_2).onEach { _ =>
             out.set(true)
         } start()
 

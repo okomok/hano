@@ -11,6 +11,19 @@ package hano
 import java.util.{Date, Timer => JTimer, TimerTask}
 
 
+object Timer {
+    /**
+     * The global timer in daemon thread
+     */
+    lazy val daemon = new Timer(true)
+
+    /**
+     * The global timer in non-daemon thread
+     */
+    lazy val nondaemon = new Timer(false)
+}
+
+
 /**
  * Creates a sequence of Units.
  */

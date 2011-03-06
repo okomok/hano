@@ -14,12 +14,12 @@ class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
     override val context = _1.context upper _2.context
 
     override def forloop(f: Reaction[A]) {
-        val _enter = new Exit.Two(f)
+        val _enter = new MergeEnter(f, context)
 
         _1.shift {
             context
         } onEnter {
-            _enter
+            _enter(_)
         } onEach {
             f(_)
         } onExit {
@@ -27,7 +27,7 @@ class Append[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
                 _2.shift {
                     context
                 } onEnter {
-                    _enter
+                    _enter(_)
                 } onEach {
                     f(_)
                 } onExit {
