@@ -16,8 +16,19 @@ class IteratorsTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter("10","9","8","7","6","5","4","3","2","1"))(hano.Iter.from(it))
     }
 
-    def testCycle {
-        val it = hano.Iterators.cycle(Iterator(1,2,3)).take(10)
+    def testLoop {
+        val it = hano.Iterators.loop(Iterator(1,2,3)).take(10)
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1))(hano.Iter.from(it))
+    }
+
+    def testLoopWhile {
+        var i = 0
+        val it = hano.Iterators.loopWhile(Iterator(1,2,3)){i += 1; i != 3}
+        expect(hano.Iter(1,2,3,1,2,3))(hano.Iter.from(it))
+    }
+
+    def testRepeat {
+        val it = hano.Iterators.repeat(Iterator(1,2,3), 3)
+        expect(hano.Iter(1,2,3,1,2,3,1,2,3))(hano.Iter.from(it))
     }
 }

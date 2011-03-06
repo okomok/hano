@@ -13,24 +13,29 @@ package hano
  */
 object Iterators {
     /**
-     * Creates an `Iterable` from an `Iterator`.
+     * Creates an infinite-length iterator returning `x`.
      */
-    def toIterable[A](it: => Iterator[A]): Iterable[A] = new ToIterable(() => it)
+    def const[A](x: A): Iterator[A] = Iterator.continually(x)
 
     /**
-     * The dual of foldRight
+     * Creates an infinite-length iterator of the current times.
      */
-    def unfold[A, B](z: A)(op: A => Option[(B, A)]): Iterator[B] = new Unfold(z, op).concrete
+    def currentDate: Iterator[java.util.Date] = Iterator.continually(new java.util.Date)
 
     /**
      * Cycles an `Iterator` indefinitely.
      */
-    def cycle[A](it: => Iterator[A]): Iterator[A] = Iterator.continually(()).flatMap(_ => it)
+    def loop[A](it: Iter[A]): Iterator[A] = Iterator.continually(()).flatMap(_ => it.ator)
 
     /**
-     * An infinite sequence of the current times.
+     * Cycles an `Iterator` while `p` returns `true`.
      */
-    def currentDate: Iterator[java.util.Date] = Iterator.continually(new java.util.Date)
+    def loopWhile[A](it: Iter[A])(p: => Boolean): Iterator[A] = Iterator.continually(()).takeWhile(_ => p).flatMap(_ => it.ator)
+
+    /**
+     * Cycles an `Iterator` `n` times.
+     */
+    def repeat[A](it: Iter[A], n: Int): Iterator[A] = Iterator.continually(()).take(n).flatMap(_ => it.ator)
 
     /**
      * An infinite sequence of `next` time spans. (cf. JSR-310)
@@ -45,10 +50,11 @@ object Iterators {
         }
     }
 
+    /**
+     * The dual of foldRight
+     */
+    def unfold[A, B](z: A)(op: A => Option[(B, A)]): Iterator[B] = new Unfold(z, op).concrete
 
-    private class ToIterable[A](_1: () => Iterator[A]) extends Iterable[A] {
-        override def iterator = _1()
-    }
 
     private class Unfold[A, +B](_1: A, _2: A => Option[(B, A)]) extends detail.AbstractIterator[B] {
         private[this] var _acc = _2(_1)

@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Times[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
+class Repeat[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var _n = _2
 
