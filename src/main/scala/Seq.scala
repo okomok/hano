@@ -69,6 +69,8 @@ trait Seq[+A] {
 
     def merge[B >: A](that: Seq[B]): Seq[B] = new detail.Merge[B](this, that)
 
+    def race[B >: A](that: Seq[B]): Seq[B] = new detail.Race[B](this, that)
+
     def map[B](f: A => B): Seq[B] = new detail.Map(this, f)
 
     /**

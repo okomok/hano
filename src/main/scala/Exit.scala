@@ -12,6 +12,9 @@ package hano
  * Exit function
  */
 trait Exit {
+    @annotation.returnThis @inline
+    final def asExit: Exit = this
+
     @annotation.threadSafe
     protected def rawApply(q: Exit.Status)
 
