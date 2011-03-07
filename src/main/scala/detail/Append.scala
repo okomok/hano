@@ -40,18 +40,20 @@ class AppendIf[A](_1: Seq[A], _2: Seq[A], cond: Exit.Status => Boolean) extends 
         } onEach {
             f(_)
         } onExit { q =>
-            if (cond(q)) {
-                _2.shift {
-                    context
-                } onEnter {
-                    _enter(_)
-                } onEach {
-                    f(_)
-                } onExit {
-                    f.exit(_)
-                } start()
-            } else {
-                f.exit(q)
+            f.beforeExit {
+                if (cond(q)) {
+                    _2.shift {
+                        context
+                    } onEnter {
+                        _enter(_)
+                    } onEach {
+                        f(_)
+                    } onExit {
+                        f.exit(_)
+                    } start()
+                } else {
+                    f.exit(q)
+                }
             }
         } start()
     }
