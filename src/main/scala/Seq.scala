@@ -443,6 +443,14 @@ trait Seq[+A] {
     @annotation.aliasOf("reduceLeft")
     final def reduce[B >: A](op: (B, A) => B): Seq[B] = reduceLeft(op)
 
+    def min[B >: A](implicit cmp: Ordering[B]): Seq[A] = new detail.Min(this, cmp)
+
+    def max[B >: A](implicit cmp: Ordering[B]): Seq[A] = new detail.Max(this, cmp)
+
+    def minBy[B >: A](f: A => B)(implicit cmp: Ordering[B]): Seq[A] = new detail.MinBy(this, f, cmp)
+
+    def maxBy[B >: A](f: A => B)(implicit cmp: Ordering[B]): Seq[A] = new detail.MaxBy(this, f, cmp)
+
     def copy[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Seq[To] = new detail.Copy(this, bf)
 
 }
