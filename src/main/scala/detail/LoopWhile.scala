@@ -29,8 +29,8 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
         @volatile var status = Exit.Success.asStatus
         @volatile var isActive = true
 
-        def rec() {
-            _1.onEnter { p =>
+        def rec(xs: Seq[A]) {
+            xs.onEnter { p =>
                 f.enter {
                     Exit { q =>
                         p(q)
@@ -57,7 +57,7 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
                     q match {
                         case Exit.Success => {
                             if (isActive) {
-                                rec()
+                                rec(xs)
                             } else {
                                 assert(f.isExited)
                             }
@@ -68,7 +68,7 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean, grainSize: Int = 1) exten
             } start()
         }
 
-        rec()
+        rec(_1)
     }
 }
 

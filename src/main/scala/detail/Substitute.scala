@@ -10,9 +10,7 @@ package detail
 
 
 private[hano]
-class Substitute[A](_1: Seq[A], _2: PartialFunction[Throwable, Seq[A]]) extends Seq[A] {
-    override def context = _1.context
-
+class Substitute[A](_1: Seq[A], _2: PartialFunction[Throwable, Seq[A]]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         val _enter = new MergeEnter(f, context)
 
