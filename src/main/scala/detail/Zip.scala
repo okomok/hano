@@ -44,7 +44,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                     f.exit(Exit.Success)
                 }
             }
-            case q => f.exit(q) // fail-immediately
+            case q => f.exit(q) // fail immediately
         } start()
 
         _2 shift {
