@@ -18,7 +18,7 @@ class Duplicate[A](_1: Seq[A]) extends Seq[A] {
             _f = f
         } Else { f =>
             _1.onEnter { p =>
-                val p2 = p.second
+                val p2 = new Exit.Second(p)
                 _f.enter(p2); f.enter(p2)
             } onEach { x =>
                 _f(x); f(x)

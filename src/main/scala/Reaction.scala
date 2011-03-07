@@ -36,11 +36,11 @@ trait Reaction[-A] {
         if (isExited) {
             p(_exitStatus)
         } else {
-            _exitFuncs.add(p)
+            _exitFuncs.offer(p)
         }
 
         _enter {
-            rawEnter(p)
+            rawEnter(_exitFuncs)
         }
 
         this
@@ -67,9 +67,7 @@ trait Reaction[-A] {
         _exit {
             _exitStatus = q
             try {
-                for (f <- Iter.from(_exitFuncs).able) {
-                    f(q)
-                }
+                _exitFuncs(q)
                 rawExit(q)
             } catch {
                 case break.Control => ()
@@ -119,7 +117,7 @@ trait Reaction[-A] {
     private[this] val _mdf = new detail.Modification(toString)
     private[this] var _enter = new detail.DoOnce
     private[this] val _exit = new detail.DoOnce
-    private[this] var _exitFuncs = new java.util.ArrayList[Exit]
+    private[this] var _exitFuncs = new Exit.Queue
     private[this] var _exitStatus: Exit.Status = null
 }
 
