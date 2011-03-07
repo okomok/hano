@@ -120,6 +120,7 @@ trait Seq[+A] {
 
     def slice(n: Int, m: Int): Seq[A] = new detail.Slice(this, n, m)
 
+
     def takeWhile(p: A => Boolean): Seq[A] = new detail.TakeWhile(this, p)
 
     def dropWhile(p: A => Boolean): Seq[A] = new detail.DropWhile(this, p)
@@ -136,6 +137,12 @@ trait Seq[+A] {
     }
 
     def flatten[B](implicit pre: Seq[A] <:< Seq[Seq[B]]): Seq[B] = new detail.Flatten(pre(this))
+
+    /**
+     * Extracts a sub-sequence.
+     */
+    @annotation.pre("`it` is strictly-increasing")
+    def subseq(it: Iter[Int]): Seq[A] = new detail.Subseq(this, it)
 
     /**
      * Steps by the specified stride.
