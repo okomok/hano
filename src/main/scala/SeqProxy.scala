@@ -99,6 +99,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def orElse[B >: A](default: => B): Seq[B] = around(self.orElse(default))
     override def options: Seq[Option[A]] = around(self.options)
     override def eithers: Seq[Either[Exit.Status, A]] = around(self.eithers)
+    override def amplify(n: Int): Seq[A] = around(self.amplify(n))
     override def isEmpty: Seq[Boolean] = around(self.isEmpty)
     override def length: Seq[Int] = around(self.length)
     override def head: Seq[A] = around(self.head)

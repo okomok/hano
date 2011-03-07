@@ -410,6 +410,11 @@ trait Seq[+A] {
      */
     def eithers: Seq[Either[Exit.Status, A]] = new detail.Eithers(this)
 
+    /**
+     * Increases the loop grain-size.
+     */
+    def amplify(n: Int): Seq[A] = new detail.Amplify(this, n)
+
 
 // standard algorithms
 

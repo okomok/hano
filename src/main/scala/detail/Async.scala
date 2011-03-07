@@ -28,13 +28,13 @@ class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Context {
         }
     }
 
-//    override def loop: Seq[Unit] = new LoopWhileOther(this, () => true, Async.grainSize)
+    override def loop: Seq[Unit] = super.loop.amplify(Async.grainSize)
 }
 
 
 private[hano]
 object Async {
-    private val grainSize = 20
+    private val grainSize = 16
 
     private[hano]
     def defaultOut: actors.OutputChannel[Any] = {
