@@ -10,49 +10,6 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-object Impl {
-/*
-    import hano._
-
-    class LoopOther[A](_1: Seq[A]) extends SeqResource[A] {
-        assert(_1.context ne Self)
-
-        private[this] var isActive = false
-        override def context = _1.context
-        override def closeResource() { isActive = false; _1.close() }
-        override def openResource(f: Reaction[A]) {
-            require(!isActive)
-
-            isActive = true
-            def _k(q: Exit.Status) { close(); f.exit(q) }
-
-            def rec() {
-                _1 onEach { x =>
-                    synchronized { // is needed because...
-                        f(x) // may reenter `forloop` from other threads.
-                        if (!isActive) {
-                            _k(Exit.Closed)
-                            // `isActive` is out of play for me.
-                        }
-                    }
-                    // Now you can reenter `forloop`.
-                } onExit { q =>
-                    q match {
-                        case Exit.Success => {
-                            if (isActive) {
-                                rec()
-                            }
-                        }
-                        case q => _k(q)
-                    }
-                } start()
-            }
-            rec()
-        }
-    }
-*/
-}
-
 
 class FindTest extends org.scalatest.junit.JUnit3Suite {
 

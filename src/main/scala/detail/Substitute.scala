@@ -12,12 +12,10 @@ package detail
 private[hano]
 class Substitute[A](_1: Seq[A], _2: PartialFunction[Throwable, Seq[A]]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
-        val _enter = new MergeEnter(f, context)
-
         _1.shift {
             context
         } onEnter {
-            _enter(_)
+            f.enter(_)
         } onEach {
             f(_)
         } onExit {
@@ -25,7 +23,7 @@ class Substitute[A](_1: Seq[A], _2: PartialFunction[Throwable, Seq[A]]) extends 
                 _2(t).shift {
                     context
                 } onEnter {
-                    _enter(_)
+                    f.enter(_)
                 } onEach {
                     f(_)
                 } onExit {

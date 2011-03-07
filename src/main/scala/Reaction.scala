@@ -33,8 +33,13 @@ trait Reaction[-A] {
      */
     @annotation.idempotent
     final def enter(p: Exit = Exit.Empty): this.type = _mdf[this.type] {
+        if (isExited) {
+            p(_exitStatus)
+        } else {
+            _exitFuncs.add(p)
+        }
+
         _enter {
-            _exitFunc = p
             rawEnter(p)
         }
 
@@ -45,9 +50,9 @@ trait Reaction[-A] {
      * Reacts on each element.
      */
     final def apply(x: A) = _mdf {
-        require(_enter.isDone, "`enter` shall be called before `apply` to: " + toString)
+        require(isEntered, "`enter` shall be called before `apply` to: " + toString)
 
-        if (_enter.isDone && !_exit.isDone) {
+        if (!isExited) {
             rawApply(x)
         }
     }
@@ -57,11 +62,14 @@ trait Reaction[-A] {
      */
     @annotation.idempotent
     final def exit(q: Exit.Status = Exit.Success) = _mdf {
-        require(_enter.isDone, "`enter` shall be called before `exit` to: " + toString)
+        require(isEntered, "`enter` shall be called before `exit` to: " + toString)
 
         _exit {
+            _exitStatus = q
             try {
-                _exitFunc(q)
+                for (f <- Iter.from(_exitFuncs).able) {
+                    f(q)
+                }
                 rawExit(q)
             } catch {
                 case break.Control => ()
@@ -108,10 +116,11 @@ trait Reaction[-A] {
         }
     }
 
-    private[this] var _exitFunc: Exit = null
     private[this] val _mdf = new detail.Modification(toString)
-    private[this] val _enter = new detail.DoOnce
+    private[this] var _enter = new detail.DoOnce
     private[this] val _exit = new detail.DoOnce
+    private[this] var _exitFuncs = new java.util.ArrayList[Exit]
+    private[this] var _exitStatus: Exit.Status = null
 }
 
 

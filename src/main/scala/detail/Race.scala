@@ -22,14 +22,13 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         }
         def winnerIs(xs: Seq[A]) = (winner ne null) && (winner eq xs)
 
-        val _enter = new MergeEnter(f, context)
         var _p1, _p2 = Exit.Empty.asExit
 
         _1.shift {
             context
         } onEnter { p =>
             _p1 = p
-            _enter(p)
+            f.enter(p)
 
             if (winnerIs(_1)) {
                 _p2(Exit.Failure(break.Control))
@@ -57,7 +56,7 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
             context
         } onEnter { p =>
             _p2 = p
-            _enter(p)
+            f.enter(p)
 
             if (winnerIs(_2)) {
                 _p1(Exit.Failure(break.Control))

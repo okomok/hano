@@ -31,12 +31,10 @@ class AppendIf[A](_1: Seq[A], _2: Seq[A], cond: Exit.Status => Boolean) extends 
     override val context = _1.context upper _2.context
 
     override def forloop(f: Reaction[A]) {
-        val _enter = new MergeEnter(f, context)
-
         _1.shift {
             context
         } onEnter {
-            _enter(_)
+            f.enter(_)
         } onEach {
             f(_)
         } onExit { q =>
@@ -45,7 +43,7 @@ class AppendIf[A](_1: Seq[A], _2: Seq[A], cond: Exit.Status => Boolean) extends 
                     _2.shift {
                         context
                     } onEnter {
-                        _enter(_)
+                        f.enter(_)
                     } onEach {
                         f(_)
                     } onExit {

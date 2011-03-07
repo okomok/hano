@@ -9,7 +9,7 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-class TimesTest extends org.scalatest.junit.JUnit3Suite {
+class RepeatTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivialSelf {
         val xs = hano.Self.loop.pull(1 until 4).repeat(4)
