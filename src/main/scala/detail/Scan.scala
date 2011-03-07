@@ -14,20 +14,14 @@ class ScanLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter.Of[B
     override def forloop(f: Reaction[B]) {
         var acc = _2
 
-        context.onEnter { // FIXME. Doesn't use context when possible.
-            f.enter(_)
-        } onEach { _ =>
+        _1.onEnter { p =>
+            f.enter(p)
+            f(acc)
+        } onEach { x =>
+            acc = _3(acc, x)
             f(acc)
         } onExit {
-            case Exit.Success => {
-                _1 onEach { x =>
-                    acc = _3(acc, x)
-                    f(acc)
-                } onExit {
-                    f.exit(_)
-                } start()
-            }
-            case q => f.exit(q)
+            f.exit(_)
         } start()
     }
 }
