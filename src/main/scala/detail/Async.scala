@@ -28,7 +28,7 @@ class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Context {
         }
     }
 
-    override def loop: Seq[Unit] = super.loop.amplify(Async.grainSize)
+    //override def loop: Seq[Unit] = super.loop.amplify(Async.grainSize)
 }
 
 
