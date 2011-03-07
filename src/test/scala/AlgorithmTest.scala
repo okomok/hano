@@ -202,6 +202,27 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
         expect(10)(v())
     }
 
+    def testSum {
+        val xs = hano.async.loop.pull(Seq(1,2,3,4,5))
+        val v = new hano.Val[Int]
+        v := xs.sum
+        expect(1+2+3+4+5)(v())
+    }
+
+    def testProduct {
+        val xs = hano.async.loop.pull(Seq(1,2,3,4,5))
+        val v = new hano.Val[Int]
+        v := xs.product
+        expect(1*2*3*4*5)(v())
+    }
+
+    def testFoldSuccess {
+        val xs = hano.async.loop.pull(Seq(1,2,3,4,5))
+        val v = new hano.Val[Int]
+        v := xs.max.product
+        expect(5)(v())
+    }
+
 
 
 /* hmmmmmm....

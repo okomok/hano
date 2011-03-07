@@ -443,6 +443,10 @@ trait Seq[+A] {
     @annotation.aliasOf("reduceLeft")
     final def reduce[B >: A](op: (B, A) => B): Seq[B] = reduceLeft(op)
 
+    def sum[B >: A](implicit num: Numeric[B]): Seq[B] = new detail.Sum(this, num)
+
+    def product[B >: A](implicit num: Numeric[B]): Seq[B] = new detail.Product(this, num)
+
     def min[B >: A](implicit cmp: Ordering[B]): Seq[A] = new detail.Min(this, cmp)
 
     def max[B >: A](implicit cmp: Ordering[B]): Seq[A] = new detail.Max(this, cmp)

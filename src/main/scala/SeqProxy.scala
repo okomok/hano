@@ -109,6 +109,8 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def exists(p: A => Boolean): Seq[Boolean] = around(self.exists(p))
     override def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = around(self.foldLeft(z)(op))
     override def reduceLeft[B >: A](op: (B, A) => B): Seq[B] = around(self.reduceLeft(op))
+    override def sum[B >: A](implicit num: Numeric[B]): Seq[B] = around(self.sum(num))
+    override def product[B >: A](implicit num: Numeric[B]): Seq[B] = around(self.product(num))
     override def min[B >: A](implicit cmp: Ordering[B]): Seq[A] = around(self.min(cmp))
     override def max[B >: A](implicit cmp: Ordering[B]): Seq[A] = around(self.max(cmp))
     override def minBy[B >: A](f: A => B)(implicit cmp: Ordering[B]): Seq[A] = around(self.minBy(f)(cmp))
