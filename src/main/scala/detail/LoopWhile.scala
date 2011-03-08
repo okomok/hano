@@ -11,11 +11,17 @@ package detail
 
 private[hano]
 class LoopWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
+    override val self = new LoopWhileIf(_1, _2, _.isSuccess)
+}
+
+
+private[hano]
+class LoopWhileIf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqProxy[A] {
     override val self = {
         if (_1.context eq Self) {
-            new LoopWhileIfSelf(_1, _2, _.isSuccess)
+            new LoopWhileIfSelf(_1, _2, cond)
         } else {
-            new LoopWhileIfOther(_1, _2, _.isSuccess)
+            new LoopWhileIfOther(_1, _2, cond)
         }
     }
 }

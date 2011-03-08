@@ -381,6 +381,11 @@ trait Seq[+A] {
     def repeat(n: Int): Seq[A] = new detail.Repeat(this, n)
 
     /**
+     * Retries until this sequence ends successfully.
+     */
+    def retry(n: Int): Seq[A] = new detail.Retry(this, n)
+
+    /**
      * Ignores `Exit.Success`.
      */
     def noSuccess: Seq[A] = new detail.NoSuccess(this)
