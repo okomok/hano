@@ -3,7 +3,7 @@ package com.github.okomok.hanotest.example
 import com.github.okomok.hano
 
 /**
- * `Process` is an infinite sequence of the `Unit`.
+ * `Process` is an infinite sequence of the `Unit`s.
  */
 class ProcessTest extends org.scalatest.junit.JUnit3Suite {
 
@@ -17,7 +17,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
             var i = 0
             us.onEach { x =>
             // reaction block
-                expect(())(x) // The element is the `Unit`.
+                expect(())(x) // The elemen is the `Unit`.
                 if (i == 5) {
                     hano.break()
                 }
@@ -52,7 +52,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
             var i = 0
             us onEach { x =>
             // Don't bother about multi-threaded issue.
-            // Any `Seq` guarantees reactions are invoked in serialized fashion.
+            // Any `Seq` guarantees reactions are invoked in sequential fashion.
                 expect(())(x)
                 if (i == 5) {
                     hano.break()

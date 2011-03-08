@@ -8,7 +8,7 @@ import com.github.okomok.hano
 class OnExitTest extends org.scalatest.junit.JUnit3Suite {
 
     /**
-     * There are three types of exit message.
+     * There are two types of exit message.
      */
     def testThree {
         val xs: hano.Seq[Int] = hano.async.pull(0 until 5)
