@@ -9,12 +9,12 @@ package hano
 
 
 /**
- * Call-site context
+ * Call-site process
  */
-object Self extends Context {
+object Self extends Process {
     override def close() = ()
 
-    override def forloop(f: Reaction[Unit]) {
+    override def `do`(f: Reaction[Unit]) {
         f.enter {
             Exit.Empty
         } applying {

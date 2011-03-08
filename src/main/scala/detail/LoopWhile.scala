@@ -18,7 +18,7 @@ class LoopWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
 private[hano]
 class LoopWhileIf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqProxy[A] {
     override val self = {
-        if (_1.context eq Self) {
+        if (_1.process eq Self) {
             new LoopWhileIfSelf(_1, _2, cond)
         } else {
             new LoopWhileIfOther(_1, _2, cond)
@@ -29,7 +29,7 @@ class LoopWhileIf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean
 
 private[hano]
 class LoopWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
-    assert(_1.context ne Self)
+    assert(_1.process ne Self)
 
     override def forloop(f: Reaction[A]) {
         @volatile var status = Exit.Success.asStatus
@@ -77,7 +77,7 @@ class LoopWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Bo
 // Specialized to avoid stack-overflow.
 private[hano]
 class LoopWhileIfSelf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
-    assert(_1.context eq Self)
+    assert(_1.process eq Self)
 
     override def forloop(f: Reaction[A]) {
         @volatile var status = Exit.Success.asStatus

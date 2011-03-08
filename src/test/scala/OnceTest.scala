@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class OnceTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        val xs = hano.async.loop.pull(0 until 5).once
+        val xs = hano.async.pull(0 until 5).once
 
         expect(hano.Iter.from(0 until 5))(xs.toIter)
 

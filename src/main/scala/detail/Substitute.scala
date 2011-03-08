@@ -13,7 +13,7 @@ private[hano]
 class Substitute[A](_1: Seq[A], _2: PartialFunction[Throwable, Seq[A]]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         _1.shift {
-            context
+            process
         } onEnter {
             f.enter(_)
         } onEach {
@@ -21,7 +21,7 @@ class Substitute[A](_1: Seq[A], _2: PartialFunction[Throwable, Seq[A]]) extends 
         } onExit {
             case Exit.Failure(t) if _2.isDefinedAt(t) => {
                 _2(t).shift {
-                    context
+                    process
                 } onEnter {
                     f.enter(_)
                 } onEach {

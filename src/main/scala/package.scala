@@ -15,9 +15,9 @@ package object hano {
     def use[A](that: Arm[A]): Arm[A] = that
 
     /**
-     * Creates an asynchronous(thread-pool) context
+     * Creates an asynchronous(thread-pool) process
      */
-    def async: Context = new detail.Async()
+    def async: Process = new detail.Async()
 
     /**
      * By-name sequence

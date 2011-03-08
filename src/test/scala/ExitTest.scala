@@ -18,7 +18,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
     def testOriginClosedSent {
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
-        for (x <- hano.async.loop.onExit {
+        for (x <- hano.async.onExit {
             case hano.Exit.Failure(hano.Exit.ByOther(hano.Exit.Success)) => c.countDown
             case _ => ()
         }.pull(0 until 10)) {
@@ -31,7 +31,7 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
     def testOriginClosedNotSent {
         val c = new java.util.concurrent.CountDownLatch(1)
         val a = new java.util.ArrayList[Int]
-        for (x <- hano.async.loop.pull(0 until 10).onExit{
+        for (x <- hano.async.pull(0 until 10).onExit{
             case hano.Exit.Failure(hano.break.Control) => ()
             case _ => c.countDown
         }) {

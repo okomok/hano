@@ -12,7 +12,7 @@ package detail
 // No End sequence
 private[hano]
 class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
-    override val context = _1.context.toKnown
+    override val process = _1.process.toKnown
 
     override def forloop(f: Reaction[B]) {
         _1.noSuccess.onEnter {

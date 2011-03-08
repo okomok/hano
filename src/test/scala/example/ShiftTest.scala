@@ -3,7 +3,7 @@ package com.github.okomok.hanotest.example
 import com.github.okomok.hano
 
 /**
- * `shift` changes a context where reactions are invoked.
+ * `shift` changes a process where reactions are invoked.
  */
 class ShiftTest extends org.scalatest.junit.JUnit3Suite {
 
@@ -11,7 +11,7 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
      * `shift` to `Self` guarantees reactions has been invoked in `start` call-site.
      */
     def testShiftToSelf {
-        val xs = hano.async.loop.pull(0 until 4)
+        val xs = hano.async.pull(0 until 4)
 
         var out: List[Int] = Nil
         xs shift {
@@ -27,11 +27,11 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
      * Swing often requires a method to be invoked in the event-dispatch-thread(EDT).
      */
     def testShiftToEdt {
-        val xs = hano.async.loop.pull(0 until 4)
+        val xs = hano.async.pull(0 until 4)
 
         var out: List[Int] = Nil
         xs shift {
-            hano.Edt // `Edt` is a `Context`.
+            hano.Edt // `Edt` is a `Process`.
         } onEach { x =>
             // This reaction is invoked in the EDT.
             // ...

@@ -25,25 +25,25 @@ object listen {
     /**
      * Creates a Seq from listeners.
      */
-    def apply[A](ctx: Context = Unknown)(body: Env[A] => Unit): Seq[A] = new Apply(ctx, body)
+    def apply[A](ctx: Process = Unknown)(body: Env[A] => Unit): Seq[A] = new Apply(ctx, body)
 
     /**
      * Trivial helper to define a `Seq` directly.
      */
     trait To[A] extends SeqProxy[A] {
-        override lazy val self = hano.listen[A](context) { env =>
+        override lazy val self = hano.listen[A](process) { env =>
             listen(env)
         }
 
-        override def context = Unknown.asContext
+        override def process = Unknown.asProcess
 
         protected type Env = hano.listen.Env[A]
         protected def listen(env: Env)
     }
 
 
-    private class Apply[A](_1: Context, _2: Env[A] => Unit) extends Seq[A] {
-        override def context = _1
+    private class Apply[A](_1: Process, _2: Env[A] => Unit) extends Seq[A] {
+        override def process = _1
 
         override def forloop(f: Reaction[A]) {
             val env = new EnvImpl(f)
@@ -51,12 +51,12 @@ object listen {
             env.enter()
             _2(env)
 
-            if (context ne Unknown) {
-                context.eval {
+            if (process ne Unknown) {
+                process.eval {
                     f.enter {
                         Exit { q =>
                             env._remove()
-                            context.eval { // wrapped for thread-safety
+                            process.eval { // wrapped for thread-safety
                                 f.exit(Exit.Failure(Exit.ByOther(q)))
                             }
                         }
@@ -76,8 +76,8 @@ object listen {
                 f.enter {
                     Exit { q =>
                         _remove()
-                        if (context ne Unknown) {
-                            context.eval {
+                        if (process ne Unknown) {
+                            process.eval {
                                 f.exit(Exit.Failure(Exit.ByOther(q)))
                             }
                         }

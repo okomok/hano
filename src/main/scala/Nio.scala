@@ -24,7 +24,7 @@ object Nio {
     }
 
     private class _Selection(_1: Selector, _2: Selector => Long) extends Seq[SelectionKey] {
-        override def context = Self
+        override def process = Self
         override def forloop(f: Reaction[SelectionKey]) {
             f.enter {
                 Exit.Empty

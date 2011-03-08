@@ -141,7 +141,7 @@ class AsyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testToIterable {
-        val sample = hano.async.loop.pull(0 until 20).toIterable
+        val sample = hano.async.pull(0 until 20).toIterable
         assertEquals(hano.Iter.from(0 until 20), hano.Iter.from(sample))
     }
 /*

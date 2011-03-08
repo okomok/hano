@@ -12,7 +12,7 @@ package hano
  * Always fails without elements.
  */
 case class Fail(why: Throwable) extends Seq[Nothing] {
-    override def context = Self
+    override def process = Self
 
     override def forloop(f: Reaction[Nothing]) {
         f.enter {

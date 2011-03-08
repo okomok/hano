@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
-    override val context = _1.context upper _2.context
+    override val process = _1.process upper _2.process
 
     override def forloop(f: Reaction[A]) {
         var winner: Seq[A] = null
@@ -25,7 +25,7 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         var _p1, _p2 = Exit.Empty.asExit
 
         _1.shift {
-            context
+            process
         } onEnter { p =>
             _p1 = p
             f.enter(p)
@@ -53,7 +53,7 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         } start()
 
         _2.shift {
-            context
+            process
         } onEnter { p =>
             _p2 = p
             f.enter(p)

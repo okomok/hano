@@ -11,9 +11,9 @@ package hano
 /**
  * Immutable(single-forloop) infinite list
  */
-final class Rist[A](override val context: Context = async) extends SeqOnce[A] with java.io.Closeable {
-    require(context ne Self)
-    require(context ne Unknown)
+final class Rist[A](override val process: Process = async) extends SeqOnce[A] with java.io.Closeable {
+    require(process ne Self)
+    require(process ne Unknown)
 
     @volatile private[this] var isActive = true
     @volatile private[this] var g: Reaction[A] = null
@@ -51,7 +51,7 @@ final class Rist[A](override val context: Context = async) extends SeqOnce[A] wi
     def +=(x: A) = add(x)
 
     private def _eval(f: Reaction[A], x: A) {
-        context onEach { _ =>
+        process.single onEach { _ =>
             g beforeExit {
                 f.enter()
                 f(x)

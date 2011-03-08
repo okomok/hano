@@ -23,11 +23,11 @@ class AppendOnExit[A](_1: Seq[A], _2: Seq[A]) extends SeqProxy[A] {
 
 private[hano]
 class AppendIf[A](_1: Seq[A], _2: Seq[A], cond: Exit.Status => Boolean) extends Seq[A] {
-    override val context = _1.context upper _2.context
+    override val process = _1.process upper _2.process
 
     override def forloop(f: Reaction[A]) {
         _1.shift {
-            context
+            process
         } onEnter {
             f.enter(_)
         } onEach {
@@ -36,7 +36,7 @@ class AppendIf[A](_1: Seq[A], _2: Seq[A], cond: Exit.Status => Boolean) extends 
             f.beforeExit {
                 if (cond(q)) {
                     _2.shift {
-                        context
+                        process
                     } onEnter {
                         f.enter(_)
                     } onEach {

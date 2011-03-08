@@ -27,19 +27,19 @@ object Timer {
 /**
  * Creates a sequence of Units.
  */
-final class Timer(isDaemon: Boolean = false) extends Context { outer =>
+final class Timer(isDaemon: Boolean = false) extends Process { outer =>
     private[this] val timer = new JTimer(isDaemon)
     private[this] val now = new detail.Now
 
     override def close() = timer.cancel()
 
-    override def forloop(f: Reaction[Unit]) {
+    override def `do`(f: Reaction[Unit]) {
         val l = new TimerTask {
             override def run() {
                 try {
-                    Self.forloop(f)
+                    Self.`do`(f)
                 } catch {
-                    case t: Throwable => detail.LogErr(t, "Reaction.apply error in Timer context")
+                    case t: Throwable => detail.LogErr(t, "Timer process")
                 }
             }
         }
@@ -48,7 +48,7 @@ final class Timer(isDaemon: Boolean = false) extends Context { outer =>
     }
 
     private class Schedule(scheduler: JTimer => TimerTask => Unit, oneShot: Boolean) extends listen.To[Unit] {
-        override def context = outer.asContext
+        override def process = outer.asProcess
         override protected def listen(env: Env) {
             val l = new TimerTask {
                 override def run() = {

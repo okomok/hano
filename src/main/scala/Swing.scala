@@ -17,7 +17,7 @@ object Swing {
 
     private[hano]
     trait EdtListener[A] extends listen.To[A] {
-        final override def context = Edt
+        final override def process = Edt
     }
 
 

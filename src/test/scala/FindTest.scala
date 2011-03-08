@@ -16,7 +16,7 @@ class FindTest extends org.scalatest.junit.JUnit3Suite {
      def testAssign {
          for (i <- 0 until 1000) {
 
-             val xs = hano.async.loop.pull(0 until 90)
+             val xs = hano.async.pull(0 until 90)
 
              // Recall a `Seq` algorithm returns a single-element `Seq`.
              val x: hano.Seq[Int] = xs find { x => x == 70 }

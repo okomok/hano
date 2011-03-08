@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter.Of[Unit](_1) {
-    override def context = Timer.daemon
+    override def process = Timer.daemon
 
     override def forloop(f: Reaction[Unit]) {
         var u: Seq[Unit] = null

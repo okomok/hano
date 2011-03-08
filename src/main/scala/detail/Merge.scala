@@ -11,13 +11,13 @@ package detail
 
 private[hano]
 class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
-    override val context = _1.context upper _2.context
+    override val process = _1.process upper _2.process
 
     override def forloop(f: Reaction[A]) {
         val _end = IfFirst[Unit] { _ => () } Else { _ => f.exit(Exit.Success) }
 
         _1.shift {
-            context
+            process
         } onEnter {
             f.enter(_)
         } onEach {
@@ -28,7 +28,7 @@ class Merge[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         } start()
 
         _2.shift {
-            context
+            process
         } onEnter {
             f.enter(_)
         } onEach {

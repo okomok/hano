@@ -13,7 +13,7 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
         // `Iterator` is traversable once only, that is, *mutable*.
         val it: Iterator[Int] = Iterator(5,1,6,0,3,2,4)
 
-        val xs: hano.Seq[Int] = hano.async.loop.pull(it)
+        val xs: hano.Seq[Int] = hano.async.pull(it)
 
         // The first time is ok.
         expect(0)(hano.Val(xs.min).get)
@@ -25,7 +25,7 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
     def testMinMax {
         // `Iterator` is traversable once only, that is, mutable.
         val it: Iterator[Int] = Iterator(5,1,6,0,3,2,4)
-        val xs: hano.Seq[Int] = hano.async.loop.pull(it)
+        val xs: hano.Seq[Int] = hano.async.pull(it)
 
         val v1, v2 = new hano.Val[Int]
         xs fork { xs =>

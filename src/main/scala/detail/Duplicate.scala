@@ -28,6 +28,6 @@ class Duplicate[A](_1: Seq[A]) extends Seq[A] {
         }
     }
 
-    override def context = _1.context
+    override def process = _1.process
     override def forloop(f: Reaction[A]) = _forloop(f)
 }

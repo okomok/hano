@@ -71,7 +71,7 @@ class BagTest extends org.scalatest.junit.JUnit3Suite {
 
     def testMember {
         for (i <- 0 until 100) {
-            val as = hano.async.loop.pull(1 until 6)
+            val as = hano.async.pull(1 until 6)
             val xs = new hano.Bag[Int](50)
 /*
             as fork { as =>

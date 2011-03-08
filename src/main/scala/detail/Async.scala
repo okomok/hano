@@ -13,17 +13,17 @@ import scala.actors
 
 
 private[hano]
-class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Context {
+class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Process {
     override def close() {
         out ! Exit.Success
     }
 
-    override def forloop(f: Reaction[Unit]) {
+    override def `do`(f: Reaction[Unit]) {
         out ! Action {
             try {
-                Self.forloop(f)
+                Self.`do`(f)
             } catch {
-                case t: Throwable => LogErr(t, "aReaction.apply error in async context")
+                case t: Throwable => detail.LogErr(t, "async process")
             }
         }
     }

@@ -12,7 +12,7 @@ class AlgorithmsTest extends org.scalatest.junit.JUnit3Suite {
      * of course, the head element of sequence.
      */
     def testHead {
-        val xs: hano.Seq[Int] = hano.async.loop.pull(5 until 8)
+        val xs: hano.Seq[Int] = hano.async.pull(5 until 8)
 
         var out: Option[Int] = None
         xs.head onEach { x =>
@@ -26,7 +26,7 @@ class AlgorithmsTest extends org.scalatest.junit.JUnit3Suite {
      * Ditto `find`.
      */
     def testFind {
-        val xs = hano.async.loop.pull(5 until 8)
+        val xs = hano.async.pull(5 until 8)
 
         locally {
             var out: Option[Int] = None

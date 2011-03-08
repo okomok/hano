@@ -176,7 +176,7 @@ class CpsGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     Clearly never works.
     def testAsync {
         val it = generator.cps[Int] { y =>
-            val x = hano.async.loop.pull(0 until 20).toCps
+            val x = hano.async.pull(0 until 20).toCps
             y(x)
         }
         Thread.sleep(2000)

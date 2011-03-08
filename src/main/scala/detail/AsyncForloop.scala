@@ -12,7 +12,7 @@ package detail
 private[hano]
 object AsyncForloop {
     def apply[A](xs: Seq[A])(f: Reaction[A]) {
-        if (xs.context eq Self) {
+        if (xs.process eq Self) {
             new Thread {
                 override def run() {
                     xs.forloop(f)

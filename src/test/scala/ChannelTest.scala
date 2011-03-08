@@ -50,7 +50,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     */
 
     def loopRecSeq[A](xs: hano.Seq[A]) = new hano.Seq[A] {
-        override def context = xs.context
+        override def process = xs.process
         override def forloop(f: hano.Reaction[A]) {
             var g: hano.Reaction[A] = null
             g = new hano.Reaction[A] {
@@ -197,7 +197,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     def testOutput {
         val ch = new hano.Channel[Int]
 
-        val xs = hano.async.loop.pull(Seq(5,1,3,6,2,0,4))
+        val xs = hano.async.pull(Seq(5,1,3,6,2,0,4))
         ch << xs.reduceLeft(_ min _) << xs.reduceLeft(_ max _)
 
         expect(0)(ch.read)

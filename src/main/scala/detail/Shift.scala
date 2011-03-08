@@ -14,11 +14,11 @@ import scala.actors.Actor
 
 private[hano]
 class Shift[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
-    require(_2.context ne Unknown)
+    require(_2.process ne Unknown)
 
     override val self = {
-        val from = _1.context
-        val to = _2.context
+        val from = _1.process
+        val to = _2.process
         if (from eq to) {
             _1
         } else if (to eq Self) {
@@ -32,7 +32,7 @@ class Shift[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
 
 private[hano]
 class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
-    override def context = Self
+    override def process = Self
 
     override def forloop(f: Reaction[A]) {
         val cur = Actor.self
@@ -40,7 +40,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
 
         _1.onEnter { p =>
             cur ! Action {
-                context.noSuccess.onEach { _ =>
+                process.single.noSuccess.onEach { _ =>
                     f.enter(p)
                 } onExit {
                     _exit
@@ -49,7 +49,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         } onEach { x =>
             f.beforeExit {
                 cur ! Action {
-                    context.noSuccess.onEach { _ =>
+                    process.single.noSuccess.onEach { _ =>
                         f(x)
                     } onExit {
                         _exit
@@ -59,7 +59,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         } onExit { q =>
             f.beforeExit {
                 cur ! Action {
-                    context.onEach { _ =>
+                    process.single.onEach { _ =>
                         _exit(q)
                     } onExit {
                         case Exit.Failure(t) => LogErr(t, "Reaction.exit error")
@@ -82,12 +82,12 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
 
 private[hano]
 class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
-    assert(_2.context ne Self)
-    override def context = _2.context
+    assert(_2.process ne Self)
+    override def process = _2.process
 
     override def forloop(f: Reaction[A]) {
         _1.onEnter { p =>
-            context.noSuccess.onEach { _ =>
+            process.single.noSuccess.onEach { _ =>
                 f.enter(p)
             } onExit {
                 f.exit
@@ -95,7 +95,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
 
         } onEach { x =>
             f.beforeExit {
-                context.noSuccess.onEach { _ =>
+                process.single.noSuccess.onEach { _ =>
                     f(x)
                 } onExit {
                     f.exit
@@ -103,7 +103,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
             }
         } onExit { q =>
             f.beforeExit {
-                context.onEach { _ =>
+                process.single.onEach { _ =>
                     f.exit(q)
                 } onExit {
                     case Exit.Failure(t) => LogErr(t, "Reaction.exit error")

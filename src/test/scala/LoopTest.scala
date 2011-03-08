@@ -12,31 +12,31 @@ import com.github.okomok.hano
 class LoopTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        val xs = hano.Self.loop.pull(1 until 4)
+        val xs = hano.Self.pull(1 until 4)
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
     }
 
     def testTrivial2 {
         for (i <- 0 until 300) {
-            val xs = hano.async.loop.pull(1 until 4)
+            val xs = hano.async.pull(1 until 4)
             expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
         }
     }
 
     /*
     def testClosingShallBeSync {
-        val xs = hano.async.loop.closing{Thread.sleep(100);false}.pull(1 until 4).closing{Thread.sleep(100);false}
+        val xs = hano.async.closing{Thread.sleep(100);false}.pull(1 until 4).closing{Thread.sleep(100);false}
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
     }
     */
 
     def testReact {
-        val xs = hano.async.loop.onEach(_ => ()).pull(1 until 4)
+        val xs = hano.async.onEach(_ => ()).pull(1 until 4)
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1,2))(xs.loop.take(11).toIter)
     }
 
     def testBreak {
-        val xs = hano.async.loop.pull(1 until 100)
+        val xs = hano.async.pull(1 until 100)
 
         val out = new java.util.ArrayList[Int]
         var i = 0
@@ -53,7 +53,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testCloseIndirect {
-        val xs = hano.async.loop.pull(1 until 100)
+        val xs = hano.async.pull(1 until 100)
 
         val out = new java.util.ArrayList[Int]
         var i = 0
@@ -71,7 +71,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
 /*
     def testCloseParallel {
         val suite = new ParallelSuite(10)
-        val xs = hano.async.loop.pull(1 until 100)
+        val xs = hano.async.pull(1 until 100)
         suite.add(1) {
             for (x <- xs.loop.take(500)) {
                 ()
@@ -86,7 +86,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
     }
     def testResource {
         class MyResource extends hano.SeqResource[Int] {
-            override val context = hano.Self
+            override val process = hano.Self
             override def closeResource = ()
             override def openResource(f: hano.Reaction[Int]) {
                 f(1); f(2); f(3); f.exit()
@@ -100,7 +100,7 @@ class LoopTest extends org.scalatest.junit.JUnit3Suite {
         var count = 0
         class MyResource extends hano.Seq[Int] {
             count += 1
-            override val context = hano.Self
+            override val process = hano.Self
             override def forloop(f: hano.Reaction[Int]) {
                 f(1); f(2); f(3); f.exit()
             }

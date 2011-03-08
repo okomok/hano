@@ -14,7 +14,7 @@ import java.util.LinkedList
 
 private[hano]
 class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
-    override val context = _1.context upper _2.context
+    override val process = _1.process upper _2.process
 
     override def forloop(f: Reaction[(A, B)]) {
         var ends1 = false
@@ -24,7 +24,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         def _invariant() = assert(c1.isEmpty || c2.isEmpty)
 
         _1 shift {
-            context
+            process
         } onEnter {
             f.enter(_)
         } onEach { x =>
@@ -48,7 +48,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
         } start()
 
         _2 shift {
-            context
+            process
         } onEnter {
             f.enter(_)
         } onEach { y =>

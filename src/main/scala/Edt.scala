@@ -9,19 +9,19 @@ package hano
 
 
 /**
- * Event-dispatch-thread context
+ * Event-dispatch-thread process
  */
-object Edt extends Context {
+object Edt extends Process {
     override def close() = ()
 
-    override def forloop(f: Reaction[Unit]) {
+    override def `do`(f: Reaction[Unit]) {
         javax.swing.SwingUtilities.invokeLater {
             new Runnable {
                 override def run() {
                     try {
-                        Self.forloop(f)
+                        Self.`do`(f)
                     } catch {
-                        case t: Throwable => detail.LogErr(t, "Reaction.apply error in Edt context")
+                        case t: Throwable => detail.LogErr(t, "Edt process")
                     }
                 }
             }

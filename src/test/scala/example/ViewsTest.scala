@@ -12,7 +12,7 @@ class ViewsTest extends org.scalatest.junit.JUnit3Suite {
      * `map` and `filter, the famous ones.
      */
     def testMapFilter {
-        val xs: hano.Seq[Int] = hano.async.loop.pull(0 until 3)
+        val xs: hano.Seq[Int] = hano.async.pull(0 until 3)
 
         var out: List[String] = Nil
         xs map { x =>
@@ -30,7 +30,7 @@ class ViewsTest extends org.scalatest.junit.JUnit3Suite {
      * `append` concatenates two sequences.
      */
     def testAppend {
-        val xs: hano.Seq[Int] = hano.async.loop.pull(0 until 3)
+        val xs: hano.Seq[Int] = hano.async.pull(0 until 3)
         val ys: hano.Seq[Int] = new hano.Timer().schedule(0, 100).pull(3 until 6)
 
         var out: List[Int] = Nil

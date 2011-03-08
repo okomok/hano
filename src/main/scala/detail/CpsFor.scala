@@ -15,7 +15,7 @@ import scala.util.continuations.{cpsParam, reset}
 private[hano]
 class CpsFor[+A](_1: Seq[A]) {
     def foreach(g: A => Any @cpsParam[Unit, Unit]): Exit.Status @cpsParam[Any, Unit] = new Seq[Exit.Status] {
-        override def context = _1.context
+        override def process = _1.process
         override def forloop(cp: Reaction[Exit.Status]) {
             _1.onEach { x =>
                 reset {

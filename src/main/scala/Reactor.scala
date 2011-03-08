@@ -59,7 +59,7 @@ trait Reactor extends Actor {
         super.restart
     }
 
-    final val hanoContext: Context = new detail.Async(this)
+    final val hanoProcess: Process = new detail.Async(this)
 
     private def _hanoAddPrimary(f: Reaction[Any]) {
         this ! Action {
@@ -114,14 +114,14 @@ object Reactor {
     }
 
     private class Primary(_1: Reactor) extends Seq[Any] {
-        override val context = _1.hanoContext
+        override val process = _1.hanoProcess
         override def forloop(f: Reaction[Any]) {
             _1._hanoAddPrimary(f)
         }
     }
 
     private[hano] class Secondary(_1: Reactor) extends Seq[Any] {
-        override val context = _1.hanoContext
+        override val process = _1.hanoProcess
         override def forloop(f: Reaction[Any]) {
             _1._hanoAddSecondary(new detail.WrappedReaction(f))
         }

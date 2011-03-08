@@ -9,12 +9,12 @@ package hano
 
 
 /**
- * Unknown context
+ * Unknown process
  */
-object Unknown extends Context {
+object Unknown extends Process {
     override def close() = ()
 
-    override def forloop(f: Reaction[Unit]) {
-        throw new UnsupportedOperationException("Unknown.forloop")
+    override def `do`(f: Reaction[Unit]) {
+        throw new UnsupportedOperationException("Unknown.do")
     }
 }

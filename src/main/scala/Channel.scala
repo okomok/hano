@@ -20,12 +20,12 @@ import detail.Synchronized
  * Asynchronous channel
  * This is mutable one-element sequence; As you foreach, element varies.
  */
-final class Channel[A](override val context: Context = async) extends Seq[A] {
-    require(context ne Self)
-    require(context ne Unknown)
+final class Channel[A](override val process: Process = async) extends Seq[A] {
+    require(process ne Self)
+    require(process ne Unknown)
 
     private class Node[A] {
-        val value = new Val[A](context) // shares context.
+        val value = new Val[A](process) // shares a process.
         var next: Node[A] = null
     }
 

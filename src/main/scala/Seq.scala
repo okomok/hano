@@ -16,7 +16,7 @@ object Seq extends detail.Conversions with detail.PseudoMethods {
     /**
      * Creates a sequence initially containing the specified elements.
      */
-    @annotation.equivalentTo("Self.loop.pull(from)")
+    @annotation.equivalentTo("Self.pull(from)")
     def apply[A](from: A*): Seq[A] = from
 }
 
@@ -37,9 +37,9 @@ trait Seq[+A] {
 // kernel
 
     /**
-     * Context where Reactions are invoked.
+     * Process where Reactions are invoked.
      */
-    def context: Context
+    def process: Process
 
     /**
      * (Possibly) asynchronous foreach with the end reaction.
@@ -355,12 +355,12 @@ trait Seq[+A] {
     def indices: Seq[Int] = new detail.Indices(this)
 
     /**
-     * Reactions are invoked in the context of `that`.
+     * Reactions are invoked in the process of `that`.
      */
     def shift(that: Seq[_]): Seq[A] = new detail.Shift(this, that)
 
     /**
-     * `forloop` are invoked in the context of `that`.
+     * `forloop` are invoked in the process of `that`.
      */
     def shiftStart(that: Seq[_]): Seq[A] = new detail.ShiftStart(this, that)
 

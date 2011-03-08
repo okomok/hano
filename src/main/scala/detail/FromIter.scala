@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class FromIter[A](_1: Iter[A]) extends Seq[A] {
-    override def context = Self
+    override def process = Self
 
     override def forloop(f: Reaction[A]) {
         @volatile var status = Exit.Success.asStatus

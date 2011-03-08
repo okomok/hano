@@ -11,9 +11,9 @@ package hano
 /**
  * Immutable infinite unordered multi-set
  */
-final class Bag[A](val capacity: Int, override val context: Context = async) extends Seq[A] {
-    require(context ne Self)
-    require(context ne Unknown)
+final class Bag[A](val capacity: Int, override val process: Process = async) extends Seq[A] {
+    require(process ne Self)
+    require(process ne Unknown)
 
     private[this] var cur = 0
     private[this] val curLock = new java.util.concurrent.locks.ReentrantLock
@@ -21,7 +21,7 @@ final class Bag[A](val capacity: Int, override val context: Context = async) ext
     private[this] lazy val vs: Array[Val[A]] = {
         val that = new Array[Val[A]](capacity)
         for (i <- 0 until capacity) {
-            that(i) = new Val[A](context)
+            that(i) = new Val[A](process)
         }
         that
     }

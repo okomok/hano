@@ -19,9 +19,9 @@ import detail.CountDown
 /**
  * Single-assignment value as single-element sequence
  */
-final class Val[A](override val context: Context = async) extends Seq[A] {
-    require(context ne Self)
-    require(context ne Unknown)
+final class Val[A](override val process: Process = async) extends Seq[A] {
+    require(process ne Self)
+    require(process ne Unknown)
 
     private[this] val v = new concurrent.atomic.AtomicReference[Either[Throwable, A]](null)
     private[this] val fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]
@@ -117,7 +117,7 @@ final class Val[A](override val context: Context = async) extends Seq[A] {
     }
 
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
-        context onEnter {
+        process.single onEnter {
             f.enter(_)
         } onEach { _ =>
             tx match {

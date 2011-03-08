@@ -32,7 +32,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     /**
-     * Reactions on `Val` run in asynchronous context.
+     * Reactions on `Val` run in asynchronous process.
      */
     def testAsync {
         val v = new hano.Val[Int]
@@ -69,7 +69,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
      * You can assign a single-element sequence to `Val`.
      */
      def testAssign {
-         val xs = hano.async.loop.pull(0 until 9)
+         val xs = hano.async.pull(0 until 9)
 
          // Recall a `Seq` algorithm returns a single-element `Seq`.
          val x: hano.Seq[Int] = xs find { x => x == 7 }

@@ -9,13 +9,13 @@ package hano
 
 
 /**
- * A single-element sequence in Self context
+ * A single-element sequence in Self process
  */
 case class Single[A](_1: A) extends Seq[A] {
-    override def context = Self
+    override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        context.onEnter {
+        process.single.onEnter {
             f.enter(_)
         } onEach { _ =>
             f(_1)

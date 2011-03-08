@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class AsyncTest extends org.scalatest.junit.JUnit3Suite {
 
     def naturals: hano.Seq[Int] = {
-        hano.async.loop.pull(0 until 1000)
+        hano.async.pull(0 until 1000)
     }
 
     def testTrivial {
@@ -33,7 +33,7 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testReallyLazy {
-        val xs = hano.async.loop.pull(Iterator.continually(10)).take(3)
+        val xs = hano.async.pull(Iterator.continually(10)).take(3)
 
         expect(hano.Iter(10,10,10))(xs.toIter)
         expect(hano.Iter(10,10,10))(xs.toIter)

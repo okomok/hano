@@ -9,10 +9,10 @@ package hano
 
 
 /**
- * The empty sequence in Self context
+ * The empty sequence in Self process
  */
 object Empty extends Seq[Nothing] {
-    override def context = Self
+    override def process = Self
     override def forloop(f: Reaction[Nothing]) {
         f.enter {
             Exit.Empty

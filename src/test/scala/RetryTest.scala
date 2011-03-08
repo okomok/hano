@@ -12,19 +12,19 @@ import com.github.okomok.hano
 class RetryTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivialSelf {
-        val xs = hano.Self.loop.pull(1 until 4).retry(4)
+        val xs = hano.Self.pull(1 until 4).retry(4)
         expect(hano.Iter(1,2,3))(xs.toIter)
     }
 
     def testTrivialAsync {
-        val xs = hano.async.loop.pull(1 until 4).retry(4)
+        val xs = hano.async.pull(1 until 4).retry(4)
         expect(hano.Iter(1,2,3))(xs.toIter)
     }
 
     class MyError extends RuntimeException
 
     def testAsync {
-        val xs = hano.async.loop.pull(0 until 5)
+        val xs = hano.async.pull(0 until 5)
 
         def ys(n: Int) = {
             var i = 0

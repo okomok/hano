@@ -34,7 +34,7 @@ class TimerTezt {
 }
 
 
-class TimerContextTest extends org.scalatest.junit.JUnit3Suite {
+class TimerProcessTest extends org.scalatest.junit.JUnit3Suite {
 
     val t = new hano.Timer(true)
     def testConforming {

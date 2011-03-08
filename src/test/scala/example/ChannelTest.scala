@@ -21,7 +21,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
             for (x <- ch) {
                 out = Some(x)
             }
-            Thread.sleep(500) // `Channel` context is asynchronous.
+            Thread.sleep(500) // `Channel` process is asynchronous.
             expect(1)(out.get)
         }
 
@@ -82,7 +82,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
      * Like `Val`, you can write a single-element sequence into `Channel`.
      */
     def testOutput {
-        val xs = hano.async.loop.pull(1 until 6)
+        val xs = hano.async.pull(1 until 6)
 
         val ch = new hano.Channel[Int]
         ch << xs.reduce(_ + _) << xs.reduce(_ * _)

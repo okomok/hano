@@ -9,7 +9,7 @@ package hano
 package detail
 
 
-// For `Timer` to be a conforming `Context`
+// For `Timer` to be a conforming `Process`
 
 
 import java.util.Date

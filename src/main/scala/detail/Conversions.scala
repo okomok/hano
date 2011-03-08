@@ -31,10 +31,10 @@ trait Conversions { self: Seq.type =>
 
 private[hano]
 class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Seq[A] {
-    override def context = Self
+    override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        context.onEnter {
+        process.single.onEnter {
             f.enter(_)
         } onEach { _ =>
             _1.foreach(f(_))
@@ -53,7 +53,7 @@ class ToTraversable[A](_1: Seq[A]) extends scala.collection.Traversable[A] {
 private[hano]
 class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
     override def iterator = {
-        if (_1.context eq Self) {
+        if (_1.process eq Self) {
             new SyncIterable(_1).iterator
         } else {
             new AsyncIterable(_1).iterator
@@ -64,10 +64,10 @@ class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
 
 private[hano]
 class FromResponder[A](_1: Responder[A]) extends Seq[A] {
-    override def context = Self
+    override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        context.onEnter {
+        process.single.onEnter {
             f.enter(_)
         } onEach { _ =>
             _1.respond(f(_))
@@ -85,10 +85,10 @@ class ToResponder[A](_1: Seq[A]) extends Responder[A] {
 
 private[hano]
 class FromCps[A](from: => A @continuations.suspendable) extends Seq[A] {
-    override def context = Self
+    override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        context.onEnter {
+        process.single.onEnter {
             f.enter(_)
         } onEach { _ =>
             continuations.reset {

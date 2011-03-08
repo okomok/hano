@@ -13,7 +13,7 @@ package hano
  */
 trait SeqAdapter[+A] extends Seq[A] {
     protected def underlying: Seq[_]
-    override def context = underlying.context
+    override def process = underlying.process
 }
 
 object SeqAdapter {

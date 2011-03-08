@@ -11,7 +11,7 @@ class OnExitTest extends org.scalatest.junit.JUnit3Suite {
      * There are three types of exit message.
      */
     def testThree {
-        val xs: hano.Seq[Int] = hano.async.loop.pull(0 until 5)
+        val xs: hano.Seq[Int] = hano.async.pull(0 until 5)
 
         locally {
             var out: List[Int] = Nil

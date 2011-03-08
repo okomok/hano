@@ -36,7 +36,7 @@ object generator {
             def apply(x: A): Unit @suspendable
             def amb[B](xs: Iter[B]): B @cpsParam[Any, Unit]
             def get[B](xs: Seq[B]): B @cpsParam[Any, Unit] = {
-                require(xs.context eq Self)
+                require(xs.process eq Self)
                 new detail.CheckSingle(xs).toCps
             }
             def require(cond: Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Single(()) else Empty).toCps
@@ -45,7 +45,7 @@ object generator {
     }
 
     private class BodyToSeq[A](_1: Reaction[A] with java.io.Flushable => Unit) extends Seq[A] {
-        override def context = Self
+        override def process = Self
         override def forloop(f: Reaction[A]) {
             val g = new ToFlushable(f)
             try {

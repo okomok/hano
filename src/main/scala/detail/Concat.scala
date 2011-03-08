@@ -10,19 +10,19 @@ package detail
 
 
 private[hano]
-class ConcatIf[A](_1: Iter[Seq[A]], _2: Context, cond: Exit.Status => Boolean) extends Seq[A] {
-    override def context = _2
+class ConcatIf[A](_1: Iter[Seq[A]], _2: Process, cond: Exit.Status => Boolean) extends Seq[A] {
+    override def process = _2
 
     override def forloop(f: Reaction[A]) {
 
         def rec(it: Iterator[Seq[A]]) {
             it.next.shift {
-                context
+                process
             } onEnter { p =>
                 f.enter {
                     Exit { q =>
                         p(q)
-                        context.eval { // for thread-safety
+                        process.eval { // for thread-safety
                             f.exit(Exit.Failure(Exit.ByOther(q)))
                         }
                     }
@@ -47,7 +47,7 @@ class ConcatIf[A](_1: Iter[Seq[A]], _2: Context, cond: Exit.Status => Boolean) e
         val it = _1.ator
 
         if (!it.hasNext) {
-            context.eval {
+            process.eval {
                 f.exit(Exit.Success)
             }
         } else {
