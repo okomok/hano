@@ -437,6 +437,8 @@ trait Seq[+A] {
 
     def find(p: A => Boolean): Seq[A] = new detail.Find(this, p)
 
+    def count(p: A => Boolean): Seq[Int] = new detail.Count(this, p)
+
     def forall(p: A => Boolean): Seq[Boolean] = new detail.Forall(this, p)
 
     def exists(p: A => Boolean): Seq[Boolean] = new detail.Exists(this, p)

@@ -223,6 +223,11 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
         expect(5)(v())
     }
 
+    def testCount {
+        val xs = hano.async.loop.pull(Seq(3,1,8,6,7,4,2,9))
+        val find = hano.Val(xs.count(_ % 2 == 0))
+        expect(4)(find())
+    }
 
 
 /* hmmmmmm....

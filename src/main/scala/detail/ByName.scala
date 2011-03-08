@@ -18,6 +18,7 @@ class ByName[A](_1: () => Seq[A]) extends Seq[A] {
 }
 
 
+private[hano]
 object ByName {
 
     private class Shift[A](_1: () => Seq[A], _2: Seq[_]) extends Seq[A] {

@@ -107,6 +107,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def last: Seq[A] = around(self.last)
     override def nth(n: Int): Seq[A] = around(self.nth(n))
     override def find(p: A => Boolean): Seq[A] = around(self.find(p))
+    override def count(p: A => Boolean): Seq[Int] = around(self.count(p))
     override def forall(p: A => Boolean): Seq[Boolean] = around(self.forall(p))
     override def exists(p: A => Boolean): Seq[Boolean] = around(self.exists(p))
     override def foldLeft[B](z: B)(op: (B, A) => B): Seq[B] = around(self.foldLeft(z)(op))
