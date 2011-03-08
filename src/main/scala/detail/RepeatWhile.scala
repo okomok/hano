@@ -10,25 +10,25 @@ package detail
 
 
 private[hano]
-class LoopWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
-    override val self = new LoopWhileIf(_1, _2, _.isSuccess)
+class RepeatWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
+    override val self = new RepeatWhileIf(_1, _2, _.isSuccess)
 }
 
 
 private[hano]
-class LoopWhileIf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqProxy[A] {
+class RepeatWhileIf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqProxy[A] {
     override val self = {
         if (_1.process eq Self) {
-            new LoopWhileIfSelf(_1, _2, cond)
+            new RepeatWhileIfSelf(_1, _2, cond)
         } else {
-            new LoopWhileIfOther(_1, _2, cond)
+            new RepeatWhileIfOther(_1, _2, cond)
         }
     }
 }
 
 
 private[hano]
-class LoopWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
+class RepeatWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
     assert(_1.process ne Self)
 
     override def forloop(f: Reaction[A]) {
@@ -76,7 +76,7 @@ class LoopWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Bo
 
 // Specialized to avoid stack-overflow.
 private[hano]
-class LoopWhileIfSelf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
+class RepeatWhileIfSelf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
     assert(_1.process eq Self)
 
     override def forloop(f: Reaction[A]) {

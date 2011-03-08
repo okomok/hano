@@ -367,18 +367,18 @@ trait Seq[+A] {
     /**
      * Cycles this sequence indefinitely.
      */
-    @annotation.equivalentTo("loopWhile(true)")
+    @annotation.equivalentTo("repeatWhile(true)")
     def loop: Seq[A] = new detail.Loop(this)
-
-    /**
-     * Cycles this sequence while `p` returns `true`.
-     */
-    def loopWhile(p: => Boolean): Seq[A] = new detail.LoopWhile(this, () => p)
 
     /**
      * Cycles this sequence `n` times.
      */
     def repeat(n: Int): Seq[A] = new detail.Repeat(this, n)
+
+    /**
+     * Cycles this sequence while `p` returns `true`.
+     */
+    def repeatWhile(p: => Boolean): Seq[A] = new detail.RepeatWhile(this, () => p)
 
     /**
      * Retries until this sequence ends successfully.

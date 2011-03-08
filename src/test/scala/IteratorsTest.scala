@@ -21,9 +21,9 @@ class IteratorsTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter(1,2,3,1,2,3,1,2,3,1))(hano.Iter.from(it))
     }
 
-    def testLoopWhile {
+    def testRepeatWhile {
         var i = 0
-        val it = hano.Iterators.loopWhile(Iterator(1,2,3)){i += 1; i != 3}
+        val it = hano.Iterators.repeatWhile(Iterator(1,2,3)){i += 1; i != 3}
         expect(hano.Iter(1,2,3,1,2,3))(hano.Iter.from(it))
     }
 

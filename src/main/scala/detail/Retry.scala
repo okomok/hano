@@ -13,6 +13,6 @@ private[hano]
 class Retry[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         val pred = new TrueUntil(_2 + 1)
-        new LoopWhileIf(_1, pred, !_.isSuccess).forloop(f)
+        new RepeatWhileIf(_1, pred, !_.isSuccess).forloop(f)
     }
 }

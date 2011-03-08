@@ -30,7 +30,7 @@ object Iterators {
     /**
      * Cycles an `Iterator` while `p` returns `true`.
      */
-    def loopWhile[A](it: Iter[A])(p: => Boolean): Iterator[A] = Iterator.continually(()).takeWhile(_ => p).flatMap(_ => it.ator)
+    def repeatWhile[A](it: Iter[A])(p: => Boolean): Iterator[A] = Iterator.continually(()).takeWhile(_ => p).flatMap(_ => it.ator)
 
     /**
      * Cycles an `Iterator` `n` times.
