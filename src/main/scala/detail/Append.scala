@@ -11,18 +11,13 @@ package detail
 
 private[hano]
 class Append[A](_1: Seq[A], _2: Seq[A]) extends SeqProxy[A] {
-    override val self = new AppendIf(_1, _2, {
-        case Exit.Success => true
-        case _ => false
-    })
+    override val self = new AppendIf(_1, _2, _.isSuccess)
 }
 
 
 private[hano]
 class AppendOnExit[A](_1: Seq[A], _2: Seq[A]) extends SeqProxy[A] {
-    override val self = new AppendIf(_1, _2, {
-        _ => true
-    })
+    override val self = new AppendIf(_1, _2, _ => true)
 }
 
 

@@ -13,24 +13,24 @@ private[hano]
 class LoopWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
     override val self = {
         if (_1.context eq Self) {
-            new LoopWhileSelf(_1, _2)
+            new LoopWhileIfSelf(_1, _2, _.isSuccess)
         } else {
-            new LoopWhileOther(_1, _2)
+            new LoopWhileIfOther(_1, _2, _.isSuccess)
         }
     }
 }
 
 
 private[hano]
-class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean) extends SeqAdapter.Of[A](_1) {
+class LoopWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
     assert(_1.context ne Self)
 
     override def forloop(f: Reaction[A]) {
         @volatile var status = Exit.Success.asStatus
         @volatile var isActive = true
 
-        def rec(xs: Seq[A]) {
-            xs.onEnter { p =>
+        def rec() {
+            _1.onEnter { p =>
                 f.enter {
                     Exit { q =>
                         p(q)
@@ -50,37 +50,37 @@ class LoopWhileOther[A](_1: Seq[A], _2: () => Boolean) extends SeqAdapter.Of[A](
                 }
             } onExit { q =>
                 f.beforeExit {
-                    q match {
-                        case Exit.Success => {
-                            if (isActive) {
-                                rec(xs)
-                            } else {
-                                f.exit(status)
-                            }
+                    if (cond(q)) {
+                        if (isActive) {
+                            rec()
+                        } else {
+                            f.exit(status)
                         }
-                        case q => f.exit(q)
+                    } else {
+                        f.exit(q)
                     }
                 }
             } start()
         }
 
-        rec(_1)
+        rec()
     }
 }
 
 
 // Specialized to avoid stack-overflow.
 private[hano]
-class LoopWhileSelf[A](_1: Seq[A], _2: () => Boolean) extends SeqAdapter.Of[A](_1) {
+class LoopWhileIfSelf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
     assert(_1.context eq Self)
 
     override def forloop(f: Reaction[A]) {
         @volatile var status = Exit.Success.asStatus
         @volatile var isActive = true
 
-        @scala.annotation.tailrec
-        def rec() {
-            _1.noSuccess.onEnter { p =>
+        var go = true
+        while (go) {
+            go = false
+            _1.onEnter { p =>
                 f.enter {
                     Exit { q =>
                         p(q)
@@ -91,19 +91,26 @@ class LoopWhileSelf[A](_1: Seq[A], _2: () => Boolean) extends SeqAdapter.Of[A](_
                 if (!_2()) {
                     f.exit(Exit.Success)
                 }
-            } onEach {
-                f(_)
-            } onExit {
-                f.exit(_)
+            } onEach { x =>
+                f.beforeExit {
+                    f(x)
+                    if (!isActive) {
+                        f.exit(status) // exit immediately
+                    }
+                }
+            } onExit { q =>
+                f.beforeExit {
+                    if (cond(q)) {
+                        if (isActive) {
+                            go = true
+                        } else {
+                            f.exit(status)
+                        }
+                    } else {
+                        f.exit(q)
+                    }
+                }
             } start()
-
-            if (isActive) {
-                rec()
-            } else {
-                f.exit(status)
-            }
         }
-
-        rec()
     }
 }
