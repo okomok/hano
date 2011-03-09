@@ -365,18 +365,18 @@ trait Seq[+A] {
     def shiftStart(that: Seq[_]): Seq[A] = new detail.ShiftStart(this, that)
 
     /**
-     * Cycles this sequence indefinitely.
+     * Repeats this sequence indefinitely.
      */
     @annotation.equivalentTo("repeatWhile(_ => true)")
-    def loop: Seq[A] = new detail.Loop(this)
+    def cycle: Seq[A] = new detail.Cycle(this)
 
     /**
-     * Cycles this sequence `n` times.
+     * Repeats this sequence `n` times.
      */
     def repeat(n: Int): Seq[A] = new detail.Repeat(this, n)
 
     /**
-     * Cycles this sequence while `p` returns `true`.
+     * Repeats this sequence while `p` returns `true`.
      */
     def repeatWhile(p: Option[Exit.Status] => Boolean): Seq[A] = new detail.RepeatWhile(this, p)
 
@@ -416,7 +416,7 @@ trait Seq[+A] {
     def eithers: Seq[Either[Exit.Status, A]] = new detail.Eithers(this)
 
     /**
-     * Increases the loop grain-size.
+     * Increases the cycle grain-size.
      */
     def amplify(n: Int): Seq[A] = new detail.Amplify(this, n)
 

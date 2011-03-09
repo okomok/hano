@@ -60,7 +60,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     /**
-     * Recall `loop` cycles a sequence infinitely. So that, ...
+     * `cycle` repeats a sequence infinitely. So that, ...
      */
     def testLoop {
         val ch = new hano.Channel[Int]
@@ -69,7 +69,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         ch write 3
 
         var out: List[Int] = Nil
-        ch.loop take {
+        ch.cycle take {
             3
         } onEach { x =>
             out :+= x

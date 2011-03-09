@@ -25,7 +25,7 @@ trait Process extends Seq[Unit] with java.io.Closeable {
     @annotation.threadSafe
     def `do`(f: Reaction[Unit])
 
-    final override def forloop(f: Reaction[Unit]) = single.loop.forloop(f)
+    final override def forloop(f: Reaction[Unit]) = single.cycle.forloop(f)
 
     final def eval(body: => Unit) = single.foreach(_ => body)
 

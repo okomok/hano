@@ -23,17 +23,17 @@ object Iterators {
     def currentDate: Iterator[java.util.Date] = Iterator.continually(new java.util.Date)
 
     /**
-     * Cycles an `Iterator` indefinitely.
+     * Repeats an `Iterator` indefinitely.
      */
-    def loop[A](it: Iter[A]): Iterator[A] = Iterator.continually(()).flatMap(_ => it.ator)
+    def cycle[A](it: Iter[A]): Iterator[A] = Iterator.continually(()).flatMap(_ => it.ator)
 
     /**
-     * Cycles an `Iterator` `n` times.
+     * Repeats an `Iterator` `n` times.
      */
     def repeat[A](it: Iter[A], n: Int): Iterator[A] = Iterator.continually(()).take(n).flatMap(_ => it.ator)
 
     /**
-     * Cycles an `Iterator` while `p` returns `true`.
+     * Repeats an `Iterator` while `p` returns `true`.
      */
     def repeatWhile[A](it: Iter[A])(p: => Boolean): Iterator[A] = Iterator.continually(()).takeWhile(_ => p).flatMap(_ => it.ator)
 

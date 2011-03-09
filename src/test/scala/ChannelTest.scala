@@ -140,7 +140,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
 
         val q = new java.util.concurrent.ConcurrentLinkedQueue[Int]
         suite.add(10) {
-            for (x <- ch.loop) {
+            for (x <- ch.cycle) {
                 q.offer(x)
             }
         }
@@ -182,7 +182,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
 
         val q = new java.util.concurrent.ConcurrentLinkedQueue[Int]
         suite.add(10) {
-            for (x <- ch.loop.take(4)) {
+            for (x <- ch.cycle.take(4)) {
                 q.offer(x)
             }
         }
