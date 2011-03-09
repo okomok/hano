@@ -62,6 +62,11 @@ trait Seq[+A] {
 
     def append[B >: A](that: Seq[B]): Seq[B] = new detail.Append[B](this, that)
 
+    /**
+     * Appends `that` if `p` returns `true`.
+     */
+    def appendIf[B >: A](that: Seq[B])(p: Exit.Status => Boolean): Seq[B] = new detail.AppendIf[B](this, that, p)
+
     @annotation.aliasOf("append")
     final def ++[B >: A](that: Seq[B]): Seq[B] = append(that)
 
@@ -72,11 +77,6 @@ trait Seq[+A] {
     def race[B >: A](that: Seq[B]): Seq[B] = new detail.Race[B](this, that)
 
     def map[B](f: A => B): Seq[B] = new detail.Map(this, f)
-
-    /**
-     * Appends `that` on the exit; `that` is always appended.
-     */
-    def appendOnExit[B >: A](that: Seq[B]): Seq[B] = new detail.AppendOnExit[B](this, that)
 
     /**
      * Appends `that` in case of a failure.
