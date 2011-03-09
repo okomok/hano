@@ -22,13 +22,7 @@ class Substitute[A](_1: Seq[A], _2: PartialFunction[Throwable, Seq[A]]) extends 
             case Exit.Failure(t) if _2.isDefinedAt(t) => {
                 _2(t).shift {
                     process
-                } onEnter {
-                    f.enter(_)
-                } onEach {
-                    f(_)
-                } onExit {
-                    f.exit(_)
-                } start()
+                } forloop(f)
             }
             case q => f.exit(q)
         } start()

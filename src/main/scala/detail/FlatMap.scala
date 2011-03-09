@@ -11,21 +11,15 @@ package detail
 
 // No End sequence
 private[hano]
-class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends Seq[B] {
-    override val process = _1.process.toKnown
-
+class FlatMap[A, B](_1: Seq[A], _2: A => Seq[B]) extends SeqAdapter.Of[B](_1) {
     override def forloop(f: Reaction[B]) {
         _1.noSuccess.onEnter {
             f.enter(_)
         } onEach { x =>
             f.beforeExit {
                 _2(x).noSuccess.shift {
-                    _1
-                } onEach {
-                    f(_)
-                } onExit {
-                    f.exit(_)
-                } start()
+                    process
+                } forloop(f)
             }
         } onExit {
             f.exit(_)

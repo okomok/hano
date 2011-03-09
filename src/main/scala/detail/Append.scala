@@ -37,13 +37,7 @@ class AppendIf[A](_1: Seq[A], _2: Seq[A], cond: Exit.Status => Boolean) extends 
                 if (cond(q)) {
                     _2.shift {
                         process
-                    } onEnter {
-                        f.enter(_)
-                    } onEach {
-                        f(_)
-                    } onExit {
-                        f.exit(_)
-                    } start()
+                    } forloop(f)
                 } else {
                     f.exit(q)
                 }
