@@ -10,30 +10,25 @@ package detail
 
 
 private[hano]
-class RepeatWhile[A](_1: Seq[A], _2: () => Boolean) extends SeqProxy[A] {
-    override val self = new RepeatWhileIf(_1, _2, _.isSuccess)
-}
-
-
-private[hano]
-class RepeatWhileIf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqProxy[A] {
+class RepeatWhile[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends SeqProxy[A] {
     override val self = {
         if (_1.process eq Self) {
-            new RepeatWhileIfSelf(_1, _2, cond)
+            new RepeatWhileSelf(_1, _2)
         } else {
-            new RepeatWhileIfOther(_1, _2, cond)
+            new RepeatWhileOther(_1, _2)
         }
     }
 }
 
 
 private[hano]
-class RepeatWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
+class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends SeqAdapter.Of[A](_1) {
     assert(_1.process ne Self)
 
     override def forloop(f: Reaction[A]) {
         @volatile var status = Exit.Success.asStatus
         @volatile var isActive = true
+        val begin = new DoOnce
 
         def rec() {
             _1.onEnter { p =>
@@ -44,8 +39,10 @@ class RepeatWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => 
                         isActive = false
                     }
                 }
-                if (!_2()) {
-                    f.exit(Exit.Success)
+                begin {
+                    if (!_2(None)) {
+                        f.exit(Exit.Success)
+                    }
                 }
             } onEach { x =>
                 f.beforeExit {
@@ -56,7 +53,7 @@ class RepeatWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => 
                 }
             } onExit { q =>
                 f.beforeExit {
-                    if (cond(q)) {
+                    if (_2(Some(q))) {
                         if (isActive) {
                             rec()
                         } else {
@@ -76,12 +73,13 @@ class RepeatWhileIfOther[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => 
 
 // Specialized to avoid stack-overflow.
 private[hano]
-class RepeatWhileIfSelf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => Boolean) extends SeqAdapter.Of[A](_1) {
+class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends SeqAdapter.Of[A](_1) {
     assert(_1.process eq Self)
 
     override def forloop(f: Reaction[A]) {
         @volatile var status = Exit.Success.asStatus
         @volatile var isActive = true
+        val begin = new DoOnce
 
         var go = true
         while (go) {
@@ -94,8 +92,10 @@ class RepeatWhileIfSelf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => B
                         isActive = false
                     }
                 }
-                if (!_2()) {
-                    f.exit(Exit.Success)
+                begin {
+                    if (!_2(None)) {
+                        f.exit(Exit.Success)
+                    }
                 }
             } onEach { x =>
                 f.beforeExit {
@@ -106,7 +106,7 @@ class RepeatWhileIfSelf[A](_1: Seq[A], _2: () => Boolean, cond: Exit.Status => B
                 }
             } onExit { q =>
                 f.beforeExit {
-                    if (cond(q)) {
+                    if (_2(Some(q))) {
                         if (isActive) {
                             go = true
                         } else {

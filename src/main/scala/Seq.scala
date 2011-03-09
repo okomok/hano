@@ -367,7 +367,7 @@ trait Seq[+A] {
     /**
      * Cycles this sequence indefinitely.
      */
-    @annotation.equivalentTo("repeatWhile(true)")
+    @annotation.equivalentTo("repeatWhile(_ => true)")
     def loop: Seq[A] = new detail.Loop(this)
 
     /**
@@ -378,7 +378,7 @@ trait Seq[+A] {
     /**
      * Cycles this sequence while `p` returns `true`.
      */
-    def repeatWhile(p: => Boolean): Seq[A] = new detail.RepeatWhile(this, () => p)
+    def repeatWhile(p: Option[Exit.Status] => Boolean): Seq[A] = new detail.RepeatWhile(this, p)
 
     /**
      * Retries until this sequence ends successfully.

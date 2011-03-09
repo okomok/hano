@@ -13,6 +13,11 @@ private[hano]
 class Repeat[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         val pred = new TrueUntil(_2)
-        _1.repeatWhile(pred()).forloop(f)
+
+        _1.repeatWhile {
+            case Some(Exit.Success) => pred()
+            case Some(Exit.Failure(_)) => false
+            case None => pred()
+        } forloop(f)
     }
 }

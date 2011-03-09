@@ -41,7 +41,10 @@ class RetryTest extends org.scalatest.junit.JUnit3Suite {
             } retry(n)
         }
 
-        expect(hano.Iter(0,1,2))(ys(0).toIter)
+        intercept[MyError] {
+            ys(0).await()
+        }
+
         expect(hano.Iter(0,1,2,0,1,2,3,4))(ys(1).toIter)
         expect(hano.Iter(0,1,2,0,1,2,3,4))(ys(2).toIter)
         expect(hano.Iter(0,1,2,0,1,2,3,4))(ys(10).toIter)
