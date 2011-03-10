@@ -40,7 +40,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
 
         _1.onEnter { p =>
             cur ! Action {
-                process.single.noSuccess.onEach { _ =>
+                process.head.noSuccess.onEach { _ =>
                     f.enter(p)
                 } onExit {
                     _exit
@@ -49,7 +49,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         } onEach { x =>
             f.beforeExit {
                 cur ! Action {
-                    process.single.noSuccess.onEach { _ =>
+                    process.head.noSuccess.onEach { _ =>
                         f(x)
                     } onExit {
                         _exit
@@ -59,7 +59,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         } onExit { q =>
             f.beforeExit {
                 cur ! Action {
-                    process.single.onEach { _ =>
+                    process.head.onEach { _ =>
                         _exit(q)
                     } onExit {
                         case Exit.Failure(t) => LogErr(t, "Reaction.exit error")
@@ -87,7 +87,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
 
     override def forloop(f: Reaction[A]) {
         _1.onEnter { p =>
-            process.single.noSuccess.onEach { _ =>
+            process.head.noSuccess.onEach { _ =>
                 f.enter(p)
             } onExit {
                 f.exit
@@ -95,7 +95,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
 
         } onEach { x =>
             f.beforeExit {
-                process.single.noSuccess.onEach { _ =>
+                process.head.noSuccess.onEach { _ =>
                     f(x)
                 } onExit {
                     f.exit
@@ -103,7 +103,7 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
             }
         } onExit { q =>
             f.beforeExit {
-                process.single.onEach { _ =>
+                process.head.onEach { _ =>
                     f.exit(q)
                 } onExit {
                     case Exit.Failure(t) => LogErr(t, "Reaction.exit error")

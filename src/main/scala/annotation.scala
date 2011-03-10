@@ -127,6 +127,12 @@ object annotation {
 
 
     /**
+     * Exists for an optimization.
+     */
+    class optimization extends StaticAnnotation
+
+
+    /**
      * Describes method time-complexity.
      */
     sealed trait TimeComplexity extends StaticAnnotation

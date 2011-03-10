@@ -25,16 +25,17 @@ trait Process extends Seq[Unit] with java.io.Closeable {
     @annotation.threadSafe
     def `do`(f: Reaction[Unit])
 
-    final override def forloop(f: Reaction[Unit]) = single.cycle.forloop(f)
+    @annotation.optimization
+    override def head: Seq[Unit] = new Process.Head(this)
 
-    final def eval(body: => Unit) = single.foreach(_ => body)
+    final override def forloop(f: Reaction[Unit]) = head.cycle.forloop(f)
 
-    final def single: Seq[Unit] = new Process.Single(this)
+    final def eval(body: => Unit) = head.foreach(_ => body)
 
     /**
      * Evaluates a `body` until the future.
      */
-    final def future[R](body: => R): () => R = Val(single.map(_ => body)).future
+    final def future[R](body: => R): () => R = Val(head.map(_ => body)).future
 
     private[hano]
     final def upper(_that: => Process): Process = {
@@ -65,7 +66,7 @@ trait Process extends Seq[Unit] with java.io.Closeable {
 private[hano]
 object Process {
 
-    private class Single(_1: Process) extends Seq[Unit] {
+    private class Head(_1: Process) extends Seq[Unit] {
         override def process = _1
         override def forloop(f: Reaction[Unit]) = _1.`do`(f)
     }
