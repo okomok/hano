@@ -10,6 +10,7 @@ package detail
 
 
 private[hano]
-class Forall[A](_1: Seq[A], _2: A => Boolean) extends SeqProxy[Boolean] with SingleSeq[Boolean] {
-    override val self = _1.find(!_2(_)).option.map(_.isEmpty)
+trait SingleSeq[A] extends Seq[A] {
+    override def head: Seq[A] = this
+    override def last: Seq[A] = this
 }

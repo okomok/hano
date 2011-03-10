@@ -8,6 +8,9 @@ package com.github.okomok
 package hano
 
 
+import java.util.concurrent.TimeUnit
+
+
 trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     def self: Seq[A]
 
@@ -22,7 +25,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def foreach(f: A => Unit) = self.foreach(f)
     override def start() = self.start()
     override def await() = self.await()
-    override def awaitWithin(_timeout: Long, _unit: java.util.concurrent.TimeUnit): Boolean = self.awaitWithin(_timeout, _unit)
+    override def awaitWithin(_timeout: Long, _unit: TimeUnit = TimeUnit.MILLISECONDS): Boolean = self.awaitWithin(_timeout, _unit)
     override def append[B >: A](that: Seq[B]): Seq[B] = around(self.append(that))
     override def appendIf[B >: A](that: Seq[B])(p: Exit.Status => Boolean): Seq[B] = around(self.appendIf(that)(p))
     override def prepend[B >: A](that: Seq[B]): Seq[B] = around(self.prepend(that))

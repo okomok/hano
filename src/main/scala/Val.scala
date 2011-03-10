@@ -19,7 +19,9 @@ import detail.CountDown
 /**
  * Single-assignment value as single-element sequence
  */
-final class Val[A](override val process: Process = async) extends Seq[A] {
+final class Val[A](override val process: Process = async)
+    extends Seq[A] with detail.SingleSeq[A]
+{
     require(process ne Self)
     require(process ne Unknown)
 
@@ -31,12 +33,6 @@ final class Val[A](override val process: Process = async) extends Seq[A] {
      * Subscription order is NOT preserved.
      */
     override def forloop(f: Reaction[A]) = _onSet(f)
-
-    @annotation.optimization
-    override def head: Seq[A] = this
-
-    @annotation.optimization
-    override def last: Seq[A] = this
 
     /**
      * Sets the value.
