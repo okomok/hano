@@ -40,13 +40,13 @@ class TimerProcessTest extends org.scalatest.junit.JUnit3Suite {
     def testConforming {
         for (i <- 0 until 10) {
             val out = new java.util.ArrayList[Int]
-            t eval { out.add(0) }
-            t eval { out.add(1) }
-            t eval { out.add(2) }
-            t eval { out.add(3) }
-            t eval { out.add(4) }
+            t invoke { out.add(0) }
+            t invoke { out.add(1) }
+            t invoke { out.add(2) }
+            t invoke { out.add(3) }
+            t invoke { out.add(4) }
             Thread.sleep(100)
-            t eval { out.add(5) }
+            t invoke { out.add(5) }
             Thread.sleep(100)
             expect(hano.Iter.from(0 until 6))(hano.Iter.from(out))
         }

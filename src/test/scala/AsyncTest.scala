@@ -48,11 +48,11 @@ class AsyncTest extends org.scalatest.junit.JUnit3Suite {
         var _break = false
         while (!_break) {
             try {
-                hano.eval.Parallel.or(hano.eval.Reject) {
+                hano.invoke.Parallel.or(hano.invoke.Reject) {
                     Thread.sleep(7)
                 }
             } catch {
-                case _: hano.eval.RejectedException => _break = true
+                case _: hano.invoke.RejectedException => _break = true
             }
         }
 

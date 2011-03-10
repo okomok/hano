@@ -15,7 +15,7 @@ class BagTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial {
         val rx = new hano.Bag[Int](5)
         expect(5)(rx.capacity)
-        hano.async.eval {
+        hano.async.invoke {
             rx add 12
             rx add 13
             rx += 5
@@ -43,7 +43,7 @@ class BagTest extends org.scalatest.junit.JUnit3Suite {
         val a = new hano.Bag[Int](2, ctx)
         val b = new hano.Bag[Int](2, ctx)
         val ys = for (x <- a; y <- b) yield (x + y)
-        hano.async.eval {
+        hano.async.invoke {
             a add 1
             b add 2
             a add 7

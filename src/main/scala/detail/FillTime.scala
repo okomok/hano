@@ -30,7 +30,7 @@ class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter.Of[Unit](_1) {
         } onEach { _ =>
             _fill()
         } onExit { q =>
-            Timer.daemon.eval {
+            Timer.daemon.invoke {
                 f.exit(q)
             }
         } start()

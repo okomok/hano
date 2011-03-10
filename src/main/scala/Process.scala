@@ -30,7 +30,11 @@ trait Process extends Seq[Unit] with java.io.Closeable {
 
     final override def forloop(f: Reaction[Unit]) = head.cycle.forloop(f)
 
-    final def eval(body: => Unit) = head.foreach(_ => body)
+    @annotation.equivalentTo("head.onEach(_ => body).start()")
+    final def invoke(body: => Unit) = head.foreach(_ => body)
+
+    @annotation.equivalentTo("head.onEach(_ => body).await()")
+    final def invokeAndWait(body: => Unit) = head.onEach(_ => body).await()
 
     /**
      * Evaluates a `body` until the future.

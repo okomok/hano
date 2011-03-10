@@ -22,7 +22,7 @@ class ConcatIf[A](_1: Iter[Seq[A]], _2: Process, cond: Exit.Status => Boolean) e
                 f.enter {
                     Exit { q =>
                         p(q)
-                        process.eval { // for thread-safety
+                        process.invoke { // for thread-safety
                             f.exit(Exit.Failure(Exit.ByOther(q)))
                         }
                     }
@@ -47,7 +47,7 @@ class ConcatIf[A](_1: Iter[Seq[A]], _2: Process, cond: Exit.Status => Boolean) e
         val it = _1.ator
 
         if (!it.hasNext) {
-            process.eval {
+            process.invoke {
                 f.exit(Exit.Success)
             }
         } else {

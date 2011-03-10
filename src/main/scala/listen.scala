@@ -52,11 +52,11 @@ object listen {
             _2(env)
 
             if (process ne Unknown) {
-                process.eval {
+                process.invoke {
                     f.enter {
                         Exit { q =>
                             env._remove()
-                            process.eval { // wrapped for thread-safety
+                            process.invoke { // wrapped for thread-safety
                                 f.exit(Exit.Failure(Exit.ByOther(q)))
                             }
                         }
@@ -77,7 +77,7 @@ object listen {
                     Exit { q =>
                         _remove()
                         if (process ne Unknown) {
-                            process.eval {
+                            process.invoke {
                                 f.exit(Exit.Failure(Exit.ByOther(q)))
                             }
                         }
