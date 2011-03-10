@@ -32,7 +32,7 @@ class HeadFuture[A](_1: Seq[A]) extends (() => A) {
             assert(_q ne null)
             _q match {
                 case Exit.Failure(t) => throw t
-                case _ => assert(_x.isDefined); _x.get
+                case _ => throw new AssertionError("aSeq.head is broken")
             }
         } else {
             _x.get

@@ -9,6 +9,7 @@ package hano
 package detail
 
 
+@annotation.optimization
 private[hano]
 trait SingleSeq[A] extends Seq[A] {
     override def head: Seq[A] = this

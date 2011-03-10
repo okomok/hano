@@ -19,8 +19,7 @@ import detail.CountDown
 /**
  * Single-assignment value as single-element sequence
  */
-final class Val[A](override val process: Process = async)
-    extends Seq[A] with detail.SingleSeq[A]
+final class Val[A](override val process: Process = async) extends Seq[A] with detail.SingleSeq[A]
 {
     require(process ne Self)
     require(process ne Unknown)
@@ -91,7 +90,7 @@ final class Val[A](override val process: Process = async)
     /**
      * Gets the value until the future.
      */
-    def future: () => A = new Val._Future(this)
+    def future: () => A = new detail.HeadFuture(this)
 
     private def _onSet(f: Reaction[A]) {
         if (v.get != null) {
@@ -158,7 +157,7 @@ object Val {
             case Exit.Success => _1.setFailed(new NoSuchElementException("sequence end before Val.set"))
         }
     }
-
+/*
     private class _Future[A](_1: Seq[A]) extends (() => A) {
         private[this] var v: Either[Throwable, A] = null
         private[this] val c = new java.util.concurrent.CountDownLatch(1)
@@ -187,4 +186,5 @@ object Val {
             }
         }
     }
+*/
 }

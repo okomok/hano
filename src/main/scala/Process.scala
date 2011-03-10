@@ -35,7 +35,7 @@ trait Process extends Seq[Unit] with java.io.Closeable {
     /**
      * Evaluates a `body` until the future.
      */
-    final def future[R](body: => R): () => R = Val(head.map(_ => body)).future
+    final def future[R](body: => R): () => R = new detail.HeadFuture(head.map(_ => body))
 
     private[hano]
     final def upper(_that: => Process): Process = {
@@ -66,7 +66,7 @@ trait Process extends Seq[Unit] with java.io.Closeable {
 private[hano]
 object Process {
 
-    private class Head(_1: Process) extends Seq[Unit] {
+    private class Head(_1: Process) extends Seq[Unit] with detail.SingleSeq[Unit] {
         override def process = _1
         override def forloop(f: Reaction[Unit]) = _1.`do`(f)
     }
