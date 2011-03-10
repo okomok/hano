@@ -10,12 +10,12 @@ package detail
 
 
 private[hano]
-class Fork[A](_1: Seq[A], _2: Seq[A] => Unit) extends SeqProxy[A] {
-    override lazy val self = {
+class Fork[A](_1: Seq[A], _2: Seq[A] => Unit) extends SeqAdapter.Of[A](_1) {
+    override def forloop(f: Reaction[A]) {
         val (xs, ys) = _1.duplicate
         val _xs = new Idempotent(xs)
         _2(_xs)
         _xs.start() // guarantees a `forloop` call
-        ys
+        ys.forloop(f)
     }
 }

@@ -17,9 +17,6 @@ trait Exit {
 
     @annotation.threadSafe @annotation.idempotent
     def apply(q: Exit.Status = Exit.Success)
-
-    @annotation.threadSafe
-    def isDone: Boolean
 }
 
 
@@ -46,9 +43,9 @@ object Exit {
     /**
      * Used to handle an exit by default.
      */
-    object defaultHandler extends (Exit.Status => Unit) {
-        override def apply(q: Exit.Status) = q match {
-            case Exit.Failure(t) => detail.LogErr(t, "unhandled failure")
+    object defaultHandler extends (Status => Unit) {
+        override def apply(q: Status) = q match {
+            case Failure(t) => detail.LogErr(t, "unhandled failure")
             case _ => ()
         }
     }
@@ -57,13 +54,13 @@ object Exit {
      * Creates an exit function from `k`.
      */
     @annotation.pre("`k` is thread-safe")
-    def apply(k: Exit.Status => Unit): Exit = new Apply(k)
+    def apply(k: Status => Unit): Exit = new Apply(k)
 
     /**
      * The exit function to do nothing
      */
     object Empty extends Idempotent {
-        override protected def rawApply(q: Exit.Status) = ()
+        override protected def rawApply(q: Status) = ()
     }
 
     /**
@@ -76,32 +73,24 @@ object Exit {
      */
     trait Idempotent extends Exit {
         @annotation.threadSafe
-        protected def rawApply(q: Exit.Status)
+        protected def rawApply(q: Status)
 
         @annotation.threadSafe @annotation.idempotent
-        final override def apply(q: Exit.Status = Exit.Success) = _apply(q)
+        final override def apply(q: Status = Success) = _apply(q)
 
-        final override def isDone: Boolean = _apply.isSecond
-
-        private[this] val _apply = detail.IfFirst[Exit.Status] { q => rawApply(q) } Else { _ => () }
+        private[this] val _apply = detail.IfFirst[Status] { q => rawApply(q) } Else { _ => () }
     }
 
 
-    private class Apply(_1: Exit.Status => Unit) extends Idempotent {
-        override protected def rawApply(q: Exit.Status) = _1(q)
-    }
-
-    private[hano]
-    class Second(_1: Exit) extends Idempotent {
-        private[this] val _c = detail.IfFirst[Exit.Status] { _ => () } Else { q => _1(q) }
-        override protected def rawApply(q: Exit.Status) = _c(q)
+    private class Apply(_1: Status => Unit) extends Idempotent {
+        override protected def rawApply(q: Status) = _1(q)
     }
 
     private[hano]
     class Queue extends Exit {
         private[this] val ps = new java.util.concurrent.ConcurrentLinkedQueue[Exit]
 
-        override def apply(q: Exit.Status = Exit.Success) {
+        override def apply(q: Status = Success) {
             var p = ps.poll()
             while (p ne null) {
                 p(q)
@@ -109,10 +98,14 @@ object Exit {
             }
         }
 
-        override def isDone: Boolean = ps.isEmpty
-
         def offer(q: Exit) {
             ps.offer(q)
         }
+    }
+
+    private[hano]
+    class Second(_1: Exit) extends Exit {
+        private[this] val _c = detail.IfFirst[Status] { _ => () } Else { q => _1(q) }
+        override def apply(q: Status = Success) = _c(q)
     }
 }

@@ -10,9 +10,10 @@ package detail
 
 
 private[hano]
-class Duplicate[A](_1: Seq[A]) extends Seq[A] {
-    private[this] var _f: Reaction[A] = null
+class Duplicate[A](_1: Seq[A]) extends SeqAdapter.Of[A](_1) {
+    override def forloop(f: Reaction[A]) = _forloop(f)
 
+    private[this] var _f: Reaction[A] = null
     private[this] val _forloop = {
         IfFirst[Reaction[A]] { f =>
             _f = f
@@ -27,7 +28,4 @@ class Duplicate[A](_1: Seq[A]) extends Seq[A] {
             } start()
         }
     }
-
-    override def process = _1.process
-    override def forloop(f: Reaction[A]) = _forloop(f)
 }
