@@ -49,7 +49,7 @@ trait AbstractIterator[+A] {
     }
 
     private def delayThrow() {
-        if (err != null) {
+        if (err ne null) {
             throw err
         }
     }

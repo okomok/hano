@@ -45,7 +45,7 @@ class ReduceLeft[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends SeqAdapter.Of[B
         } onExit {
             case Exit.Success => {
                 if (acc.isEmpty) {
-                    f.exit(Exit.Failure(new NoSuchElementException("Seq.reduceLeft")))
+                    f.exit(Exit.Failure(new NoSuchElementException("aSeq.reduceLeft")))
                 } else {
                     f(acc.get)
                     f.exit(Exit.Success)

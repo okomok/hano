@@ -19,7 +19,7 @@ trait Process extends Seq[Unit] with java.io.Closeable {
     final override def process = this
 
     /**
-     * Evaluates a `body`.
+     * Evaluates `f` one-time.
      * This shall preserve order of subscription.
      */
     @annotation.threadSafe

@@ -8,6 +8,7 @@ package com.github.okomok
 package hano
 
 
+import java.util.concurrent.TimeUnit
 import scala.util.continuations
 
 
@@ -57,6 +58,11 @@ trait Seq[+A] {
      */
     def await() = detail.Await(this)
 
+    /**
+     * Blocks until `onExit` is called.
+     */
+    def awaitWithin(_timeout: Long, _unit: TimeUnit = TimeUnit.MILLISECONDS): Boolean = detail.Await.within(this, _timeout, _unit)
+
 
 // combinator
 
@@ -95,6 +101,8 @@ trait Seq[+A] {
     def collect[B](f: PartialFunction[A, B]): Seq[B] = new detail.Collect(this, f)
 
     def remove(p: A => Boolean): Seq[A] = new detail.Remove(this, p)
+
+    final def filterNot(p: A => Boolean): Seq[A] = remove(p)
 
     def partition(p: A => Boolean): (Seq[A], Seq[A]) = duplicate match {
         case (xs, ys) => (xs.filter(p), ys.remove(p))

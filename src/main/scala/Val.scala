@@ -32,6 +32,12 @@ final class Val[A](override val process: Process = async) extends Seq[A] {
      */
     override def forloop(f: Reaction[A]) = _onSet(f)
 
+    @annotation.optimization
+    override def head: Seq[A] = this
+
+    @annotation.optimization
+    override def last: Seq[A] = this
+
     /**
      * Sets the value.
      */
@@ -117,7 +123,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] {
     }
 
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
-        process.head onEnter {
+        process.head.onEnter {
             f.enter(_)
         } onEach { _ =>
             tx match {
@@ -177,7 +183,7 @@ object Val {
         override def apply(): A = {
             c.await()
             if (v == null) {
-                throw new NoSuchElementException("Val.future.apply()")
+                throw new NoSuchElementException("aVal.future.apply()")
             }
             v match {
                 case Left(t) => throw t

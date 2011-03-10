@@ -51,7 +51,7 @@ final class Rist[A](override val process: Process = async) extends SeqOnce[A] wi
     def +=(x: A) = add(x)
 
     private def _eval(f: Reaction[A], x: A) {
-        process.head onEach { _ =>
+        process.head.onEach { _ =>
             g beforeExit {
                 f.enter()
                 f(x)

@@ -59,9 +59,9 @@ final class Channel[A](override val process: Process = async) extends Seq[A] {
     def <<(x: Seq[A]): this.type = output(x)
 
     private def _readable: Val[A] = Synchronized(readLock) {
-        if (readNode.next == null) {
+        if (readNode.next eq null) {
             Synchronized(writeLock) {
-                if (readNode.next == null) {
+                if (readNode.next eq null) {
                     readNode.next = new Node[A]
                 }
             }
@@ -73,7 +73,7 @@ final class Channel[A](override val process: Process = async) extends Seq[A] {
 
     private def _writable: Val[A] = Synchronized(writeLock) {
         val w = writeNode.value
-        if (writeNode.next == null) {
+        if (writeNode.next eq null) {
             writeNode.next = new Node[A]
         }
         writeNode = writeNode.next

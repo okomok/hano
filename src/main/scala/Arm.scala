@@ -76,7 +76,7 @@ trait Arm[+A] extends Seq[A] with java.io.Closeable {
                 throw t
             }
         } finally {
-            if (primary != null) {
+            if (primary ne null) {
                 try {
                     close()
                 } catch {

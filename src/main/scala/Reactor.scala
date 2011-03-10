@@ -30,7 +30,7 @@ trait Reactor extends Actor {
                 case Action(f) => f()
                 case _: Exit.Status => Actor.exit()
                 case x => {
-                    if (_f != null) {
+                    if (_f ne null) {
                         _f(x)
                     }
                     for (f <- Iter.from(_fs).able) {
@@ -42,7 +42,7 @@ trait Reactor extends Actor {
     }
 
     final override def exceptionHandler = {
-        if (_f != null) {
+        if (_f ne null) {
             case t => _f.exit(Exit.Failure(t))
         } else {
             super.exceptionHandler
