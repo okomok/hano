@@ -34,13 +34,9 @@ class FromTraversableOnce[A](_1: scala.collection.TraversableOnce[A]) extends Se
     override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        process.head.onEnter {
-            f.enter(_)
-        } onEach { _ =>
+        f.applyingIn(process) {
             _1.foreach(f(_))
-        } onExit {
-            f.exit(_)
-        } start()
+        }
     }
 }
 
@@ -67,13 +63,9 @@ class FromResponder[A](_1: Responder[A]) extends Seq[A] {
     override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        process.head.onEnter {
-            f.enter(_)
-        } onEach { _ =>
+        f.applyingIn(process) {
             _1.respond(f(_))
-        } onExit {
-            f.exit(_)
-        } start()
+        }
     }
 }
 
@@ -88,14 +80,10 @@ class FromCps[A](from: => A @continuations.suspendable) extends Seq[A] {
     override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        process.head.onEnter {
-            f.enter(_)
-        } onEach { _ =>
+        f.applyingIn(process) {
             continuations.reset {
                 f(from)
             }
-        } onExit {
-            f.exit(_)
-        } start()
+        }
     }
 }

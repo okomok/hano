@@ -25,7 +25,7 @@ object listen {
     /**
      * Creates a Seq from listeners.
      */
-    def apply[A](ctx: Process = Unknown)(body: Env[A] => Unit): Seq[A] = new Apply(ctx, body)
+    def apply[A](pro: Process = Unknown)(body: Env[A] => Unit): Seq[A] = new Apply(pro, body)
 
     /**
      * Trivial helper to define a `Seq` directly.
@@ -43,6 +43,8 @@ object listen {
 
 
     private class Apply[A](_1: Process, _2: Env[A] => Unit) extends Seq[A] {
+        require(_1 ne Self, "process of `listen` shall not be `Self`")
+
         override def process = _1
 
         override def forloop(f: Reaction[A]) {

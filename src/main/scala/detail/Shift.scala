@@ -43,7 +43,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                 process.head.noSuccess.onEach { _ =>
                     f.enter(p)
                 } onExit {
-                    _exit
+                    _exit(_)
                 } start()
             }
         } onEach { x =>
@@ -52,7 +52,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                     process.head.noSuccess.onEach { _ =>
                         f(x)
                     } onExit {
-                        _exit
+                        _exit(_)
                     } start()
                 }
             }
@@ -90,15 +90,14 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
             process.head.noSuccess.onEach { _ =>
                 f.enter(p)
             } onExit {
-                f.exit
+                f.exit(_)
             } start()
-
         } onEach { x =>
             f.beforeExit {
                 process.head.noSuccess.onEach { _ =>
                     f(x)
                 } onExit {
-                    f.exit
+                    f.exit(_)
                 } start()
             }
         } onExit { q =>

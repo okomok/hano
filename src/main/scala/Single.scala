@@ -15,12 +15,8 @@ case class Single[A](_1: A) extends Seq[A] with detail.SingleSeq[A] {
     override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        process.head.onEnter {
-            f.enter(_)
-        } onEach { _ =>
+        f.applyingIn(process) {
             f(_1)
-        } onExit {
-            f.exit(_)
-        } start()
+        }
     }
 }

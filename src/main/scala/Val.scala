@@ -118,16 +118,12 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     }
 
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
-        process.head.onEnter {
-            f.enter(_)
-        } onEach { _ =>
+        f.applyingIn(process) {
             tx match {
                 case Left(t) => f.exit(Exit.Failure(t))
                 case Right(x) => f(x)
             }
-        } onExit {
-            f.exit(_)
-        } start()
+        }
     }
 }
 

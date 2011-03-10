@@ -27,15 +27,11 @@ class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Process {
             }
         }
     }
-
-    //override def loop: Seq[Unit] = super.loop.amplify(Async.grainSize)
 }
 
 
 private[hano]
 object Async {
-    private val grainSize = 16
-
     private[hano]
     def defaultOut: actors.OutputChannel[Any] = {
         val that = new DefaultOut

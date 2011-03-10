@@ -95,9 +95,7 @@ trait Reaction[-A] {
      */
     protected def rawExit(q: Exit.Status)
 
-    /**
-     * Specifies an applying block.
-     */
+    private[hano]
     final def applying(body: => Unit): this.type = {
         try {
             body
@@ -112,6 +110,18 @@ trait Reaction[-A] {
                 throw t // handled in Seq-site
             }
         }
+    }
+
+    private[hano]
+    final def applyingIn(pro: Process)(body: => Unit): this.type = {
+        pro.head.onEnter {
+            enter(_)
+        } onEach { _ =>
+            body
+        } onExit {
+            exit(_)
+        } start()
+        this
     }
 
     private[this] val _mdf = new detail.Modification(toString)
