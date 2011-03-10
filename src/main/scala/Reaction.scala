@@ -33,14 +33,21 @@ trait Reaction[-A] {
      */
     @annotation.idempotent
     final def enter(p: Exit = Exit.Empty): this.type = _mdf[this.type] {
-        if (isExited) {
-            p(_exitStatus)
-        } else {
-            _exitFuncs.offer(p)
-        }
+        try {
+            if (isExited) {
+                p(_exitStatus)
+            } else {
+                _exitFuncs.offer(p)
+            }
 
-        _enter {
-            rawEnter(_exitFuncs)
+            _enter {
+                rawEnter(_exitFuncs)
+            }
+        } catch {
+            case t: Throwable => {
+                _exitFuncs(Exit.Failure(t)) // clean up
+                throw t // handled in Seq-site
+            }
         }
 
         this
@@ -121,6 +128,7 @@ trait Reaction[-A] {
         } onExit {
             exit(_)
         } start()
+
         this
     }
 
