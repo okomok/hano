@@ -35,7 +35,7 @@ trait Process extends Seq[Unit] with java.io.Closeable {
     /**
      * Evaluates a `body` until the future.
      */
-    final def future[R](body: => R): () => R = new detail.HeadFuture(head.map(_ => body))
+    final def future[R](body: => R): () => R = new detail.HeadFuture(map(_ => body))
 
     private[hano]
     final def upper(_that: => Process): Process = {
