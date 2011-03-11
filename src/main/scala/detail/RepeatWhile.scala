@@ -26,20 +26,17 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
     assert(_1.process ne Self)
 
     override def forloop(f: Reaction[A]) {
-        @volatile var status = Exit.Success.asStatus
-        @volatile var isActive = true
-        val begin = new DoOnce
+        val loop = new Loop
 
         def rec() {
             _1.onEnter { p =>
                 f.enter {
                     Exit { q =>
                         p(q)
-                        status = Exit.Failure(Exit.ByOther(q))
-                        isActive = false
+                        loop.end(q)
                     }
                 }
-                begin {
+                loop.begin {
                     if (!_2(None)) {
                         f.exit(Exit.Success)
                     }
@@ -47,17 +44,19 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
             } onEach { x =>
                 f.beforeExit {
                     f(x)
-                    if (!isActive) {
-                        f.exit(status) // exit immediately
+                    if (!loop.isActive) {
+                        f.exit(loop.status) // exit immediately
                     }
                 }
             } onExit { q =>
                 f.beforeExit {
                     if (_2(Some(q))) {
-                        if (isActive) {
+                        if (loop.isActive) {
+                            f.clearExit()
+                            loop.reset()
                             rec()
                         } else {
-                            f.exit(status)
+                            f.exit(loop.status)
                         }
                     } else {
                         f.exit(q)
@@ -77,9 +76,7 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
     assert(_1.process eq Self)
 
     override def forloop(f: Reaction[A]) {
-        @volatile var status = Exit.Success.asStatus
-        @volatile var isActive = true
-        val begin = new DoOnce
+        val loop = new Loop
 
         var go = true
         while (go) {
@@ -88,11 +85,10 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
                 f.enter {
                     Exit { q =>
                         p(q)
-                        status = Exit.Failure(Exit.ByOther(q))
-                        isActive = false
+                        loop.end(q)
                     }
                 }
-                begin {
+                loop.begin {
                     if (!_2(None)) {
                         f.exit(Exit.Success)
                     }
@@ -100,17 +96,19 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
             } onEach { x =>
                 f.beforeExit {
                     f(x)
-                    if (!isActive) {
-                        f.exit(status) // exit immediately
+                    if (!loop.isActive) {
+                        f.exit(loop.status) // exit immediately
                     }
                 }
             } onExit { q =>
                 f.beforeExit {
                     if (_2(Some(q))) {
-                        if (isActive) {
+                        if (loop.isActive) {
+                            f.clearExit()
+                            loop.reset()
                             go = true
                         } else {
-                            f.exit(status)
+                            f.exit(loop.status)
                         }
                     } else {
                         f.exit(q)

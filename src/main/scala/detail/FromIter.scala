@@ -14,24 +14,22 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
     override def process = Self
 
     override def forloop(f: Reaction[A]) {
-        @volatile var status = Exit.Success.asStatus
-        @volatile var isActive = true
-
+        val loop = new Loop
         var it: Iterator[A] = null
 
         f.enter {
             Exit { q =>
-                status = Exit.Failure(Exit.ByOther(q))
-                isActive = false
+                loop.end(q)
             }
         } applying {
+            loop.begin()
             it = _1.ator
-            while (isActive && it.hasNext) {
+            while (loop.isActive && it.hasNext) {
                 f(it.next)
             }
         } exit {
             if (it.hasNext) {
-                status
+                loop.status
             } else {
                 Exit.Success
             }
