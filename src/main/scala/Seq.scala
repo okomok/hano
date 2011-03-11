@@ -399,6 +399,11 @@ trait Seq[+A] {
     def noSuccess: Seq[A] = new detail.NoSuccess(this)
 
     /**
+     * Regards `Exit.Failure` as `Exit.Success`.
+     */
+    def neverFail: Seq[A] = new detail.NeverFail(this)
+
+    /**
      * Disallows multiple `forloop`s.
      */
     def once: Seq[A] = new detail.Once(this)

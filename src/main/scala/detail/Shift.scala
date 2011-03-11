@@ -31,6 +31,37 @@ class Shift[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
 
 
 private[hano]
+class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
+    assert(_2.process ne Self)
+    override def process = _2.process
+
+    override def forloop(f: Reaction[A]) {
+        _1.onEnter { p =>
+            process.head.noSuccess.onEach { _ =>
+                f.enter(p)
+            } onExit {
+                f.exit(_)
+            } start()
+        } onEach { x =>
+            f.beforeExit {
+                process.head.noSuccess.onEach { _ =>
+                    f(x)
+                } onExit {
+                    f.exit(_)
+                } start()
+            }
+        } onExit { q =>
+            f.beforeExit {
+                process.invoke {
+                    f.exit(q)
+                }
+            }
+        } start()
+    }
+}
+
+
+private[hano]
 class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
     override def process = Self
 
@@ -59,12 +90,9 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         } onExit { q =>
             f.beforeExit {
                 cur ! Action {
-                    process.head.onEach { _ =>
+                    process.invoke {
                         _exit(q)
-                    } onExit {
-                        case Exit.Failure(t) => LogErr(t, "Reaction.exit error")
-                        case _ => ()
-                    } start()
+                    }
                 }
             }
         } start()
@@ -76,39 +104,5 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
                 case _: Exit.Status => go = false
             }
         }
-    }
-}
-
-
-private[hano]
-class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
-    assert(_2.process ne Self)
-    override def process = _2.process
-
-    override def forloop(f: Reaction[A]) {
-        _1.onEnter { p =>
-            process.head.noSuccess.onEach { _ =>
-                f.enter(p)
-            } onExit {
-                f.exit(_)
-            } start()
-        } onEach { x =>
-            f.beforeExit {
-                process.head.noSuccess.onEach { _ =>
-                    f(x)
-                } onExit {
-                    f.exit(_)
-                } start()
-            }
-        } onExit { q =>
-            f.beforeExit {
-                process.head.onEach { _ =>
-                    f.exit(q)
-                } onExit {
-                    case Exit.Failure(t) => LogErr(t, "Reaction.exit error")
-                    case _ => ()
-                } start()
-            }
-        } start()
     }
 }

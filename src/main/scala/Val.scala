@@ -153,34 +153,4 @@ object Val {
             case Exit.Success => _1.setFailed(new NoSuchElementException("sequence end before Val.set"))
         }
     }
-/*
-    private class _Future[A](_1: Seq[A]) extends (() => A) {
-        private[this] var v: Either[Throwable, A] = null
-        private[this] val c = new java.util.concurrent.CountDownLatch(1)
-
-        _1 onEach { x =>
-            CountDown(c) {
-                v = Right(x)
-            }
-        } onExit { q =>
-            CountDown(c) {
-                q match {
-                    case Exit.Failure(t) if v == null => v = Left(t)
-                    case _ => ()
-                }
-            }
-        } start()
-
-        override def apply(): A = {
-            c.await()
-            if (v == null) {
-                throw new NoSuchElementException("aVal.future.apply()")
-            }
-            v match {
-                case Left(t) => throw t
-                case Right(r) => r
-            }
-        }
-    }
-*/
 }
