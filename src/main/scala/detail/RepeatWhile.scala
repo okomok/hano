@@ -51,7 +51,7 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
                 f.beforeExit {
                     if (_2(Some(q))) {
                         if (loop.isActive) {
-                            f.removeExit(_p) // hmm... too slow...
+                            f.removeExit(_p)
                             rec()
                         } else {
                             f.exit(loop.status)

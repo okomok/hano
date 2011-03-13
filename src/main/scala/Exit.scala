@@ -88,9 +88,10 @@ object Exit {
 
     private[hano]
     class Queue extends Exit {
-        private[this] val ps = new java.util.concurrent.ConcurrentLinkedQueue[Exit]
+        private[this] val ps = new java.util.ArrayDeque[Exit]
+            //new java.util.concurrent.ConcurrentLinkedQueue[Exit]
 
-        override def apply(q: Status = Success) {
+        override def apply(q: Status = Success): Unit = synchronized {
             var p = ps.poll()
             while (p ne null) {
                 p(q)
@@ -98,8 +99,8 @@ object Exit {
             }
         }
 
-        def offer(p: Exit): Unit = ps.offer(p)
-        def remove(p: Exit): Unit = ps.remove(p)
+        def offer(p: Exit): Unit = synchronized { ps.offer(p) }
+        def remove(p: Exit): Unit = synchronized { ps.remove(p) }
     }
 
     private[hano]
