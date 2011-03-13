@@ -86,11 +86,6 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     @annotation.conversion
     def toReaction: Reaction[A] = new Val.ToReaction(this)
 
-    /**
-     * Gets the value until the future.
-     */
-    def future: () => A = new detail.HeadFuture(this)
-
     private def _onSet(f: Reaction[A]) {
         if (v.get != null) {
             _eval(f, v.get)

@@ -36,7 +36,8 @@ trait Process extends Seq[Unit] with java.io.Closeable {
     /**
      * Returns a `Val` to evaluate `body`.
      */
-    final def future[R](body: => R): () => R = new detail.HeadFuture(map(_ => body)) // Val(head.map(_ => body))
+    @annotation.equivalentTo("Val(head.map(_ => body))")
+    final def future[R](body: => R): Val[R] = Val(head.map(_ => body))
 
     @annotation.optimization
     final override def head: Seq[Unit] = new Process.Head(this)
