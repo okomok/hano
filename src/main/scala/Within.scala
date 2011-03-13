@@ -11,12 +11,34 @@ package hano
 import java.util.concurrent.TimeUnit
 
 
-sealed abstract class Within
+/**
+ * Period
+ */
+sealed abstract class Within {
+    def toMillis: Long
+}
 
 object Within {
-    case object Inf extends Within
-    case class Elapse(duration: Long, unit: TimeUnit) extends Within
+    /**
+     * The infinite time
+     */
+    case object Inf extends Within {
+        override def toMillis: Long = throw new UnsupportedOperationException("Inf.toMillis")
+    }
 
-    def apply(msec: Long): Within = Elapse(msec, TimeUnit.MILLISECONDS)
-    def apply(duration: Long, unit: TimeUnit): Within = Elapse(duration, unit)
+    /**
+     * Specified by `TimeUnit`.
+     */
+    case class Elapse(duration: Long, unit: TimeUnit) extends Within {
+        override def toMillis: Long = unit.toMillis(duration)
+    }
+
+    @annotation.returnThat
+    def from(that: Within): Within = that
+
+    @annotation.compatibleConversion
+    implicit def fromMillis(t: Long): Within = Elapse(t, TimeUnit.MILLISECONDS)
+
+    @annotation.equivalentTo("Elapse(_duration, _unit)")
+    def apply(_duration: Long, _unit: TimeUnit): Within = Elapse(_duration, _unit)
 }

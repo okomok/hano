@@ -168,9 +168,9 @@ trait Seq[+A] {
     def delay(i: Long): Seq[A] = new detail.Delay(this, i)
 
     /**
-     * Fails with `TimeOutException` if the head element doesn't come in time(millisecond).
+     * Fails with `TimeoutException` if the head element doesn't come in time(millisecond).
      */
-    def timeout(i: Long): Seq[A] = new detail.Timeout(this, i)
+    def timeout(t: Within): Seq[A] = new detail.Timeout(this, t)
 
     /**
      * Removes duplicates using <code>==</code>.

@@ -23,8 +23,8 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     require(process ne Self)
     require(process ne Unknown)
 
-    private[this] val v = new concurrent.atomic.AtomicReference[Either[Throwable, A]](null)
-    private[this] val fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]
+    private[this] val _v = new concurrent.atomic.AtomicReference[Either[Throwable, A]](null)
+    private[this] val _fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]
 
     /**
      * Will call a reaction when the value is initialized.
@@ -68,7 +68,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
      */
     def update(x: A) {
         if (!set(x)) {
-            v.get match {
+            _v.get match {
                 case Right(y) if x != y => {
                     throw new Val.MultipleAssignmentException(y, x)
                 }
@@ -87,20 +87,20 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     def toReaction: Reaction[A] = new Val.ToReaction(this)
 
     private def _onSet(f: Reaction[A]) {
-        if (v.get != null) {
-            _eval(f, v.get)
+        if (_v.get != null) {
+            _eval(f, _v.get)
         } else {
-            fs.offer(f)
-            if (v.get != null && fs.remove(f)) {
-                _eval(f, v.get)
+            _fs.offer(f)
+            if (_v.get != null && _fs.remove(f)) {
+                _eval(f, _v.get)
             }
         }
     }
 
     private def _set(tx: Either[Throwable, A]): Boolean = {
-        if (v.compareAndSet(null, tx)) {
-            while (!fs.isEmpty) {
-                val f = fs.poll
+        if (_v.compareAndSet(null, tx)) {
+            while (!_fs.isEmpty) {
+                val f = _fs.poll
                 if (f != null) {
                     _eval(f, tx)
                 }
@@ -133,9 +133,9 @@ object Val {
      * Creates a `Val` with initial value.
      */
     def apply[A](x: Seq[A]): Val[A] = {
-        val v = new Val[A]
-        v := x
-        v
+        val _v = new Val[A]
+        _v := x
+        _v
     }
 
     private class ToReaction[A](_1: Val[A]) extends Reaction[A] {

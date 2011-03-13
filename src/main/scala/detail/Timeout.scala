@@ -10,12 +10,25 @@ package detail
 
 
 private[hano]
-class Timeout[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
+class Timeout[A](_1: Seq[A], _2: Within) extends SeqProxy[A] {
+    override val self = _2 match {
+        case Within.Inf => _1
+        case _ => new TimeoutElapse(_1, _2)
+    }
+}
+
+
+private[hano]
+class TimeoutElapse[A](_1: Seq[A], _2: Within) extends SeqAdapter.Of[A](_1) {
+    assert(_2 != Within.Inf)
+
     override def forloop(f: Reaction[A]) {
         val out = new java.util.concurrent.atomic.AtomicBoolean(false)
         var safe = false
 
-        Timer.nondaemon.schedule(_2).onEach { _ =>
+        Timer.nondaemon.schedule {
+            _2.toMillis
+        } onEach { _ =>
             out.set(true)
         } start()
 
