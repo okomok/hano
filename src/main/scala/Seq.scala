@@ -54,14 +54,9 @@ trait Seq[+A] {
     def start() = foreach(_ => ())
 
     /**
-     * Blocks until `onExit` is called.
+     * Waits and blocks until `onExit` is called.
      */
-    def await() = detail.Await(this)
-
-    /**
-     * Blocks until `onExit` is called.
-     */
-    def awaitWithin(_timeout: Long, _unit: TimeUnit = TimeUnit.MILLISECONDS): Boolean = detail.Await.within(this, _timeout, _unit)
+    def await(t: Within = Within.Inf): Boolean = detail.Await(this, t)
 
 
 // combinator
@@ -207,7 +202,7 @@ trait Seq[+A] {
 // conversion
 
     @annotation.conversion
-    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = Val(copy(bf)).get
+    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = Val(copy(bf)).get()
 
     @annotation.conversion @annotation.pre("synchronous")
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)

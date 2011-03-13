@@ -50,16 +50,10 @@ class PrimesProgressGuiTest
                 monitor.setMillisToPopup(0)
 
                 val ps =
-                hano.async./*.onFailure {// primes in thread-group.
-                    case t: Throwable => {
-                        //println("error caught")
-                        t.printStackTrace()
-                        //throw t
-                    }
-                }*/ pull {
+                hano.async.pull {
                     primes
                 } onExit { q =>
-                    //println("ok countDown: " + q)
+                    println("ok countDown: " + q)
                     gate.countDown()
                 } shift {
                     hano.Edt // reactions in EDT.
@@ -78,6 +72,8 @@ class PrimesProgressGuiTest
                         monitor.setProgress(i)
                         monitor.setNote("Calculated " + i + " primes")
                     }
+                } onExit { q =>
+                    println("ok123: " + q)
                 } start()
             }
 

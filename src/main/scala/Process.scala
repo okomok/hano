@@ -34,9 +34,9 @@ trait Process extends Seq[Unit] with java.io.Closeable {
     final def invokeAndWait(body: => Unit) = head.onEach(_ => body).await()
 
     /**
-     * Evaluates a `body` until the future.
+     * Returns a `Val` to evaluate `body`.
      */
-    final def future[R](body: => R): () => R = new detail.HeadFuture(map(_ => body))
+    final def future[R](body: => R): () => R = new detail.HeadFuture(map(_ => body)) // Val(head.map(_ => body))
 
     @annotation.optimization
     final override def head: Seq[Unit] = new Process.Head(this)

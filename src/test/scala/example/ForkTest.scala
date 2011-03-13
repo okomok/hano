@@ -16,10 +16,10 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
         val xs: hano.Seq[Int] = hano.async.pull(it)
 
         // The first time is ok.
-        expect(0)(hano.Val(xs.min).get)
+        expect(0)(hano.Val(xs.min).get())
 
         // For the second time, `xs` is mutated to empty one.
-        expect(true)(hano.Val(xs.isEmpty).get)
+        expect(true)(hano.Val(xs.isEmpty).get())
     }
 
     def testMinMax {

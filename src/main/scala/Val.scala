@@ -19,8 +19,7 @@ import detail.CountDown
 /**
  * Single-assignment value as single-element sequence
  */
-final class Val[A](override val process: Process = async) extends Seq[A] with detail.SingleSeq[A]
-{
+final class Val[A](override val process: Process = async) extends Seq[A] with detail.SingleSeq[A] {
     require(process ne Self)
     require(process ne Unknown)
 
@@ -46,17 +45,17 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     /**
      * Gets the value. (blocking)
      */
-    def get: A = {
+    def get(t: Within = Within.Inf): A = {
         var that: Option[A] = None
 
         onEach { x =>
             that = Some(x)
-        } await()
+        } await()//(t)
 
-        if (that.isEmpty) {
-            throw new NoSuchElementException("Val.get")
+        that match {
+            case Some(x) => x
+            case None => throw new NoSuchElementException("Val.get")
         }
-        that.get
     }
 
     /**
@@ -79,7 +78,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     }
 
     @annotation.aliasOf("get")
-    def apply(): A = get
+    def apply(t: Within = Within.Inf): A = get(t)
 
     @annotation.aliasOf("assign")
     def :=[B <: A](that: Seq[B]) = assign(that)
@@ -129,7 +128,6 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
 
 
 object Val {
-
     /**
      * Thrown in case multiple assignment
      */

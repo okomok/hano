@@ -105,7 +105,12 @@ object Exit {
 
     private[hano]
     class Second(_1: Exit) extends Exit {
-        private[this] val _c = detail.IfFirst[Status] { _ => () } Else { q => _1(q) }
+        private[this] val _c = detail.IfFirst[Status] { q =>
+            println("ignored exit: " + q)
+        } Else { q =>
+            println("nonignored exit: " + q)
+            _1(q)
+        }
         override def apply(q: Status = Success) = _c(q)
     }
 }
