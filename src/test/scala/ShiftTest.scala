@@ -50,4 +50,34 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
         }
         expect(hano.Iter.from(0 to 10))(hano.Iter.from(s))
     }
+
+}
+
+
+class ShiftAAsyncShiftTest extends org.scalatest.junit.JUnit3Suite {
+
+    def testAsyncToAsync {
+
+        for (i <- 0 until 10) {
+            val gate = new java.util.concurrent.CountDownLatch(1)
+            hano.async.pull {
+                Iterator.from(0)
+            }.onExit { q =>
+                gate.countDown()
+            }.shift {
+                hano.async
+            }.drop(10).onHead {
+                case Some(n) => {
+                    //println("breaking")
+                    hano.break()
+                }
+                case None => {
+                    //println("not found")
+                }
+            }.start()
+
+            assert(gate.await(5000, java.util.concurrent.TimeUnit.MILLISECONDS))
+        }
+    }
+
 }

@@ -50,7 +50,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
 
         onEach { x =>
             that = Some(x)
-        } await()//(t)
+        } await(t)
 
         that match {
             case Some(x) => x

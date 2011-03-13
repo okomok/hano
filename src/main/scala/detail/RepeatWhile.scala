@@ -29,18 +29,17 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
         val loop = new Loop
 
         def rec() {
+            var _p: Exit = null
+
             _1.onEnter { p =>
-                f.enter {
-                    Exit { q =>
-                        p(q)
-                        loop.end(q)
-                    }
-                }
                 loop.begin {
+                    f.enter(loop.exit)
                     if (!_2(None)) {
                         f.exit(Exit.Success)
                     }
                 }
+                _p = p
+                f.enter(_p)
             } onEach { x =>
                 f.beforeExit {
                     f(x)
@@ -52,8 +51,7 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
                 f.beforeExit {
                     if (_2(Some(q))) {
                         if (loop.isActive) {
-                            f.clearExit()
-                            loop.reset()
+                            f.removeExit(_p) // hmm... too slow...
                             rec()
                         } else {
                             f.exit(loop.status)
@@ -81,18 +79,17 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
         var go = true
         while (go) {
             go = false
+            var _p: Exit = null
+
             _1.onEnter { p =>
-                f.enter {
-                    Exit { q =>
-                        p(q)
-                        loop.end(q)
-                    }
-                }
                 loop.begin {
+                    f.enter(loop.exit)
                     if (!_2(None)) {
                         f.exit(Exit.Success)
                     }
                 }
+                _p = p
+                f.enter(_p)
             } onEach { x =>
                 f.beforeExit {
                     f(x)
@@ -104,8 +101,7 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
                 f.beforeExit {
                     if (_2(Some(q))) {
                         if (loop.isActive) {
-                            f.clearExit()
-                            loop.reset()
+                            f.removeExit(_p)
                             go = true
                         } else {
                             f.exit(loop.status)

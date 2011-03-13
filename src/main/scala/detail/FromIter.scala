@@ -18,11 +18,8 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
         var it: Iterator[A] = null
 
         f.enter {
-            Exit { q =>
-                loop.end(q)
-            }
+            loop.exit
         } applying {
-            loop.begin()
             it = _1.ator
             while (loop.isActive && it.hasNext) {
                 f(it.next)

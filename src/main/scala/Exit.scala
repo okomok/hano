@@ -98,9 +98,8 @@ object Exit {
             }
         }
 
-        def offer(q: Exit) {
-            ps.offer(q)
-        }
+        def offer(p: Exit): Unit = ps.offer(p)
+        def remove(p: Exit): Unit = ps.remove(p)
     }
 
     private[hano]

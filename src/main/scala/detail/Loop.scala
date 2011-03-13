@@ -13,16 +13,16 @@ private[hano]
 class Loop {
     @volatile var status = Exit.Success.asStatus
     @volatile var isActive = true
-
     val begin = new DoOnce
+    val exit = new Loop.ExitImpl(this)
+}
 
-    def reset() {
-        status = Exit.Success
-        isActive = true
-    }
-
-    def end(q: Exit.Status) {
-        status = Exit.Failure(Exit.ByOther(q))
-        isActive = false
+private[hano]
+object Loop {
+    private class ExitImpl(_1: Loop) extends Exit {
+        override def apply(q: Exit.Status = Exit.Success) {
+            _1.status = Exit.Failure(Exit.ByOther(q))
+            _1.isActive = false
+        }
     }
 }

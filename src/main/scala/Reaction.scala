@@ -88,9 +88,9 @@ trait Reaction[-A] {
     final def beforeExit(body: => Unit) = if (!_exit.isDone) body
 
     /**
-     * Clean up all the exits.
+     * Removes an attached `Exit` without closing.
      */
-    final def clearExit() = _exitFuncs()
+    final def removeExit(p: Exit) = _exitFuncs.remove(p)
 
     /**
      * Override this to implement `enter`.
