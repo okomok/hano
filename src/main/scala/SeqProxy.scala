@@ -86,7 +86,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def handleExit(k: PartialFunction[Exit.Status, Unit]): Seq[A] = around(self.handleExit(k))
     override def protect: Seq[A] = around(self.protect)
     override def using(c: => java.io.Closeable): Seq[A] = around(self.using(c))
-    override def adjacent(n: Int): Seq[scala.collection.immutable.IndexedSeq[A]] = around(self.adjacent(n))
+    override def buffered(n: Int): Seq[scala.collection.immutable.IndexedSeq[A]] = around(self.buffered(n))
     override def pull[B](it: Iter[B]): Seq[B] = around(self.pull(it))
     override def replace[B >: A](it: Iter[B]): Seq[B] = around(self.replace(it))
     override def replaceRegion[B >: A](n: Int, m: Int, it: Iter[B]): Seq[B] = around(self.replaceRegion(n, m, it))

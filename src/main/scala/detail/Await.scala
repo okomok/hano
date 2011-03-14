@@ -18,7 +18,7 @@ object Await {
         val c = new CountDownLatch(1)
         var s: Throwable = null
 
-        xs onExit { q =>
+        xs.onExit { q =>
             CountDown(c) {
                 q match {
                     case Exit.Failure(break.Control) => ()

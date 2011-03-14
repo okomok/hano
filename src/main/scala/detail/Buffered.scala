@@ -14,7 +14,7 @@ import scala.collection.JavaConversions
 
 
 private[hano]
-class Adjacent[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[IndexedSeq[A]](_1) {
+class Buffered[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[IndexedSeq[A]](_1) {
     override def forloop(f: Reaction[IndexedSeq[A]]) {
         val buf = new AdjacentBuffer[A](_2)
 
@@ -35,7 +35,7 @@ class Adjacent[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[IndexedSeq[A]](_1) 
 
 private[hano]
 class AdjacentBuffer[A](capacity: Int) {
-    Pre.positive(capacity, "adjacent")
+    Pre.positive(capacity, "buffered")
 
     private[this] val impl = new java.util.ArrayList[A](capacity)
 
