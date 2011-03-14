@@ -10,10 +10,10 @@ package detail
 
 
 private[hano]
-class Pick[A](_1: Seq[A]) extends Iterable[Option[A]] {
+class Pick[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
     override def iterator = {
         import Pick._
-        val data = new Data[A]
+        val data = new Data(_2)
         _1.forloop(new ReactionImpl(data))
         new IteratorImpl(data).concrete
     }
@@ -22,8 +22,8 @@ class Pick[A](_1: Seq[A]) extends Iterable[Option[A]] {
 
 private[hano]
 object Pick {
-    private class Data[A] {
-        @volatile var value: Option[A] = None
+    private class Data[A](z: A) {
+        @volatile var value: A = z
         @volatile var isEnd = false
         @volatile var exit = Exit.Empty.asExit
         @volatile var exitable = false
@@ -37,7 +37,7 @@ object Pick {
             }
         }
         override protected def rawApply(x: A) {
-            _data.value = Some(x)
+            _data.value = x
             if (_data.exitable) {
                 exit()
             }
@@ -47,7 +47,7 @@ object Pick {
         }
     }
 
-    private class IteratorImpl[A](_data: Data[A]) extends AbstractIterator[Option[A]] {
+    private class IteratorImpl[A](_data: Data[A]) extends AbstractIterator[A] {
         override def isEnd = _data.isEnd
         override def deref = _data.value
         override def increment() = ()

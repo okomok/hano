@@ -234,9 +234,9 @@ trait Seq[+A] {
     def actor: scala.actors.Actor = scala.actors.Actor.actor(start)
 
     /**
-     * Pick up the latest values.
+     * Pick up the latest values with the initial value `z`.
      */
-    def pick: Iterable[Option[A]] = new detail.Pick(this)
+    def pick[B >: A](z: B): Iterable[B] = new detail.Pick(this, z)
 
 
 // misc
