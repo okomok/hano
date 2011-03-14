@@ -55,6 +55,16 @@ object Iterators {
      */
     def unfold[A, B](z: A)(op: A => Option[(B, A)]): Iterator[B] = new Unfold(z, op).concrete
 
+    /**
+     * Closes an attached resource if closeable.
+     */
+    def close(it: Iterator[_]) {
+        it match {
+            case it: java.io.Closeable => it.close()
+            case _ => ()
+        }
+    }
+
 
     private class Unfold[A, +B](_1: A, _2: A => Option[(B, A)]) extends detail.AbstractIterator[B] {
         private[this] var _acc = _2(_1)

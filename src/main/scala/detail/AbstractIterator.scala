@@ -30,6 +30,11 @@ trait AbstractIterator[+A] {
      */
     def increment()
 
+    /**
+     * Closes an attached resource.
+     */
+    def close() = ()
+
     private[this] var err: Throwable = null
 
     private def hasNext: Boolean = {
@@ -60,8 +65,9 @@ trait AbstractIterator[+A] {
 
 private[hano]
 object AbstractIterator {
-    private class Concrete[A](_1: AbstractIterator[A]) extends Iterator[A] {
+    private class Concrete[A](_1: AbstractIterator[A]) extends Iterator[A] with java.io.Closeable {
         override def hasNext = _1.hasNext
         override def next = _1.next
+        override def close() = _1.close()
     }
 }
