@@ -99,7 +99,7 @@ object Exit {
             }
         }
 
-        def offer(p: Exit): Unit = synchronized { ps.offer(p) }
+        def offer(p: Exit): Unit = synchronized { if (p ne Empty) ps.offer(p) }
         def remove(p: Exit): Unit = synchronized { ps.remove(p) }
     }
 
