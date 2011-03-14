@@ -67,6 +67,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def toIter: Iter[A] = self.toIter
     override def toResponder: Responder[A] = self.toResponder
     override def actor: scala.actors.Actor = self.actor
+    override def pick: Iterable[Option[A]] = self.pick
     override def react(f: => Reaction[A]): Seq[A] = around(self.react(f))
     override def onEnter(j: Exit => Unit): Seq[A] = around(self.onEnter(j))
     override def onExit(k: Exit.Status => Unit): Seq[A] = around(self.onExit(k))

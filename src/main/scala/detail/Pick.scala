@@ -10,31 +10,6 @@ package detail
 
 
 private[hano]
-class ZipWithPick[A, B](_1: Seq[A], _2: Seq[B]) extends SeqAdapter.Of[(A, Option[B])](_1) {
-    override def forloop(f: Reaction[(A, Option[B])]) {
-        @volatile var _y: Option[B] = None
-        @volatile var _p: Exit = null
-
-        _2.onEnter { p =>
-            _p = p
-        } onEach { y =>
-            _y = Some(y)
-        } start()
-
-        _1.onEnter {
-            f.enter(_)
-        } onEach { x =>
-            f((x, _y))
-        } onExit { q =>
-            f.exit(q)
-            _p(q)
-        } start()
-    }
-}
-
-
-
-private[hano]
 class Pick[A](_1: Seq[A]) extends Iterable[Option[A]] {
     override def iterator = {
         import Pick._
@@ -50,11 +25,13 @@ object Pick {
     private class Data[A] {
         @volatile var value: Option[A] = None
         @volatile var isEnd = false
+        @volatile var exit = Exit.Empty.asExit
         @volatile var exitable = false
     }
 
     private class ReactionImpl[A](_data: Data[A]) extends Reaction[A] {
         override protected def rawEnter(p: Exit) {
+            _data.exit = p
             if (_data.exitable) {
                 exit()
             }
@@ -74,6 +51,9 @@ object Pick {
         override def isEnd = _data.isEnd
         override def deref = _data.value
         override def increment() = ()
-        override def close() = _data.exitable = true
+        override def close() {
+            _data.exitable = true
+            _data.exit()
+        }
     }
 }
