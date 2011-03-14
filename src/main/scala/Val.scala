@@ -48,13 +48,13 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     def get(t: Within = Within.Inf): A = {
         var that: Option[A] = None
 
-        onEach { x =>
+        head.onEach { x =>
             that = Some(x)
         } await(t)
 
         that match {
             case Some(x) => x
-            case None => throw new NoSuchElementException("Val.get")
+            case None => throw new NoSuchElementException("aVal.get")
         }
     }
 
@@ -143,7 +143,7 @@ object Val {
         override protected def rawApply(x: A) = _1.set(x)
         override protected def rawExit(q: Exit.Status) = q match {
             case Exit.Failure(t) => _1.setFailed(t)
-            case Exit.Success => _1.setFailed(new NoSuchElementException("sequence end before Val.set"))
+            case Exit.Success => _1.setFailed(new NoSuchElementException("sequence end before aVal.set"))
         }
     }
 }
