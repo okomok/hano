@@ -35,11 +35,11 @@ class ReplaceRegion[A](_1: Seq[A], _2: Int, _3: Int, _4: Iter[A]) extends SeqAda
         _1 onEnter {
             f.enter(_)
         } fork { xs =>
-            xs.protect.take(_2).onEach(f(_)).start()
+            xs.protect.take(_2).noSuccess.react(f).start()
         } fork { xs =>
-            xs.protect.slice(_2, _3).replace(_4).onEach(f(_)).start()
+            xs.protect.slice(_2, _3).replace(_4).noSuccess.react(f).start()
         } fork { xs =>
-            xs.drop(_3).onEach(f(_)).start()
+            xs.drop(_3).react(f).start()
         } onExit {
             f.exit(_)
         } start()
