@@ -47,18 +47,6 @@ class ToTraversable[A](_1: Seq[A]) extends scala.collection.Traversable[A] {
 
 
 private[hano]
-class ToIterable[A](_1: Seq[A]) extends Iterable[A] {
-    override def iterator = {
-        if (_1.process eq Self) {
-            new SyncIterable(_1).iterator
-        } else {
-            new AsyncIterable(_1).iterator
-        }
-    }
-}
-
-
-private[hano]
 class FromResponder[A](_1: Responder[A]) extends Seq[A] {
     override def process = Self
 

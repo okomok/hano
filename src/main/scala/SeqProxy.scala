@@ -8,7 +8,7 @@ package com.github.okomok
 package hano
 
 
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.{BlockingQueue, LinkedBlockingQueue}
 
 
 trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
@@ -63,7 +63,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def unzip[B, C](implicit pre: Seq[A] <:< Seq[(B, C)]): (Seq[B], Seq[C]) = around2(self.unzip)
     override def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = self.breakOut
     override def toTraversable: scala.collection.Traversable[A] = self.toTraversable
-    override def toIterable: Iterable[A] = self.toIterable
+    override def toIterable(timeout: Within, queue: => BlockingQueue[Any]): Iterable[A] = self.toIterable(timeout, queue)
     override def toIter: Iter[A] = self.toIter
     override def toResponder: Responder[A] = self.toResponder
     override def actor: scala.actors.Actor = self.actor

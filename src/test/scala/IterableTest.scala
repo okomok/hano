@@ -13,7 +13,7 @@ import com.github.okomok.hano
 import junit.framework.Assert._
 
 
-class IterativeTest extends org.scalatest.junit.JUnit3Suite {
+class IterableTest extends org.scalatest.junit.JUnit3Suite {
     def testTo: Unit = {
         val r = hano.Seq(1,2,3,4,5,6)
         assertEquals(hano.Iter(1,2,3,4,5,6), r.toIter)

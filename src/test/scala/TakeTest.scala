@@ -21,7 +21,7 @@ class TakeTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(hano.Iter(4,5,1,3,2), k.toIter)
         val k_ = t.take(50)
         assertEquals(hano.Iter(4,5,1,3,2,9,7,10), k_.toIter)
-        assertTrue(t.take(0).toIterable.isEmpty)
+        assertTrue(t.take(0).toIterable().isEmpty)
     }
 
     def testTrivial0: Unit = {

@@ -24,8 +24,7 @@ private[hano]
 object Pick {
 
     private class Data[A](z: A) {
-        @volatile var value: A = z
-        @volatile var hasNext = true
+        @volatile var mail = ElementMail(z).asMail
         @volatile var exit = Exit.Empty.asExit
         @volatile var exitable = false
     }
@@ -41,16 +40,21 @@ object Pick {
             if (_data.exitable) {
                 exit()
             }
-            _data.value = x
+            _data.mail = ElementMail(x)
         }
         override protected def rawExit(q: Exit.Status) {
-            _data.hasNext = false
+            _data.mail = ExitMail(q)
         }
     }
 
     private class IteratorImpl[A](_data: Data[A]) extends Iterator[A] with java.io.Closeable {
-        override def hasNext = _data.hasNext
-        override def next = _data.value
+        override def hasNext = _data.mail match {
+            case ExitMail(Exit.Failure(t)) => throw t
+            case ExitMail(_) => false
+            case ElementMail(_) => true
+        }
+        override def next = _data.mail.element
+
         override def close() {
             _data.exitable = true
             _data.exit()

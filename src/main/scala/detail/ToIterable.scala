@@ -13,11 +13,11 @@ import java.util.concurrent.BlockingQueue
 
 
 private[hano]
-class ToIterable2[A](_1: Seq[A], _2: Within, _3: BlockingQueue[Any]) extends Iterable[A] {
+class ToIterable[A](_1: Seq[A], _2: Within, _3: () => BlockingQueue[Any]) extends Iterable[A] {
     override def iterator = {
-        import ToIterable2._
+        import ToIterable._
 
-        val data = new Data(_3)
+        val data = new Data(_3())
 
         if (_1.process eq Self) {
             new Thread {
@@ -35,7 +35,7 @@ class ToIterable2[A](_1: Seq[A], _2: Within, _3: BlockingQueue[Any]) extends Ite
 
 
 private[hano]
-object ToIterable2 {
+object ToIterable {
 
     private class Data(val queue: BlockingQueue[Any]) {
         @volatile var exit = Exit.Empty.asExit
@@ -54,7 +54,7 @@ object ToIterable2 {
             if (_data.exitable) {
                 exit()
             }
-            _data.queue.put(ElemMail(x))
+            _data.queue.put(ElementMail(x))
         }
 
         override protected def rawExit(q: Exit.Status) {
@@ -66,7 +66,7 @@ object ToIterable2 {
         private[this] var _x: Option[A] = None
         _ready()
 
-        override def isEnd = !_x.isEmpty
+        override def isEnd = _x.isEmpty
         override def deref = _x.get
         override def increment = _ready()
 

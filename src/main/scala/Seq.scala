@@ -8,7 +8,7 @@ package com.github.okomok
 package hano
 
 
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.{BlockingQueue, LinkedBlockingQueue}
 import scala.util.continuations
 
 
@@ -208,10 +208,12 @@ trait Seq[+A] {
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)
 
     @annotation.conversion
-    def toIterable: Iterable[A] = new detail.ToIterable(this)
+    def toIterable(timeout: Within = Within.Inf, queue: => BlockingQueue[Any] = defaultQueue): Iterable[A] = new detail.ToIterable(this, timeout, () => queue)
+
+    final def defaultQueue: BlockingQueue[Any] = new LinkedBlockingQueue[Any](20)
 
     @annotation.conversion
-    def toIter: Iter[A] = Iter.from(toIterable)
+    def toIter: Iter[A] = Iter.from(toIterable())
 
     @annotation.conversion
     def toResponder: Responder[A] = new detail.ToResponder(this)
