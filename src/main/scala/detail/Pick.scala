@@ -22,6 +22,7 @@ class Pick[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
 
 private[hano]
 object Pick {
+
     private class Data[A](z: A) {
         @volatile var value: A = z
         @volatile var hasNext = true

@@ -16,7 +16,26 @@ import java.util.concurrent.TimeUnit
  */
 sealed abstract class Within {
     def toMillis: Long
+
+    /**
+     * Retrieves and removes the head of this queue,
+     * waiting if no elements are present on this queue.
+     */
+    def poll[A](q: java.util.concurrent.BlockingQueue[A]): A = {
+        this match {
+            case Within.Inf => q.take()
+            case Within.Elapse(d, u) => {
+                val res = q.poll(d, u)
+                if (res == null) {
+                    throw new java.util.concurrent.TimeoutException()
+                } else {
+                    res
+                }
+            }
+        }
+    }
 }
+
 
 object Within {
     /**

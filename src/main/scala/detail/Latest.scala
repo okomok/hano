@@ -15,15 +15,16 @@ class Latest[A](_1: Seq[A], _2: Within) extends Iterable[A] {
         import Latest._
         val data = new Data[A]
         _1.forloop(new ReactionImpl(data))
-        new IteratorImpl(data, _2)
+        new IteratorImpl(data, _2).concrete
     }
 }
 
 
 private[hano]
 object Latest {
+
     private class Data[A] {
-        val queue = new java.util.concurrent.LinkedBlockingQueue[Option[A]](1)
+        val queue = new java.util.concurrent.LinkedBlockingQueue[Mail[A]](1)
         @volatile var exit = Exit.Empty.asExit
         @volatile var exitable = false
     }
@@ -41,25 +42,22 @@ object Latest {
                 exit()
             }
             _data.queue.clear()
-            Verify(_data.queue.offer(Some(x)))
+            Verify(_data.queue.offer(ElemMail(x)))
         }
 
         override protected def rawExit(q: Exit.Status) {
             _data.queue.clear()
-            Verify(_data.queue.offer(None))
+            Verify(_data.queue.offer(ExitMail(q)))
         }
     }
 
-    private class IteratorImpl[A](_data: Data[A], _t: Within) extends Iterator[A] with java.io.Closeable {
+    private class IteratorImpl[A](_data: Data[A], _t: Within) extends AbstractIterator[A] {
         private[this] var _x: Option[A] = None
         _ready()
 
-        override def hasNext = !_x.isEmpty
-        override def next = {
-            val res = _x.get
-            _ready()
-            res
-        }
+        override def isEnd = _x.isEmpty
+        override def deref = _x.get
+        override def increment() = _ready()
 
         override def close() {
             _data.exitable = true
@@ -67,17 +65,7 @@ object Latest {
         }
 
         private def _ready() {
-            _x = _t match {
-                case Within.Inf => _data.queue.take()
-                case Within.Elapse(d, u) => {
-                    val res = _data.queue.poll(d, u)
-                    if (res == null) {
-                        throw new java.util.concurrent.TimeoutException("`latest` is timeout")
-                    } else {
-                        res
-                    }
-                }
-            }
+            _x = _t.poll(_data.queue).toOption
         }
     }
 }
