@@ -48,7 +48,7 @@ final class Channel[A](override val process: Process = async) extends Seq[A] {
     /**
      * Reads and removes a value.
      */
-    def read: A = _readable.apply()
+    def read(t: Within = Within.Inf): A = _readable(t)
 
     /**
      * Writes a value as single-element sequence.

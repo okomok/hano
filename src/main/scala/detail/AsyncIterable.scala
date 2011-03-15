@@ -39,7 +39,7 @@ object AsyncIterable {
         override def increment() = ready()
 
         private def ready() {
-            v = ch.read match {
+            v = ch.read() match {
                 case Msg(Exit.Failure(t)) => throw t
                 case Msg(q: Exit.Status) => None
                 case Msg(x) => Some(x.asInstanceOf[A])

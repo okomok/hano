@@ -17,7 +17,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     /* Equivalent to
         hano.cps { * =>
             while (true) {
-                val x = ch.read
+                val x = ch.read()
                 q.offer(x)
             }
         }
@@ -200,8 +200,8 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         val xs = hano.async.pull(Seq(5,1,3,6,2,0,4))
         ch << xs.reduceLeft(_ min _) << xs.reduceLeft(_ max _)
 
-        expect(0)(ch.read)
-        expect(6)(ch.read)
+        expect(0)(ch.read())
+        expect(6)(ch.read())
     }
 
 }

@@ -8,23 +8,24 @@ package com.github.okomok
 package hano
 package detail
 
-
+/*
 private[hano]
-class Pick[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
+class Latest[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
     override def iterator = {
-        import Pick._
+        import Latest._
         val data = new Data(_2)
         _1.forloop(new ReactionImpl(data))
-        new IteratorImpl(data)
+        new IteratorImpl(data).concrete
     }
 }
 
 
 private[hano]
-object Pick {
+object Latest {
     private class Data[A](z: A) {
-        @volatile var value: A = z
-        @volatile var hasNext = true
+        val ch = new Channel[A]
+        @volatile var value = new Val[A]
+        @volatile var isEnd = false
         @volatile var exit = Exit.Empty.asExit
         @volatile var exitable = false
     }
@@ -40,19 +41,24 @@ object Pick {
             if (_data.exitable) {
                 exit()
             }
-            _data.value = x
+            _data.foreach { _ =>
+                ()
+            }
+            _data.ch << x
         }
         override protected def rawExit(q: Exit.Status) {
-            _data.hasNext = false
+            _data.isEnd = true
         }
     }
 
-    private class IteratorImpl[A](_data: Data[A]) extends Iterator[A] with java.io.Closeable {
-        override def hasNext = _data.hasNext
-        override def next = _data.value
+    private class IteratorImpl[A](_data: Data[A], t: Within) extends AbstractIterator[A] {
+        override def isEnd = _data.isEnd
+        override def deref = _data.value(t)
+        override def increment() = ()
         override def close() {
             _data.exitable = true
             _data.exit()
         }
     }
 }
+*/

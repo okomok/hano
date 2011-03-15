@@ -52,9 +52,9 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         ch write 3
 
         var out: List[Int] = Nil
-        out :+= ch.read
-        out :+= ch.read
-        out :+= ch.read
+        out :+= ch.read()
+        out :+= ch.read()
+        out :+= ch.read()
 
         expect(List(1,2,3))(out)
     }
@@ -88,8 +88,8 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         ch << xs.reduce(_ + _) << xs.reduce(_ * _)
 
         var out: List[Int] = Nil
-        out :+= ch.read
-        out :+= ch.read
+        out :+= ch.read()
+        out :+= ch.read()
 
         expect(List(1+2+3+4+5,1*2*3*4*5))(out)
     }
