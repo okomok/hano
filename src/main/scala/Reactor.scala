@@ -16,6 +16,7 @@ import scala.actors.Actor
  * An actor built upon Seq
  */
 trait Reactor extends Actor {
+
     /**
      * Override to build up a Seq.
      */
@@ -86,6 +87,7 @@ trait Reactor extends Actor {
 
 
 object Reactor {
+
     /**
      * Constructs a trivial Reactor.
      */

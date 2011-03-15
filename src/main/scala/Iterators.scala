@@ -12,10 +12,11 @@ package hano
  * Contains methods missing from the standard.
  */
 object Iterators {
+
     /**
      * Creates an infinite-length iterator returning `x`.
      */
-    def const[A](x: A): Iterator[A] = Iterator.continually(x)
+    def const[A](x: A): Iterator[A] = new Const(x)
 
     /**
      * Creates an infinite-length iterator of the current times.
@@ -25,17 +26,17 @@ object Iterators {
     /**
      * Repeats an `Iterator` indefinitely.
      */
-    def cycle[A](it: Iter[A]): Iterator[A] = Iterator.continually(()).flatMap(_ => it.ator)
+    def cycle[A](iter: Iter[A]): Iterator[A] = const(()).flatMap(_ => iter.ator)
 
     /**
      * Repeats an `Iterator` `n` times.
      */
-    def repeat[A](it: Iter[A], n: Int): Iterator[A] = Iterator.continually(()).take(n).flatMap(_ => it.ator)
+    def repeat[A](iter: Iter[A], n: Int): Iterator[A] = const(()).take(n).flatMap(_ => iter.ator)
 
     /**
      * Repeats an `Iterator` while `p` returns `true`.
      */
-    def repeatWhile[A](it: Iter[A])(p: => Boolean): Iterator[A] = Iterator.continually(()).takeWhile(_ => p).flatMap(_ => it.ator)
+    def repeatWhile[A](iter: Iter[A])(p: => Boolean): Iterator[A] = const(()).takeWhile(_ => p).flatMap(_ => iter.ator)
 
     /**
      * An infinite sequence of `next` time spans. (cf. JSR-310)
@@ -65,6 +66,11 @@ object Iterators {
         }
     }
 
+
+    private class Const[A](_1: A) extends Iterator[A] {
+        override def hasNext = true
+        override def next = _1
+    }
 
     private class Unfold[A, +B](_1: A, _2: A => Option[(B, A)]) extends detail.AbstractIterator[B] {
         private[this] var _acc = _2(_1)

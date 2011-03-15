@@ -12,6 +12,7 @@ import java.util.{Date, Timer => JTimer, TimerTask}
 
 
 object Timer {
+
     /**
      * The global timer in daemon thread
      */

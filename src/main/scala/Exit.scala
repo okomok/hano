@@ -21,6 +21,7 @@ trait Exit {
 
 
 object Exit {
+
     /**
      * Exit status
      */

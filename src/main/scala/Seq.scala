@@ -144,8 +144,8 @@ trait Seq[+A] {
     /**
      * Extracts a sub-sequence.
      */
-    @annotation.pre("`it` is strictly-increasing")
-    def subseq(it: Iter[Int]): Seq[A] = new detail.Subseq(this, it)
+    @annotation.pre("`iter` is strictly-increasing")
+    def subseq(iter: Iter[Int]): Seq[A] = new detail.Subseq(this, iter)
 
     /**
      * Steps by the specified stride.
@@ -192,7 +192,7 @@ trait Seq[+A] {
     /**
      * Zips with an `Iterable`. Its length is the minimum of the two.
      */
-    def zipWith[B](it: Iter[B]): Seq[(A, B)] = new detail.ZipWith(this, it)
+    def zipWith[B](iter: Iter[B]): Seq[(A, B)] = new detail.ZipWith(this, iter)
 
     def unzip[B, C](implicit pre: Seq[A] <:< Seq[(B, C)]): (Seq[B], Seq[C]) = pre(this).duplicate match {
         case (xs, ys) => (xs.map(_._1), ys.map(_._2))
@@ -352,19 +352,19 @@ trait Seq[+A] {
     def buffered(n: Int): Seq[scala.collection.immutable.IndexedSeq[A]] = new detail.Buffered(this, n)
 
     /**
-     * Replaces elements by those of `it`. The length of this sequence never becomes longer.
+     * Replaces elements by those of `iter`. The length of this sequence never becomes longer.
      */
-    def pull[B](it: Iter[B]): Seq[B] = new detail.Pull(this, it)
+    def pull[B](iter: Iter[B]): Seq[B] = new detail.Pull(this, iter)
 
     /**
-     * Replaces elements by those of `it`. The length of this sequence never be changed.
+     * Replaces elements by those of `iter`. The length of this sequence never be changed.
      */
-    def replace[B >: A](it: Iter[B]): Seq[B] = new detail.Replace[B](this, it)
+    def replace[B >: A](iter: Iter[B]): Seq[B] = new detail.Replace[B](this, iter)
 
     /**
-     * Replaces elements by those of `it`. The length of this sequence never be changed.
+     * Replaces elements by those of `iter`. The length of this sequence never be changed.
      */
-    def replaceRegion[B >: A](n: Int, m: Int, it: Iter[B]): Seq[B] = new detail.ReplaceRegion[B](this, n, m, it)
+    def replaceRegion[B >: A](n: Int, m: Int, iter: Iter[B]): Seq[B] = new detail.ReplaceRegion[B](this, n, m, iter)
 
     @annotation.equivalentTo("replace(Stream.from(0))")
     def indices: Seq[Int] = new detail.Indices(this)
