@@ -45,12 +45,12 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     /**
      * Gets the value. (blocking)
      */
-    def get(t: Within = Within.Inf): A = {
+    def get(d: Long = INF): A = {
         var that: Option[A] = None
 
         head.onEach { x =>
             that = Some(x)
-        } await(t)
+        } await(d)
 
         that match {
             case Some(x) => x
@@ -78,7 +78,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     }
 
     @annotation.aliasOf("get")
-    def apply(t: Within = Within.Inf): A = get(t)
+    def apply(d: Long = INF): A = get(d)
 
     @annotation.aliasOf("assign")
     def :=[B <: A](that: Seq[B]) = assign(that)

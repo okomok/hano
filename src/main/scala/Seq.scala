@@ -57,7 +57,7 @@ trait Seq[+A] {
     /**
      * Waits and blocks until `onExit` is called.
      */
-    def await(t: Within = Within.Inf): Boolean = detail.Await(this, t)
+    def await(d: Long = INF): Boolean = detail.Await(this, d)
 
 
 // combinator
@@ -156,22 +156,22 @@ trait Seq[+A] {
     /**
      * Steps by the specified time-span(millisecond).
      */
-    def stepTime(i: Long): Seq[A] = new detail.StepTime(this, i)
+    def stepTime(d: Long): Seq[A] = new detail.StepTime(this, d)
 
     /**
      * Calls a reaction in case any element doesn't come in the specified time-span(millisecond).
      */
-    def fillTime(i: Long): Seq[Unit] = new detail.FillTime(this, i)
+    def fillTime(d: Long): Seq[Unit] = new detail.FillTime(this, d)
 
     /**
      * Calls reactions with the specified delay(millisecond).
      */
-    def delay(i: Long): Seq[A] = new detail.Delay(this, i)
+    def delay(d: Long): Seq[A] = new detail.Delay(this, d)
 
     /**
      * Fails with `TimeoutException` if the head element doesn't come in time(millisecond).
      */
-    def timeout(t: Within): Seq[A] = new detail.Timeout(this, t)
+    def timeout(d: Long): Seq[A] = new detail.Timeout(this, d)
 
     /**
      * Removes duplicates using <code>==</code>.
@@ -209,7 +209,7 @@ trait Seq[+A] {
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)
 
     @annotation.conversion
-    def toIterable(timeout: Within = Within.Inf, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = new detail.ToIterable(this, timeout, () => queue)
+    def toIterable(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = new detail.ToIterable(this, timeout, () => queue)
 
     @annotation.conversion
     def toIter: Iter[A] = Iter.from(toIterable())
@@ -242,7 +242,7 @@ trait Seq[+A] {
     /**
      * Pick up the latest values with the initial value `z`.
      */
-    def latest(t: Within = Within.Inf): Iterable[A] = new detail.Latest(this, t)
+    def latest(d: Long = INF): Iterable[A] = new detail.Latest(this, d)
 
 
 // misc

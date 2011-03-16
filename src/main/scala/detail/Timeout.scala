@@ -18,7 +18,7 @@ class Timeout[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
         var safe = false
 
         Timer.nondaemon.schedule {
-            _2.toMillis
+            _2
         } onEach { _ =>
             out.set(true)
         } start()

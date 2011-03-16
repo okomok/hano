@@ -25,7 +25,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def forloop(f: Reaction[A]) = self.forloop(f)
     override def foreach(f: A => Unit) = self.foreach(f)
     override def start() = self.start()
-    override def await(t: Within = Within.Inf): Boolean = self.await(t)
+    override def await(d: Long = INF): Boolean = self.await(d)
     override def append[B >: A](that: Seq[B]): Seq[B] = around(self.append(that))
     override def appendIf[B >: A](that: Seq[B])(p: Exit.Status => Boolean): Seq[B] = around(self.appendIf(that)(p))
     override def prepend[B >: A](that: Seq[B]): Seq[B] = around(self.prepend(that))
@@ -51,10 +51,10 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def splitAt(n: Int): (Seq[A], Seq[A]) = around2(self.splitAt(n))
     override def subseq(iter: Iter[Int]) = around(self.subseq(iter))
     override def step(n: Int): Seq[A] = around(self.step(n))
-    override def stepTime(i: Long): Seq[A] = around(self.stepTime(i))
-    override def fillTime(i: Long): Seq[Unit] = around(self.fillTime(i))
-    override def delay(i: Long): Seq[A] = around(self.delay(i))
-    override def timeout(t: Within): Seq[A] = around(self.timeout(t))
+    override def stepTime(d: Long): Seq[A] = around(self.stepTime(d))
+    override def fillTime(d: Long): Seq[Unit] = around(self.fillTime(d))
+    override def delay(d: Long): Seq[A] = around(self.delay(d))
+    override def timeout(d: Long): Seq[A] = around(self.timeout(d))
     override def flatten[B](implicit pre: Seq[A] <:< Seq[Seq[B]]): Seq[B] = around(self.flatten)
     override def unique: Seq[A] = around(self.unique)
     override def uniqueBy(p: (A, A) => Boolean): Seq[A] = around(self.uniqueBy(p))
@@ -64,12 +64,12 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def unzip[B, C](implicit pre: Seq[A] <:< Seq[(B, C)]): (Seq[B], Seq[C]) = around2(self.unzip)
     override def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = self.breakOut
     override def toTraversable: scala.collection.Traversable[A] = self.toTraversable
-    override def toIterable(timeout: Within, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = self.toIterable(timeout, queue)
+    override def toIterable(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = self.toIterable(timeout, queue)
     override def toIter: Iter[A] = self.toIter
     override def toResponder: Responder[A] = self.toResponder
     override def actor: scala.actors.Actor = self.actor
     override def pick[B >: A](z: B): Iterable[B] = self.pick(z)
-    override def latest(t: Within = Within.Inf): Iterable[A] = self.latest(t)
+    override def latest(d: Long = INF): Iterable[A] = self.latest(d)
     override def react(f: => Reaction[A]): Seq[A] = around(self.react(f))
     override def onEnter(j: Exit => Unit): Seq[A] = around(self.onEnter(j))
     override def onExit(k: Exit.Status => Unit): Seq[A] = around(self.onExit(k))
