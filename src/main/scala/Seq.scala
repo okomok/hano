@@ -8,11 +8,12 @@ package com.github.okomok
 package hano
 
 
-import java.util.concurrent.{BlockingQueue, LinkedBlockingQueue}
+import java.util.concurrent.BlockingQueue
 import scala.util.continuations
+import scala.collection.mutable.Builder
 
 
-object Seq extends detail.Conversions with detail.PseudoMethods {
+object Seq extends detail.Conversions with detail.PseudoMethods with detail.Defaults {
 
     /**
      * Creates a sequence initially containing the specified elements.
@@ -208,9 +209,7 @@ trait Seq[+A] {
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)
 
     @annotation.conversion
-    def toIterable(timeout: Within = Within.Inf, queue: => BlockingQueue[Any] = defaultQueue): Iterable[A] = new detail.ToIterable(this, timeout, () => queue)
-
-    final def defaultQueue: BlockingQueue[Any] = new LinkedBlockingQueue[Any](20)
+    def toIterable(timeout: Within = Within.Inf, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = new detail.ToIterable(this, timeout, () => queue)
 
     @annotation.conversion
     def toIter: Iter[A] = Iter.from(toIterable())
@@ -354,7 +353,7 @@ trait Seq[+A] {
     /**
      * Retrieves buffered sequences.
      */
-    def buffered(n: Int): Seq[scala.collection.immutable.IndexedSeq[A]] = new detail.Buffered(this, n)
+    def buffered[To](n: Int, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Buffered(this, n, () => b)
 
     /**
      * Replaces elements by those of `iter`. The length of this sequence never becomes longer.
