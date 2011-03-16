@@ -346,14 +346,14 @@ trait Seq[+A] {
     def using(c: => java.io.Closeable): Seq[A] = new detail.Using(this, () => c)
 
     /**
-     * Adjacent pairs
+     * Retrieves adjacent sequences.
      */
-    def adjacent: Seq[(A, A)] = new detail.Adjacent(this)
+    def adjacent[To](n: Int, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Adjacent(this, n, () => b)
 
     /**
-     * Retrieves buffered sequences.
+     * Retrives adjacent pairs.
      */
-    def buffered[To](n: Int, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Buffered(this, n, () => b)
+    def adjacent2: Seq[(A, A)] = new detail.Adjacent2(this)
 
     /**
      * Replaces elements by those of `iter`. The length of this sequence never becomes longer.

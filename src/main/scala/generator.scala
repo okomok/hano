@@ -22,7 +22,7 @@ object generator {
     }
 
     /**
-     * Yielding thread is not blocked; elements are buffered.
+     * Yielding thread is not blocked; elements are adjacent.
      */
     object async {
         type Env[A] = Reaction[A]
