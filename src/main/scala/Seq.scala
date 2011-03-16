@@ -154,12 +154,12 @@ trait Seq[+A] {
     def step(n: Int): Seq[A] = new detail.Step(this, n)
 
     /**
-     * Steps by the specified time-span(millisecond).
+     * Steps by the specified duration(millisecond).
      */
     def stepWithin(d: Long): Seq[A] = new detail.StepWithin(this, d)
 
     /**
-     * Calls a reaction in case any element doesn't come in the specified time-span(millisecond).
+     * Calls a reaction in case any element doesn't come in the specified duration(millisecond).
      */
     def fillTime(d: Long): Seq[Unit] = new detail.FillTime(this, d)
 
@@ -344,6 +344,16 @@ trait Seq[+A] {
      * Attach a resource.
      */
     def using(c: => java.io.Closeable): Seq[A] = new detail.Using(this, () => c)
+
+    /**
+     * Buffers values.
+     */
+    def buffered[To](n: Int, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Buffered(this, n, () => b)
+
+    /**
+     * Buffers values within the specified duration(millisecond).
+     */
+    def bufferedWithin[To](d: Long, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.BufferedWithin(this, d, () => b)
 
     /**
      * Retrieves adjacent sequences.
