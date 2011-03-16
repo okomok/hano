@@ -9,12 +9,12 @@ package hano
 package detail
 
 
-import java.util.concurrent.CountDownLatch
+import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 
 private[hano]
 object Await {
-    def apply[A](xs: Seq[A], t: Within): Boolean = {
+    def apply[A](xs: Seq[A], t: Long): Boolean = {
         val c = new CountDownLatch(1)
         var s: Throwable = null
 
@@ -28,21 +28,18 @@ object Await {
             }
         } start()
 
-        t match {
-            case Within.Inf => {
-                c.await()
-                if (s ne null) {
-                    throw s
-                }
-                true
+        if (t < 0) {
+            c.await()
+            if (s ne null) {
+                throw s
             }
-            case Within.Elapse(d, u) => {
-                val that = c.await(d, u)
-                if (that && (s ne null)) {
-                    throw s
-                }
-                that
+            true
+        } else {
+            val that = c.await(t, TimeUnit.MILLISECONDS)
+            if (that && (s ne null)) {
+                throw s
             }
+            that
         }
     }
 }

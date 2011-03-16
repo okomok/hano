@@ -13,7 +13,7 @@ import java.util.concurrent.BlockingQueue
 
 
 private[hano]
-class ToIterable[A](_1: Seq[A], _2: Within, _3: () => BlockingQueue[Any]) extends Iterable[A] {
+class ToIterable[A](_1: Seq[A], _2: Long, _3: () => BlockingQueue[Any]) extends Iterable[A] {
     override def iterator = {
         import ToIterable._
 

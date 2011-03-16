@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class Latest[A](_1: Seq[A], _2: Within) extends Iterable[A] {
+class Latest[A](_1: Seq[A], _2: Long) extends Iterable[A] {
     override def iterator = {
         import Latest._
         val data = new Data[A]
@@ -51,7 +51,7 @@ object Latest {
         }
     }
 
-    private class IteratorImpl[A](_data: Data[A], _t: Within) extends AbstractIterator[A] {
+    private class IteratorImpl[A](_data: Data[A], _t: Long) extends AbstractIterator[A] {
         private[this] var _x: Option[A] = None
         _ready()
 
@@ -65,7 +65,7 @@ object Latest {
         }
 
         private def _ready() {
-            _x = _t.poll(_data.queue).toOption
+            _x = Poll(_data.queue, _t).toOption
         }
     }
 }
