@@ -156,7 +156,7 @@ trait Seq[+A] {
     /**
      * Steps by the specified time-span(millisecond).
      */
-    def stepTime(d: Long): Seq[A] = new detail.StepTime(this, d)
+    def stepWithin(d: Long): Seq[A] = new detail.StepWithin(this, d)
 
     /**
      * Calls a reaction in case any element doesn't come in the specified time-span(millisecond).

@@ -38,7 +38,7 @@ class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
 
 
 private[hano]
-class StepTime[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
+class StepWithin[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var past = 0L
 
@@ -55,5 +55,5 @@ class StepTime[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
         } start()
     }
 
-    override def stepTime(i: Long): Seq[A] = _1.stepTime(_2 * i) // stepTime.stepTime fusion
+    override def stepWithin(d: Long): Seq[A] = _1.stepWithin(_2 * d) // stepWithin.stepWithin fusion
 }

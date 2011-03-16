@@ -51,7 +51,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def splitAt(n: Int): (Seq[A], Seq[A]) = around2(self.splitAt(n))
     override def subseq(iter: Iter[Int]) = around(self.subseq(iter))
     override def step(n: Int): Seq[A] = around(self.step(n))
-    override def stepTime(d: Long): Seq[A] = around(self.stepTime(d))
+    override def stepWithin(d: Long): Seq[A] = around(self.stepWithin(d))
     override def fillTime(d: Long): Seq[Unit] = around(self.fillTime(d))
     override def delay(d: Long): Seq[A] = around(self.delay(d))
     override def timeout(d: Long): Seq[A] = around(self.timeout(d))
