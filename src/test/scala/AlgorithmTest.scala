@@ -229,15 +229,21 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
         expect(4)(find())
     }
 
-
-/* hmmmmmm....
     def testCopy {
         val xs = hano.async.pull(Seq(3,1,2,6,7,4,2,9))
         val v = new hano.Val[scala.collection.immutable.Vector[Int]]
-        v := xs.copy//(implicitly[scala.collection.generic.CanBuildFrom[Nothing, Int, scala.collection.immutable.Vector[Int]]])
+        v := xs.copy()
         expect(hano.Iter(3,1,2,6,7,4,2,9))(hano.Iter.from(v()))
     }
-*/
+
+    def testCopyNoDefault {
+        import scala.collection.mutable.ArrayBuffer
+        val xs = hano.async.pull(Seq(3,1,2,6,7,4,2,9))
+        val v = new hano.Val[ArrayBuffer[Int]]
+        v := xs.copy(ArrayBuffer.newBuilder)
+        expect(hano.Iter(3,1,2,6,7,4,2,9))(hano.Iter.from(v()))
+    }
+
     def testBreakOut {
         val xs = hano.async.pull(Seq(3,1,2,6,7,4,2,9))
         val v: scala.collection.immutable.Vector[Int] = xs.breakOut

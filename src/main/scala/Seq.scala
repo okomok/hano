@@ -203,7 +203,7 @@ trait Seq[+A] {
 // conversion
 
     @annotation.conversion
-    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = Val(copy(bf)).get()
+    def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = Val(copy(bf())).get()
 
     @annotation.conversion @annotation.pre("synchronous")
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)
@@ -491,6 +491,6 @@ trait Seq[+A] {
 
     def maxBy[B >: A](f: A => B)(implicit cmp: Ordering[B]): Seq[A] = new detail.MaxBy(this, f, cmp)
 
-    def copy[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Seq[To] = new detail.Copy(this, bf)
+    def copy[To](b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Copy(this, () => b)
 
 }

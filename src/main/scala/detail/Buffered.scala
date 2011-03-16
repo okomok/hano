@@ -49,10 +49,9 @@ class WorkBuffer[A](capacity: Int) {
     }
 
     def copy[To](b: Builder[A, To]): To = {
-        b.clear()
         for (x <- Iter.from(impl).able) {
             b += x
         }
-        b.result()
+        b.result
     }
 }

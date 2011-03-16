@@ -126,5 +126,5 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def max[B >: A](implicit cmp: Ordering[B]): Seq[A] = around(self.max(cmp))
     override def minBy[B >: A](f: A => B)(implicit cmp: Ordering[B]): Seq[A] = around(self.minBy(f)(cmp))
     override def maxBy[B >: A](f: A => B)(implicit cmp: Ordering[B]): Seq[A] = around(self.maxBy(f)(cmp))
-    override def copy[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): Seq[To] = around(self.copy)
+    override def copy[To](b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = around(self.copy(b))
 }
