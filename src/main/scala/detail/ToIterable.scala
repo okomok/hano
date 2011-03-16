@@ -62,7 +62,7 @@ object ToIterable {
         }
     }
 
-    private class IteratorImpl[A](_data: Data, _d: Long) extends AbstractIterator[A] {
+    private class IteratorImpl[A](_data: Data, _timeout: Long) extends AbstractIterator[A] {
         private[this] var _x: Option[A] = None
         _ready()
 
@@ -76,7 +76,7 @@ object ToIterable {
         }
 
         private def _ready() {
-            _x = Poll(_data.queue, _d).asInstanceOf[Mail[A]].toOption
+            _x = Poll(_data.queue, _timeout).asInstanceOf[Mail[A]].toOption
         }
     }
 }

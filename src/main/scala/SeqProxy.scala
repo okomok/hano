@@ -25,7 +25,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def forloop(f: Reaction[A]) = self.forloop(f)
     override def foreach(f: A => Unit) = self.foreach(f)
     override def start() = self.start()
-    override def await(d: Long = INF): Boolean = self.await(d)
+    override def await(_timeout: Long = INF): Boolean = self.await(_timeout)
     override def append[B >: A](that: Seq[B]): Seq[B] = around(self.append(that))
     override def appendIf[B >: A](that: Seq[B])(p: Exit.Status => Boolean): Seq[B] = around(self.appendIf(that)(p))
     override def prepend[B >: A](that: Seq[B]): Seq[B] = around(self.prepend(that))
@@ -69,7 +69,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def toResponder: Responder[A] = self.toResponder
     override def actor: scala.actors.Actor = self.actor
     override def pick[B >: A](z: B): Iterable[B] = self.pick(z)
-    override def latest(d: Long = INF): Iterable[A] = self.latest(d)
+    override def latest(_timeout: Long = INF): Iterable[A] = self.latest(_timeout)
     override def react(f: => Reaction[A]): Seq[A] = around(self.react(f))
     override def onEnter(j: Exit => Unit): Seq[A] = around(self.onEnter(j))
     override def onExit(k: Exit.Status => Unit): Seq[A] = around(self.onExit(k))

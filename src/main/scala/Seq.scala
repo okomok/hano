@@ -57,7 +57,7 @@ trait Seq[+A] {
     /**
      * Waits and blocks until `onExit` is called.
      */
-    def await(d: Long = INF): Boolean = detail.Await(this, d)
+    def await(_timeout: Long = INF): Boolean = detail.Await(this, _timeout)
 
 
 // combinator
@@ -242,7 +242,7 @@ trait Seq[+A] {
     /**
      * Pick up the latest values with the initial value `z`.
      */
-    def latest(d: Long = INF): Iterable[A] = new detail.Latest(this, d)
+    def latest(_timeout: Long = INF): Iterable[A] = new detail.Latest(this, _timeout)
 
 
 // misc

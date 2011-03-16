@@ -18,11 +18,11 @@ import java.util.concurrent
  */
 private[hano]
 object Poll {
-    def apply[A](q: concurrent.BlockingQueue[A], d: Long): A = {
-        if (d < 0) {
+    def apply[A](q: concurrent.BlockingQueue[A], timeout: Long): A = {
+        if (timeout < 0) {
             q.take()
         } else {
-            val res = q.poll(d, concurrent.TimeUnit.MILLISECONDS)
+            val res = q.poll(timeout, concurrent.TimeUnit.MILLISECONDS)
             if (res == null) {
                 throw new concurrent.TimeoutException
             } else {

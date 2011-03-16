@@ -14,7 +14,7 @@ import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 private[hano]
 object Await {
-    def apply[A](xs: Seq[A], d: Long): Boolean = {
+    def apply[A](xs: Seq[A], timeout: Long): Boolean = {
         val c = new CountDownLatch(1)
         var s: Throwable = null
 
@@ -28,14 +28,14 @@ object Await {
             }
         } start()
 
-        if (d < 0) {
+        if (timeout < 0) {
             c.await()
             if (s ne null) {
                 throw s
             }
             true
         } else {
-            val that = c.await(d, TimeUnit.MILLISECONDS)
+            val that = c.await(timeout, TimeUnit.MILLISECONDS)
             if (that && (s ne null)) {
                 throw s
             }

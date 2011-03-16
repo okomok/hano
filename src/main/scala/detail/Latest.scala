@@ -51,7 +51,7 @@ object Latest {
         }
     }
 
-    private class IteratorImpl[A](_data: Data[A], _d: Long) extends AbstractIterator[A] {
+    private class IteratorImpl[A](_data: Data[A], _timeout: Long) extends AbstractIterator[A] {
         private[this] var _x: Option[A] = None
         _ready()
 
@@ -65,7 +65,7 @@ object Latest {
         }
 
         private def _ready() {
-            _x = Poll(_data.queue, _d).toOption
+            _x = Poll(_data.queue, _timeout).toOption
         }
     }
 }
