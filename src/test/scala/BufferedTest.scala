@@ -24,6 +24,14 @@ class BufferedTest extends org.scalatest.junit.JUnit3Suite {
         assertEquals(Vector(Vector(1,2),Vector(2,3),Vector(3,4)), Vector.empty ++ out)
     }
 
+    def testTrivialNoDefault: Unit = {
+        import scala.collection.mutable.ArrayBuffer
+        val t = hano.Seq(1,2,3,4)
+        val out = new java.util.ArrayList[ArrayBuffer[Int]]
+        t.buffered(2, ArrayBuffer.newBuilder).foreach(out.add(_))
+        assertEquals(Vector(ArrayBuffer(1,2),ArrayBuffer(2,3),ArrayBuffer(3,4)), Vector.empty ++ out)
+    }
+
     def testEmpty: Unit = {
         val t = hano.Empty.of[Int]
         val out = new java.util.ArrayList[IndexedSeq[Int]]

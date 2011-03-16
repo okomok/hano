@@ -18,14 +18,14 @@ class Buffered[A, To](_1: Seq[A], _2: Int, _3: () => Builder[A, To]) extends Seq
 
     override def forloop(f: Reaction[To]) {
         val buf = new WorkBuffer[A](_2)
-        val b = _3()
 
         _1.onEnter {
             f.enter(_)
         } onEach { x =>
             buf.addLast(x)
             if (buf.isFull) {
-                f(buf.copy(b))
+                // You can't share a builder, e.g. mutable.ArrayBuffer's.
+                f(buf.copy(_3()))
                 buf.removeFirst()
             }
         } onExit {
