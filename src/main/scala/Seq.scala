@@ -347,6 +347,11 @@ trait Seq[+A] {
     def using(c: => java.io.Closeable): Seq[A] = new detail.Using(this, () => c)
 
     /**
+     * Adjacent pairs
+     */
+    def adjacent: Seq[(A, A)] = new detail.Adjacent(this)
+
+    /**
      * Retrieves buffered sequences.
      */
     def buffered(n: Int): Seq[scala.collection.immutable.IndexedSeq[A]] = new detail.Buffered(this, n)
