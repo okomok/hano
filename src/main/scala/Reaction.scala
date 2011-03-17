@@ -137,9 +137,9 @@ trait Reaction[-A] {
         this
     }
 
-    private[this] val _mdf = new detail.Modification(toString)
-    private[this] var _enter = new detail.DoOnce
-    private[this] val _exit = new detail.DoOnce
+    private[this] val _mdf = new Util.Modify(toString)
+    private[this] var _enter = new Util.DoOnce
+    private[this] val _exit = new Util.DoOnce
     private[this] var _exitFuncs = new Exit.Queue
     private[this] var _exitStatus: Exit.Status = null
 }

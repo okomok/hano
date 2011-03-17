@@ -10,7 +10,7 @@ package com.github.okomok.hanotest
 import com.github.okomok.hano
 
 
-class ModificationTest extends org.scalatest.junit.JUnit3Suite {
+class ModifyTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
         val f = new hano.Reaction[Int] {

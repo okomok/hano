@@ -67,7 +67,7 @@ final class Bag[A](val capacity: Int, override val process: Process = async) ext
 
     private def _next: Option[Val[A]] = {
         if (cur < capacity) {
-            val j = detail.Synchronized(curLock) {
+            val j = Util.syncBy(curLock) {
                 val that = cur
                 cur += 1
                 that

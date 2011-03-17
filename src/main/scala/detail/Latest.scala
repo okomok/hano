@@ -42,12 +42,12 @@ object Latest {
                 exit()
             }
             _data.queue.clear()
-            Verify(_data.queue.offer(ElementMail(x)))
+            Util.verify(_data.queue.offer(ElementMail(x)))
         }
 
         override protected def rawExit(q: Exit.Status) {
             _data.queue.clear()
-            Verify(_data.queue.offer(ExitMail(q)))
+            Util.verify(_data.queue.offer(ExitMail(q)))
         }
     }
 

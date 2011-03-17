@@ -25,7 +25,7 @@ class Adjacent[A, To](_1: Seq[A], _2: Int, _3: () => Builder[A, To]) extends Seq
             f.beforeExit {
                 buf.addLast(x)
                 if (buf.isFull) {
-                    f(Build(buf, _3()))
+                    f(Util.build(buf, _3()))
                     buf.removeFirst()
                 }
             }

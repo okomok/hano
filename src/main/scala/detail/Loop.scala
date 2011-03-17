@@ -13,7 +13,7 @@ private[hano]
 class Loop {
     @volatile var status = Exit.Success.asStatus
     @volatile var isActive = true
-    val begin = new DoOnce
+    val begin = new Util.DoOnce
     val exit = new Loop.ExitImpl(this)
 }
 

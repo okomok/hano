@@ -19,7 +19,7 @@ object Await {
         var s: Throwable = null
 
         xs.onExit { q =>
-            CountDown(c) {
+            Util.countDown(c) {
                 q match {
                     case Exit.Failure(break.Control) => ()
                     case Exit.Failure(t) => s = t

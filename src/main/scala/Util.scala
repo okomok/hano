@@ -1,0 +1,96 @@
+
+
+// Copyright Shunsuke Sogame 2010-2011.
+// Distributed under the terms of an MIT-style license.
+
+
+package com.github.okomok
+package hano
+
+
+/**
+ * Contains some utilities.
+ */
+object Util {
+
+    /**
+     * Builds a collection from an `Iterable`.
+     */
+    def build[A, To](from: Iter[A], _b: => scala.collection.mutable.Builder[A, To]): To = {
+        // Note you can't share a builder, e.g. mutable.ArrayBuffer's.
+        val b = _b
+        for (x <- from.able) {
+            b += x
+        }
+        b.result
+    }
+
+    /**
+     * Counts down a latch.
+     */
+    def countDown[A](c: java.util.concurrent.CountDownLatch)(body: => A): A = {
+        try {
+            body
+        } finally {
+            c.countDown()
+        }
+    }
+
+    /**
+     * Locks and unlocks a lock.
+     */
+    def syncBy[A](l: java.util.concurrent.locks.ReentrantLock)(body: => A): A = {
+        l.lock()
+        try {
+            body
+        } finally {
+            l.unlock()
+        }
+    }
+
+    @annotation.equivalentTo("assert(assertion)")
+    def verify[A](assertion: Boolean): Unit = assert(assertion)
+
+    @annotation.equivalentTo("assert(assertion, message)")
+    def verify[A](assertion: Boolean, message: String): Unit = assert(assertion, message)
+
+    /**
+     * Evaluates an expression only once.
+     */
+    @annotation.notThreadSafe
+    final class DoOnce {
+        // @volatile is nothing but a hint.
+        @volatile private[this] var _done = false
+
+        def isDone: Boolean = _done
+
+        def apply(body: => Unit) {
+            if (!_done) {
+                _done = true
+                body
+            }
+        }
+    }
+
+    /**
+     * Offers fail-fast behavior based on a best-effort basis.
+     */
+    final class Modify(msg: => String) {
+        @volatile private[this] var _ing: Thread = null
+
+        def apply[A](body: => A): A = {
+            val cur = Thread.currentThread()
+
+            if ((_ing ne null) && (_ing ne cur)) {
+                throw new java.util.ConcurrentModificationException(msg)
+            }
+
+            try {
+                _ing = cur
+                body
+            } finally {
+                _ing = null
+            }
+        }
+    }
+}

@@ -13,7 +13,6 @@ package hano
 
 
 import java.util.concurrent.locks.ReentrantLock
-import detail.Synchronized
 
 
 /**
@@ -58,9 +57,9 @@ final class Channel[A](override val process: Process = async) extends Seq[A] {
     @annotation.aliasOf("output")
     def <<(x: Seq[A]): this.type = output(x)
 
-    private def _readable: Val[A] = Synchronized(readLock) {
+    private def _readable: Val[A] = Util.syncBy(readLock) {
         if (readNode.next eq null) {
-            Synchronized(writeLock) {
+            Util.syncBy(writeLock) {
                 if (readNode.next eq null) {
                     readNode.next = new Node[A]
                 }
@@ -71,7 +70,7 @@ final class Channel[A](override val process: Process = async) extends Seq[A] {
         w
     }
 
-    private def _writable: Val[A] = Synchronized(writeLock) {
+    private def _writable: Val[A] = Util.syncBy(writeLock) {
         val w = writeNode.value
         if (writeNode.next eq null) {
             writeNode.next = new Node[A]

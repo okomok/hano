@@ -25,14 +25,14 @@ class Buffered[A, To](_1: Seq[A], _2: Int, _3: () => Builder[A, To]) extends Seq
             f.beforeExit {
                 buf.addLast(x)
                 if (buf.isFull) {
-                    f(Build(buf, _3()))
+                    f(Util.build(buf, _3()))
                     buf.clear()
                 }
             }
         } onExit {
             case q @ Exit.Success => {
                 if (!buf.isEmpty) {
-                    f(Build(buf, _3()))
+                    f(Util.build(buf, _3()))
                 }
                 f.exit(q)
             }
@@ -58,14 +58,14 @@ class BufferedWithin[A, To](_1: Seq[A], _2: Long, _3: () => Builder[A, To]) exte
                 val now = System.currentTimeMillis
                 if (now - past >= _2) {
                     past = now
-                    f(Build(buf, _3()))
+                    f(Util.build(buf, _3()))
                     buf.clear()
                 }
             }
         } onExit {
             case q @ Exit.Success => {
                 if (!buf.isEmpty) {
-                    f(Build(buf, _3()))
+                    f(Util.build(buf, _3()))
                 }
                 f.exit(q)
             }
