@@ -12,8 +12,8 @@ package hano
  * Immutable(single-forloop) infinite list
  */
 final class Rist[A](override val process: Process = async) extends SeqOnce[A] with java.io.Closeable {
-    require(process ne Self)
-    require(process ne Unknown)
+    Require.notSelf(process, "Rist")
+    Require.notUnknown(process, "Rist")
 
     @volatile private[this] var isActive = true
     @volatile private[this] var g: Reaction[A] = null

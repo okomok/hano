@@ -134,7 +134,7 @@ trait Seq[+A] {
     }
 
     def splitAt(n: Int): (Seq[A], Seq[A]) = {
-        detail.Pre.nonnegative(n, "splitAt")
+        Require.nonnegative(n, "splitAt position")
         duplicate match {
             case (xs, ys) => (xs.take(n), ys.drop(n))
         }

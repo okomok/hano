@@ -11,7 +11,8 @@ package detail
 
 private[hano]
 class Drop[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
-    Pre.nonnegative(_2, "drop")
+    Require.nonnegative(_2, "drop count")
+
     override def forloop(f: Reaction[A]) {
         var c = _2
         _1.onEnter {

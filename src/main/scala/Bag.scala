@@ -12,8 +12,8 @@ package hano
  * Immutable infinite unordered multi-set
  */
 final class Bag[A](val capacity: Int, override val process: Process = async) extends Seq[A] {
-    require(process ne Self)
-    require(process ne Unknown)
+    Require.notSelf(process, "Bag")
+    Require.notUnknown(process, "Bag")
 
     private[this] var cur = 0
     private[this] val curLock = new java.util.concurrent.locks.ReentrantLock

@@ -12,9 +12,9 @@ package detail
 import scala.collection.mutable.Builder
 
 
-//private[hano]
+private[hano]
 class Buffered[A, To](_1: Seq[A], _2: Int, _3: () => Builder[A, To]) extends SeqAdapter.Of[To](_1) {
-    require(_2 > 0, "buffered count shall be positive")
+    Require.positive(_2, "buffered count")
 
     override def forloop(f: Reaction[To]) {
         val buf = new BoundedBuffer[A](_2)
@@ -42,9 +42,9 @@ class Buffered[A, To](_1: Seq[A], _2: Int, _3: () => Builder[A, To]) extends Seq
 }
 
 
-//private[hano]
+private[hano]
 class BufferedWithin[A, To](_1: Seq[A], _2: Long, _3: () => Builder[A, To]) extends SeqAdapter.Of[To](_1) {
-    require(_2 >= 0, "bufferedWithin duration shall be nonnegative")
+    Require.nonnegative(_2, "bufferedWithin duration")
 
     override def forloop(f: Reaction[To]) {
         val buf = new java.util.ArrayList[A]

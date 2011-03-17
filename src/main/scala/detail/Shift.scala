@@ -14,7 +14,7 @@ import scala.actors.Actor
 
 private[hano]
 class Shift[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
-    require(_2.process ne Unknown)
+    Require.notUnknown(_2.process, "shift")
 
     override val self = {
         val from = _1.process

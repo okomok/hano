@@ -19,8 +19,8 @@ import java.util.concurrent
  * Single-assignment value as single-element sequence
  */
 final class Val[A](override val process: Process = async) extends Seq[A] with detail.SingleSeq[A] {
-    require(process ne Self)
-    require(process ne Unknown)
+    Require.notSelf(process, "Val")
+    Require.notUnknown(process, "Val")
 
     private[this] val _v = new concurrent.atomic.AtomicReference[Either[Throwable, A]](null)
     private[this] val _fs = new concurrent.ConcurrentLinkedQueue[Reaction[A]]

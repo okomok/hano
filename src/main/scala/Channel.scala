@@ -20,8 +20,8 @@ import java.util.concurrent.locks.ReentrantLock
  * This is mutable one-element sequence; As you foreach, element varies.
  */
 final class Channel[A](override val process: Process = async) extends Seq[A] {
-    require(process ne Self)
-    require(process ne Unknown)
+    Require.notSelf(process, "Channel")
+    Require.notUnknown(process, "Channel")
 
     private class Node[A] {
         val value = new Val[A](process) // shares a process.

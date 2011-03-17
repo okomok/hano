@@ -13,7 +13,7 @@ package detail
 
 private[hano]
 class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
-    Pre.positive(_2, "step")
+    Require.positive(_2, "step count")
 
     override def forloop(f: Reaction[A]) {
         var c = 0
@@ -39,6 +39,8 @@ class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
 
 private[hano]
 class StepWithin[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
+    Require.nonnegative(_2, "stepWithin duration")
+
     override def forloop(f: Reaction[A]) {
         var past = 0L
 

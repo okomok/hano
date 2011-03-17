@@ -68,7 +68,7 @@ object annotation {
 
 
     /**
-     * Pre
+     * Precondition
      */
     class pre(expr: String) extends StaticAnnotation
 

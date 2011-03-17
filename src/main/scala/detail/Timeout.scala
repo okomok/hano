@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class Timeout[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
-    require(_2 >= 0, "timeout duration shall be nonnegative")
+    Require.nonnegative(_2, "timeout duration")
 
     override def forloop(f: Reaction[A]) {
         val out = new java.util.concurrent.atomic.AtomicBoolean(false)

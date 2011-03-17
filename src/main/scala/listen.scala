@@ -43,7 +43,7 @@ object listen {
 
 
     private class Apply[A](_1: Process, _2: Env[A] => Unit) extends Seq[A] {
-        require(_1 ne Self, "process of `listen` shall not be `Self`")
+        Require.notSelf(_1, "listen")
 
         override def process = _1
 

@@ -14,7 +14,7 @@ import scala.collection.mutable.Builder
 
 private[hano]
 class Adjacent[A, To](_1: Seq[A], _2: Int, _3: () => Builder[A, To]) extends SeqAdapter.Of[To](_1) {
-    Pre.positive(_2, "adjacent")
+    Require.positive(_2, "adjacent count")
 
     override def forloop(f: Reaction[To]) {
         val buf = new BoundedBuffer[A](_2)
