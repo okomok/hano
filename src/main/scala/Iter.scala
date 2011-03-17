@@ -83,6 +83,7 @@ object Iter {
     implicit def fromJIterable[A](from: java.lang.Iterable[A]): Iter[A] = new FromJIterable(from)
     implicit def fromArray[A](from: Array[A]): Iter[A] = new FromArray(from)
     implicit def fromOption[A](from: Option[A]): Iter[A] = new FromOption(from)
+    implicit def fromCharSequence(from: java.lang.CharSequence): Iter[Char] = new FromCharSequence(from)
 
     private class FromIterator[A](_1: () => Iterator[A]) extends Iter[A] {
         override def ator = _1()
@@ -108,6 +109,15 @@ object Iter {
 
     private class FromOption[A](_1: Option[A]) extends Iter[A] {
         override def ator = _1.iterator
+    }
+
+    private class FromCharSequence(_1: java.lang.CharSequence) extends Iter[Char] {
+        override def ator = new detail.AbstractIterator[Char] {
+            private[this] var i = 0
+            override def isEnd = i == _1.length
+            override def deref = _1.charAt(i)
+            override def increment() = i += 1
+        }.concrete
     }
 
     private class Able[A](_1: Iter[A]) extends Iterable[A] {

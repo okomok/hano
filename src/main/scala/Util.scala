@@ -16,13 +16,20 @@ object Util {
     /**
      * Builds a collection from an `Iterable`.
      */
-    def build[A, To](from: Iter[A], _b: => scala.collection.mutable.Builder[A, To]): To = {
-        // Note you can't share a builder, e.g. mutable.ArrayBuffer's.
+    def build[A, To](iter: Iter[A], _b: => scala.collection.mutable.Builder[A, To]): To = {
+        // Builder is taken by-name, for it can't be shared.(e.g. mutable.ArrayBuffer)
         val b = _b
-        for (x <- from.able) {
+        for (x <- iter.able) {
             b += x
         }
         b.result
+    }
+
+    /**
+     * Builds a collection from an `Iterable` using a target type implicitly.
+     */
+    def buildFrom[A, To](iter: Iter[A])(implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = {
+        build(iter, bf())
     }
 
     /**
