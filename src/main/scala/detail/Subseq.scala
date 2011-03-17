@@ -18,7 +18,7 @@ class Subseq[A, B](_1: Seq[A], _2: Iter[Int]) extends SeqAdapter.Of[A](_1) {
         _1.onEnter { p =>
             f.enter(p)
             if (!it.hasNext) {
-                f.exit(Exit.Success)
+                f.exit()
             } else {
                 j = it.next
             }
@@ -31,7 +31,7 @@ class Subseq[A, B](_1: Seq[A], _2: Iter[Int]) extends SeqAdapter.Of[A](_1) {
                         j = it.next
                         require(oldj < j, "`subseq` requires a strictly-increasing `Iterator`")
                     } else {
-                        f.exit(Exit.Success)
+                        f.exit()
                     }
                 }
                 i += 1

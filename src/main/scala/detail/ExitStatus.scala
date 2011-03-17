@@ -16,7 +16,7 @@ class ExitStatus(_1: Seq[_]) extends SeqAdapter.Of[Exit.Status](_1) with SingleS
             f.enter(_)
         } onExit { q =>
             f(q)
-            f.exit(Exit.Success)
+            f.exit()
         } start()
     }
 }

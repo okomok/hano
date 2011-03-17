@@ -23,7 +23,7 @@ class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Process {
             try {
                 Self.`do`(f)
             } catch {
-                case t: Throwable => detail.LogErr(t, "async process")
+                case t: Throwable => detail.Log.err("async process", t)
             }
         }
     }

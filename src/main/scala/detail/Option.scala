@@ -16,11 +16,11 @@ class _Option[A](_1: Seq[A]) extends SeqAdapter.Of[Option[A]](_1) {
             f.enter(_)
         } onEach { x =>
             f(Some(x))
-            f.exit(Exit.Success)
+            f.exit()
         } onExit {
             case Exit.Failure(_: NoSuchElementException) => {
                 f(None)
-                f.exit(Exit.Success)
+                f.exit()
             }
             case q => f.exit(q)
         } start()

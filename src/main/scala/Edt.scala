@@ -21,7 +21,7 @@ object Edt extends Process {
                     try {
                         Self.`do`(f)
                     } catch {
-                        case t: Throwable => detail.LogErr(t, "Edt process")
+                        case t: Throwable => detail.Log.err("Edt process", t)
                     }
                 }
             }

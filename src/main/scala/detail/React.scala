@@ -12,52 +12,14 @@ package detail
 private[hano]
 class React[A](_1: Seq[A], _2: () => Reaction[A]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
-        val _g = _2()
+        val g = _2()
 
-        _1.forloop {
-            Reaction(
-                p => { _g.enter(p); f.enter(p) },
-                x => { _g(x); f(x) },
-                // Force to enter f, for _g may exit the reaction tree.
-                q => { _g.exit(q); f.enter(); f.exit(q) }
-            )
-        }
-    }
-
-    override def react(f: => Reaction[A]): Seq[A] = { // react.react fusion
-        _1.react {
-            val _f = f
-            val _g = _2()
-
-            Reaction(
-                p => { _g.enter(p); _f.enter(p) },
-                x => { _g(x); _f(x) },
-                q => { _g.exit(q); _f.enter(); _f.exit(q) }
-            )
-        }
-    }
-
-    override def foreach(f: A => Unit) { // react.foreach fusion
-        val _g = _2()
-
-        _1.forloop {
-            Reaction(
-                _g.enter(_),
-                x => { _g(x); f(x) },
-                _g.exit(_)
-            )
-        }
-    }
-
-    override def start() { // react.start fusion
-        val _g = _2()
-
-        _1.forloop {
-            Reaction(
-                _g.enter(_),
-                _g(_),
-                _g.exit(_)
-            )
-        }
+        _1.onEnter {
+            g.enter(_)
+        } onEach {
+            g(_)
+        } onExit {
+            g.exit(_)
+        } forloop(f)
     }
 }

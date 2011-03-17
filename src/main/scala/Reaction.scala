@@ -12,6 +12,7 @@ package hano
  * Triggered by Seq.forloop
  */
 trait Reaction[-A] {
+
     @annotation.returnThis @inline
     final def of[B <: A]: Reaction[B] = this
 
@@ -79,7 +80,7 @@ trait Reaction[-A] {
             } catch {
                 case break.Control => ()
                 case t: scala.util.control.ControlThrowable => throw t
-                case t: Throwable => detail.LogErr(t, "aReaction.exit", true)
+                case t: Throwable => detail.Log.err("onExit", t, true)
             }
         }
     }
@@ -146,6 +147,19 @@ trait Reaction[-A] {
 
 
 object Reaction {
+
+    /**
+     * A reaction to do nothing
+     */
+    class End extends Reaction[Any] {
+        override protected def rawEnter(p: Exit) = ()
+        override protected def rawApply(x: Any) = ()
+        override protected def rawExit(q: Exit.Status) = q match {
+            case Exit.Failure(t) if detail.IsBuggy(t) => detail.Log.err("bug", t, true)
+            case _ => ()
+        }
+    }
+
     def apply[A](j: Exit => Unit, f: A => Unit, k: Exit.Status => Unit): Reaction[A] = new Apply(j, f, k)
 
     @annotation.returnThat

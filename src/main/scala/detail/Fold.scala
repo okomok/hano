@@ -21,7 +21,7 @@ class FoldLeft[A, B](_1: Seq[A], _2: B, _3: (B, A) => B) extends SeqAdapter.Of[B
         } onExit {
             case Exit.Success => {
                 f(acc)
-                f.exit(Exit.Success)
+                f.exit()
             }
             case q => f.exit(q)
         } start()
@@ -48,7 +48,7 @@ class ReduceLeft[A, B >: A](_1: Seq[A], _3: (B, A) => B) extends SeqAdapter.Of[B
                     f.exit(Exit.Failure(new NoSuchElementException("aSeq.reduceLeft")))
                 } else {
                     f(acc.get)
-                    f.exit(Exit.Success)
+                    f.exit()
                 }
             }
             case q => f.exit(q)

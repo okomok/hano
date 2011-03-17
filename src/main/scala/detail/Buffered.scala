@@ -30,11 +30,11 @@ class Buffered[A, To](_1: Seq[A], _2: Int, _3: () => Builder[A, To]) extends Seq
                 }
             }
         } onExit {
-            case q @ Exit.Success => {
+            case Exit.Success => {
                 if (!buf.isEmpty) {
                     f(Util.build(buf, _3()))
                 }
-                f.exit(q)
+                f.exit()
             }
             case q => f.exit(q)
         } start()
@@ -63,11 +63,11 @@ class BufferedWithin[A, To](_1: Seq[A], _2: Long, _3: () => Builder[A, To]) exte
                 }
             }
         } onExit {
-            case q @ Exit.Success => {
+            case Exit.Success => {
                 if (!buf.isEmpty) {
                     f(Util.build(buf, _3()))
                 }
-                f.exit(q)
+                f.exit()
             }
             case q => f.exit(q)
         } start()

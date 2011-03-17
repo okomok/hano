@@ -35,7 +35,7 @@ class ConcatIf[A](_1: Iter[Seq[A]], _2: Process, cond: Exit.Status => Boolean) e
                         if (it.hasNext) {
                             rec(it)
                         } else {
-                            f.exit(Exit.Success)
+                            f.exit()
                         }
                     } else {
                         f.exit(q)
@@ -48,7 +48,7 @@ class ConcatIf[A](_1: Iter[Seq[A]], _2: Process, cond: Exit.Status => Boolean) e
 
         if (!it.hasNext) {
             process.invoke {
-                f.exit(Exit.Success)
+                f.exit()
             }
         } else {
             rec(it)

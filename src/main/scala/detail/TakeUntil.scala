@@ -19,7 +19,7 @@ class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
         } onEnter {
             f.enter(_)
         } onEach { _ =>
-            f.exit(Exit.Success)
+            f.exit()
         } start()
 
         _1.shift {

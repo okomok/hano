@@ -16,11 +16,11 @@ class IsEmpty(_1: Seq[_]) extends SeqAdapter.Of[Boolean](_1) with SingleSeq[Bool
             f.enter(_)
         } onEach { _ =>
             f(false)
-            f.exit(Exit.Success)
+            f.exit()
         } onExit {
-            case q @ Exit.Success => {
+            case Exit.Success => {
                 f(true)
-                f.exit(q)
+                f.exit()
             }
             case q => f.exit(q)
         } start()

@@ -40,7 +40,7 @@ final class Timer(isDaemon: Boolean = false) extends Process { outer =>
                 try {
                     Self.`do`(f)
                 } catch {
-                    case t: Throwable => detail.LogErr(t, "Timer process")
+                    case t: Throwable => detail.Log.err("Timer process", t)
                 }
             }
         }

@@ -24,7 +24,7 @@ class Copy[A, To](_1: Seq[A], _2: () => Builder[A, To]) extends SeqAdapter.Of[To
         } onExit {
             case Exit.Success => {
                 f(b.result)
-                f.exit(Exit.Success)
+                f.exit()
             }
             case q => f.exit(q)
         } start()

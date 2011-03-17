@@ -17,10 +17,10 @@ class Options[A](_1: Seq[A]) extends SeqAdapter.Of[Option[A]](_1) {
         } onEach { x =>
             f(Some(x))
         } onExit {
-            case q @ Exit.Success => f.exit(q)
+            case Exit.Success => f.exit()
             case q => {
                 f(None)
-                f.exit(Exit.Success)
+                f.exit()
             }
         } start()
     }

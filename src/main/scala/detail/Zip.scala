@@ -41,7 +41,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                 _invariant()
                 ends1 = true
                 if (ends2 || c1.isEmpty) {
-                    f.exit(Exit.Success)
+                    f.exit()
                 }
             }
             case q => f.exit(q) // fail immediately
@@ -65,7 +65,7 @@ class Zip[A, B](_1: Seq[A], _2: Seq[B]) extends Seq[(A, B)] {
                 _invariant()
                 ends2 = true
                 if (ends1 || c2.isEmpty) {
-                    f.exit(Exit.Success)
+                    f.exit()
                 }
             }
             case q => f.exit(q)

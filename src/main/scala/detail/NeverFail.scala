@@ -17,7 +17,7 @@ class NeverFail[A](_1: Seq[A]) extends SeqAdapter.Of[A](_1) {
         } onEach {
             f(_)
         } onExit { _ =>
-            f.exit(Exit.Success)
+            f.exit()
         } start()
     }
 }

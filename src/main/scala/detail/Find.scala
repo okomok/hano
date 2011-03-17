@@ -17,7 +17,7 @@ class Find[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[A](_1) with Si
         } onEach { x =>
             if (_2(x)) {
                 f(x)
-                f.exit(Exit.Success)
+                f.exit()
             }
         } onExit {
             case Exit.Success => f.exit(Exit.Failure(new NoSuchElementException("aSeq.find")))

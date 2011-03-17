@@ -22,6 +22,7 @@ object Await {
             Util.countDown(c) {
                 q match {
                     case Exit.Failure(break.Control) => ()
+                    case Exit.Failure(Exit.ByOther(_)) => ()
                     case Exit.Failure(t) => s = t
                     case _ => ()
                 }

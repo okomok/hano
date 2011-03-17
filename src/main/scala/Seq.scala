@@ -48,11 +48,11 @@ trait Seq[+A] {
      */
     def forloop(f: Reaction[A])
 
-    @annotation.equivalentTo("forloop(Reaction(f, _ => ()))")
-    def foreach(f: A => Unit) = forloop(Reaction(_ => (), f, Exit.defaultHandler))
+    @annotation.equivalentTo("onEach(f).start()")
+    def foreach(f: A => Unit) = onEach(f).start()
 
-    @annotation.equivalentTo("foreach(_ => ())")
-    def start() = foreach(_ => ())
+    @annotation.equivalentTo("forloop(new Reaction.Empty)")
+    def start() = forloop(new Reaction.End)
 
     /**
      * Waits and blocks until `onExit` is called.

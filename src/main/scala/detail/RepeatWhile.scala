@@ -35,7 +35,7 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
                 loop.begin {
                     f.enter(loop.exit)
                     if (!_2(None)) {
-                        f.exit(Exit.Success)
+                        f.exit()
                     }
                 }
                 _p = p
@@ -85,7 +85,7 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
                 loop.begin {
                     f.enter(loop.exit)
                     if (!_2(None)) {
-                        f.exit(Exit.Success)
+                        f.exit()
                     }
                 }
                 _p = p
