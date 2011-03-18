@@ -156,7 +156,7 @@ trait Seq[+A] {
     /**
      * Steps by the specified duration(millisecond).
      */
-    def stepWithin(d: Long): Seq[A] = new detail.StepWithin(this, d)
+    def stepFor(d: Long): Seq[A] = new detail.StepFor(this, d)
 
     /**
      * Calls a reaction in case any element doesn't come in the specified duration(millisecond).
@@ -237,7 +237,7 @@ trait Seq[+A] {
     /**
      * Pick up the newest values with the initial value `z`.
      */
-    def pick[B >: A](z: B): Iterable[B] = new detail.Pick(this, z)
+    def news[B >: A](z: B): Iterable[B] = new detail.News(this, z)
 
     /**
      * Pick up the latest values with the initial value `z`.
@@ -353,7 +353,7 @@ trait Seq[+A] {
     /**
      * Buffers values within the specified duration(millisecond).
      */
-    def bufferedWithin[To](d: Long, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.BufferedWithin(this, d, () => b)
+    def bufferedFor[To](d: Long, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.BufferedFor(this, d, () => b)
 
     /**
      * Retrieves adjacent sequences.

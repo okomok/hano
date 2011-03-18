@@ -21,7 +21,7 @@ private[hano]
 object Loop {
     private class ExitImpl(_1: Loop) extends Exit {
         override def apply(q: Exit.Status = Exit.Success) {
-            _1.status = Exit.Failure(Exit.ByOther(q))
+            _1.status = Exit.Failure(Exit.Interrupted(q))
             _1.isActive = false
         }
     }

@@ -23,7 +23,7 @@ class ConcatIf[A](_1: Iter[Seq[A]], _2: Process, cond: Exit.Status => Boolean) e
                     Exit { q =>
                         p(q)
                         process.invoke { // for thread-safety
-                            f.exit(Exit.Failure(Exit.ByOther(q)))
+                            f.exit(Exit.Failure(Exit.Interrupted(q)))
                         }
                     }
                 }

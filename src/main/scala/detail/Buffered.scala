@@ -43,8 +43,8 @@ class Buffered[A, To](_1: Seq[A], _2: Int, _3: () => Builder[A, To]) extends Seq
 
 
 private[hano]
-class BufferedWithin[A, To](_1: Seq[A], _2: Long, _3: () => Builder[A, To]) extends SeqAdapter.Of[To](_1) {
-    Require.nonnegative(_2, "bufferedWithin duration")
+class BufferedFor[A, To](_1: Seq[A], _2: Long, _3: () => Builder[A, To]) extends SeqAdapter.Of[To](_1) {
+    Require.nonnegative(_2, "bufferedFor duration")
 
     override def forloop(f: Reaction[To]) {
         val buf = new java.util.ArrayList[A]

@@ -51,7 +51,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def splitAt(n: Int): (Seq[A], Seq[A]) = around2(self.splitAt(n))
     override def subseq(iter: Iter[Int]) = around(self.subseq(iter))
     override def step(n: Int): Seq[A] = around(self.step(n))
-    override def stepWithin(d: Long): Seq[A] = around(self.stepWithin(d))
+    override def stepFor(d: Long): Seq[A] = around(self.stepFor(d))
     override def fillTime(d: Long): Seq[Unit] = around(self.fillTime(d))
     override def delay(d: Long): Seq[A] = around(self.delay(d))
     override def timeout(d: Long): Seq[A] = around(self.timeout(d))
@@ -68,7 +68,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def toIter: Iter[A] = self.toIter
     override def toResponder: Responder[A] = self.toResponder
     override def actor: scala.actors.Actor = self.actor
-    override def pick[B >: A](z: B): Iterable[B] = self.pick(z)
+    override def news[B >: A](z: B): Iterable[B] = self.news(z)
     override def latest(_timeout: Long = INF): Iterable[A] = self.latest(_timeout)
     override def react(f: => Reaction[A]): Seq[A] = around(self.react(f))
     override def onEnter(j: Exit => Unit): Seq[A] = around(self.onEnter(j))
@@ -90,7 +90,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def protect: Seq[A] = around(self.protect)
     override def using(c: => java.io.Closeable): Seq[A] = around(self.using(c))
     override def buffered[To](n: Int, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = around(self.buffered(n, b))
-    override def bufferedWithin[To](d: Long, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = around(self.bufferedWithin(d, b))
+    override def bufferedFor[To](d: Long, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = around(self.bufferedFor(d, b))
     override def adjacent[To](n: Int, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = around(self.adjacent(n, b))
     override def adjacent2: Seq[(A, A)] = around(self.adjacent2)
     override def pull[B](iter: Iter[B]): Seq[B] = around(self.pull(iter))

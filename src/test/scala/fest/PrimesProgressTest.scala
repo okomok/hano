@@ -64,7 +64,7 @@ class PrimesProgressGuiTest
                         resultLabel.setText(p.toString)
                         hano.break()
                     case None => ()
-                }.indices.stepWithin(10) onEach { i =>
+                }.indices.stepFor(10) onEach { i =>
                     if (monitor.isCanceled) {
                         resultLabel.setText("Canceled")
                         hano.break()

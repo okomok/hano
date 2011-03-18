@@ -59,7 +59,7 @@ object listen {
                         Exit { q =>
                             env._remove()
                             process.invoke { // wrapped for thread-safety
-                                f.exit(Exit.Failure(Exit.ByOther(q)))
+                                f.exit(Exit.Failure(Exit.Interrupted(q)))
                             }
                         }
                     }
@@ -80,7 +80,7 @@ object listen {
                         _remove()
                         if (process ne Unknown) {
                             process.invoke {
-                                f.exit(Exit.Failure(Exit.ByOther(q)))
+                                f.exit(Exit.Failure(Exit.Interrupted(q)))
                             }
                         }
                     }

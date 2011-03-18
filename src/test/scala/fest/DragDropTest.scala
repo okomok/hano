@@ -37,7 +37,7 @@ class DragDropTest extends
             val mouse = hano.Swing.Mouse(jl)
             mouse.Pressed onEach { p =>
                 println("pressed at: " + (p.getX, p.getY))
-                mouse.Dragged stepWithin {
+                mouse.Dragged stepFor {
                     100
                 } takeUntil {
                     mouse.Released
@@ -55,7 +55,7 @@ class DragDropTest extends
                 mouse.Pressed.options.! match {
                     case Some(p) => {
                         println("pressed at: " + (p.getX, p.getY))
-                        mouse.Dragged.stepWithin(100).takeUntil(mouse.Released).options.! match {
+                        mouse.Dragged.stepFor(100).takeUntil(mouse.Released).options.! match {
                             case Some(d) => println("dragging at: " + (d.getX, d.getY))
                             case None => ()
                         }
@@ -69,7 +69,7 @@ class DragDropTest extends
                 val mouse = hano.Swing.Mouse(jl)
                 for (p <- mouse.Pressed.!?) {
                     println("pressed at: " + (p.getX, p.getY))
-                    for (d <- mouse.Dragged.stepWithin(100).takeUntil(mouse.Released).!?) {
+                    for (d <- mouse.Dragged.stepFor(100).takeUntil(mouse.Released).!?) {
                         println("dragging at: " + (d.getX, d.getY))
                     }
                     println("released")

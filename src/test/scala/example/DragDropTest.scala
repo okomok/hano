@@ -24,7 +24,7 @@ package sequencetest; package reactivetest; package example
                     val mouse = hano.Swing.Mouse(label)
                     val p = *.each(mouse.Pressed)
                     println("pressed at: " + (p.getX, p.getY))
-                    for (d <- *.until(mouse.Dragged.stepWithin(100), mouse.Released)) {
+                    for (d <- *.until(mouse.Dragged.stepFor(100), mouse.Released)) {
                         println("dragging at: " + (d.getX, d.getY))
                     }
                     println("released")

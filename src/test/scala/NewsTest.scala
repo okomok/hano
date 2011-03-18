@@ -13,10 +13,10 @@ import com.github.okomok.hano
 import junit.framework.Assert._
 
 
-class PickTest extends org.scalatest.junit.JUnit3Suite {
+class NewsTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
         val xs = hano.Timer.nondaemon.schedule(500, 500).pull(Seq(0,1,2,3,4,5))
-        val it = xs.pick(999).iterator
+        val it = xs.news(999).iterator
         expect(999)(it.next)
         Thread.sleep(600)
         expect(0)(it.next)

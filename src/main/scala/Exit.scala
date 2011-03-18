@@ -58,7 +58,7 @@ object Exit {
     /**
      * Specifies a failure that reaction is exited in downstream.
      */
-    case class ByOther(status: Status) extends RuntimeException
+    case class Interrupted(status: Status) extends RuntimeException
 
     /**
      * Mixin for a trivial implementation.

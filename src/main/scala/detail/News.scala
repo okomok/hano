@@ -10,9 +10,9 @@ package detail
 
 
 private[hano]
-class Pick[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
+class News[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
     override def iterator = {
-        import Pick._
+        import News._
         val data = new Data(_2)
         _1.forloop(new ReactionImpl(data))
         new IteratorImpl(data)
@@ -21,7 +21,7 @@ class Pick[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
 
 
 private[hano]
-object Pick {
+object News {
 
     private class Data[A](z: A) {
         @volatile var mail = ElementMail(z).asMail
