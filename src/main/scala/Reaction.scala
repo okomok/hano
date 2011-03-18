@@ -60,9 +60,12 @@ trait Reaction[-A] {
     final def apply(x: A) = _mdf {
         require(isEntered, "`enter` shall be called before `apply` to: " + toString)
 
-        if (!isExited) {
-            rawApply(x)
+        applying {
+            if (!isExited) {
+                rawApply(x)
+            }
         }
+        ()
     }
 
     /**
