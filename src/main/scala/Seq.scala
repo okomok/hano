@@ -448,7 +448,7 @@ trait Seq[+A] {
     /**
      * Turns an algorithm into a `Option` form.
      */
-    def option: Seq[Option[A]] = new detail._Option(this)
+    def option: Seq[Option[A]] = new detail.SeqOption(this)
 
     /**
      * Turns an algorithm into a default value form.

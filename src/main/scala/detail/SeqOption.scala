@@ -10,7 +10,7 @@ package detail
 
 
 private[hano]
-class _Option[A](_1: Seq[A]) extends SeqAdapter.Of[Option[A]](_1) {
+class SeqOption[A](_1: Seq[A]) extends SeqAdapter.Of[Option[A]](_1) {
     override def forloop(f: Reaction[Option[A]]) {
         _1.onEnter {
             f.enter(_)
