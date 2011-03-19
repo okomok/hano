@@ -23,7 +23,6 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testMinMax {
-        // `Iterator` is traversable once only, that is, mutable.
         val it: Iterator[Int] = Iterator(5,1,6,0,3,2,4)
         val xs: hano.Seq[Int] = hano.async.pull(it)
 

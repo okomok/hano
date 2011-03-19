@@ -3,7 +3,7 @@ package com.github.okomok.hanotest.example
 import com.github.okomok.hano
 
 /**
- * Unlike `scala.collections`, algorithms on `Seq` returns a single-element `Seq`.
+ * Unlike `scala.collections`, algorithms on `Seq` return a single-element `Seq`.
  */
 class AlgorithmsTest extends org.scalatest.junit.JUnit3Suite {
 

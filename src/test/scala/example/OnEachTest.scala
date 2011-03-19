@@ -22,7 +22,7 @@ class OnEachTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     /**
-     * You can apply `onEach` many timers.
+     * You can apply `onEach` many times.
      */
     def testOnEach2 {
         val xs: hano.Seq[Int] = hano.async.pull(1 until 4)

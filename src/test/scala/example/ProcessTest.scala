@@ -17,7 +17,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
             var i = 0
             us.onEach { x =>
             // reaction block
-                expect(())(x) // The elemen is the `Unit`.
+                expect(())(x) // The element is the `Unit`.
                 if (i == 5) {
                     hano.break()
                 }
