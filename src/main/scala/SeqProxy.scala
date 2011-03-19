@@ -67,6 +67,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def toIterable: Iterable[A] = self.toIterable
     override def toIter: Iter[A] = self.toIter
     override def toResponder: Responder[A] = self.toResponder
+    override def toVal[B](implicit pre: Seq[A] <:< Seq[B]): Val[B] = self.toVal
     override def actor: scala.actors.Actor = self.actor
     override def iterator(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterator[A] = self.iterator(timeout, queue)
     override def iterable(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = self.iterable(timeout, queue)

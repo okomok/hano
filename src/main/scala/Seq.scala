@@ -218,6 +218,9 @@ trait Seq[+A] {
     def toResponder: Responder[A] = new detail.ToResponder(this)
 
     @annotation.conversion
+    def toVal[B](implicit pre: Seq[A] <:< Seq[B]): Val[B] = Val(pre(this))
+
+    @annotation.conversion
     final def toCps: A @continuations.cpsParam[Any, Unit] = {
         continuations.shift {
             (cont: A => Any) => foreach(new detail.DiscardValue(cont))

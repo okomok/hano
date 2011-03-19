@@ -99,17 +99,17 @@ trait Reaction[-A] {
     /**
      * Override this to implement `enter`.
      */
-    protected def rawEnter(p: Exit)
+    protected def rawEnter(p: Exit) = ()
 
     /**
      * Override this to implement `apply`.
      */
-    protected def rawApply(x: A)
+    protected def rawApply(x: A) = ()
 
     /**
      * Override this to implement `exit`.
      */
-    protected def rawExit(q: Exit.Status)
+    protected def rawExit(q: Exit.Status) = ()
 
     private[hano]
     final def applying(body: => Unit): this.type = {
@@ -155,8 +155,6 @@ object Reaction {
      * A reaction to do nothing
      */
     class End extends Reaction[Any] {
-        override protected def rawEnter(p: Exit) = ()
-        override protected def rawApply(x: Any) = ()
         override protected def rawExit(q: Exit.Status) = q match {
             case Exit.Failure(t) if detail.IsBuggy(t) => detail.Log.err("bug", t, true)
             case _ => ()

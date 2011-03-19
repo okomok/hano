@@ -49,6 +49,13 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
         expect(9)(head())
     }
 
+    def testHeadToVal {
+        val xs = hano.async.pull(Seq(9,3,1,2,6,7,4,2))
+        val head = new hano.Val[Int]
+        expect(9)(xs.head.toVal.get())
+    }
+
+
     def testNoHead {
         val xs = hano.async.pull(Seq[Int]())
         val head = new hano.Val[Int]
