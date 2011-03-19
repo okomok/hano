@@ -18,7 +18,7 @@ object generator {
      */
     object sync {
         type Env[A] = Reaction[A] with java.io.Flushable
-        def apply[A](body: Env[A] => Unit): Iterable[A] = new BodyToSeq(body).toIterable()
+        def apply[A](body: Env[A] => Unit): Iterable[A] = new BodyToSeq(body).toIterable
     }
 
     /**
@@ -26,7 +26,7 @@ object generator {
      */
     object async {
         type Env[A] = Reaction[A]
-        def apply[A](body: Env[A] => Unit): Iterable[A] = new BodyToSeq(body).toIterable()
+        def apply[A](body: Env[A] => Unit): Iterable[A] = new BodyToSeq(body).toIterable
     }
 
     /**

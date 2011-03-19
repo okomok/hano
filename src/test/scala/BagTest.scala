@@ -65,7 +65,7 @@ class BagTest extends org.scalatest.junit.JUnit3Suite {
         }
         suite.start
 
-        val it = xs.take(100).toIterable()
+        val it = xs.take(100).toIterable
         assert(it.forall(x => x == 10 || x == 12))
     }
 

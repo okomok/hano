@@ -64,10 +64,12 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def unzip[B, C](implicit pre: Seq[A] <:< Seq[(B, C)]): (Seq[B], Seq[C]) = around2(self.unzip)
     override def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = self.breakOut
     override def toTraversable: scala.collection.Traversable[A] = self.toTraversable
-    override def toIterable(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = self.toIterable(timeout, queue)
+    override def toIterable: Iterable[A] = self.toIterable
     override def toIter: Iter[A] = self.toIter
     override def toResponder: Responder[A] = self.toResponder
     override def actor: scala.actors.Actor = self.actor
+    override def iterator(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterator[A] = self.iterator(timeout, queue)
+    override def iterable(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = self.iterable(timeout, queue)
     override def news[B >: A](z: B): Iterable[B] = self.news(z)
     override def latest(_timeout: Long = INF): Iterable[A] = self.latest(_timeout)
     override def react(f: => Reaction[A]): Seq[A] = around(self.react(f))

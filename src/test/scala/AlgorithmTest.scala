@@ -254,8 +254,8 @@ class AlgorithmTest extends org.scalatest.junit.JUnit3Suite {
     def testIterable {
         val xs = hano.async.pull(0 until 108)
         val (ys, zs) = xs.duplicate
-        val ax = ys.toIterable()
-        val bx = zs.toIterable()
+        val ax = ys.toIterable
+        val bx = zs.toIterable
         expect(hano.Iter.from(0 until 108))(hano.Iter.from(ax))
         expect(hano.Iter.from(0 until 108))(hano.Iter.from(bx))
     }

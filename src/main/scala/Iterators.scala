@@ -14,6 +14,11 @@ package hano
 object Iterators {
 
     /**
+     * Binds an `Iterator` to `Iterable`.
+     */
+    def bind[A](it: => Iterator[A]): Iterable[A] = new Bind(() => it)
+
+    /**
      * Creates an infinite-length iterator returning `x`.
      */
     def const[A](x: A): Iterator[A] = new Const(x)
@@ -66,6 +71,10 @@ object Iterators {
         }
     }
 
+
+    private class Bind[A](_1: () => Iterator[A]) extends Iterable[A] {
+        override def iterator = _1()
+    }
 
     private class Const[A](_1: A) extends Iterator[A] {
         override def hasNext = true

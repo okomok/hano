@@ -209,10 +209,10 @@ trait Seq[+A] {
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)
 
     @annotation.conversion
-    def toIterable(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = new detail.ToIterable(this, timeout, () => queue)
+    def toIterable: Iterable[A] = iterable()
 
     @annotation.conversion
-    def toIter: Iter[A] = Iter.from(toIterable())
+    def toIter: Iter[A] = Iter.from(toIterable)
 
     @annotation.conversion
     def toResponder: Responder[A] = new detail.ToResponder(this)
@@ -233,6 +233,19 @@ trait Seq[+A] {
     final def !? = cpsFor
 
     def actor: scala.actors.Actor = scala.actors.Actor.actor(start)
+
+
+// Iterable
+
+    /**
+     * Retrieves an `Iterator` from this sequence.
+     */
+    def iterator(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterator[A] = iterable(timeout, queue).iterator
+
+    /**
+     * Retrieves an `Iterable` from this sequence.
+     */
+    def iterable(timeout: Long = INF, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = new detail.SeqIterable(this, timeout, () => queue)
 
     /**
      * Pick up the newest values with the initial value `z`.

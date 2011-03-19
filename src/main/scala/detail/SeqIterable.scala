@@ -13,9 +13,9 @@ import java.util.concurrent.BlockingQueue
 
 
 private[hano]
-class ToIterable[A](_1: Seq[A], _2: Long, _3: () => BlockingQueue[Any]) extends Iterable[A] {
+class SeqIterable[A](_1: Seq[A], _2: Long, _3: () => BlockingQueue[Any]) extends Iterable[A] {
     override def iterator = {
-        import ToIterable._
+        import SeqIterable._
 
         val data = new Data(_3())
 
@@ -35,7 +35,7 @@ class ToIterable[A](_1: Seq[A], _2: Long, _3: () => BlockingQueue[Any]) extends 
 
 
 private[hano]
-object ToIterable {
+object SeqIterable {
 
     private class Data(val queue: BlockingQueue[Any]) {
         @volatile var exit = Exit.Empty.asExit
