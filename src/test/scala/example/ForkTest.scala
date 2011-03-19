@@ -7,8 +7,6 @@ import com.github.okomok.hano
  */
 class ForkTest extends org.scalatest.junit.JUnit3Suite {
 
-    import java.lang.Math
-
     def testMotivation {
         // `Iterator` is traversable once only, that is, *mutable*.
         val it: Iterator[Int] = Iterator(5,1,6,0,3,2,4)
