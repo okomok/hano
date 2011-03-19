@@ -79,7 +79,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     /**
-     * Like `Val`, you can write a single-element sequence into `Channel`.
+     * Like `Val`, you can write sequence values into `Channel`.
      */
     def testOutput {
         val xs = hano.async.pull(1 until 6)

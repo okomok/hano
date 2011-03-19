@@ -204,4 +204,21 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         expect(6)(ch.read())
     }
 
+    def testOutputSeq {
+        val p = hano.async
+        val ch = new hano.Channel[Int](p)
+
+        val xs = p.pull(0 until 3)
+        val ys = p.pull(10 until 13)
+
+        ch << xs << ys
+
+        expect(0)(ch.read())
+        expect(10)(ch.read())
+        expect(1)(ch.read())
+        expect(11)(ch.read())
+        expect(2)(ch.read())
+        expect(12)(ch.read())
+    }
+
 }

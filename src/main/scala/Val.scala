@@ -122,6 +122,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
 
 
 object Val {
+
     /**
      * Thrown in case multiple assignment
      */

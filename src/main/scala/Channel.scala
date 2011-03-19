@@ -45,17 +45,29 @@ final class Channel[A](override val process: Process = async) extends Seq[A] {
     def write(x: A) = _writable.set(x)
 
     /**
+     * Informs a failure to a consumer.
+     */
+    def writeFailed(why: Throwable) = _writable.setFailed(why)
+
+    /**
      * Reads and removes a value.
      */
     def read(_timeout: Long = INF): A = _readable(_timeout)
 
     /**
-     * Writes a value as single-element sequence.
+     * Writes all the sequence values.
      */
-    def output(x: Seq[A]): this.type = { _writable.assign(x); this }
+    def output(xs: Seq[A]): this.type = {
+        xs.onEach { x =>
+            write(x)
+        } onFailure { q =>
+            writeFailed(q)
+        } start()
+        this
+    }
 
     @annotation.aliasOf("output")
-    def <<(x: Seq[A]): this.type = output(x)
+    def <<(xs: Seq[A]): this.type = output(xs)
 
     private def _readable: Val[A] = Util.syncBy(readLock) {
         if (readNode.next eq null) {
