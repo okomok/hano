@@ -178,14 +178,9 @@ trait Seq[+A] {
     def timeout(d: Long): Seq[A] = new detail.Timeout(this, d)
 
     /**
-     * Removes duplicates using <code>==</code>.
+     * Removes adjacent duplicates.
      */
-    def unique: Seq[A] = new detail.Unique(this)
-
-    /**
-     * Removes duplicates using the predicate.
-     */
-    def uniqueBy(p: (A, A) => Boolean): Seq[A] = new detail.UniqueBy(this, p)
+    def unique[B >: A](implicit equ: Equiv[B]): Seq[A] = new detail.Unique(this, equ)
 
     /**
      * Flattens <code>vs</code>, each Seq appending <code>sep</code> except the last one.
@@ -513,13 +508,13 @@ trait Seq[+A] {
 
     def product[B >: A](implicit num: Numeric[B]): Seq[B] = new detail.Product(this, num)
 
-    def min[B >: A](implicit cmp: Ordering[B]): Seq[A] = new detail.Min(this, cmp)
+    def min[B >: A](implicit ord: Ordering[B]): Seq[A] = new detail.Min(this, ord)
 
-    def max[B >: A](implicit cmp: Ordering[B]): Seq[A] = new detail.Max(this, cmp)
+    def max[B >: A](implicit ord: Ordering[B]): Seq[A] = new detail.Max(this, ord)
 
-    def minBy[B >: A](f: A => B)(implicit cmp: Ordering[B]): Seq[A] = new detail.MinBy(this, f, cmp)
+    def minBy[B >: A](f: A => B)(implicit ord: Ordering[B]): Seq[A] = new detail.MinBy(this, f, ord)
 
-    def maxBy[B >: A](f: A => B)(implicit cmp: Ordering[B]): Seq[A] = new detail.MaxBy(this, f, cmp)
+    def maxBy[B >: A](f: A => B)(implicit ord: Ordering[B]): Seq[A] = new detail.MaxBy(this, f, ord)
 
     def copy[To](b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Copy(this, () => b)
 

@@ -11,7 +11,6 @@ package detail
 
 import java.util.concurrent.{BlockingQueue, LinkedBlockingQueue}
 import scala.collection.mutable.Builder
-import scala.collection.immutable.Vector
 
 
 private[hano]

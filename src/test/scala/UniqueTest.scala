@@ -12,6 +12,8 @@ import com.github.okomok.hano
 
 import junit.framework.Assert._
 
+import Ordering._ // works around below 2.9
+
 
 class UniqueTest extends org.scalatest.junit.JUnit3Suite {
 

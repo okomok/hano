@@ -10,23 +10,19 @@ package detail
 
 
 private[hano]
-class Unique[A](_1: Seq[A]) extends SeqProxy[A] {
-    override val self = _1.uniqueBy(_ == _)
-    override def unique: Seq[A] = this // unique.unique fusion
-}
-
-private[hano]
-class UniqueBy[A](_1: Seq[A], _2: (A, A) => Boolean) extends SeqAdapter.Of[A](_1) {
+class Unique[A, B >: A](_1: Seq[A], _2: Equiv[B]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         var prev: Option[A] = None
 
         _1.onEnter {
             f.enter(_)
         } onEach { x =>
-            if (prev.isEmpty || !_2(prev.get, x)) {
-                f(x)
+            f.beforeExit {
+                if (prev.isEmpty || !_2.equiv(prev.get, x)) {
+                    f(x)
+                }
+                prev = Some(x)
             }
-            prev = Some(x)
         } onExit {
             f.exit(_)
         } start()
