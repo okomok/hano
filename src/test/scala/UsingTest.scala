@@ -13,7 +13,7 @@ import com.github.okomok.hano
 class UsingTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        var closed = false
+        val latch = new java.util.concurrent.CountDownLatch(1)
         val xs = hano.async.pull(0 until 6)
 
         class MyError extends RuntimeException
@@ -21,15 +21,17 @@ class UsingTest extends org.scalatest.junit.JUnit3Suite {
         intercept[MyError] {
             xs.using {
                 new java.io.Closeable {
-                    override def close() = closed = true
+                    override def close() {
+                        latch.countDown()
+                    }
                 }
             } onEach { x =>
                 if (x == 2) {
                     throw new MyError
                 }
-            } await()
+            } await() // doesn't wait for using block.
         }
 
-        expect(true)(closed)
+        latch.await()
     }
 }
