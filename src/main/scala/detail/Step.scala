@@ -13,12 +13,15 @@ private[hano]
 class Step[A](_1: Seq[A], _2: Int) extends SeqProxy[A] {
     Require.positive(_2, "step count")
 
-    override val self = _1.foldFilter(0) { (z, _) =>
-        def newz = if (z + 1 == _2) 0 else (z + 1)
-        if (z == 0) {
-            Some((newz, true))
-        } else {
-            Some((newz, false))
+    override val self = _1.sample {
+        var i = 0
+        Iterator.continually {
+            val res = i == 0
+            i += 1
+            if (i == _2) {
+                i = 0
+            }
+            res
         }
     }
 
@@ -30,12 +33,16 @@ private[hano]
 class StepFor[A](_1: Seq[A], _2: Long) extends SeqProxy[A] {
     Require.nonnegative(_2, "stepFor duration")
 
-    override val self = _1.foldFilter(0L) { (past, _) =>
-        val now = System.currentTimeMillis
-        if (now - past >= _2) {
-            Some((now, true))
-        } else {
-            Some((past, false))
+    override val self = _1.sample {
+        var past = 0L
+        Iterator.continually {
+            val now = System.currentTimeMillis
+            if (now - past >= _2) {
+                past = now
+                true
+            } else {
+                false
+            }
         }
     }
 

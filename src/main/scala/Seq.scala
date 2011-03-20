@@ -153,6 +153,11 @@ trait Seq[+A] {
     def foldFilter[B](z: B)(p: (B, A) => Option[(B, Boolean)]): Seq[A] = new detail.FoldFilter(this, z, p)
 
     /**
+     * Samples elements such that `iter.next` returns `true`.
+     */
+    def sample(iter: Iter[Boolean]): Seq[A] = new detail.Sample(this, iter)
+
+    /**
      * Steps by the specified stride.
      */
     def step(n: Int): Seq[A] = new detail.Step(this, n)

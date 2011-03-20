@@ -49,10 +49,10 @@ object Iterators {
     def timeSpan: Iterator[Long] = {
         var past = System.currentTimeMillis
         Iterator.continually {
-            val cur  = System.currentTimeMillis
-            val that = cur - past
+            val cur = System.currentTimeMillis
+            val res = cur - past
             past = cur
-            that
+            res
         }
     }
 
