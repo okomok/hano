@@ -9,28 +9,17 @@ package hano
 package detail
 
 
-// step 0 is meaningful?
-
 private[hano]
-class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
+class Step[A](_1: Seq[A], _2: Int) extends SeqProxy[A] {
     Require.positive(_2, "step count")
 
-    override def forloop(f: Reaction[A]) {
-        var c = 0
-
-        _1.onEnter {
-            f.enter(_)
-        } onEach { x =>
-            if (c == 0) {
-                f(x)
-            }
-            c += 1
-            if (c == _2) {
-                c = 0
-            }
-        } onExit {
-            f.exit(_)
-        } start()
+    override val self = _1.foldFilter(0) { (z, _) =>
+        def newz = if (z + 1 == _2) 0 else (z + 1)
+        if (z == 0) {
+            Some((newz, true))
+        } else {
+            Some((newz, false))
+        }
     }
 
     override def step(n: Int): Seq[A] = _1.step(_2 * n) // step.step fusion
@@ -38,23 +27,16 @@ class Step[A](_1: Seq[A], _2: Int) extends SeqAdapter.Of[A](_1) {
 
 
 private[hano]
-class StepFor[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
+class StepFor[A](_1: Seq[A], _2: Long) extends SeqProxy[A] {
     Require.nonnegative(_2, "stepFor duration")
 
-    override def forloop(f: Reaction[A]) {
-        var past = 0L
-
-        _1.onEnter {
-            f.enter(_)
-        } onEach { x =>
-            val now = System.currentTimeMillis
-            if (now - past >= _2) {
-                past = now
-                f(x)
-            }
-        } onExit {
-            f.exit(_)
-        } start()
+    override val self = _1.foldFilter(0L) { (past, _) =>
+        val now = System.currentTimeMillis
+        if (now - past >= _2) {
+            Some((now, true))
+        } else {
+            Some((past, false))
+        }
     }
 
     override def stepFor(d: Long): Seq[A] = _1.stepFor(_2 * d) // stepFor.stepFor fusion

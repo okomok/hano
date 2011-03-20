@@ -124,7 +124,6 @@ trait Seq[+A] {
 
     def slice(n: Int, m: Int): Seq[A] = new detail.Slice(this, n, m)
 
-
     def takeWhile(p: A => Boolean): Seq[A] = new detail.TakeWhile(this, p)
 
     def dropWhile(p: A => Boolean): Seq[A] = new detail.DropWhile(this, p)
@@ -147,6 +146,11 @@ trait Seq[+A] {
      */
     @annotation.pre("`iter` is strictly-increasing")
     def subseq(iter: Iter[Int]): Seq[A] = new detail.Subseq(this, iter)
+
+    /**
+     * Generic filter
+     */
+    def foldFilter[B](z: B)(p: (B, A) => Option[(B, Boolean)]): Seq[A] = new detail.FoldFilter(this, z, p)
 
     /**
      * Steps by the specified stride.
