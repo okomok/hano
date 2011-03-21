@@ -49,9 +49,10 @@ object News {
 
     private class IteratorImpl[A](_data: Data[A]) extends Iterator[A] with java.io.Closeable {
         override def hasNext = _data.mail match {
+            case EnterMail(_) => throw new AssertionError("impossible")
+            case ElementMail(_) => true
             case ExitMail(Exit.Failure(t)) => throw t
             case ExitMail(_) => false
-            case ElementMail(_) => true
         }
         override def next = _data.mail.element
 

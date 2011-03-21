@@ -460,19 +460,19 @@ trait Seq[+A] {
     def orElse[B >: A](default: => B): Seq[B] = new detail.OrElse[B](this, () => default)
 
     /**
-     * Turns into never-fail sequence. REMOVE ME.
-     */
-    def options: Seq[Option[A]] = new detail.Options(this)
-
-    /**
-     * Turns into never-fail sequence.
-     */
-    def eithers: Seq[Either[Exit.Status, A]] = new detail.Eithers(this)
-
-    /**
      * Increases the cycle grain-size.
      */
     def amplify(n: Int): Seq[A] = new detail.Amplify(this, n)
+
+    /**
+     * Materialize.
+     */
+    def mail: Seq[Mail[A]] = new SeqMail(this)
+
+    /**
+     * Dematrialize.
+     */
+    def unmail[B](implicit pre: Seq[A] <:< Seq[Mail[B]]): Seq[B] = new SeqUnmail(pre(this))
 
 
 // standard algorithms
