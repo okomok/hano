@@ -11,6 +11,9 @@ package hano
 import java.util.{Date, Timer => JTimer, TimerTask}
 
 
+/**
+ * Contains trivial short-cuts for timers.
+ */
 object Timer {
 
     /**
@@ -22,6 +25,12 @@ object Timer {
      * The global timer in non-daemon thread
      */
     lazy val nondaemon = new Timer(false)
+
+    /**
+     * Creates one-shot timer event.
+     */
+    @annotation.equivalentTo("nondaemon.schedule(_msec)")
+    def after(_msec: Long): Seq[Unit] = nondaemon.schedule(_msec)
 }
 
 

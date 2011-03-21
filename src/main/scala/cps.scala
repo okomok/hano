@@ -18,7 +18,7 @@ object cps {
     @annotation.equivalentTo("scala.util.continuations.reset")
     def apply[A](ctx: => A @cpsParam[A, Any]) = reset(ctx)
 
-    def require(cond: Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Single(()) else Empty).toCps
+    def require(cond: Boolean): Unit @cpsParam[Any, Unit] = (if (cond) Single(()) else Empty).toCps
 
     private[hano]
     def discardValue[A](v: => A @cpsParam[Unit, Unit]): A @cpsParam[Any, Unit] = {

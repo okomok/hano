@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class TakeUntil[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
-    override val process =  _1.process upper _2.process
+    override val process = _1.process upper _2.process
 
     override def forloop(f: Reaction[A]) {
         _2.shift {

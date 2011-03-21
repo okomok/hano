@@ -73,3 +73,43 @@ class BufferedFor[A, To](_1: Seq[A], _2: Long, _3: () => Builder[A, To]) extends
         } start()
     }
 }
+
+
+private[hano]
+class BufferedBy[A, To](_1: Seq[A], _2: Seq[_], _3: () => Builder[A, To]) extends Seq[To] {
+    override val process = _1.process upper _2.process
+
+    override def forloop(f: Reaction[To]) {
+        val buf = new java.util.concurrent.ConcurrentLinkedQueue[A]
+
+        _2.shift {
+            process
+        } onEnter {
+            f.enter(_)
+        } onEach { _ =>
+            f.beforeExit {
+                if (!buf.isEmpty) {
+                    f(Util.build(buf, _3()))
+                }
+            }
+        } start()
+
+        _1.shift {
+            process
+        } onEnter {
+            f.enter(_)
+        } onEach { x =>
+            f.beforeExit {
+                buf.offer(x)
+            }
+        } onExit {
+            case Exit.Success => {
+                if (!buf.isEmpty) {
+                    f(Util.build(buf, _3()))
+                }
+                f.exit()
+            }
+            case buf => f.exit(buf)
+        } start()
+    }
+}

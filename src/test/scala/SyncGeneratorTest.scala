@@ -58,7 +58,7 @@ class SyncGeneratorTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        def example =  generator.sync[Any] { * =>
+        def example = generator.sync[Any] { * =>
             *("first")
             for (i <- 1 until 4) {
                 *(i)

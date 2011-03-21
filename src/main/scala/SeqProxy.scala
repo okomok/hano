@@ -56,7 +56,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def stepFor(d: Long): Seq[A] = around(self.stepFor(d))
     override def fillTime(d: Long): Seq[Unit] = around(self.fillTime(d))
     override def delay(d: Long): Seq[A] = around(self.delay(d))
-    override def timeout(d: Long): Seq[A] = around(self.timeout(d))
+    override def timeout(that: Seq[_]): Seq[A] = around(self.timeout(that))
     override def flatten[B](implicit pre: Seq[A] <:< Seq[Seq[B]]): Seq[B] = around(self.flatten)
     override def unique[B >: A](implicit equ: Equiv[B]): Seq[A] = around(self.unique(equ))
     override def unsplit[B](sep: Seq[B])(implicit pre : Seq[A] <:< Seq[Seq[B]]): Seq[B] = around(self.unsplit(sep))

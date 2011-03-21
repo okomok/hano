@@ -40,7 +40,7 @@ object generator {
                 Predef.require(xs.process eq Self, "generator.cps requires Self process")
                 new detail.CheckSingle(xs).toCps
             }
-            def require(cond: Boolean): Unit @cpsParam[Any, Unit] =  (if (cond) Single(()) else Empty).toCps
+            def require(cond: Boolean): Unit @cpsParam[Any, Unit] = (if (cond) Single(()) else Empty).toCps
         }
         def apply[A](body: Env[A] => Any @suspendable): Iterable[A] = new detail.CpsIterable(body)
     }

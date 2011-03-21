@@ -10,16 +10,12 @@ package detail
 
 
 private[hano]
-class Timeout[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
-    Require.nonnegative(_2, "timeout duration")
-
+class Timeout[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1) {
     override def forloop(f: Reaction[A]) {
         val out = new java.util.concurrent.atomic.AtomicBoolean(false)
         var safe = false
 
-        Timer.nondaemon.schedule {
-            _2
-        } onEach { _ =>
+        _2.head.onEach { _ =>
             out.set(true)
         } start()
 
