@@ -4,9 +4,9 @@
 `hano` is a reactive sequence combinator library:
 
     val mouse = hano.Swing.Mouse(jl)
-    mouse.Pressed onEach { p =>
+    mouse.Pressed.onEach { p =>
         println("pressed at: " + (p.getX, p.getY))
-        mouse.Dragged stepTime {
+        mouse.Dragged.stepFor {
             100
         } takeUntil {
             mouse.Released
@@ -32,7 +32,7 @@ The current status is pre-alpha.
 
 ## Reactive Sequence
 
-A reactive sequence `hano.Seq` is built upon the famous method `foreach`:
+`hano.Seq` is essentially built upon the famous method `foreach`:
 
     package hano
 
