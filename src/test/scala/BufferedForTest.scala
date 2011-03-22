@@ -18,7 +18,7 @@ import scala.collection.JavaConversions._
 class BufferedForTest extends org.scalatest.junit.JUnit3Suite {
 /*
     implicit def _buffered[A](from: hano.Seq[A]) = new {
-        def bufferedFor[To](n: Long, b: => scala.collection.mutable.Builder[A, To] = hano.Seq.defaultBuilder[A]) = new hano.detail.BufferedFor(from, n, () => b)
+        def bufferedFor[To](n: Long, b: => scala.collection.mutable.Builder[A, To] = hano.Seq.defaultCopyBuilder[A]) = new hano.detail.BufferedFor(from, n, () => b)
     }
 */
     def teztTrivial: Unit = {

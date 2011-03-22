@@ -15,9 +15,9 @@ import scala.collection.mutable.Builder
 
 private[hano]
 trait Defaults { self: Seq.type =>
-
+    @annotation.equivalentTo("new LinkedBlockingQueue[Any](20)")
     def defaultBlockingQueue: BlockingQueue[Any] = new LinkedBlockingQueue[Any](20)
 
-    def defaultBuilder[A]: Builder[A, Vector[A]] = Vector.newBuilder[A]
-
+    @annotation.equivalentTo("Vector.newBuilder[A]")
+    def defaultCopyBuilder[A]: Builder[A, Vector[A]] = Vector.newBuilder[A]
 }

@@ -368,17 +368,17 @@ trait Seq[+A] {
     /**
      * Buffers values.
      */
-    def buffered[To](n: Int, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Buffered(this, n, () => b)
+    def buffered[To](n: Int, b: => Builder[A, To] = Seq.defaultCopyBuilder[A]): Seq[To] = new detail.Buffered(this, n, () => b)
 
     /**
      * Buffers values within the specified duration(millisecond).
      */
-    def bufferedFor[To](d: Long, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.BufferedFor(this, d, () => b)
+    def bufferedFor[To](d: Long, b: => Builder[A, To] = Seq.defaultCopyBuilder[A]): Seq[To] = new detail.BufferedFor(this, d, () => b)
 
     /**
      * Retrieves adjacent sequences.
      */
-    def adjacent[To](n: Int, b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Adjacent(this, n, () => b)
+    def adjacent[To](n: Int, b: => Builder[A, To] = Seq.defaultCopyBuilder[A]): Seq[To] = new detail.Adjacent(this, n, () => b)
 
     /**
      * Retrives adjacent pairs.
@@ -521,6 +521,6 @@ trait Seq[+A] {
 
     def maxBy[B >: A](f: A => B)(implicit ord: Ordering[B]): Seq[A] = new detail.MaxBy(this, f, ord)
 
-    def copy[To](b: => Builder[A, To] = Seq.defaultBuilder[A]): Seq[To] = new detail.Copy(this, () => b)
+    def copy[To](b: => Builder[A, To] = Seq.defaultCopyBuilder[A]): Seq[To] = new detail.Copy(this, () => b)
 
 }

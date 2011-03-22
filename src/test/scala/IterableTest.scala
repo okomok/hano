@@ -14,6 +14,17 @@ import junit.framework.Assert._
 
 
 class IterableTest extends org.scalatest.junit.JUnit3Suite {
+
+    def testSync: Unit = {
+        val it = hano.Seq(0,1,2,3,4).iterable(queue = new java.util.concurrent.SynchronousQueue)
+        expect(hano.Iter(0,1,2,3,4))(hano.Iter.from(it))
+    }
+
+    def testSyncTimeout: Unit = {
+        val it = hano.Seq(0,1,2,3,4).iterable(queue = new java.util.concurrent.SynchronousQueue, timeout = 2000)
+        expect(hano.Iter(0,1,2,3,4))(hano.Iter.from(it))
+    }
+
     def testTo: Unit = {
         val r = hano.Seq(1,2,3,4,5,6)
         assertEquals(hano.Iter(1,2,3,4,5,6), r.toIter)
