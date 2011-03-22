@@ -470,7 +470,7 @@ trait Seq[+A] {
     def mail: Seq[Mail[A]] = new SeqMail(this)
 
     /**
-     * Dematrialize.
+     * Dematerialize.
      */
     def unmail[B](implicit pre: Seq[A] <:< Seq[Mail[B]]): Seq[B] = new SeqUnmail(pre(this))
 
