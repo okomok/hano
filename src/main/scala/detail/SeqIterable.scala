@@ -16,19 +16,10 @@ private[hano]
 class SeqIterable[A](_1: Seq[A], _2: Long, _3: () => BlockingQueue[Any]) extends Iterable[A] {
     override def iterator = {
         import SeqIterable._
-
         val data = new Data(_3())
-
-        if (_1.process eq Self) {
-            new Thread {
-                override def run() {
-                    _1.forloop(new ReactionImpl[A](data))
-                }
-            } start()
-        } else {
+        async.invoke {
             _1.forloop(new ReactionImpl[A](data))
         }
-
         new IteratorImpl[A](data, _2).concrete
     }
 }

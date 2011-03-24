@@ -14,7 +14,9 @@ class Latest[A](_1: Seq[A], _2: Long) extends Iterable[A] {
     override def iterator = {
         import Latest._
         val data = new Data[A]
-        _1.forloop(new ReactionImpl(data))
+        async.invoke {
+            _1.forloop(new ReactionImpl(data))
+        }
         new IteratorImpl(data, _2).concrete
     }
 }

@@ -28,7 +28,7 @@ class ShiftStart[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
 
 private[hano]
 class ShiftStartFromOther[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1) {
-    assert(_2.process ne Self)
+    assert(_1.process ne Self)
 
     override def forloop(f: Reaction[A]) {
         _2.process.invoke {
@@ -40,6 +40,8 @@ class ShiftStartFromOther[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1
 
 private[hano]
 class ShiftStartFromSelf[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1) {
+    assert(_1.process eq Self)
+
     override def forloop(f: Reaction[A]) {
         val cur = Actor.self
 

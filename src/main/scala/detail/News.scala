@@ -14,7 +14,9 @@ class News[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
     override def iterator = {
         import News._
         val data = new Data(_2)
-        _1.forloop(new ReactionImpl(data))
+        async.invoke {
+            _1.forloop(new ReactionImpl(data))
+        }
         new IteratorImpl(data)
     }
 }
