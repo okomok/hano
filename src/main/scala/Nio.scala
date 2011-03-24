@@ -28,10 +28,7 @@ object Nio {
             val loop = new detail.Loop
 
             f.enter {
-                Exit { q =>
-                    loop.exit(q)
-                    _1.close()
-                }
+                loop.exit
             } applying {
                 try {
                     while (loop.isActive) {

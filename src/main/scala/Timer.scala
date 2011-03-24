@@ -57,7 +57,7 @@ final class Timer(isDaemon: Boolean = false) extends Process { outer =>
         timer.schedule(l, now())
     }
 
-    private class Schedule(scheduler: JTimer => TimerTask => Unit, oneShot: Boolean) extends listen.To[Unit] {
+    private class Schedule(by: JTimer => TimerTask => Unit, oneShot: Boolean) extends listen.To[Unit] {
         override def process = outer.asProcess
         override protected def listen(env: Env) {
             val l = new TimerTask {
@@ -71,7 +71,7 @@ final class Timer(isDaemon: Boolean = false) extends Process { outer =>
             }
 
             env.add {
-                scheduler(timer)(l)
+                by(outer.timer)(l)
             }
             env.remove {
                 l.cancel()

@@ -413,6 +413,9 @@ trait Seq[+A] {
      */
     def shiftStart(that: Seq[_]): Seq[A] = new detail.ShiftStart(this, that)
 
+    @annotation.equivalentTo("val p = async; _1.shift(p).shiftStart(p)")
+    def asynchronous: Seq[A] = new detail.Asynchronous(this)
+
     /**
      * Repeats this sequence indefinitely.
      */

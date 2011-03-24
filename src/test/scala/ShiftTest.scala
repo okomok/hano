@@ -51,6 +51,10 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter.from(0 to 10))(hano.Iter.from(s))
     }
 
+    def testAsynchronous {
+        val xs = hano.Self.pull(0 until 500).asynchronous
+        expect(hano.Iter.from(0 until 500))(xs.toIter)
+    }
 }
 
 

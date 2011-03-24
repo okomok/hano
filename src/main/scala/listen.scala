@@ -11,6 +11,7 @@ package hano
 object listen {
 
     sealed abstract class Env[A] extends Reaction[A] {
+
         /**
          * How to add a listener
          */
