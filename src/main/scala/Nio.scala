@@ -40,7 +40,7 @@ object Nio {
                         }
                     }
                 } catch  {
-                    case _: ClosedSelectorException => ()
+                    case t: ClosedSelectorException => f.exit(Exit.Failure(t))
                 }
             } exit {
                 Exit.Success

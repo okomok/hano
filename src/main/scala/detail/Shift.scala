@@ -37,18 +37,14 @@ class ShiftToOther[A](_1: Seq[A], _2: Seq[_]) extends Seq[A] {
 
     override def forloop(f: Reaction[A]) {
         _1.onEnter { p =>
-            process.head.noSuccess.onEach { _ =>
+            process.invoke {
                 f.enter(p)
-            } onExit {
-                f.exit(_)
-            } start()
+            }
         } onEach { x =>
             f.beforeExit {
-                process.head.noSuccess.onEach { _ =>
+                process.invoke {
                     f(x)
-                } onExit {
-                    f.exit(_)
-                } start()
+                }
             }
         } onExit { q =>
             f.beforeExit {
@@ -67,32 +63,26 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
 
     override def forloop(f: Reaction[A]) {
         val cur = Actor.self
-        def _exit(q: Exit.Status) { cur ! q; f.exit(q) }
 
         _1.onEnter { p =>
             cur ! Action {
-                process.head.noSuccess.onEach { _ =>
-                    f.enter(p)
-                } onExit {
-                    _exit(_)
-                } start()
+                f.enter {
+                    Exit { q =>
+                        cur ! q
+                    }
+                }
+                f.enter(p)
             }
         } onEach { x =>
             f.beforeExit {
                 cur ! Action {
-                    process.head.noSuccess.onEach { _ =>
-                        f(x)
-                    } onExit {
-                        _exit(_)
-                    } start()
+                    f(x)
                 }
             }
         } onExit { q =>
             f.beforeExit {
                 cur ! Action {
-                    process.invoke {
-                        _exit(q)
-                    }
+                    f.exit(q)
                 }
             }
         } start()
