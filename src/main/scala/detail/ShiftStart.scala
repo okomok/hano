@@ -17,9 +17,7 @@ class ShiftStart[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
     Require.notUnknown(_2.process, "shiftStart")
 
     override val self = {
-        if ((_1 eq Self) && (_2.process eq Self)) {
-            _1
-        } else if (_1.process eq Self) {
+        if (_1.process eq Self) {
             new ShiftStartFromSelf(_1, _2)
         } else {
             new ShiftStartFromOther(_1, _2)

@@ -24,7 +24,7 @@ class NioTest extends org.scalatest.junit.JUnit3Suite {
 
         val s: Selector = null
 
-        hano.Nio.selection(s) foreach { key =>
+        hano.Nio.select(s) foreach { key =>
             if (key.isAcceptable) {
                 _accept(key)
             } else if (key.isReadable) {

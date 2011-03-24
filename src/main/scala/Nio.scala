@@ -12,25 +12,29 @@ import java.nio.channels.{Selector, SelectionKey, ClosedSelectorException}
 
 
 object Nio {
-    def selection(s: Selector): Seq[SelectionKey] = Selection1(s)
-    def selection(s: Selector, t: Long): Seq[SelectionKey] = Selection2(s, t)
 
-    case class Selection1(_1: Selector) extends SeqProxy[SelectionKey] {
-        override val self = new _Selection(_1, _.select).asSeq
-    }
+    /**
+     * Selects a set of keys whose corresponding channels are ready for I/O operations.
+     */
+    def select(s: Selector): Seq[SelectionKey] = new Select(s, _.select())
+    def select(s: Selector, _timeout: Long): Seq[SelectionKey] = new Select(s, _.select(_timeout))
+    def selectNow(s: Selector): Seq[SelectionKey] = new Select(s, _.selectNow())
 
-    case class Selection2(_1: Selector, _2: Long) extends SeqProxy[SelectionKey] {
-        override val self = new _Selection(_1, _.select(_2)).asSeq
-    }
 
-    private class _Selection(_1: Selector, _2: Selector => Long) extends Seq[SelectionKey] {
+    private class Select(_1: Selector, _2: Selector => Int) extends Seq[SelectionKey] {
         override def process = Self
+
         override def forloop(f: Reaction[SelectionKey]) {
+            val loop = new detail.Loop
+
             f.enter {
-                Exit.Empty
+                Exit { q =>
+                    loop.exit(q)
+                    _1.close()
+                }
             } applying {
                 try {
-                    while (true) {
+                    while (loop.isActive) {
                         if (_2(_1) != 0) {
                             val keys = _1.selectedKeys
                             for (key <- Iter.from(keys).able) {
@@ -39,11 +43,11 @@ object Nio {
                             keys.clear()
                         }
                     }
-                } catch  {
+                } catch {
                     case t: ClosedSelectorException => f.exit(Exit.Failure(t))
                 }
             } exit {
-                Exit.Success
+                loop.status
             }
         }
     }
