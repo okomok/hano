@@ -12,8 +12,7 @@ import com.github.okomok.hano
 class RistTest extends org.scalatest.junit.JUnit3Suite {
 
     def testTrivial {
-        val ctx = hano.async
-        val xs = new hano.Rist[Int](ctx)
+        val xs = new hano.Rist[Int]
 
         val suite = new ParallelSuite(10)
         val i = new java.util.concurrent.atomic.AtomicInteger(0)
@@ -41,8 +40,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial2 {
-        val ctx = hano.async
-        val xs = new hano.Rist[Int](ctx)
+        val xs = new hano.Rist[Int]
 
         val suite = new ParallelSuite(10)
         val i = new java.util.concurrent.atomic.AtomicInteger(0)
@@ -61,5 +59,12 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
 
         Thread.sleep(2000)
         expect(hano.Iter(9,9,9,9,9,9,9,9,9,9,9,9))(hano.Iter.from(q))
+    }
+
+    def testAssign {
+        val xs = hano.async.pull(0 until 100)
+        val rist = hano.Rist(xs)
+
+        expect(hano.Iter.from(0 until 100))(rist.toIter)
     }
 }

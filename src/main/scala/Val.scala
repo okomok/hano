@@ -132,10 +132,10 @@ object Val {
     /**
      * Creates a `Val` with initial value.
      */
-    def apply[A](x: Seq[A]): Val[A] = {
-        val _v = new Val[A]
-        _v := x
-        _v
+    def apply[A](that: Seq[A]): Val[A] = {
+        val v = new Val[A]
+        v := that
+        v
     }
 
     private class ToReaction[A](_1: Val[A]) extends Reaction[A] {

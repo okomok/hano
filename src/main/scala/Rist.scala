@@ -11,54 +11,64 @@ package hano
 /**
  * Immutable(single-forloop) infinite list
  */
-final class Rist[A](override val process: Process = async) extends SeqOnce[A] with java.io.Closeable {
-    Require.notSelf(process, "Rist")
-    Require.notUnknown(process, "Rist")
+final class Rist[A] extends SeqOnce[A] with java.io.Closeable {
+    private[this] val _ch = new Channel[Either[Exit.Status, A]]
 
-    @volatile private[this] var isActive = true
-    @volatile private[this] var g: Reaction[A] = null
-    private[this] val vs = new java.util.concurrent.ConcurrentLinkedQueue[A]
-    private def _k(q: Exit.Status) { close(); g.exit(q) }
+    override def close() = _ch.close()
+    override def process = _ch.process
 
-    override def close() {
-        isActive = false
-        vs.clear()
-    }
     override protected def forloopOnce(f: Reaction[A]) {
-        g = f
-        while (!vs.isEmpty) {
-            val v = vs.poll
-            if (v != null) {
-                _eval(f, v)
+        _ch.cycle.onEnter {
+            f.enter(_)
+        } onEach { lr =>
+            f.beforeExit {
+                lr match {
+                    case Left(q) => f.exit(q)
+                    case Right(x) => f(x)
+                }
             }
-        }
+        } onExit {
+            f.exit(_)
+        } start()
     }
 
     def add(x: A) {
-        if (isActive) {
-            if (g != null) {
-                _eval(g, x)
-            } else {
-                vs.offer(x)
-                if (g != null && vs.remove(x)) {
-                    _eval(g, x)
-                }
-            }
-        }
+        _ch.write(Right(x))
     }
+
+    def exit(q: Exit.Status) {
+        _ch.write(Left(q))
+    }
+
+    /**
+     * Adds elements until exit.
+     */
+    def assign(that: Seq[A]) = that.forloop(toReaction)
+
+    @annotation.aliasOf("assign")
+    def :=(that: Seq[A]) = that.forloop(toReaction)
+
+    @annotation.compatibleConversion
+    def toReaction: Reaction[A] = new Rist.ToReaction(this)
 
     @annotation.aliasOf("add")
     def +=(x: A) = add(x)
+}
 
-    private def _eval(f: Reaction[A], x: A) {
-        process.head.onEach { _ =>
-            g beforeExit {
-                f.enter()
-                f(x)
-            }
-        } onExit {
-            case q @ Exit.Failure(_) => _k(q)
-            case _ => ()
-        } start()
+
+object Rist {
+
+    /**
+     * Creates a `Rist` with initial value.
+     */
+    def apply[A](that: Seq[A]): Rist[A] = {
+        val xs = new Rist[A]
+        xs := that
+        xs
+    }
+
+    private class ToReaction[A](_1: Rist[A]) extends Reaction[A] {
+        override def rawApply(x: A) = _1.add(x)
+        override def rawExit(q: Exit.Status) = _1.exit(q)
     }
 }

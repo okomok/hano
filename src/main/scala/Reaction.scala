@@ -168,6 +168,8 @@ object Reaction {
 
     implicit def fromFunction[A](from: A => Unit): Reaction[A] = new FromFunction(from)
     implicit def fromVal[A](from: Val[A]): Reaction[A] = from.toReaction
+    implicit def fromChannel[A](from: Channel[A]): Reaction[A] = from.toReaction
+    implicit def fromRist[A](from: Rist[A]): Reaction[A] = from.toReaction
 
     private class Apply[A](_1: Exit => Unit, _2: A => Unit, _3: Exit.Status => Unit) extends Reaction[A] {
         override protected def rawEnter(p: Exit) = _1(p)

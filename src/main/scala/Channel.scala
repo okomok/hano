@@ -73,7 +73,9 @@ final class Channel[A] extends Seq[A] with java.io.Closeable {
 
     override def close() = _live.die()
 
-    override val process = new detail.Async(_a).asProcess
+    override lazy val process = _live {
+        new detail.Async(_a).asProcess
+    }
 
     /**
      * Will call a reaction when a value is written.
@@ -101,12 +103,13 @@ final class Channel[A] extends Seq[A] with java.io.Closeable {
     /**
      * Writes all the sequence values without `Exit.Success`.
      */
-    def output(that: Seq[A]): this.type = _live[this.type] {
-        that.onEach {
-            write(_)
-        } start()
+    def output(xs: Seq[A]): this.type = _live[this.type] {
+        xs.forloop(toReaction)
         this
     }
+
+    @annotation.compatibleConversion
+    def toReaction: Reaction[A] = new Channel.ToReaction(this)
 
     @annotation.aliasOf("output")
     def <<(xs: Seq[A]): this.type = output(xs)
@@ -119,4 +122,9 @@ object Channel {
      * Sent when a `Channel` closed.
      */
     class ClosedException extends IllegalStateException
+
+
+    private class ToReaction[A](_1: Channel[A]) extends Reaction[A] {
+        override def rawApply(x: A) = _1.write(x)
+    }
 }
