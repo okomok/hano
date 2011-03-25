@@ -12,6 +12,8 @@ sealed abstract class Mail[+A] {
     @annotation.returnThis @inline
     def asMail: Mail[A] = this
 
+    def isElement: Boolean
+
     def isExit: Boolean
 
     def element: A
@@ -22,19 +24,28 @@ sealed abstract class Mail[+A] {
         case ExitMail(Exit.Failure(t)) => throw t
         case ExitMail(_) => None
     }
+
+    def evalBy(f: Reaction[A]) = this match {
+        case EnterMail(p) => f.enter(p)
+        case ElementMail(x) => f(x)
+        case ExitMail(q) => f.exit(q)
+    }
 }
 
 
 case class EnterMail(exit: Exit) extends Mail[Nothing] {
+    override def isElement = false
     override def isExit = false
     override def element = throw new NoSuchElementException("EnterMail.element")
 }
 
 case class ElementMail[A](override val element: A) extends Mail[A] {
+    override def isElement = true
     override def isExit = false
 }
 
 case class ExitMail(status: Exit.Status) extends Mail[Nothing] {
+    override def isElement = false
     override def isExit = true
     override def element = status match {
         case Exit.Success => throw new NoSuchElementException("ExitMail.element")

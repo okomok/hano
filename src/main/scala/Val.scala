@@ -80,7 +80,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     def apply(_timeout: Long = INF): A = get(_timeout)
 
     @annotation.aliasOf("assign")
-    def :=[B <: A](that: Seq[B]) = assign(that)
+    def :=(that: Seq[A]) = assign(that)
 
     @annotation.conversion
     def toReaction: Reaction[A] = new Val.ToReaction(this)
@@ -127,7 +127,7 @@ object Val {
      * Thrown in case multiple assignment
      */
     case class MultipleAssignmentException(expected: Any, actual: Any) extends
-        RuntimeException("expected: " + expected + ", but actual: " + actual)
+        IllegalStateException("expected: " + expected + ", but actual: " + actual)
 
     /**
      * Creates a `Val` with initial value.

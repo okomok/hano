@@ -129,8 +129,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial {
-        val ctx = hano.async
-        val ch = new hano.Channel[Int](ctx)
+        val ch = new hano.Channel[Int]
 
         val suite = new ParallelSuite(10)
         val i = new java.util.concurrent.atomic.AtomicInteger(0)
@@ -171,8 +170,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
 
 
     def testTake {
-        val ctx = hano.async
-        val ch = new hano.Channel[Int](ctx)
+        val ch = new hano.Channel[Int]
 
         val suite = new ParallelSuite(10)
         val i = new java.util.concurrent.atomic.AtomicInteger(0)
@@ -203,10 +201,21 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         expect(0)(ch.read())
         expect(6)(ch.read())
     }
+/*
+    def testReadAll {
+        val ch = new hano.Channel[Int]
 
-    def testOutputSeq {
         val p = hano.async
-        val ch = new hano.Channel[Int](p)
+        val xs = p.pull(Seq(1,2,3,4,5))
+        val ys = p.pull(Seq(10,20,30,40,50))
+        ch << xs << ys close()
+        Thread.sleep(2000)
+        expect(hano.Iter(1,10,2,20,3,30,4,40,5,50))(hano.Iter.from(ch.readAll()))
+    }
+*/
+    def testOutputSeq {
+        val ch = new hano.Channel[Int]
+        val p = ch.process
 
         val xs = p.pull(0 until 3)
         val ys = p.pull(10 until 13)

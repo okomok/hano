@@ -50,7 +50,7 @@ class ShiftStartFromSelf[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1)
                 cur ! Action {
                     f.enter {
                         Exit { q =>
-                            cur ! q
+                            cur ! Close
                         }
                     }
                     f.enter(p)
@@ -74,7 +74,7 @@ class ShiftStartFromSelf[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1)
         while (go) {
             Actor.receive {
                 case Action(f) => f()
-                case _: Exit.Status => go = false
+                case Close => go = false
             }
         }
     }

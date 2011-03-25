@@ -26,10 +26,10 @@ trait Reactor extends Actor {
     private val _fs = new CopyOnWriteArrayList[Reaction[Any]] // secondaries
 
     final override def act = {
-        Actor.loop {
+        loop {
             react {
                 case Action(f) => f()
-                case _: Exit.Status => Actor.exit()
+                case Close => exit()
                 case x => {
                     if (_f ne null) {
                         _f(x)
@@ -60,7 +60,7 @@ trait Reactor extends Actor {
         super.restart
     }
 
-    final val hanoProcess: Process = new detail.Async(this)
+    final val hanoProcess = new detail.Async(this).asProcess
 
     private def _hanoAddPrimary(f: Reaction[Any]) {
         this ! Action {

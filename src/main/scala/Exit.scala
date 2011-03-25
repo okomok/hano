@@ -84,10 +84,8 @@ object Exit {
             //new java.util.concurrent.ConcurrentLinkedQueue[Exit]
 
         override def apply(q: Status = Success): Unit = synchronized {
-            var p = ps.poll()
-            while (p ne null) {
+            detail.Polleach(ps) { p =>
                 p(q)
-                p = ps.poll()
             }
         }
 

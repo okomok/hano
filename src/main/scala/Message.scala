@@ -9,11 +9,23 @@ package hano
 
 
 /**
- * Trivial wrapper for a function passed around Actors.
+ * Actor message
  */
-case class Action(_1: () => Unit)
+sealed abstract class Message
 
+
+/**
+ * `Function0` wrapper
+ */
+case class Action(_1: () => Unit) extends Message
 
 object Action {
+    // `U` disambiguates overload resolution.
     def apply[U](body: => U)(implicit d: DummyImplicit) = new Action(() => body)
 }
+
+
+/**
+ * For an actor to exit
+ */
+case object Close extends Message

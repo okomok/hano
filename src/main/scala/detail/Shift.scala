@@ -67,8 +67,8 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         _1.onEnter { p =>
             cur ! Action {
                 f.enter {
-                    Exit { q =>
-                        cur ! q
+                    Exit { _ =>
+                        cur ! Close
                     }
                 }
                 f.enter(p)
@@ -91,7 +91,7 @@ class ShiftToSelf[A](_1: Seq[A]) extends Seq[A] {
         while (go) {
             Actor.receive {
                 case Action(f) => f()
-                case _: Exit.Status => go = false
+                case Close => go = false
             }
         }
     }

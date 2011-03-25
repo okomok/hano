@@ -37,4 +37,19 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
 
         assertEquals(hano.Iter(2,11,4,12,6,13,8,14,10,15,12,16), hano.Iter.from(out))
     }
+
+    /*
+    def testToIterable: Unit = {
+        val r = hano.async.pull(0 until 100)
+        val v1, v2 = new hano.Val[Iterator[Int]]
+        r.fork { xs =>
+            v1() = xs.iterator() // deadlock, offcourse.
+        } fork { xs =>
+            v2() = xs.iterator()
+        } start()
+
+        expect(hano.Iter.from(0 until 100))(hano.Iter.from(v1()))
+        expect(hano.Iter.from(0 until 100))(hano.Iter.from(v2()))
+    }
+    */
 }

@@ -8,86 +8,109 @@ package com.github.okomok
 package hano
 
 
-// See: ScalaFlow
-//   at http://github.com/hotzen/ScalaFlow/raw/master/thesis.pdf
-
-
-import java.util.concurrent.locks.ReentrantLock
-
-
 /**
- * Asynchronous channel
- * This is mutable one-element sequence; As you foreach, element varies.
+ * A mutable one-element sequence; As you foreach, element varies.
  */
-final class Channel[A](override val process: Process = async) extends Seq[A] {
-    Require.notSelf(process, "Channel")
-    Require.notUnknown(process, "Channel")
+final class Channel[A] extends Seq[A] with java.io.Closeable {
+    private[this] val _fs = new java.util.concurrent.ConcurrentLinkedQueue[Reaction[A]]
+    private[this] val _xs = new java.util.ArrayDeque[A]
 
-    private class Node[A] {
-        val value = new Val[A](process) // shares a process.
-        var next: Node[A] = null
+    private case class OnWriteMsg(f: Reaction[A])
+    private case class WriteMsg(x: A)
+
+    private[this] val _a = new scala.actors.Reactor[Any] {
+        override def act = {
+            loop {
+                react {
+                    case Action(f) => f()
+                    case Close => {
+                        for (f <- Iter.from(_fs).able) {
+                            f.exit(Exit.Failure(new Channel.ClosedException))
+                        }
+                        _fs.clear()
+                        _xs.clear()
+                        exit()
+                    }
+
+                    case OnWriteMsg(f) => {
+                        val x = _xs.poll
+                        if (x != null) {
+                            f.enter {
+                                Exit.Empty
+                            } applying {
+                                f(x)
+                            } exit {
+                                Exit.Success
+                            }
+                        } else {
+                            _fs.offer(f)
+                            f.enter {
+                                Exit { _ =>
+                                    _fs.remove(f) // might be a bottleneck.
+                                }
+                            }
+                        }
+                    }
+                    case WriteMsg(x) => {
+                        val f = _fs.poll
+                        if (f != null) {
+                            f.applying {
+                                f(x)
+                            } exit {
+                                Exit.Success
+                            }
+                        } else {
+                            _xs.offer(x)
+                        }
+                    }
+                }
+            }
+        }
     }
+    _a.start()
 
-    private[this] var readNode = new Node[A]
-    private[this] var writeNode = readNode
+    override def close(): Unit = _a ! Close
 
-    private[this] val readLock = new ReentrantLock
-    private[this] val writeLock = new ReentrantLock
+    override val process = new detail.Async(_a).asProcess
 
     /**
      * Will call a reaction when a value is written.
      */
-    override def forloop(f: Reaction[A]) = _readable.forloop(f)
+    override def forloop(f: Reaction[A]) = _a ! OnWriteMsg(f)
 
     /**
      * Writes a value.
      */
-    def write(x: A) = _writable.set(x)
-
-    /**
-     * Informs a failure to a consumer.
-     */
-    def writeFailed(why: Throwable) = _writable.setFailed(why)
+    def write(x: A) = _a ! WriteMsg(x)
 
     /**
      * Reads and removes a value.
      */
-    def read(_timeout: Long = INF): A = _readable(_timeout)
+    def read(_timeout: Long = INF): A = {
+        val v = new Val[A]
+        forloop(v)
+        v.get(_timeout)
+    }
 
     /**
-     * Writes all the sequence values.
+     * Writes all the sequence values without `Exit.Success`.
      */
-    def output(xs: Seq[A]): this.type = {
-        xs.onEach { x =>
-            write(x)
-        } onFailure { q =>
-            writeFailed(q)
+    def output(that: Seq[A]): this.type = {
+        that.onEach {
+            write(_)
         } start()
         this
     }
 
     @annotation.aliasOf("output")
     def <<(xs: Seq[A]): this.type = output(xs)
+}
 
-    private def _readable: Val[A] = Util.syncBy(readLock) {
-        if (readNode.next eq null) {
-            Util.syncBy(writeLock) {
-                if (readNode.next eq null) {
-                    readNode.next = new Node[A]
-                }
-            }
-        }
-        val w = readNode.value
-        readNode = readNode.next
-        w
-    }
 
-    private def _writable: Val[A] = Util.syncBy(writeLock) {
-        val w = writeNode.value
-        if (writeNode.next eq null) {
-            writeNode.next = new Node[A]
-        }
-        writeNode = writeNode.next
-        w
-    }
+object Channel {
+
+    /**
+     * Sent when a `Channel` closed.
+     */
+    class ClosedException extends IllegalStateException
 }

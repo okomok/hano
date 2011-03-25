@@ -15,7 +15,7 @@ import scala.actors
 private[hano]
 class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Process {
     override def close() {
-        out ! Exit.Success
+        out ! Close
     }
 
     override def `do`(f: Reaction[Unit]) {
@@ -44,7 +44,7 @@ object Async {
             loop {
                 react {
                     case Action(f) => f()
-                    case _: Exit.Status => exit()
+                    case Close => exit()
                 }
             }
         }
