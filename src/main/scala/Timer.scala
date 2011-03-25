@@ -39,7 +39,7 @@ object Timer {
  */
 final class Timer(isDaemon: Boolean = false) extends Process { outer =>
     private[this] val timer = new JTimer(isDaemon)
-    private[this] val now = new detail.Now
+    private[this] val now = new detail.DateNow
 
     override def close() = timer.cancel()
 

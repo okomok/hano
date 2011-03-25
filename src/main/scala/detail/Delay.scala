@@ -14,7 +14,7 @@ class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     override def process = Timer.nondaemon
 
     override def forloop(f: Reaction[A]) {
-        val now = new Now
+        val now = new DateNow
 
         def _delay(body: => Unit) {
             Timer.nondaemon.schedule {

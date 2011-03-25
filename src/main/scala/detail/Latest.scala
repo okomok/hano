@@ -67,7 +67,7 @@ object Latest {
         }
 
         private def _ready() {
-            _x = Poll(_data.queue, _timeout).toOption
+            _x = PollWithin(_data.queue, _timeout).toOption
         }
     }
 }

@@ -12,12 +12,8 @@ package detail
 import java.util.concurrent
 
 
-/**
- * Retrieves and removes the head of this queue,
- * waiting if no elements are present on this queue.
- */
 private[hano]
-object Poll {
+object PollWithin {
     def apply[A](q: concurrent.BlockingQueue[A], timeout: Long): A = {
         if (timeout < 0) {
             q.take()
@@ -28,6 +24,18 @@ object Poll {
             } else {
                 res
             }
+        }
+    }
+}
+
+
+private[hano]
+object Polleach {
+    def apply[A](q: java.util.Queue[A])(f: A => Unit) {
+        var x = q.poll
+        while (x != null) {
+            f(x)
+            x = q.poll
         }
     }
 }

@@ -26,10 +26,9 @@ final class Channel[A] extends Seq[A] with java.io.Closeable {
                     react {
                         case Action(f) => f()
                         case Close => {
-                            for (f <- Iter.from(_fs).able) {
+                            detail.Polleach(_fs) { f =>
                                 f.exit(Exit.Failure(new Channel.ClosedException))
                             }
-                            _fs.clear()
                             _xs.clear()
                             exit()
                         }

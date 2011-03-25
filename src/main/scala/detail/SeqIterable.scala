@@ -67,7 +67,7 @@ object SeqIterable {
         }
 
         private def _ready() {
-            _x = Poll(_data.queue, _timeout).asInstanceOf[Mail[A]].toOption
+            _x = PollWithin(_data.queue, _timeout).asInstanceOf[Mail[A]].toOption
         }
     }
 }

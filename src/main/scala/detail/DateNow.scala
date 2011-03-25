@@ -16,7 +16,7 @@ import java.util.Date
 
 
 private[hano]
-class Now {
+class DateNow {
     private[this] val past = new Date(0L)
 
     def apply(): Date = synchronized {
