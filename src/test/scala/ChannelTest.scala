@@ -201,7 +201,23 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         expect(0)(ch.read())
         expect(6)(ch.read())
     }
-/*
+
+    def testClose {
+        val ch = new hano.Channel[Int]
+
+        val xs = hano.async.pull(Seq(5,1,3,6,2,0,4))
+        ch << xs.reduceLeft(_ min _) << xs.reduceLeft(_ max _)
+
+        expect(0)(ch.read())
+        expect(6)(ch.read())
+
+        ch.close()
+        intercept[hano.Channel.ClosedException] {
+            ch write 10
+        }
+    }
+
+    /*
     def testReadAll {
         val ch = new hano.Channel[Int]
 

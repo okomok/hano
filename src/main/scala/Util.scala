@@ -80,6 +80,29 @@ object Util {
     }
 
     /**
+     * Helps to implement open-close resources.
+     */
+    final class Live(_die: => Unit, _err: => Throwable) {
+        @annotation.compilerWorkaround("2.8.0")
+        private[this] lazy val _doDie: Int = { _die; 0 }
+
+        @volatile private[this] var _dead = false
+
+        def die() {
+            _dead = true
+            _doDie
+        }
+
+        def apply[A](body: => A): A = {
+            if (_dead) {
+                throw _err
+            } else {
+                body
+            }
+        }
+    }
+
+    /**
      * Offers fail-fast behavior based on a best-effort basis.
      */
     final class Modify(msg: => String) {
