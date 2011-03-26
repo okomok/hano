@@ -40,6 +40,9 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
                 }
                 _p = p
                 f.enter(_p)
+                if (!loop.isActive) {
+                    f.exit(loop.status) // exit immediately
+                }
             } onEach { x =>
                 f.beforeExit {
                     f(x)
@@ -50,11 +53,11 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
             } onExit { q =>
                 f.beforeExit {
                     if (_2(Some(q))) {
-                        if (loop.isActive) {
+                        if (!loop.isActive) {
+                            f.exit(loop.status)
+                        } else {
                             f.removeExit(_p)
                             rec()
-                        } else {
-                            f.exit(loop.status)
                         }
                     } else {
                         f.exit(q)
@@ -90,6 +93,9 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
                 }
                 _p = p
                 f.enter(_p)
+                if (!loop.isActive) {
+                    f.exit(loop.status) // exit immediately
+                }
             } onEach { x =>
                 f.beforeExit {
                     f(x)
@@ -100,11 +106,11 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
             } onExit { q =>
                 f.beforeExit {
                     if (_2(Some(q))) {
-                        if (loop.isActive) {
+                        if (!loop.isActive) {
+                            f.exit(loop.status)
+                        } else {
                             f.removeExit(_p)
                             go = true
-                        } else {
-                            f.exit(loop.status)
                         }
                     } else {
                         f.exit(q)

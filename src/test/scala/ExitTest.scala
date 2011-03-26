@@ -66,31 +66,5 @@ class ExitTest extends org.scalatest.junit.JUnit3Suite {
         expect(false)(closed)
         expect(hano.Iter.from(0 until 10))(hano.Iter.from(a))
     }
-
-    def testCancel {
-        val cancel = new hano.Cancel
-        var out: List[Int] = Nil
-        hano.async.pull(0 until 1000).onEnter(cancel).onEach { x =>
-            out :+= x
-        } start()
-
-        Thread.sleep(100)
-        cancel()
-        assert(out.size < 1000)
-    }
-
-    def testCancel2 {
-        val cancel = new hano.Cancel
-        var i = 0
-        hano.async.pull(0 until 1000).onEnter(cancel).onEach { x =>
-            if (i == 50) {
-                cancel()
-            }
-            i += 1
-        } start()
-
-        Thread.sleep(1000)
-        expect(51)(i)
-    }
 }
 
