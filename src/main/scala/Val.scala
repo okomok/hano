@@ -44,7 +44,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     /**
      * Gets the value. (blocking)
      */
-    def get(_timeout: Long = INF): A = {
+    def get(_timeout: Long = NO_TIMEOUT): A = {
         var that: Option[A] = None
 
         head.onEach { x =>
@@ -77,7 +77,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     }
 
     @annotation.aliasOf("get")
-    def apply(_timeout: Long = INF): A = get(_timeout)
+    def apply(_timeout: Long = NO_TIMEOUT): A = get(_timeout)
 
     @annotation.aliasOf("assign")
     def :=(that: Seq[A]) = assign(that)
@@ -113,7 +113,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     private def _eval(f: Reaction[A], tx: Either[Throwable, A]) {
         f.applyingIn(process) {
             tx match {
-                case Left(t) => f.exit(Exit.Failure(t))
+                case Left(t) => f.fail(t)
                 case Right(x) => f(x)
             }
         }

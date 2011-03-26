@@ -8,6 +8,8 @@ package com.github.okomok
 package hano
 
 
+// WILL BE REJECTED.
+
 /**
  * Immutable infinite unordered multi-set
  */

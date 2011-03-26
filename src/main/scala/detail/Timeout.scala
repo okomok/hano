@@ -29,7 +29,7 @@ class Timeout[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1) {
                     safe = true
                     f(x)
                 } else {
-                    f.exit(Exit.Failure(new java.util.concurrent.TimeoutException))
+                    f.fail(new java.util.concurrent.TimeoutException)
                 }
             }
         } onExit {

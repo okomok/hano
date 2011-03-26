@@ -54,7 +54,7 @@ object generator {
                 _1(g)
                 g.exit(Exit.Success)
             } catch {
-                case t: Throwable => g.exit(Exit.Failure(t))
+                case t: Throwable => g.fail(t)
             }
         }
     }

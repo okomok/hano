@@ -20,7 +20,7 @@ class Find[A](_1: Seq[A], _2: A => Boolean) extends SeqAdapter.Of[A](_1) with Si
                 f.exit()
             }
         } onExit {
-            case Exit.Success => f.exit(Exit.Failure(new NoSuchElementException("aSeq.find")))
+            case Exit.Success => f.fail(new NoSuchElementException("aSeq.find"))
             case q => f.exit(q)
         } start()
     }

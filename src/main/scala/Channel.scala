@@ -12,7 +12,7 @@ package hano
  * A mutable one-element sequence; As you foreach, element varies.
  */
 final class Channel[A] extends Seq[A] with java.io.Closeable {
-    private[this] val _fs = new java.util.concurrent.ConcurrentLinkedQueue[Reaction[A]]
+    private[this] val _fs = new java.util.ArrayDeque[Reaction[A]]
     private[this] val _xs = new java.util.ArrayDeque[A]
     private[this] val _live = new Util.Live(_a ! Close, new Channel.ClosedException)
 
@@ -27,7 +27,7 @@ final class Channel[A] extends Seq[A] with java.io.Closeable {
                         case Action(f) => f()
                         case Close => {
                             detail.Polleach(_fs) { f =>
-                                f.exit(Exit.Failure(new Channel.ClosedException))
+                                f.fail(new Channel.ClosedException)
                             }
                             _xs.clear()
                             exit()
@@ -46,9 +46,7 @@ final class Channel[A] extends Seq[A] with java.io.Closeable {
                             } else {
                                 _fs.offer(f)
                                 f.enter {
-                                    Exit { _ =>
-                                        _fs.remove(f) // might be a bottleneck.
-                                    }
+                                    Exit.Empty
                                 }
                             }
                         }
@@ -94,14 +92,14 @@ final class Channel[A] extends Seq[A] with java.io.Closeable {
     /**
      * Reads and removes a value.
      */
-    def read(_timeout: Long = INF): A = _live {
+    def read(_timeout: Long = NO_TIMEOUT): A = _live {
         val v = new Val[A]
         forloop(v)
         v.get(_timeout)
     }
 
     /**
-     * Writes all the sequence values without `Exit.Success`.
+     * Writes all the sequence values.
      */
     def output(xs: Seq[A]): this.type = _live[this.type] {
         xs.forloop(toReaction)

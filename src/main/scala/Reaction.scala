@@ -88,6 +88,9 @@ trait Reaction[-A] {
         }
     }
 
+    @annotation.equivalentTo("exit(Exit.Failure(t))")
+    final def fail(t: Throwable) = exit(Exit.Failure(t))
+
     @annotation.equivalentTo("if (!isExited) body")
     final def beforeExit(body: => Unit) = if (!_exit.isDone) body
 
@@ -118,11 +121,11 @@ trait Reaction[-A] {
             this
         } catch {
             case t @ break.Control => {
-                exit(Exit.Failure(t))
+                fail(t)
                 this
             }
             case t: Throwable => {
-                exit(Exit.Failure(t)) // informs Reaction-site
+                fail(t) // informs Reaction-site
                 throw t // handled in Seq-site
             }
         }

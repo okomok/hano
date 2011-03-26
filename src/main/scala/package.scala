@@ -34,8 +34,6 @@ package object hano {
      */
     def optional[A](body: => A): Seq[A] = new detail.Optional(() => body)
 
-    /**
-     * The infinite duration
-     */
-    val INF: Long = -1
+    private[hano]
+    val NO_TIMEOUT: Long = -1
 }

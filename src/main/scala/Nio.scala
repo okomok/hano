@@ -41,7 +41,7 @@ object Nio {
                         }
                     }
                 } catch {
-                    case t: ClosedSelectorException => f.exit(Exit.Failure(t))
+                    case t: ClosedSelectorException => f.fail(t)
                 }
             } exit {
                 loop.status
