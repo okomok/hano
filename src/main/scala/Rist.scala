@@ -13,6 +13,7 @@ package hano
  */
 final class Rist[A] extends SeqOnce[A] with java.io.Closeable {
     private[this] val _ch = new Channel[Either[Exit.Status, A]]
+    private[this] val _exit = Util.once[Exit.Status] { q => _ch.write(Left(q)) }
 
     override def close() = _ch.close()
     override def process = _ch.process
@@ -32,13 +33,33 @@ final class Rist[A] extends SeqOnce[A] with java.io.Closeable {
         } start()
     }
 
-    def add(x: A) {
+    /**
+     * Adds an element to the tail.
+     */
+    def add(x: A): this.type = {
         _ch.write(Right(x))
+        this
     }
 
-    def exit(q: Exit.Status) {
-        _ch.write(Left(q))
+    /**
+     * Adds all the elements to the tail.
+     */
+    def addAll(that: Seq[A]): this.type = {
+        that.noSuccess.onEach {
+            add(_)
+        } onExit {
+            exit(_)
+        } start()
+        this
     }
+
+    /**
+     * Ends this sequence.
+     */
+    def exit(q: Exit.Status = Exit.Success) = _exit(q)
+
+    @annotation.equivalentTo("exit(Exit.Failure(t))")
+    def fail(t: Throwable) = exit(Exit.Failure(t))
 
     /**
      * Adds elements until exit.
@@ -52,7 +73,10 @@ final class Rist[A] extends SeqOnce[A] with java.io.Closeable {
     def toReaction: Reaction[A] = new Rist.ToReaction(this)
 
     @annotation.aliasOf("add")
-    def +=(x: A) = add(x)
+    def +=(x: A): this.type = add(x)
+
+    @annotation.aliasOf("addAll")
+    def ++=(xs: Seq[A]): this.type = addAll(xs)
 }
 
 
@@ -63,8 +87,7 @@ object Rist {
      */
     def apply[A](that: Seq[A]): Rist[A] = {
         val xs = new Rist[A]
-        xs := that
-        xs
+        xs ++= that
     }
 
     private class ToReaction[A](_1: Rist[A]) extends Reaction[A] {

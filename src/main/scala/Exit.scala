@@ -70,7 +70,7 @@ object Exit {
         @annotation.threadSafe @annotation.idempotent
         final override def apply(q: Status = Success) = _apply(q)
 
-        private[this] val _apply = detail.IfFirst[Status] { q => rawApply(q) } Else { _ => () }
+        private[this] val _apply = Util.once(rawApply)
     }
 
 

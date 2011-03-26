@@ -62,6 +62,11 @@ object Util {
     def verify[A](assertion: Boolean, message: String): Unit = assert(assertion, message)
 
     /**
+     * Turns `f` into a function which ignores the second call.
+     */
+    def once[A](f: A => Unit): A => Unit = detail.IfFirst[A] { f(_) } Else { _ => () } toFunction
+
+    /**
      * Evaluates an expression only once.
      */
     @annotation.notThreadSafe

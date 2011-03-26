@@ -29,5 +29,7 @@ class IfFirst[T](_then: T => Unit) {
         }
 
         def isSecond: Boolean = !first.get
+
+        def toFunction: T => Unit = x => apply(x)
     }
 }

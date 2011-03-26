@@ -238,12 +238,12 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
 
         ch << xs << ys
 
-        expect(0)(ch.read())
-        expect(10)(ch.read())
-        expect(1)(ch.read())
-        expect(11)(ch.read())
-        expect(2)(ch.read())
-        expect(12)(ch.read())
+        var out: List[Int] = Nil
+        for (_ <- 0 until 6) {
+            out :+= ch.read()
+        }
+
+        expect(hano.Iter(0,1,2,10,11,12))(hano.Iter.from(out.sortWith(_ < _)))
     }
 
 }

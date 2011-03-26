@@ -61,9 +61,21 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         expect(hano.Iter(9,9,9,9,9,9,9,9,9,9,9,9))(hano.Iter.from(q))
     }
 
+    def testAddAll {
+        val p = hano.async
+        val xs = p.pull(0 until 3)
+        val ys = p.pull(10 until 13)
+        val rist = new hano.Rist[Int]
+        rist addAll xs addAll ys
+        Thread.sleep(1000)
+        rist.exit()
+        expect(hano.Iter(0,10,1,11,2,12))(rist.toIter)
+    }
+
     def testAssign {
         val xs = hano.async.pull(0 until 100)
-        val rist = hano.Rist(xs)
+        val rist = new hano.Rist[Int]
+        rist := xs
 
         expect(hano.Iter.from(0 until 100))(rist.toIter)
     }
