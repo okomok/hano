@@ -54,8 +54,9 @@ class TakeUntilTest extends org.scalatest.junit.JUnit3Suite {
         a add 1
         a add 2
         a add 3
-        Thread.sleep(2000)
+        Thread.sleep(1000)
         b add 999
+        Thread.sleep(1000)
         a add 4
         a add 5
         assertEquals(hano.Iter(1,2,3), hano.Iter.from(out))

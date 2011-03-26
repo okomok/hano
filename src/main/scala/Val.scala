@@ -98,11 +98,8 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
 
     private def _set(tx: Either[Throwable, A]): Boolean = {
         if (_v.compareAndSet(null, tx)) {
-            while (!_fs.isEmpty) {
-                val f = _fs.poll
-                if (f != null) {
-                    _eval(f, tx)
-                }
+            detail.Polleach(_fs) { f =>
+                _eval(f, tx)
             }
             true
         } else {
