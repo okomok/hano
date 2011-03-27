@@ -12,6 +12,8 @@ package hano
  * Cancellable exit
  */
 final class Cancel extends Exit {
+    // I'm sure @volatile can replace `synchronized`,
+    // but I couldn't prove it.
     private[this] var _status: Exit.Status = null
     private[this] var _exit = Exit.Empty.asExit
 

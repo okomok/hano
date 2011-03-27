@@ -31,7 +31,7 @@ object Nio {
                 loop.exit
             } applying {
                 try {
-                    while (loop.isActive) {
+                    while (!loop.breaks) {
                         if (_2(_1) != 0) {
                             val keys = _1.selectedKeys
                             for (key <- Iter.from(keys).able) {

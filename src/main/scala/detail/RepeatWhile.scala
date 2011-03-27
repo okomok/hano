@@ -40,22 +40,17 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
                 }
                 _p = p
                 f.enter(_p)
-                if (!loop.isActive) {
-                    f.exit(loop.status) // exit immediately
-                }
+                loop.breakable(f)
             } onEach { x =>
                 f.beforeExit {
                     f(x)
-                    if (!loop.isActive) {
-                        f.exit(loop.status) // exit immediately
-                    }
+                    loop.breakable(f)
                 }
             } onExit { q =>
                 f.beforeExit {
                     if (_2(Some(q))) {
-                        if (!loop.isActive) {
-                            f.exit(loop.status)
-                        } else {
+                        loop.breakable(f)
+                        if (!loop.breaks) {
                             f.removeExit(_p)
                             rec()
                         }
@@ -93,22 +88,17 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
                 }
                 _p = p
                 f.enter(_p)
-                if (!loop.isActive) {
-                    f.exit(loop.status) // exit immediately
-                }
+                loop.breakable(f)
             } onEach { x =>
                 f.beforeExit {
                     f(x)
-                    if (!loop.isActive) {
-                        f.exit(loop.status) // exit immediately
-                    }
+                    loop.breakable(f)
                 }
             } onExit { q =>
                 f.beforeExit {
                     if (_2(Some(q))) {
-                        if (!loop.isActive) {
-                            f.exit(loop.status)
-                        } else {
+                        loop.breakable(f)
+                        if (!loop.breaks) {
                             f.removeExit(_p)
                             go = true
                         }

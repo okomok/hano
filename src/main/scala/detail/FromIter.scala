@@ -21,7 +21,7 @@ class FromIter[A](_1: Iter[A]) extends Seq[A] {
             loop.exit
         } applying {
             it = _1.ator
-            while (loop.isActive && it.hasNext) {
+            while (!loop.breaks && it.hasNext) {
                 f(it.next)
             }
         } exit {

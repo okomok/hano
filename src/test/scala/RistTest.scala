@@ -69,7 +69,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         rist addAll xs addAll ys
         Thread.sleep(1000)
         rist.exit()
-        expect(hano.Iter(0,10,1,11,2,12))(rist.toIter)
+        expect(List(0,1,2,10,11,12))(rist.toIter.able.toList.sortWith(_ < _))
     }
 
     def testAssign {
