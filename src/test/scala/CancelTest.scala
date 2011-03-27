@@ -49,5 +49,29 @@ class CancelTest extends org.scalatest.junit.JUnit3Suite {
         Thread.sleep(1000)
         expect(0)(i)
     }
+
+    def testTheadSafe {
+        for (i <- 0 until 1000) {
+            @volatile var exited = false
+            val exit = new hano.Exit {
+                override def apply(q: hano.Exit.Status) {
+                    exited = true
+                }
+            }
+
+            val cancel = new hano.Cancel
+            val enter: hano.Exit => Unit = cancel
+
+            val suite = new ParallelSuite(2)
+            suite.add {
+                enter(exit)
+            }
+            suite.add {
+                cancel()
+            }
+            suite.start()
+            assert(exited)
+        }
+    }
 }
 

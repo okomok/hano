@@ -12,17 +12,15 @@ package hano
  * Cancellable exit
  */
 final class Cancel extends Exit {
-    // I'm sure @volatile can replace `synchronized`,
-    // but I couldn't prove it.
-    private[this] var _status: Exit.Status = null
-    private[this] var _exit = Exit.Empty.asExit
+    @volatile private[this] var _status: Exit.Status = null
+    @volatile private[this] var _exit = Exit.Empty.asExit
 
-    override def apply(q: Exit.Status = Exit.Success) = synchronized {
+    override def apply(q: Exit.Status = Exit.Success) {
         _status = q
         _exit(_status)
     }
 
-    private val toEnterFunction: Exit => Unit = p => synchronized {
+    private val toEnterFunction: Exit => Unit = p => {
         _exit = p
         if (_status ne null) {
             _exit(_status)
