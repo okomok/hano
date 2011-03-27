@@ -46,7 +46,7 @@ object Util {
     /**
      * Locks and unlocks a lock.
      */
-    def syncBy[A](l: java.util.concurrent.locks.ReentrantLock)(body: => A): A = {
+    def syncBy[A](l: java.util.concurrent.locks.Lock)(body: => A): A = {
         l.lock()
         try {
             body
