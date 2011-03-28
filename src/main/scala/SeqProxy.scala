@@ -72,7 +72,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def toIterable(implicit timeout: Util.Default[Long] = NO_TIMEOUT, queue: Util.Default.ByName[BlockingQueue[Any]] = Seq.defaultBlockingQueue): Iterable[A] = self.toIterable(timeout, queue)
     override def iterator(implicit timeout: Util.Default[Long] = NO_TIMEOUT, queue: Util.Default.ByName[BlockingQueue[Any]] = Seq.defaultBlockingQueue): Iterator[A] = self.iterator(timeout, queue)
     override def news[B >: A](z: B): Iterable[B] = self.news(z)
-    override def latest(_timeout: Util.Default[Long] = NO_TIMEOUT): Iterable[A] = self.latest(_timeout)
+    override def latest(implicit _timeout: Util.Default[Long] = NO_TIMEOUT): Iterable[A] = self.latest(_timeout)
     override def react(f: => Reaction[A]): Seq[A] = around(self.react(f))
     override def onEnter(j: Exit => Unit): Seq[A] = around(self.onEnter(j))
     override def onExit(k: Exit.Status => Unit): Seq[A] = around(self.onExit(k))

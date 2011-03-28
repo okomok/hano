@@ -260,7 +260,7 @@ trait Seq[+A] {
     /**
      * Pick up the latest values with the initial value `z`.
      */
-    def latest(_timeout: Util.Default[Long] = NO_TIMEOUT): Iterable[A] = new detail.Latest(this, _timeout())
+    def latest(implicit _timeout: Util.Default[Long] = NO_TIMEOUT): Iterable[A] = new detail.Latest(this, _timeout())
 
 
 // misc
