@@ -14,7 +14,7 @@ class Loop {
     @volatile var status = Exit.Success.asStatus
     @volatile var breaks = false
     val begin = new Util.DoOnce
-    val exit = new Loop.ExitImpl(this)
+    val exit = new Loop.ExitImpl(this).asExit
 
     def breakable(f: Reaction[_]) {
         if (breaks) {
@@ -25,6 +25,7 @@ class Loop {
 
 private[hano]
 object Loop {
+
     private class ExitImpl(_1: Loop) extends Exit {
         override def apply(q: Exit.Status = Exit.Success) {
             // This order matters.

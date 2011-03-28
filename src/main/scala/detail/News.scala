@@ -11,7 +11,7 @@ package detail
 
 private[hano]
 class News[A, B >: A](_1: Seq[A], _2: B) extends Iterable[B] {
-    override def iterator = {
+    override def iterator: Iterator[B] = {
         import News._
         val data = new Data(_2)
         async.invoke {

@@ -128,8 +128,8 @@ class WikiTest
 
     def testCps {
         reset {
-            val p: Int @suspendable = shift { f => f(2);f(3);f(5) }
-            val q: Int @suspendable = shift { f => f(2);f(3);f(5) }
+            val p: Int @suspendable = shift { (f: Int => Unit) => f(2);f(3);f(5) }
+            val q: Int @suspendable = shift { (f: Int => Unit) => f(2);f(3);f(5) }
             println((p, q)) // (2,2) (2,3) (2,5) (3,2) ...
         }
     }

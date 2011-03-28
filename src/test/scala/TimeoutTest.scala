@@ -19,7 +19,7 @@ class TimeoutTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testSuccess {
-        val xs = naturals.timeout(hano.Timer.after(700)).take(3)
+        val xs = naturals.timeout(hano.Timer.after(1000)).take(3)
         expect(hano.Iter(0,1,2))(xs.toIter)
     }
 

@@ -67,6 +67,17 @@ object Util {
     def once[A](f: A => Unit): A => Unit = detail.IfFirst[A] { f(_) } Else { _ => () } toFunction
 
     /**
+     * Default value, used with implicit.
+     */
+    final class Default[A](val value: A) {
+        def apply(): A = value
+    }
+
+    object Default {
+        implicit def fromAny[A](from: A): Default[A] = new Default(from)
+    }
+
+    /**
      * Evaluates an expression only once.
      */
     @annotation.notThreadSafe
