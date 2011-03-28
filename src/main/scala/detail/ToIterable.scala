@@ -13,9 +13,9 @@ import java.util.concurrent.BlockingQueue
 
 
 private[hano]
-class SeqIterable[A](_1: Seq[A], _2: Long, _3: () => BlockingQueue[Any]) extends Iterable[A] {
+class ToIterable[A](_1: Seq[A], _2: Long, _3: () => BlockingQueue[Any]) extends Iterable[A] {
     override def iterator = {
-        import SeqIterable._
+        import ToIterable._
         val data = new Data(_3())
         async.invoke {
             _1.forloop(new ReactionImpl[A](data))
@@ -26,7 +26,7 @@ class SeqIterable[A](_1: Seq[A], _2: Long, _3: () => BlockingQueue[Any]) extends
 
 
 private[hano]
-object SeqIterable {
+object ToIterable {
 
     private class Data(val queue: BlockingQueue[Any]) {
         @volatile var exit = Exit.Empty.asExit

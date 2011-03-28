@@ -13,15 +13,15 @@ import com.github.okomok.hano
 import junit.framework.Assert._
 
 
-class IterableTest extends org.scalatest.junit.JUnit3Suite {
+class ToIterableTest extends org.scalatest.junit.JUnit3Suite {
 
     def testSync: Unit = {
-        val it = hano.Seq(0,1,2,3,4).iterable(queue = new java.util.concurrent.SynchronousQueue)
+        val it = hano.Seq(0,1,2,3,4).toIterable(queue = new java.util.concurrent.SynchronousQueue)
         expect(hano.Iter(0,1,2,3,4))(hano.Iter.from(it))
     }
 
     def testSyncTimeout: Unit = {
-        val it = hano.Seq(0,1,2,3,4).iterable(queue = new java.util.concurrent.SynchronousQueue, timeout = 2000)
+        val it = hano.Seq(0,1,2,3,4).toIterable(queue = new java.util.concurrent.SynchronousQueue, timeout = 2000)
         expect(hano.Iter(0,1,2,3,4))(hano.Iter.from(it))
     }
 

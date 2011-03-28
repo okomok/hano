@@ -25,7 +25,7 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def forloop(f: Reaction[A]) = self.forloop(f)
     override def foreach(f: A => Unit) = self.foreach(f)
     override def start() = self.start()
-    override def await(_timeout: Long = NO_TIMEOUT): Boolean = self.await(_timeout)
+    override def await(implicit _timeout: Util.Default[Long] = NO_TIMEOUT): Boolean = self.await(_timeout)
     override def append[B >: A](that: Seq[B]): Seq[B] = around(self.append(that))
     override def appendIf[B >: A](that: Seq[B])(p: Exit.Status => Boolean): Seq[B] = around(self.appendIf(that)(p))
     override def prepend[B >: A](that: Seq[B]): Seq[B] = around(self.prepend(that))
@@ -65,15 +65,14 @@ trait SeqProxy[+A] extends Seq[A] with scala.Proxy {
     override def unzip[B, C](implicit pre: Seq[A] <:< Seq[(B, C)]): (Seq[B], Seq[C]) = around2(self.unzip)
     override def breakOut[To](implicit bf: scala.collection.generic.CanBuildFrom[Nothing, A, To]): To = self.breakOut
     override def toTraversable: scala.collection.Traversable[A] = self.toTraversable
-    override def toIterable: Iterable[A] = self.toIterable
     override def toIter: Iter[A] = self.toIter
     override def toResponder: Responder[A] = self.toResponder
     override def toVal[B](implicit pre: Seq[A] <:< Seq[B]): Val[B] = self.toVal
     override def actor: scala.actors.Actor = self.actor
-    override def iterator(timeout: Long = NO_TIMEOUT, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterator[A] = self.iterator(timeout, queue)
-    override def iterable(timeout: Long = NO_TIMEOUT, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = self.iterable(timeout, queue)
+    override def toIterable(implicit timeout: Util.Default[Long] = NO_TIMEOUT, queue: Util.Default.ByName[BlockingQueue[Any]] = Seq.defaultBlockingQueue): Iterable[A] = self.toIterable(timeout, queue)
+    override def iterator(implicit timeout: Util.Default[Long] = NO_TIMEOUT, queue: Util.Default.ByName[BlockingQueue[Any]] = Seq.defaultBlockingQueue): Iterator[A] = self.iterator(timeout, queue)
     override def news[B >: A](z: B): Iterable[B] = self.news(z)
-    override def latest(_timeout: Long = NO_TIMEOUT): Iterable[A] = self.latest(_timeout)
+    override def latest(_timeout: Util.Default[Long] = NO_TIMEOUT): Iterable[A] = self.latest(_timeout)
     override def react(f: => Reaction[A]): Seq[A] = around(self.react(f))
     override def onEnter(j: Exit => Unit): Seq[A] = around(self.onEnter(j))
     override def onExit(k: Exit.Status => Unit): Seq[A] = around(self.onExit(k))

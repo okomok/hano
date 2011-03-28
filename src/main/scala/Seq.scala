@@ -57,7 +57,7 @@ trait Seq[+A] {
     /**
      * Waits and blocks until `onExit` is called.
      */
-    def await(_timeout: Long = NO_TIMEOUT): Boolean = detail.Await(this, _timeout)
+    def await(implicit _timeout: Util.Default[Long] = NO_TIMEOUT): Boolean = detail.Await(this, _timeout())
 
 
 // combinator
@@ -213,9 +213,6 @@ trait Seq[+A] {
     def toTraversable: scala.collection.Traversable[A] = new detail.ToTraversable(this)
 
     @annotation.conversion
-    def toIterable: Iterable[A] = iterable()
-
-    @annotation.conversion
     def toIter: Iter[A] = Iter.from(toIterable)
 
     @annotation.conversion
@@ -245,14 +242,15 @@ trait Seq[+A] {
 // Iterable
 
     /**
-     * Retrieves an `Iterator` from this sequence.
-     */
-    def iterator(timeout: Long = NO_TIMEOUT, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterator[A] = iterable(timeout, queue).iterator
-
-    /**
      * Retrieves an `Iterable` from this sequence.
      */
-    def iterable(timeout: Long = NO_TIMEOUT, queue: => BlockingQueue[Any] = Seq.defaultBlockingQueue): Iterable[A] = new detail.SeqIterable(this, timeout, () => queue)
+    @annotation.conversion
+    def toIterable(implicit timeout: Util.Default[Long] = NO_TIMEOUT, queue: Util.Default.ByName[BlockingQueue[Any]] = Seq.defaultBlockingQueue): Iterable[A] = new detail.ToIterable(this, timeout(), queue())
+
+    /**
+     * Retrieves an `Iterator` from this sequence.
+     */
+    def iterator(implicit timeout: Util.Default[Long] = NO_TIMEOUT, queue: Util.Default.ByName[BlockingQueue[Any]] = Seq.defaultBlockingQueue): Iterator[A] = toIterable(timeout, queue).iterator
 
     /**
      * Pick up the newest values with the initial value `z`.
@@ -262,7 +260,7 @@ trait Seq[+A] {
     /**
      * Pick up the latest values with the initial value `z`.
      */
-    def latest(_timeout: Long = NO_TIMEOUT): Iterable[A] = new detail.Latest(this, _timeout)
+    def latest(_timeout: Util.Default[Long] = NO_TIMEOUT): Iterable[A] = new detail.Latest(this, _timeout())
 
 
 // misc
