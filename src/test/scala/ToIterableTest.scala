@@ -67,4 +67,9 @@ class ToIterableTest extends org.scalatest.junit.JUnit3Suite {
             expect(hano.Iter(0,1,2,3))(t.toIter)
         }
     }
+
+    def testToList {
+        val xs = hano.async.pull(0 until 5)
+        expect(List(0,1,2,3,4))(xs.toList)
+    }
 }

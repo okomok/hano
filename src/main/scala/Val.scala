@@ -32,14 +32,19 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     override def forloop(f: Reaction[A]) = _onSet(f)
 
     /**
+     * Has a value(or an error) already been set?
+     */
+    def isReady: Boolean = _v.get != null
+
+    /**
      * Sets the value.
      */
     def set(x: A): Boolean = _set(Right(x))
 
     /**
-     * Informs a failure to a reaction.
+     * Sets the error.
      */
-    def setFailed(why: Throwable): Boolean = _set(Left(why))
+    def fail(why: Throwable): Boolean = _set(Left(why))
 
     /**
      * Gets the value. (blocking)
@@ -141,8 +146,8 @@ object Val {
             exit()
         }
         override protected def rawExit(q: Exit.Status) = q match {
-            case Exit.Failure(t) => _1.setFailed(t)
-            case Exit.Success => _1.setFailed(new NoSuchElementException("sequence end before aVal.set"))
+            case Exit.Failure(t) => _1.fail(t)
+            case Exit.Success => _1.fail(new NoSuchElementException("sequence end before aVal.set"))
         }
     }
 }

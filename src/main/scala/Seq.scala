@@ -216,6 +216,9 @@ trait Seq[+A] {
     def toIter: Iter[A] = Iter.from(toIterable)
 
     @annotation.conversion
+    def toList: List[A] = breakOut
+
+    @annotation.conversion
     def toResponder: Responder[A] = new detail.ToResponder(this)
 
     @annotation.conversion

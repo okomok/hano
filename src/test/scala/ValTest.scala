@@ -17,6 +17,8 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
         val cxt = hano.async
         val v1 = new hano.Val[Int](cxt)
 
+        expect(false)(v1.isReady)
+
         val suite = new ParallelSuite(10)
         suite.add(50) {
             v1() = 12
@@ -33,6 +35,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
         }
         suite.start()
         Thread.sleep(1000)
+        expect(true)(v1.isReady)
     }
 
     def testThrows {
