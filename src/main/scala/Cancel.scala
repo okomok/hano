@@ -12,15 +12,15 @@ package hano
  * Cancellable exit
  */
 final class Cancel extends Exit {
-    @volatile private[this] var _status: Exit.Status = null
-    @volatile private[this] var _exit = Exit.Empty.asExit
+    private[this] var _status: Exit.Status = null
+    private[this] var _exit = Exit.Empty.asExit
 
-    override def apply(q: Exit.Status = Exit.Success) {
+    override def apply(q: Exit.Status = Exit.Success) = synchronized {
         _status = q
         _exit(_status)
     }
 
-    private val toEnterFunction: Exit => Unit = p => {
+    private val toEnterFunction: Exit => Unit = p => synchronized {
         _exit = p
         if (_status ne null) {
             _exit(_status)

@@ -15,7 +15,7 @@ import junit.framework.Assert._
 
 class NewsTest extends org.scalatest.junit.JUnit3Suite {
     def testTrivial: Unit = {
-        val xs = hano.Timer.nondaemon.schedule(500, 500).pull(Seq(0,1,2,3,4,5))
+        val xs = hano.Timer.nondaemon.schedule(500, 500).pull(0 until 6)
         val it = xs.news(999).iterator
         expect(999)(it.next)
         Thread.sleep(600)
