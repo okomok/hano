@@ -23,6 +23,16 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         def winnerIs(xs: Seq[A]) = (winner ne null) && (winner eq xs)
 
         var _p1, _p2 = Exit.Empty.asExit
+        val _q = Exit.Failure(break.Control)
+
+        def _release() {
+            if (winnerIs(_1)) {
+                _p2(_q)
+            }
+            if (winnerIs(_2)) {
+                _p1(_q)
+            }
+        }
 
         _1.shift {
             process
@@ -30,17 +40,16 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
             _p1 = p
             f.enter(p)
 
-            if (winnerIs(_1)) {
-                _p2(Exit.Failure(break.Control))
-            }
+            _release()
         } onEach { x =>
             f.beforeExit {
                 winnerSet(_1)
 
                 if (winnerIs(_1)) {
-                    _p2(Exit.Failure(break.Control))
                     f(x)
                 }
+
+                _release()
             }
         } onExit { q =>
             f.beforeExit {
@@ -49,6 +58,8 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
                 if (winnerIs(_1)) {
                     f.exit(q)
                 }
+
+                _release()
             }
         } start()
 
@@ -59,16 +70,17 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
             f.enter(p)
 
             if (winnerIs(_2)) {
-                _p1(Exit.Failure(break.Control))
+                _p1(_q)
             }
         } onEach { x =>
             f.beforeExit {
                 winnerSet(_2)
 
                 if (winnerIs(_2)) {
-                    _p1(Exit.Failure(break.Control))
                     f(x)
                 }
+
+                _release()
             }
         } onExit { q =>
             f.beforeExit {
@@ -77,6 +89,8 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
                 if (winnerIs(_2)) {
                     f.exit(q)
                 }
+
+                _release()
             }
         } start()
     }

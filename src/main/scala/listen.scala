@@ -54,10 +54,13 @@ object listen {
             env.enter()
             _2(env)
 
+            lazy val forceAdd = env._add()
+
             if (process ne Unknown) {
                 process.invoke {
                     f.enter {
                         Exit { q =>
+                            forceAdd
                             env._remove()
                             process.invoke { // wrapped for thread-safety
                                 f.fail(Exit.Interrupted(q))
@@ -67,7 +70,7 @@ object listen {
                 }
             }
 
-            env._add()
+            forceAdd
         }
 
         private class EnvImpl[A](f: Reaction[A]) extends Env[A] {

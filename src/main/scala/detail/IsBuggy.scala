@@ -15,6 +15,7 @@ object IsBuggy {
         t match {
             case _: java.lang.Error => true
             case _: IllegalArgumentException => true
+            case _: IllegalStateException => true
             case _: UnsupportedOperationException => true
             case _: java.util.ConcurrentModificationException => true
             case _ => false
