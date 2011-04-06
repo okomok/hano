@@ -26,7 +26,7 @@ class CancelTest extends org.scalatest.junit.JUnit3Suite {
 
     def testInReaction {
         val cancel = new hano.Cancel
-        var i = 0
+        @volatile var i = 0
         hano.async.pull(0 until 1000).onEnter(cancel).onEach { x =>
             if (i == 50) {
                 cancel()
@@ -34,19 +34,19 @@ class CancelTest extends org.scalatest.junit.JUnit3Suite {
             i += 1
         } start()
 
-        Thread.sleep(1000)
-        expect(51)(i)
+        Polling.expect(51, i)
+        Polling.expect(51, i, delay = 100)
     }
 
     def testBefore {
         val cancel = new hano.Cancel
         cancel()
-        var i = 0
+        @volatile var i = 0
         hano.async.pull(0 until 1000).onEnter(cancel).onEach { x =>
             i += 1
         } start()
 
-        Thread.sleep(1000)
+        Thread.sleep(500)
         expect(0)(i)
     }
 

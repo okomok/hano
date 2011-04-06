@@ -34,8 +34,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
             }
         }
         suite.start()
-        Thread.sleep(1000)
-        expect(true)(v1.isReady)
+        Polling.assert(v1.isReady)
     }
 
     def testThrows {

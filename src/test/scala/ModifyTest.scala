@@ -32,7 +32,7 @@ class ModifyTest extends org.scalatest.junit.JUnit3Suite {
             }
         }
         suite.start()
-        Thread.sleep(1000)
-        assert(thrown)
+
+        Polling.assert(thrown)
     }
 }

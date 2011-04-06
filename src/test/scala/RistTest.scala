@@ -29,14 +29,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
 
         suite.start()
 
-        Thread.sleep(2000)
-
-        val arr = new java.util.ArrayList[Int]
-        for (x <- hano.Iter.from(q).able) {
-            arr.add(x)
-        }
-        java.util.Collections.sort(arr, implicitly[Ordering[Int]])
-        expect(hano.Iter.from(1 to 50))(hano.Iter.from(arr))
+        Polling.expect(1 to 50 toList, hano.Iter.from(q).able.toList.sortWith(_ < _))
     }
 
     def testTrivial2 {
@@ -57,8 +50,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
 
         suite.start()
 
-        Thread.sleep(2000)
-        expect(hano.Iter(9,9,9,9,9,9,9,9,9,9,9,9))(hano.Iter.from(q))
+        Polling.expect(hano.Iter(9,9,9,9,9,9,9,9,9,9,9,9), hano.Iter.from(q))
     }
 
     def testAddAll {
@@ -69,7 +61,7 @@ class RistTest extends org.scalatest.junit.JUnit3Suite {
         rist addAll xs addAll ys
         Thread.sleep(1000)
         rist.exit()
-        expect(List(0,1,2,10,11,12))(rist.toIter.able.toList.sortWith(_ < _))
+        expect(List(0,1,2,10,11,12))(rist.toList.sortWith(_ < _))
     }
 
     def testAssign {

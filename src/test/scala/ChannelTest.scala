@@ -186,10 +186,7 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         }
 
         suite.start()
-
-        Thread.sleep(2000)
-
-        expect(40)(q.size)
+        Polling.expect(40, q.size)
     }
 
     def testOutput {

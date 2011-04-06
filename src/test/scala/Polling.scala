@@ -14,9 +14,9 @@ import java.util.concurrent.TimeoutException
 object Polling {
     private[this] val _timer = new hano.Timer(false)
 
-    def assert(assertion: => Boolean, period: Long = 10L, timeout: Long = 5000L) {
+    def assert(assertion: => Boolean, delay: Long = 0L, period: Long = 10L, timeout: Long = 5000L) {
         val res = {
-            _timer.schedule(0, period).onEach { _ =>
+            _timer.schedule(delay, period).onEach { _ =>
                 if (assertion) {
                     hano.break()
                 }
@@ -27,10 +27,10 @@ object Polling {
         }
     }
 
-    def expect(expected: Any, actual: => Any, period: Long = 10L, timeout: Long = 5000L) {
+    def expect(expected: Any, actual: => Any, delay: Long = 0L, period: Long = 10L, timeout: Long = 5000L) {
         var latest: Option[Any] = None
         val res = {
-            _timer.schedule(0, period).onEach { _ =>
+            _timer.schedule(delay, period).onEach { _ =>
                 val a = actual
                 if (expected == a) {
                     hano.break()

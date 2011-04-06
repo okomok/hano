@@ -21,28 +21,26 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
     }
 
     def testTrivial {
-        val arr = new java.util.ArrayList[(Int, Int)]
+        val arr = new java.util.concurrent.CopyOnWriteArrayList[(Int, Int)]
         hano.cps {
             val x = naturals.take(2).! // 0, 1
             val y = naturals.take(3).! // 0, 1, 2
             arr.add((x, y))
         }
-        Thread.sleep(1200)
 
-        java.util.Collections.sort(arr, implicitly[Ordering[(Int, Int)]])
-        assertEquals(hano.Iter((0,0), (0,1), (0,2), (1,0), (1,1), (1,2)), hano.Iter.from(arr))
+        Polling.expect(hano.Iter((0,0), (0,1), (0,2), (1,0), (1,1), (1,2)).able.toList, hano.Iter.from(arr).able.toList.sortWith(implicitly[Ordering[(Int, Int)]].lt))
     }
 
     def testNth {
-        val arr = new java.util.ArrayList[(Int, Int, Int)]
+        val arr = new java.util.concurrent.CopyOnWriteArrayList[(Int, Int, Int)]
         hano.cps {
             val x = naturals.nth(3).!
             val y = naturals.head.!
             val z = naturals.find(_ == 5).!
             arr.add((x, y, z))
         }
-        Thread.sleep(1200)
-        assertEquals(hano.Iter((3,0,5)), hano.Iter.from(arr))
+
+        Polling.expect(hano.Iter((3,0,5)), hano.Iter.from(arr))
     }
 
     def testNthEmpty {
@@ -53,7 +51,8 @@ class CpsTest extends org.scalatest.junit.JUnit3Suite {
             val z = naturals.find(_ == 5).!
             arr.add((x, y, z))
         }
-        Thread.sleep(1200)
+
+        Thread.sleep(700)
         assertTrue(arr.isEmpty)
     }
 
