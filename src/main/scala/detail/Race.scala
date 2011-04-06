@@ -69,9 +69,7 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
             _p2 = p
             f.enter(p)
 
-            if (winnerIs(_2)) {
-                _p1(_q)
-            }
+            _release()
         } onEach { x =>
             f.beforeExit {
                 winnerSet(_2)
