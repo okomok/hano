@@ -21,11 +21,11 @@ final class Bag[A](val capacity: Int, override val process: Process = async) ext
     private[this] val curLock = new java.util.concurrent.locks.ReentrantLock
 
     private[this] lazy val vs: Array[Val[A]] = {
-        val that = new Array[Val[A]](capacity)
+        val res = new Array[Val[A]](capacity)
         for (i <- 0 until capacity) {
-            that(i) = new Val[A](process)
+            res(i) = new Val[A](process)
         }
-        that
+        res
     }
 
     override def forloop(f: Reaction[A]) {
@@ -63,9 +63,9 @@ final class Bag[A](val capacity: Int, override val process: Process = async) ext
     private def _next: Option[Val[A]] = {
         if (cur < capacity) {
             val j = Util.syncBy(curLock) {
-                val that = cur
+                val res = cur
                 cur += 1
-                that
+                res
             }
             if (j < capacity) {
                 Some(vs(j))

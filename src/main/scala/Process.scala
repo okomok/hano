@@ -47,19 +47,19 @@ trait Process extends Seq[Unit] with java.io.Closeable {
 
     private[hano]
     final def upper(_that: => Process): Process = {
-        lazy val that = _that
+        lazy val res = _that
         // Unknown <: Self <: other
         if (this eq Unknown) {
-            if (that eq Unknown) {
+            if (res eq Unknown) {
                 async // make it "known".
             } else {
-                that
+                res
             }
         } else if (this eq Self) {
-            if ((that eq Self) || (that eq Unknown)) {
+            if ((res eq Self) || (res eq Unknown)) {
                 this
             } else {
-                that
+                res
             }
         } else {
             this

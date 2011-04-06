@@ -34,9 +34,9 @@ private[hano]
 object Async {
     private[hano]
     def defaultOut: actors.OutputChannel[Any] = {
-        val that = new DefaultOut
-        that.start()
-        that
+        val res = new DefaultOut
+        res.start()
+        res
     }
 
     private class DefaultOut extends actors.Reactor[Any] {

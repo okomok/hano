@@ -92,23 +92,23 @@ object Reactor {
      * Constructs a trivial Reactor.
      */
     def apply(body: Seq[Any] => Unit = Starter): Reactor = {
-        val that = new Reactor {
+        val res = new Reactor {
             override protected def hanoStart(xs: Seq[Any]) = body(xs)
         }
-        that.start
-        that
+        res.start
+        res
     }
 
     /**
      * Constructs a single-threaded Reactor.
      */
     def singleThreaded(body: Seq[Any] => Unit = Starter): Reactor = {
-        val that = new Reactor {
+        val res = new Reactor {
             override protected def hanoStart(xs: Seq[Any]) = body(xs)
             override def scheduler = new scala.actors.scheduler.SingleThreadedScheduler
         }
-        that.start
-        that
+        res.start
+        res
     }
 
     private object Starter extends (Seq[Any] => Unit) {
