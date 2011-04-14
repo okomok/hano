@@ -20,7 +20,7 @@
 
 The current status is alpha.
 If you are familliar with [Reactive Extensions],
-See [Hano vs Rx Method Table](https://github.com/okomok/hano/wiki/hano-vs-rx-method-table "Hano vs Rx Method Table").
+see [Hano vs Rx Method Table](https://github.com/okomok/hano/wiki/hano-vs-rx-method-table "Hano vs Rx Method Table").
 
 
 
