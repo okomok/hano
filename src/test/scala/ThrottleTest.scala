@@ -28,4 +28,15 @@ class ThrottleTest extends org.scalatest.junit.JUnit3Suite {
         val xs = aSample.throttle(350)
         expect(List(0,6,13,20))(xs.take(4).toList)
     }
+
+    def testProcessBack {
+        var ct: Thread = null
+        aSample.take(1).onEach { _ =>
+            ct = Thread.currentThread
+        } await()
+
+        aSample.throttle(350).take(1).onEach { _ =>
+            expect(ct)(Thread.currentThread)
+        } await()
+    }
 }

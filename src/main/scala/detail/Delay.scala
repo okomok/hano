@@ -10,7 +10,13 @@ package detail
 
 
 private[hano]
-class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
+class Delay[A](_1: Seq[A], _2: Long) extends SeqProxy[A] {
+    override val self = new DelayImpl(_1, _2).shift(_1.process)
+    override def delay(i: Long): Seq[A] = _1.delay(_2 + i) // delay.delay fusion
+}
+
+private[hano]
+class DelayImpl[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     private[this] val _timer = Timer.nondaemon
 
     override def process = _timer
@@ -36,6 +42,4 @@ class Delay[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
             }
         } start()
     }
-
-    override def delay(i: Long): Seq[A] = _1.delay(_2 + i) // delay.delay fusion
 }

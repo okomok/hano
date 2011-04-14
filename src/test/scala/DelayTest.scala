@@ -40,4 +40,11 @@ class DelayTezt { // extends org.scalatest.junit.JUnit3Suite {
             println(x)
         }
     }
+
+    def testTrivial2 {
+        val xs = new MySeq().onEach(println(_)).delay(5000).delay(5000)
+        for (x <- xs) {
+            println(x)
+        }
+    }
 }

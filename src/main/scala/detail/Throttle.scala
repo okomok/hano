@@ -10,7 +10,12 @@ package detail
 
 
 private[hano]
-class Throttle[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
+class Throttle[A](_1: Seq[A], _2: Long) extends SeqProxy[A] {
+    override val self = new ThrottleImpl(_1, _2).shift(_1.process)
+}
+
+private[hano]
+class ThrottleImpl[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     private[this] val _timer = Timer.nondaemon
 
     override def process = _timer
@@ -23,7 +28,7 @@ class Throttle[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
         }
 
         var c = new Cancel
-        val now = new DateNow // guarantees the last element precedes `f.exit`.
+        val now = new DateNow
 
         _1.onEnter { p =>
             _eval(now()) {

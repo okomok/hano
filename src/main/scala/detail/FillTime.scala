@@ -9,6 +9,8 @@ package hano
 package detail
 
 
+// SHOULD BE REVISED.
+
 private[hano]
 class FillTime(_1: Seq[_], _2: Long) extends SeqAdapter.Of[Unit](_1) {
     private[this] val _timer = Timer.daemon
