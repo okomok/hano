@@ -33,13 +33,17 @@ class Throttle[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
                 f.enter(p)
             }
         } onEach { x =>
-            c()
-            c = _eval(now + _2) {
-                f(x)
+            f.beforeExit {
+                c()
+                c = _eval(now + _2) {
+                    f(x)
+                }
             }
         } onExit { q =>
-            _eval(now + _2) {
-                f.exit(q)
+            f.beforeExit {
+                _eval(now + _2) {
+                    f.exit(q)
+                }
             }
         } start()
     }

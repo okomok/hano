@@ -19,8 +19,9 @@ class CancelTest extends org.scalatest.junit.JUnit3Suite {
             out :+= x
         } start()
 
-        Thread.sleep(100)
+        Thread.sleep(10)
         cancel()
+        assert(0 < out.size)
         assert(out.size < 1000)
     }
 
