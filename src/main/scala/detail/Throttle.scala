@@ -9,9 +9,6 @@ package hano
 package detail
 
 
-import java.util.Date
-
-
 private[hano]
 class Throttle[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     private[this] val _timer = Timer.nondaemon
@@ -19,7 +16,7 @@ class Throttle[A](_1: Seq[A], _2: Long) extends SeqAdapter.Of[A](_1) {
     override def process = _timer
 
     override def forloop(f: Reaction[A]) {
-        def _eval(time: Date)(body: => Unit): Cancel = {
+        def _eval(time: java.util.Date)(body: => Unit): Cancel = {
             val res = new Cancel
             _timer.schedule(time).onEnter(res).onEach(_ => body).start()
             res
