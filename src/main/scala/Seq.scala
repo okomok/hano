@@ -183,6 +183,11 @@ trait Seq[+A] {
     def timeout(that: Seq[_]): Seq[A] = new detail.Timeout(this, that)
 
     /**
+     * Ignores values which are followed by another value before the specified time span.
+     */
+    def throttle(d: Long): Seq[A] = new detail.Throttle(this, d)
+
+    /**
      * Removes adjacent duplicates.
      */
     def unique[B >: A](implicit equ: Equiv[B]): Seq[A] = new detail.Unique(this, equ)
