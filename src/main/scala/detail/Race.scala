@@ -23,7 +23,7 @@ class Race[A](_1: Seq[A], _2: Seq[A]) extends Seq[A] {
         def winnerIs(xs: Seq[A]) = (winner ne null) && (winner eq xs)
 
         var _p1, _p2 = Exit.Empty.asExit
-        val _q = Exit.Failure(break.Control)
+        val _q = Exit.Failure(BreakControl)
 
         def _release() {
             if (winnerIs(_1)) {

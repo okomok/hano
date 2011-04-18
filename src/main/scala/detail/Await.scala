@@ -29,7 +29,7 @@ object Await {
         xs.onExit { q =>
             Util.countDown(c) {
                 q match {
-                    case Exit.Failure(break.Control) => ()
+                    case Exit.Failure(BreakControl) => ()
                     case Exit.Failure(Exit.Interrupted(_)) => ()
                     case Exit.Failure(t) => s = t
                     case _ => ()
@@ -52,7 +52,7 @@ object Await {
         xs.onEnter(out).onExit { q =>
             Util.countDown(c) {
                 q match {
-                    case Exit.Failure(break.Control) => ()
+                    case Exit.Failure(BreakControl) => ()
                     case Exit.Failure(Exit.Interrupted(_)) => ()
                     case Exit.Failure(t) => s = t
                     case _ => ()

@@ -23,7 +23,7 @@ class BreakableTest extends org.scalatest.junit.JUnit3Suite {
         naturals.foreach { x =>
             if (x == 50) {
                 c.countDown()
-                hano.break()
+                hano.break
             } else {
                 b.add(x)
             }

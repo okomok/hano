@@ -45,7 +45,7 @@ class CycleTest extends org.scalatest.junit.JUnit3Suite {
             out add i
             i += 1
             if (i == 50) {
-                hano.break()
+                hano.break
             }
         } await()
 
@@ -61,7 +61,7 @@ class CycleTest extends org.scalatest.junit.JUnit3Suite {
             out add i
             i += 1
             if (i == 50) {
-                hano.break()
+                hano.break
             }
         } await()
 

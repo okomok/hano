@@ -81,7 +81,7 @@ trait Reaction[-A] {
                 _exitFuncs(q)
                 rawExit(q)
             } catch {
-                case break.Control => ()
+                case BreakControl => ()
                 case t: scala.util.control.ControlThrowable => throw t
                 case t: Throwable => detail.Log.err("onExit", t, true)
             }
@@ -120,7 +120,7 @@ trait Reaction[-A] {
             body
             this
         } catch {
-            case t @ break.Control => {
+            case t @ BreakControl => {
                 fail(t)
                 this
             }

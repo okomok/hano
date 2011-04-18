@@ -83,7 +83,7 @@ class ShiftAAsyncShiftTest extends org.scalatest.junit.JUnit3Suite {
             }.drop(10).onHead {
                 case Some(n) => {
                     //println("breaking")
-                    hano.break()
+                    hano.break
                 }
                 case None => {
                     //println("not found")

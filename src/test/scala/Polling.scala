@@ -18,7 +18,7 @@ object Polling {
         val res = {
             _timer.schedule(delay, period).onEach { _ =>
                 if (assertion) {
-                    hano.break()
+                    hano.break
                 }
             }.await(timeout)
         }
@@ -33,7 +33,7 @@ object Polling {
             _timer.schedule(delay, period).onEach { _ =>
                 val a = actual
                 if (expected == a) {
-                    hano.break()
+                    hano.break
                 }
                 latest = Some(a)
             }.await(timeout)

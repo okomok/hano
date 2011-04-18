@@ -19,7 +19,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
             // reaction block
                 expect(())(x) // The element is the `Unit`.
                 if (i == 5) {
-                    hano.break()
+                    hano.break
                 }
                 i += 1
             } start()
@@ -33,7 +33,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
             for (x <- us) {
                 expect(())(x)
                 if (i == 5) {
-                    hano.break()
+                    hano.break
                 }
                 i += 1
             }
@@ -55,7 +55,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
             // Any `Seq` guarantees reactions are invoked in sequential fashion.
                 expect(())(x)
                 if (i == 5) {
-                    hano.break()
+                    hano.break
                 }
                 i += 1
             } start()
@@ -70,7 +70,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
             us onEach { x =>
                 expect(())(x)
                 if (i == 5) {
-                    hano.break()
+                    hano.break
                 }
                 i += 1
             } await()

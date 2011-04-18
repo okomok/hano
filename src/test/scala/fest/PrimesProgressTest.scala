@@ -62,12 +62,12 @@ class PrimesProgressGuiTest
                 ps.onNth(Q-1) {
                     case Some(p) =>
                         resultLabel.setText(p.toString)
-                        hano.break()
+                        hano.break
                     case None => ()
                 }.indices.stepFor(10) onEach { i =>
                     if (monitor.isCanceled) {
                         resultLabel.setText("Canceled")
-                        hano.break()
+                        hano.break
                     } else {
                         monitor.setProgress(i)
                         monitor.setNote("Calculated " + i + " primes")
