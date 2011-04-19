@@ -18,9 +18,9 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
         var out: Option[Int] = None
 
         // `Val` is a single-element sequence.
-        v onEach { x =>
+        v.onEach { x =>
             out = Some(x)
-        } await()
+        }.await
 
         expect(7)(out.get)
 
@@ -38,9 +38,9 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
         val v = new hano.Val[Int]
 
         var out: Option[Int] = None
-        v onEach { x =>
+        v.onEach { x =>
             out = Some(x)
-        } start()
+        }.start
 
         v() = 7
         Thread.sleep(1000) // You might have to wait for the asynchronous job of `Val`.
@@ -60,7 +60,7 @@ class ValTest extends org.scalatest.junit.JUnit3Suite {
                  // `Val` methods are thread-safe.
                  v() = 7
              }
-         } start()
+         }.start
 
          expect(7)(v()) // waits for the thread to have done the job.
      }

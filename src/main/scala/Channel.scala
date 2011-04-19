@@ -92,7 +92,7 @@ final class Channel[A] extends Seq[A] with java.io.Closeable {
     /**
      * Reads and removes a value.
      */
-    def read(_timeout: Long = NO_TIMEOUT): A = _live {
+    def read(implicit _timeout: Util.Default[Long] = NO_TIMEOUT): A = _live {
         val v = new Val[A]
         forloop(v)
         v.get(_timeout)

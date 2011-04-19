@@ -67,7 +67,7 @@ object Util {
     def once[A](f: A => Unit): A => Unit = detail.IfFirst[A] { f(_) } Else { _ => () } toFunction
 
     /**
-     * Default value, used with implicit.
+     * Default value used with implicit, which makes `()` optional.
      */
     final class Default[A](val value: A) extends (() => A) {
         override def apply(): A = value

@@ -22,7 +22,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
                     hano.break
                 }
                 i += 1
-            } start()
+            } start
 
             expect(5)(i)
         }
@@ -50,7 +50,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
 
         locally {
             var i = 0
-            us onEach { x =>
+            us.onEach { x =>
             // Don't bother about multi-threaded issue.
             // Any `Seq` guarantees reactions are invoked in sequential fashion.
                 expect(())(x)
@@ -58,7 +58,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
                     hano.break
                 }
                 i += 1
-            } start()
+            }.start
 
             Thread.sleep(500) // wait for the thread-pool has done the reaction.
             expect(5)(i)
@@ -67,13 +67,13 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
         // Even better, `await` instead of `start` waits until a sequence ends.
         locally {
             var i = 0
-            us onEach { x =>
+            us.onEach { x =>
                 expect(())(x)
                 if (i == 5) {
                     hano.break
                 }
                 i += 1
-            } await()
+            }.await
 
             expect(5)(i)
         }

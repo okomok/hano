@@ -14,11 +14,11 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
         val xs = hano.async.pull(0 until 4)
 
         var out: List[Int] = Nil
-        xs shift {
+        xs.shift {
             hano.Self
-        } onEach { x =>
+        }.onEach { x =>
             out :+= x
-        } start() // Notice `await` is unneeded here.
+        }.start // Notice `await` is unneeded here.
 
         expect(List(0,1,2,3))(out)
     }
@@ -30,11 +30,11 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
         val xs = hano.async.pull(0 until 4)
 
         var out: List[Int] = Nil
-        xs shift {
+        xs.shift {
             hano.Edt // `Edt` is a `Process`.
-        } onEach { x =>
+        }.onEach { x =>
             // This reaction is invoked in the EDT.
             // ...
-        } start()
+        }.start
     }
 }

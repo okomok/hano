@@ -14,9 +14,9 @@ class OnEachTest extends org.scalatest.junit.JUnit3Suite {
         val xs: hano.Seq[Int] = hano.async.pull(1 until 6)
 
         var out: List[Int] = Nil
-        xs onEach { x =>
+        xs.onEach { x =>
             out :+= x
-        } await()
+        }.await
 
         expect(List(1,2,3,4,5))(out)
     }
@@ -28,11 +28,11 @@ class OnEachTest extends org.scalatest.junit.JUnit3Suite {
         val xs: hano.Seq[Int] = hano.async.pull(1 until 4)
 
         var out: List[Int] = Nil
-        xs onEach { x =>
+        xs.onEach { x =>
             out :+= x
-        } onEach { x =>
+        }.onEach { x =>
             out :+= x * 10
-        } await()
+        }.await
 
         expect(List(1,10,2,20,3,30))(out)
     }

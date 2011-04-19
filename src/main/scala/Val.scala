@@ -49,7 +49,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     /**
      * Gets the value. (blocking)
      */
-    def get(_timeout: Long = NO_TIMEOUT): A = {
+    def get(implicit _timeout: Util.Default[Long] = NO_TIMEOUT): A = {
         var that: Option[A] = None
 
         head.onEach { x =>
@@ -82,7 +82,7 @@ final class Val[A](override val process: Process = async) extends Seq[A] with de
     }
 
     @annotation.aliasOf("get")
-    def apply(_timeout: Long = NO_TIMEOUT): A = get(_timeout)
+    def apply(implicit _timeout: Util.Default[Long] = NO_TIMEOUT): A = get(_timeout)
 
     @annotation.aliasOf("assign")
     def :=(that: Seq[A]) = assign(that)

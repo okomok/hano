@@ -16,12 +16,12 @@ class OnExitTest extends org.scalatest.junit.JUnit3Suite {
         locally {
             var out: List[Int] = Nil
 
-            xs onEach { x =>
+            xs.onEach { x =>
                 out :+= x
-            } onExit {
+            }.onExit {
                 case hano.Exit.Success => out :+= 99
                 case hano.Exit.Failure(t) => println("something bad happens:" + t)
-            } await()
+            }.await
 
             expect(List(0,1,2,3,4,99))(out)
         }
@@ -30,13 +30,13 @@ class OnExitTest extends org.scalatest.junit.JUnit3Suite {
         locally {
             var out: List[Int] = Nil
 
-            xs onEach { x =>
+            xs.onEach { x =>
                 out :+= x
-            } onSuccess {
+            }.onSuccess {
                 out :+= 99
-            } onFailure { t =>
+            }.onFailure { t =>
                 println("something bad happens: " + t)
-            } await()
+            }.await
 
             expect(List(0,1,2,3,4,99))(out)
         }

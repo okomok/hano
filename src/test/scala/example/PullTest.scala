@@ -16,9 +16,9 @@ class PullTest extends org.scalatest.junit.JUnit3Suite {
         val xs: hano.Seq[Int] = us.pull(0 until 4)
 
         var out: List[Int] = Nil
-        xs onEach { x =>
+        xs.onEach { x =>
             out :+= x
-        } await()
+        }.await
 
         expect(List(0,1,2,3))(out)
     }
