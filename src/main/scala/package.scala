@@ -28,6 +28,7 @@ package object hano {
     /**
      * By-name sequence
      */
+    @annotation.processShifted
     def byName[A](body: => Seq[A]): Seq[A] = new detail.ByName(() => body)
 
     /**

@@ -144,4 +144,10 @@ object annotation {
     class exponentialTime extends TimeComplexity
     class factorialTime extends TimeComplexity
 
+
+    /**
+     * Associated process may be shifted.
+     */
+    class processShifted extends StaticAnnotation
+
 }

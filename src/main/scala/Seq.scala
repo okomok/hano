@@ -62,11 +62,13 @@ trait Seq[+A] {
 
 // combinator
 
+    @annotation.processShifted
     def append[B >: A](that: Seq[B]): Seq[B] = new detail.Append[B](this, that)
 
     /**
      * Appends `that` if `p` returns `true`.
      */
+    @annotation.processShifted
     def appendIf[B >: A](that: Seq[B])(p: Exit.Status => Boolean): Seq[B] = new detail.AppendIf[B](this, that, p)
 
     @annotation.aliasOf("append")
@@ -74,8 +76,10 @@ trait Seq[+A] {
 
     def prepend[B >: A](that: Seq[B]): Seq[B] = new detail.Prepend[B](this, that)
 
+    @annotation.processShifted
     def merge[B >: A](that: Seq[B]): Seq[B] = new detail.Merge[B](this, that)
 
+    @annotation.processShifted
     def race[B >: A](that: Seq[B]): Seq[B] = new detail.Race[B](this, that)
 
     def map[B](f: A => B): Seq[B] = new detail.Map(this, f)
@@ -185,6 +189,7 @@ trait Seq[+A] {
     /**
      * Ignores values which are followed by another value before the specified time span.
      */
+    @annotation.processShifted
     def throttle(d: Long): Seq[A] = new detail.Throttle(this, d)
 
     /**
@@ -197,6 +202,7 @@ trait Seq[+A] {
      */
     def unsplit[B](sep: Seq[B])(implicit pre: Seq[A] <:< Seq[Seq[B]]): Seq[B] = new detail.Unsplit(pre(this), sep)
 
+    @annotation.processShifted
     def zip[B](that: Seq[B]): Seq[(A, B)] = new detail.Zip(this, that)
 
     /**
@@ -324,6 +330,7 @@ trait Seq[+A] {
     /**
      * Takes elements until `that` starts. `that` may be closed.
      */
+    @annotation.processShifted
     def takeUntil(that: Seq[_]): Seq[A] = new detail.TakeUntil(this, that)
 
     /**
@@ -379,6 +386,7 @@ trait Seq[+A] {
     /**
      * Buffers values within the specified duration(millisecond).
      */
+    @annotation.processShifted
     def bufferedFor[To](d: Long, b: => Builder[A, To] = Seq.defaultCopyBuilder[A]): Seq[To] = new detail.BufferedFor(this, d, () => b)
 
     /**
@@ -412,6 +420,7 @@ trait Seq[+A] {
     /**
      * Reactions are invoked in the process of `that`.
      */
+    @annotation.processShifted
     def shift(that: Seq[_]): Seq[A] = new detail.Shift(this, that)
 
     /**
