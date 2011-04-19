@@ -97,7 +97,7 @@ trait Reaction[-A] {
     /**
      * Removes an attached `Exit` without closing.
      */
-    final def removeExit(p: Exit) = _exitFuncs.remove(p)
+    final def unenter(p: Exit) = _exitFuncs.remove(p)
 
     /**
      * Override this to implement `enter`.

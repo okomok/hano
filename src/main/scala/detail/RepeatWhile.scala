@@ -51,7 +51,7 @@ class RepeatWhileOther[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extend
                     if (_2(Some(q))) {
                         loop.breakable(f)
                         if (!loop.breaks) {
-                            f.removeExit(_p)
+                            f.unenter(_p) // keeps Exit.Queue small.
                             rec()
                         }
                     } else {
@@ -99,7 +99,7 @@ class RepeatWhileSelf[A](_1: Seq[A], _2: Option[Exit.Status] => Boolean) extends
                     if (_2(Some(q))) {
                         loop.breakable(f)
                         if (!loop.breaks) {
-                            f.removeExit(_p)
+                            f.unenter(_p)
                             go = true
                         }
                     } else {
