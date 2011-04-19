@@ -50,7 +50,7 @@ class TakeUntil_[A](_1: Seq[A], _2: Seq[_]) extends SeqAdapter.Of[A](_1) {
             }
         } onEach { x =>
             if (!go) {
-                f.exit() // keeps process, but delayed
+                f.exit() // keeps process, but delayed.
             }
             f(x)
         } onExit {
