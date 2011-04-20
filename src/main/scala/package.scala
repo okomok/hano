@@ -18,7 +18,12 @@ package object hano {
     /**
      * Breaks the current reaction.
      */
-    def break: Nothing = throw BreakControl
+    def break(): Nothing = throw BreakControl
+
+    /**
+     * Continues the current reaction.
+     */
+    def continue(): Nothing = throw detail.ContinueControl
 
     /**
      * Creates an asynchronous(thread-pool) process
