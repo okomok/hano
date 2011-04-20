@@ -22,7 +22,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
                     hano.break
                 }
                 i += 1
-            }.start
+            } start()
 
             expect(5)(i)
         }
@@ -58,7 +58,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
                     hano.break
                 }
                 i += 1
-            }.start
+            } start()
 
             Thread.sleep(500) // wait for the thread-pool has done the reaction.
             expect(5)(i)
@@ -73,7 +73,7 @@ class ProcessTest extends org.scalatest.junit.JUnit3Suite {
                     hano.break
                 }
                 i += 1
-            }.await
+            } await()
 
             expect(5)(i)
         }

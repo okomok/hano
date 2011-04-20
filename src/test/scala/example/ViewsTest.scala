@@ -17,11 +17,11 @@ class ViewsTest extends org.scalatest.junit.JUnit3Suite {
         var out: List[String] = Nil
         xs.map { x =>
             x.toString
-        }.filter { str =>
+        } filter { str =>
             str != "1"
-        }.onEach { str =>
+        } onEach { str =>
             out :+= str
-        }.await
+        } await()
 
         expect(List("0","2"))(out)
     }
@@ -36,7 +36,7 @@ class ViewsTest extends org.scalatest.junit.JUnit3Suite {
         var out: List[Int] = Nil
         (xs ++ ys).onEach { x =>
             out :+= x
-        }.await
+        } await()
 
         expect(List(0,1,2,3,4,5))(out)
     }

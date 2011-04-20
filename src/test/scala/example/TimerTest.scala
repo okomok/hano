@@ -25,9 +25,9 @@ class TimerTest extends org.scalatest.junit.JUnit3Suite {
         var out: List[Int] = Nil
         naturals.take {
             5
-        }.onEach { x =>
+        } onEach { x =>
             out :+= x
-        }.await
+        } await()
 
         expect(List(0,1,2,3,4))(out)
     }

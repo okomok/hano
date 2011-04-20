@@ -18,7 +18,7 @@ class PullTest extends org.scalatest.junit.JUnit3Suite {
         var out: List[Int] = Nil
         xs.onEach { x =>
             out :+= x
-        }.await
+        } await()
 
         expect(List(0,1,2,3))(out)
     }

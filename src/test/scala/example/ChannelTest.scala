@@ -71,9 +71,9 @@ class ChannelTest extends org.scalatest.junit.JUnit3Suite {
         var out: List[Int] = Nil
         ch.cycle.take {
             3
-        }.onEach { x =>
+        } onEach { x =>
             out :+= x
-        }.await
+        } await()
 
         expect(List(1,2,3))(out)
     }

@@ -25,13 +25,13 @@ class ForkTest extends org.scalatest.junit.JUnit3Suite {
         val xs: hano.Seq[Int] = hano.async.pull(it)
 
         val v1, v2 = new hano.Val[Int]
-        xs fork { xs =>
+        xs.fork { xs =>
             // Recall `Seq` algorithms return a single-element sequence, and
             // `Val` can be assigned with a single-element sequence.
             v1 := xs.min
         } fork { xs =>
             v2 := xs.max
-        } start
+        } start()
 
         expect(0)(v1())
         expect(6)(v2())

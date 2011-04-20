@@ -17,7 +17,7 @@ class AlgorithmsTest extends org.scalatest.junit.JUnit3Suite {
         var out: Option[Int] = None
         xs.head.onEach { x =>
             out = Some(x)
-        }.await
+        } await()
 
         expect(5)(out.get)
     }
@@ -32,9 +32,9 @@ class AlgorithmsTest extends org.scalatest.junit.JUnit3Suite {
             var out: Option[Int] = None
             xs.find { x =>
                 x % 2 == 0
-            }.onEach { x =>
+            } onEach { x =>
                 out = Some(x)
-            }.await
+            } await()
 
             expect(6)(out.get)
         }
@@ -45,9 +45,9 @@ class AlgorithmsTest extends org.scalatest.junit.JUnit3Suite {
             intercept[NoSuchElementException] {
                 xs.find { x =>
                     x == 10
-                }.onEach { x =>
+                } onEach { x =>
                     out = Some(x)
-                }.await
+                } await()
             }
 
             expect(None)(out)
