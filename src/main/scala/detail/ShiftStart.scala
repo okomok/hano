@@ -16,11 +16,19 @@ private[hano]
 class ShiftStart[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
     Require.notUnknown(_2.process, "shiftStart")
 
-    override val self = {
+    override val self: Seq[A] = {
         if (_1.process eq Self) {
             new ShiftStartFromSelf(_1, _2)
         } else {
             new ShiftStartFromOther(_1, _2)
+        }
+    }
+
+    override def shiftStart(that: Seq[_]): Seq[A] = { // shiftStart.shiftStart fusion
+        if (that.process eq _2.process) {
+            _1.shiftStart(_2)
+        } else {
+            super.shiftStart(that)
         }
     }
 }

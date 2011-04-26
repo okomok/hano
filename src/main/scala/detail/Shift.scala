@@ -16,7 +16,7 @@ private[hano]
 class Shift[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
     Require.notUnknown(_2.process, "shift")
 
-    override val self = {
+    override val self: Seq[A] = {
         val from = _1.process
         val to = _2.process
         if (from eq to) {
@@ -25,6 +25,14 @@ class Shift[A](_1: Seq[A], _2: Seq[_]) extends SeqProxy[A] {
             new ShiftToSelf(_1)
         } else {
             new ShiftToOther(_1, _2)
+        }
+    }
+
+    override def shift(that: Seq[_]): Seq[A] = { // shift.shift fusion
+        if (that.process eq _2.process) {
+            _1.shift(_2)
+        } else {
+            super.shift(that)
         }
     }
 }

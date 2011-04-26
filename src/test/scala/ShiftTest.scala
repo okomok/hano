@@ -65,6 +65,20 @@ class ShiftTest extends org.scalatest.junit.JUnit3Suite {
         val xs = hano.async.pull(0 until 500).shiftStart(hano.async)
         expect(hano.Iter.from(0 until 500))(xs.toIter)
     }
+
+    def testShiftFusion1 {
+        val xs = hano.async.pull(0 until 5).shift(hano.Edt).shift(hano.Edt)
+        xs.onEach { _ =>
+            assert(javax.swing.SwingUtilities.isEventDispatchThread)
+        } await()
+    }
+
+    def testShiftFusion2 {
+        val xs = hano.async.pull(0 until 5).shift(hano.Edt).shift(hano.async)
+        xs.onEach { _ =>
+            expect(false)(javax.swing.SwingUtilities.isEventDispatchThread)
+        } await()
+    }
 }
 
 
