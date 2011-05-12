@@ -29,4 +29,22 @@ class UtilTest extends org.scalatest.junit.JUnit3Suite {
         }
         foo
     }
+/*
+        // Workaround: explicit type-parameter is cumbersome.
+        import java.util.concurrent.BlockingQueue
+        final class ByNameBlockingQueue(val value: () => BlockingQueue[Any]) extends (() => () => BlockingQueue[Any]) {
+            override def apply(): () => BlockingQueue[Any] = value
+        }
+        object ByNameBlockingQueue {
+            implicit def fromByNameBlockingQueue(from: BlockingQueue[Any]): ByNameBlockingQueue = new ByNameBlockingQueue(() => from)
+        }
+
+    def _toIterable(queue: ByNameBlockingQueue): Iterable[Any] = throw new Error
+
+    def testNoParam {
+        ByNameBlockingQueue.fromByNameBlockingQueue(new java.util.concurrent.SynchronousQueue)
+        _toIterable(new java.util.concurrent.SynchronousQueue)
+        _toIterable(queue = new java.util.concurrent.SynchronousQueue)
+    }
+*/
 }

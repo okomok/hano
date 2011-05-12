@@ -69,14 +69,15 @@ object Util {
     /**
      * Default value used with implicit, which makes `()` optional.
      */
-    final class Default[A](val value: A) extends (() => A) {
+    final class Default[+A](val value: A) extends (() => A) {
         override def apply(): A = value
     }
 
     object Default {
         implicit def fromAny[A](from: A): Default[A] = new Default(from)
 
-        final class ByName[A](val value: () => A) extends (() => () => A) {
+        // Workaround: implicit parameter may not call-by-name.
+        final class ByName[+A](val value: () => A) extends (() => () => A) {
             override def apply(): () => A = value
         }
         object ByName {
