@@ -12,7 +12,7 @@ class Hano(info: ProjectInfo) extends DefaultProject(info) with AutoCompilerPlug
 
     val scalaToolsSnapshotRepo = "scala-tools.org-SNAPSHOT" at "http://scala-tools.org/repo-snapshots/"
 
-    val scalatest = "org.scalatest" %% "scalatest" % "1.4.1" % "test"
+    val scalatest = "org.scalatest" % "scalatest_2.9.0" % "1.4.1" % "test"
     val junit = "junit" % "junit" % "4.4" % "test"
     val testng = "org.testng" % "testng" % "5.14" % "test"
     val fest = "org.easytesting" % "fest-swing" % "1.2" % "test"

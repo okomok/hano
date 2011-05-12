@@ -23,9 +23,10 @@ class IfFirst[T](_then: T => Unit) {
 
         def apply(x: T) {
             if (first.get && first.compareAndSet(true, false)) {
-                return _then(x)
+                _then(x)
+            } else {
+                _else(x)
             }
-            _else(x)
         }
 
         def isSecond: Boolean = !first.get
