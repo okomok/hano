@@ -14,8 +14,8 @@
             println("dragging at: " + (d.getX, d.getY))
         } onExit { _ =>
             println("released")
-        } start()
-    } start()
+        } start
+    } start
 
 The current status is alpha.
 If you are familliar with [Reactive Extensions],
