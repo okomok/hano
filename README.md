@@ -1,5 +1,5 @@
 
-# hano 0.1.0-SNAPSHOT
+# hano 0.1.0
 
 `hano` is a reactive sequence combinator library:
 
@@ -17,7 +17,6 @@
         } start
     } start
 
-The current status is alpha.
 If you are familliar with [Reactive Extensions],
 see [Hano vs Rx Method Table](https://github.com/okomok/hano/wiki/hano-vs-rx-method-table "Hano vs Rx Method Table").
 
@@ -44,6 +43,15 @@ see [Hano vs Rx Method Table](https://github.com/okomok/hano/wiki/hano-vs-rx-met
     }
 
 Unlike `scala.collection.Traversable`, this `foreach` is allowed to be asynchronous.
+
+
+
+## Setup Dependencies for sbt
+
+Append this in your project definition:
+
+    val hano = "com.github.okomok" % "hano_2.9.0" % "0.1.0"
+    val okomokReleases = "okomok releases" at "http://okomok.github.com/maven-repo/releases"
 
 
 

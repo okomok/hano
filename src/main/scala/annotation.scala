@@ -150,4 +150,9 @@ object annotation {
      */
     class processShifted extends StaticAnnotation
 
+    /**
+     * Marks as rejected feature.
+     */
+    class rejected(reason: String) extends StaticAnnotation
+
 }

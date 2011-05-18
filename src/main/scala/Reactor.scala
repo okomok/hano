@@ -8,9 +8,6 @@ package com.github.okomok
 package hano
 
 
-// Will probably be removed.
-
-
 import java.util.concurrent.CopyOnWriteArrayList
 import scala.actors.Actor
 
@@ -18,6 +15,7 @@ import scala.actors.Actor
 /**
  * An actor built upon Seq
  */
+@annotation.rejected("toy")
 trait Reactor extends Actor {
 
     /**

@@ -8,11 +8,10 @@ package com.github.okomok
 package hano
 
 
-// WILL BE REJECTED.
-
 /**
  * Immutable infinite unordered multi-set
  */
+@annotation.rejected("toy")
 final class Bag[A](val capacity: Int, override val process: Process = async) extends Seq[A] {
     Require.notSelf(process, "Bag")
     Require.notUnknown(process, "Bag")
