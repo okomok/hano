@@ -9,7 +9,7 @@ package hano
 
 
 /**
- * Event-dispatch-thread process
+ * The event-dispatch-thread process
  */
 object Edt extends Process {
     override def close() = ()

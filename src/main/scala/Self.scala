@@ -9,7 +9,7 @@ package hano
 
 
 /**
- * Call-site process
+ * The call-site process
  */
 object Self extends Process {
     override def close() = ()

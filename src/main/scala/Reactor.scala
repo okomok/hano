@@ -8,6 +8,9 @@ package com.github.okomok
 package hano
 
 
+// Will probably be removed.
+
+
 import java.util.concurrent.CopyOnWriteArrayList
 import scala.actors.Actor
 
@@ -60,7 +63,7 @@ trait Reactor extends Actor {
         super.restart
     }
 
-    final val hanoProcess = new detail.Async(this).asProcess
+    final val hanoProcess = new Async(this).asProcess
 
     private def _hanoAddPrimary(f: Reaction[Any]) {
         this ! Action {

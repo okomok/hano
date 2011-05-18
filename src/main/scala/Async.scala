@@ -6,14 +6,16 @@
 
 package com.github.okomok
 package hano
-package detail
 
 
 import scala.actors
 
 
-private[hano]
-class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Process {
+/**
+ * An asynchronous process.
+ * `out` shall react on `Action` and `Close` message.
+ */
+class Async(val out: actors.OutputChannel[Any] = new Async.Out().start) extends Process {
     override def close() {
         out ! Close
     }
@@ -30,16 +32,13 @@ class Async(out: actors.OutputChannel[Any] = Async.defaultOut) extends Process {
 }
 
 
-private[hano]
 object Async {
-    private[hano]
-    def defaultOut: actors.OutputChannel[Any] = {
-        val res = new DefaultOut
-        res.start()
-        res
-    }
 
-    private class DefaultOut extends actors.Reactor[Any] {
+    /**
+     * Trivial `OutputChannel` implementation for `Async`
+     */
+    class Out(s: actors.IScheduler = null) extends actors.Reactor[Any] {
+        override val scheduler = if (s eq null) super.scheduler else s
         override def act = {
             loop {
                 react {

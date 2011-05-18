@@ -26,9 +26,10 @@ package object hano {
     def continue(): Nothing = throw detail.ContinueControl
 
     /**
-     * Creates an asynchronous(thread-pool) process
+     * Creates an asynchronous process in the thread-pool.
      */
-    def async: Process = new detail.Async()
+    @annotation.aliasOf("new Async()")
+    def async: Process = new Async()
 
     /**
      * By-name sequence

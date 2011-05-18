@@ -72,7 +72,7 @@ final class Channel[A] extends Seq[A] with java.io.Closeable {
     override def close() = _live.die()
 
     override lazy val process = _live {
-        new detail.Async(_a).asProcess
+        new Async(_a).asProcess
     }
 
     /**
