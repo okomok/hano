@@ -37,7 +37,7 @@ object Await {
             }
         } start()
 
-        c.await()
+        ManagedAwait(c, xs)
         if (s ne null) {
             throw s
         }
